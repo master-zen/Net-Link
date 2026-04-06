@@ -83,6 +83,18 @@ def strip_no_resolve_and_trailing_commas(line: str) -> str:
         line = line[:-1].rstrip()
     return line
 
+def normalize_ip_or_network_value(value: str) -> tuple[str, str] | None:
+    value = value.strip().strip("[]")
+    if not value:
+        return None
+
+    try:
+        network = ipaddress.ip_network(value, strict=False)
+        if isinstance(network, ipaddress.IPv6Network):
+            return ("IP-CIDR6", network.compressed)
+        return ("IP-CIDR", network.compressed)
+    except ValueError:
+        return None
 
 def normalize_existing_rule(line: str) -> str | None:
     parts = [p.strip() for p in line.split(",")]
@@ -93,35 +105,34 @@ def normalize_existing_rule(line: str) -> str | None:
     if head not in RULE_TYPES:
         return None
 
-    cleaned = [head]
+    if len(parts) < 2 or not parts[1]:
+        return None
 
-    for idx, part in enumerate(parts[1:], start=1):
-        if not part:
-            continue
+    value = parts[1].strip()
 
-        if head in {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD"} and idx == 1:
-            value = part.lower().lstrip(".") if head == "DOMAIN-SUFFIX" else part.lower()
-            cleaned.append(value)
-        elif head == "IP-CIDR" and idx == 1:
-            try:
-                network = ipaddress.ip_network(part, strict=False)
-                if isinstance(network, ipaddress.IPv6Network):
-                    return f"IP-CIDR6,{network.compressed}"
-                cleaned.append(network.compressed)
-            except ValueError:
-                cleaned.append(part)
-        elif head == "IP-CIDR6" and idx == 1:
-            try:
-                network = ipaddress.ip_network(part, strict=False)
-                cleaned.append(network.compressed)
-            except ValueError:
-                cleaned.append(part.lower())
-        else:
-            cleaned.append(part)
+    if head in {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD"}:
+        raw_value = value.lstrip(".") if head == "DOMAIN-SUFFIX" else value
+        ip_norm = normalize_ip_or_network_value(raw_value)
+        if ip_norm:
+            new_head, new_value = ip_norm
+            return f"{new_head},{new_value}"
 
-    result = ",".join(cleaned).strip()
+        normalized_value = raw_value.lower() if head == "DOMAIN-SUFFIX" else value.lower()
+        return f"{head},{normalized_value}"
+
+    if head in {"IP-CIDR", "IP-CIDR6"}:
+        ip_norm = normalize_ip_or_network_value(value)
+        if not ip_norm:
+            return None
+        new_head, new_value = ip_norm
+        return f"{new_head},{new_value}"
+
+    extras = [p.strip() for p in parts[2:] if p.strip()]
+    result = ",".join([head, value, *extras]).strip()
+    while result.endswith(","):
+        result = result[:-1].rstrip()
+
     return result or None
-
 
 def convert_plain_entry(line: str) -> str | None:
     raw = line.strip()
