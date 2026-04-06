@@ -83,6 +83,7 @@ def strip_no_resolve_and_trailing_commas(line: str) -> str:
         line = line[:-1].rstrip()
     return line
 
+
 def normalize_ip_or_network_value(value: str) -> tuple[str, str] | None:
     value = value.strip().strip("[]")
     if not value:
@@ -95,6 +96,7 @@ def normalize_ip_or_network_value(value: str) -> tuple[str, str] | None:
         return ("IP-CIDR", network.compressed)
     except ValueError:
         return None
+
 
 def normalize_existing_rule(line: str) -> str | None:
     parts = [p.strip() for p in line.split(",")]
@@ -133,6 +135,7 @@ def normalize_existing_rule(line: str) -> str | None:
         result = result[:-1].rstrip()
 
     return result or None
+
 
 def convert_plain_entry(line: str) -> str | None:
     raw = line.strip()
