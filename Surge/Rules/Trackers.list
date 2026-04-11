@@ -1614,6 +1614,7 @@ IP-CIDR,185.100.85.201/32,no-resolve
 IP-CIDR,185.102.219.163/32,no-resolve
 IP-CIDR,185.121.168.244/32,no-resolve
 IP-CIDR,185.121.168.96/32,no-resolve
+IP-CIDR,185.121.24.141/32,no-resolve
 IP-CIDR,185.130.47.2/32,no-resolve
 IP-CIDR,185.134.22.3/32,no-resolve
 IP-CIDR,185.146.233.150/32,no-resolve
