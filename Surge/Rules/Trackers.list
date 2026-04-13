@@ -1334,6 +1334,7 @@ IP-CIDR,110.187.214.29/32,no-resolve
 IP-CIDR,110.187.214.6/32,no-resolve
 IP-CIDR,110.187.215.166/32,no-resolve
 IP-CIDR,111.90.151.241/32,no-resolve
+IP-CIDR,113.13.6.40/32,no-resolve
 IP-CIDR,113.17.152.163/32,no-resolve
 IP-CIDR,114.55.113.60/32,no-resolve
 IP-CIDR,116.16.41.96/32,no-resolve
