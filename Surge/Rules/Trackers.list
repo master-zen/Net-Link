@@ -67,6 +67,7 @@ DOMAIN,api.boletera.org
 DOMAIN,api.clasificadosrapidos.com
 DOMAIN,api.ipv4online.uk
 DOMAIN,app.icon256.com
+DOMAIN,archive.torrentonline.cc
 DOMAIN,asiatorrent.ddns.net
 DOMAIN,asiatorrent.giize.com
 DOMAIN,asnet.pw
@@ -407,6 +408,7 @@ DOMAIN,nullzone.fr
 DOMAIN,nyaa.tracker.wf
 DOMAIN,nyaaplus.i2p
 DOMAIN,o-unkusrx.cloud.okteto.net
+DOMAIN,obey.torrentonline.cc
 DOMAIN,odd-hd.fr
 DOMAIN,oh.fuuuuuck.com
 DOMAIN,on.springsunday.net
@@ -1229,6 +1231,7 @@ DOMAIN,wegkxfcivgx.chickenkiller.com
 DOMAIN,wegkxfcivgx.ydns.eu
 DOMAIN,wepzone.net
 DOMAIN,wg.mortis.me
+DOMAIN,whybother.torrentonline.cc
 DOMAIN,widemus.de
 DOMAIN,wolf.parrot.run
 DOMAIN,wsad.run.place
@@ -1336,6 +1339,7 @@ IP-CIDR,110.187.214.6/32,no-resolve
 IP-CIDR,110.187.215.166/32,no-resolve
 IP-CIDR,111.90.151.241/32,no-resolve
 IP-CIDR,113.13.6.40/32,no-resolve
+IP-CIDR,113.16.155.146/32,no-resolve
 IP-CIDR,113.17.152.163/32,no-resolve
 IP-CIDR,114.55.113.60/32,no-resolve
 IP-CIDR,116.16.41.96/32,no-resolve
