@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 
 from lib_rules import (
     AD_BLOCK_LIST,
@@ -36,6 +37,15 @@ MODULE_HEADER = """#!name=Ad Block
 #!system=iOS
 #!requirement=CORE_VERSION>=20
 """
+
+VALID_SECTION_HEADERS = {
+    "[MITM]",
+    "[URL Rewrite]",
+    "[Header Rewrite]",
+    "[Body Rewrite]",
+    "[Script]",
+    "[Host]",
+}
 
 
 def load_modules() -> list[dict]:
@@ -131,11 +141,11 @@ def sanitize_final_module_line(line: str) -> str | None:
 
     lower = s.lower()
 
-    # 丢弃未展开模板
     if "{{{" in s or "}}}" in s:
         return None
-
-    # 丢弃明显损坏的指令
+    if "%" in s and not s.lower().startswith("hostname = %append% "):
+        # 最终模块里除 MITM 追加行外，不允许残留运算符/占位符
+        return None
     if lower.startswith("ttp-request") or lower.startswith("ttp-response"):
         return None
 
@@ -155,7 +165,11 @@ def build_module_text(
     clean_mitm_hosts = [
         h.strip().lower().lstrip(".")
         for h in sorted(mitm_hosts, key=lambda s: s.casefold())
-        if h and "%" not in h and "{{{" not in h and "}}}" not in h
+        if h
+        and "%" not in h
+        and "{{{" not in h
+        and "}}}" not in h
+        and " " not in h
     ]
 
     if clean_mitm_hosts:
@@ -214,6 +228,87 @@ def build_module_text(
     return "\n".join(lines) + "\n"
 
 
+def validate_final_module_text(text: str) -> tuple[bool, str]:
+    lines = text.splitlines()
+
+    if not lines:
+        return False, "empty file"
+
+    # 1. 头部必须先是 metadata
+    first_nonempty = None
+    for line in lines:
+        s = line.strip()
+        if s:
+            first_nonempty = s
+            break
+
+    if first_nonempty is None:
+        return False, "empty file"
+
+    if not first_nonempty.startswith("#!name="):
+        return False, "first non-empty line is not #!name="
+
+    # 2. 不允许未展开模板
+    if "{{{" in text or "}}}" in text:
+        return False, "contains unresolved template placeholders"
+
+    # 3. 不允许坏行
+    for line in lines:
+        s = line.strip().lower()
+        if s.startswith("ttp-request") or s.startswith("ttp-response"):
+            return False, f"contains broken line: {line.strip()}"
+
+    # 4. 必须按模块结构分段
+    current_section = None
+    seen_any_section = False
+    metadata_phase = True
+
+    for raw in lines:
+        s = raw.strip()
+        if not s:
+            continue
+
+        if s.startswith("#!"):
+            if not metadata_phase:
+                return False, f"metadata appears after sections: {s}"
+            continue
+
+        metadata_phase = False
+
+        if s.startswith("[") and s.endswith("]"):
+            if s not in VALID_SECTION_HEADERS:
+                return False, f"invalid section header: {s}"
+            current_section = s
+            seen_any_section = True
+            continue
+
+        if current_section is None:
+            return False, f"content appears before any section: {s[:120]}"
+
+    if not seen_any_section:
+        return False, "no valid sections found"
+
+    # 5. [MITM] 里的 hostname = %APPEND% 只能整行出现一次
+    current_section = None
+    for raw in lines:
+        s = raw.strip()
+        if not s:
+            continue
+
+        if s.startswith("[") and s.endswith("]"):
+            current_section = s
+            continue
+
+        if current_section == "[MITM]":
+            lower = s.lower()
+            if lower.startswith("hostname"):
+                count = len(re.findall(r"(?i)%\s*append\s*%", s))
+                if count > 1:
+                    return False, "multiple %APPEND% tokens found in MITM hostname line"
+
+    return True, "ok"
+
+
 def main() -> int:
     ensure_project_dirs()
     BUILD_DIR.mkdir(parents=True, exist_ok=True)
@@ -260,6 +355,7 @@ def main() -> int:
             rejected_log.append(f"module_excluded_by_security\t{module_id}\t{module_name}\t{source_url}")
             continue
 
+        # 抽模块里的 REJECT / REJECT-TINYGIF 到 Ad_Block.list
         for rule in module.get("rules", []):
             reject_rule = extract_reject_rule_from_module_rule(rule)
             if not reject_rule:
@@ -278,7 +374,7 @@ def main() -> int:
             if host in allow_hosts or any(h == host or h.endswith("." + host) for h in allow_hosts):
                 rejected_log.append(f"mitm_removed_by_allowlist\t{host}\t{module_id}\t{source_url}")
                 continue
-            if "%" in host or "{{{" in host or "}}}" in host:
+            if "%" in host or "{{{" in host or "}}}" in host or " " in host:
                 rejected_log.append(f"mitm_removed_by_sanitize\t{host}\t{module_id}\t{source_url}")
                 continue
             mitm_hosts.add(host)
@@ -336,9 +432,11 @@ def main() -> int:
                 continue
             host_lines.add(s)
 
+    # 先写规则文件：这部分是合并，不是覆盖旧来源池
     final_rules = [r for r in dedupe_sorted(merged_rules) if not rule_matches_allowlist(r, allow_hosts)]
     write_lines(AD_BLOCK_LIST, final_rules)
 
+    # 再生成最终模块文本，并校验合法性
     module_text = build_module_text(
         mitm_hosts=mitm_hosts,
         url_rewrite=url_rewrite,
@@ -347,8 +445,12 @@ def main() -> int:
         scripts=script_lines,
         host_lines=host_lines,
     )
-    write_text(AD_BLOCK_MODULE, module_text)
 
+    ok, reason = validate_final_module_text(module_text)
+    if not ok:
+        raise RuntimeError(f"Generated invalid Surge module: {reason}")
+
+    write_text(AD_BLOCK_MODULE, module_text)
     write_lines(REJECTED_RULES_TXT, rejected_log)
 
     print(f"Wrote {AD_BLOCK_LIST} with {len(final_rules)} rules.")
