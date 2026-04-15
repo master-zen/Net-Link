@@ -23,8 +23,7 @@
     }
   },
   "suspicious_script_hashes": [
-    "00aff406bba8aae92b9ddab41cc140c26ac6986055de5464577b3508e8e5b4bc",
-    "14178df5898473b2a3863e404917c8c5b3095bf59b53b77fdeeea94887a69b86",
+    "137d283f783faed7b66a92eefd3b4088ce23713dfcc48b5412d69e2d5516a5d8",
     "26b1b805a73f0c4992e4b92025e09e5e3df18dd99f761ff690df925a323ad694",
     "2e6850e888d092905c766f0bbedc4b4afb9a712330970cc1265105d7fb4995d0",
     "320ab9b3de4c29960888aef506da13304f5f400143164255259874ce598435c0",
@@ -32,11 +31,12 @@
     "6a4014006777e5593f81b3cee0f4a4f3890a51574af64461443ac648a4d1764c",
     "6d30380cc68e112b5bcb5d9b2013d553d3c48612b1c61e78f0e0bfae3e48ca2c",
     "8c9fd6cf844ce25fedcd71591c090c614a5e8aed7429f8f38e31b24e46b5a887",
+    "8f0497af84933bde45b6544d0128900fe10620dd5be7039e9288d03f7ab850fe",
+    "95ab1522479a3970c63127484e1fff14c7d1640c6c0a24ce44b9f025310f1856",
     "9c562ff47054aec49bb07a6646029fb1dd7466bb2135fe2d5d950d1f4a3baeb6",
     "a96553567373de33db23186fb510eeba162fc8e684ec6a4fccf222fba30b7433",
     "ae5af8f7727442984db1bc0c2d72883c0a339cf5452a88da0eaf9d097de8d7f7",
     "b5e6312938588ccdc6fe50a77fd9db75c002a027dbfcebb4337d7353000a3b52",
-    "bf2d0df1f9e61774f9ac4024a2980c9158eb9934993c0c605de56a2e5a117b0f",
     "c5e46afa219424e22bcba151dbd6f5e4c6caf518cfdf3317381f4c7e2068e51b"
   ],
   "suspicious_modules": [
@@ -54,7 +54,7 @@
     "d9b85405a8899d0b"
   ],
   "suspicious_reasons": {
-    "14178df5898473b2a3863e404917c8c5b3095bf59b53b77fdeeea94887a69b86": [
+    "8f0497af84933bde45b6544d0128900fe10620dd5be7039e9288d03f7ab850fe": [
       "heuristic:eval(|new Function(|fetch(|atob(|btoa(",
       "heuristic:eval(|new Function(|fetch(|atob(|btoa(",
       "heuristic:eval(|new Function(|fetch(|atob(|btoa("
@@ -103,10 +103,10 @@
     "c5e46afa219424e22bcba151dbd6f5e4c6caf518cfdf3317381f4c7e2068e51b": [
       "heuristic:eval(|fetch("
     ],
-    "00aff406bba8aae92b9ddab41cc140c26ac6986055de5464577b3508e8e5b4bc": [
+    "95ab1522479a3970c63127484e1fff14c7d1640c6c0a24ce44b9f025310f1856": [
       "heuristic:eval(|new Function(|fetch(|atob(|btoa("
     ],
-    "bf2d0df1f9e61774f9ac4024a2980c9158eb9934993c0c605de56a2e5a117b0f": [
+    "137d283f783faed7b66a92eefd3b4088ce23713dfcc48b5412d69e2d5516a5d8": [
       "heuristic:eval(|new Function(|fetch(|atob(|btoa("
     ],
     "2e6850e888d092905c766f0bbedc4b4afb9a712330970cc1265105d7fb4995d0": [
@@ -1851,8 +1851,8 @@
     {
       "module_id": "133729aacf573b67",
       "script_url": "https://github.com/sub-store-org/Sub-Store/releases/latest/download/cron-sync-artifacts.min.js",
-      "script_hash": "14178df5898473b2a3863e404917c8c5b3095bf59b53b77fdeeea94887a69b86",
-      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/14178df5898473b2a3863e404917c8c5b3095bf59b53b77fdeeea94887a69b86.js"
+      "script_hash": "8f0497af84933bde45b6544d0128900fe10620dd5be7039e9288d03f7ab850fe",
+      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/8f0497af84933bde45b6544d0128900fe10620dd5be7039e9288d03f7ab850fe.js"
     },
     {
       "module_id": "133729aacf573b67",
@@ -7029,26 +7029,26 @@
     {
       "module_id": "57653f85ae27b453",
       "script_url": "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store-1.min.js",
-      "script_hash": "00aff406bba8aae92b9ddab41cc140c26ac6986055de5464577b3508e8e5b4bc",
-      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/00aff406bba8aae92b9ddab41cc140c26ac6986055de5464577b3508e8e5b4bc.js"
+      "script_hash": "95ab1522479a3970c63127484e1fff14c7d1640c6c0a24ce44b9f025310f1856",
+      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/95ab1522479a3970c63127484e1fff14c7d1640c6c0a24ce44b9f025310f1856.js"
     },
     {
       "module_id": "57653f85ae27b453",
       "script_url": "https://github.com/sub-store-org/Sub-Store/releases/latest/download/sub-store-0.min.js",
-      "script_hash": "bf2d0df1f9e61774f9ac4024a2980c9158eb9934993c0c605de56a2e5a117b0f",
-      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/bf2d0df1f9e61774f9ac4024a2980c9158eb9934993c0c605de56a2e5a117b0f.js"
+      "script_hash": "137d283f783faed7b66a92eefd3b4088ce23713dfcc48b5412d69e2d5516a5d8",
+      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/137d283f783faed7b66a92eefd3b4088ce23713dfcc48b5412d69e2d5516a5d8.js"
     },
     {
       "module_id": "57653f85ae27b453",
       "script_url": "https://github.com/sub-store-org/Sub-Store/releases/latest/download/cron-sync-artifacts.min.js",
-      "script_hash": "14178df5898473b2a3863e404917c8c5b3095bf59b53b77fdeeea94887a69b86",
-      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/14178df5898473b2a3863e404917c8c5b3095bf59b53b77fdeeea94887a69b86.js"
+      "script_hash": "8f0497af84933bde45b6544d0128900fe10620dd5be7039e9288d03f7ab850fe",
+      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/8f0497af84933bde45b6544d0128900fe10620dd5be7039e9288d03f7ab850fe.js"
     },
     {
       "module_id": "57653f85ae27b453",
       "script_url": "https://github.com/sub-store-org/Sub-Store/releases/latest/download/cron-sync-artifacts.min.js",
-      "script_hash": "14178df5898473b2a3863e404917c8c5b3095bf59b53b77fdeeea94887a69b86",
-      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/14178df5898473b2a3863e404917c8c5b3095bf59b53b77fdeeea94887a69b86.js"
+      "script_hash": "8f0497af84933bde45b6544d0128900fe10620dd5be7039e9288d03f7ab850fe",
+      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/8f0497af84933bde45b6544d0128900fe10620dd5be7039e9288d03f7ab850fe.js"
     },
     {
       "module_id": "364f38c3e87747ec",
