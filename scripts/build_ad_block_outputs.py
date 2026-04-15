@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
 from lib_rules import (
     AD_BLOCK_LIST,
@@ -125,6 +124,24 @@ def filter_line_by_whitelist(line: str, allow_hosts: set[str], regexes) -> bool:
     return False
 
 
+def sanitize_final_module_line(line: str) -> str | None:
+    s = strip_no_resolve_and_trailing_commas(line.strip())
+    if not s:
+        return None
+
+    lower = s.lower()
+
+    # 丢弃未展开模板
+    if "{{{" in s or "}}}" in s:
+        return None
+
+    # 丢弃明显损坏的指令
+    if lower.startswith("ttp-request") or lower.startswith("ttp-response"):
+        return None
+
+    return s
+
+
 def build_module_text(
     mitm_hosts: set[str],
     url_rewrite: set[str],
@@ -135,34 +152,60 @@ def build_module_text(
 ) -> str:
     lines: list[str] = [MODULE_HEADER.strip(), ""]
 
-    if mitm_hosts:
+    clean_mitm_hosts = [
+        h.strip().lower().lstrip(".")
+        for h in sorted(mitm_hosts, key=lambda s: s.casefold())
+        if h and "%" not in h and "{{{" not in h and "}}}" not in h
+    ]
+
+    if clean_mitm_hosts:
         lines.append("[MITM]")
-        lines.append("hostname = " + ", ".join(sorted(mitm_hosts, key=lambda s: s.casefold())))
+        lines.append("hostname = %APPEND% " + ", ".join(clean_mitm_hosts))
         lines.append("")
 
-    if url_rewrite:
+    clean_url_rewrite = [
+        s for s in sorted(url_rewrite, key=lambda s: s.casefold())
+        if sanitize_final_module_line(s)
+    ]
+    if clean_url_rewrite:
         lines.append("[URL Rewrite]")
-        lines.extend(sorted(url_rewrite, key=lambda s: s.casefold()))
+        lines.extend(clean_url_rewrite)
         lines.append("")
 
-    if header_rewrite:
+    clean_header_rewrite = [
+        s for s in sorted(header_rewrite, key=lambda s: s.casefold())
+        if sanitize_final_module_line(s)
+    ]
+    if clean_header_rewrite:
         lines.append("[Header Rewrite]")
-        lines.extend(sorted(header_rewrite, key=lambda s: s.casefold()))
+        lines.extend(clean_header_rewrite)
         lines.append("")
 
-    if body_rewrite:
+    clean_body_rewrite = [
+        s for s in sorted(body_rewrite, key=lambda s: s.casefold())
+        if sanitize_final_module_line(s)
+    ]
+    if clean_body_rewrite:
         lines.append("[Body Rewrite]")
-        lines.extend(sorted(body_rewrite, key=lambda s: s.casefold()))
+        lines.extend(clean_body_rewrite)
         lines.append("")
 
-    if scripts:
+    clean_scripts = [
+        s for s in sorted(scripts, key=lambda s: s.casefold())
+        if sanitize_final_module_line(s)
+    ]
+    if clean_scripts:
         lines.append("[Script]")
-        lines.extend(sorted(scripts, key=lambda s: s.casefold()))
+        lines.extend(clean_scripts)
         lines.append("")
 
-    if host_lines:
+    clean_host_lines = [
+        s for s in sorted(host_lines, key=lambda s: s.casefold())
+        if sanitize_final_module_line(s)
+    ]
+    if clean_host_lines:
         lines.append("[Host]")
-        lines.extend(sorted(host_lines, key=lambda s: s.casefold()))
+        lines.extend(clean_host_lines)
         lines.append("")
 
     while lines and not lines[-1].strip():
@@ -235,10 +278,13 @@ def main() -> int:
             if host in allow_hosts or any(h == host or h.endswith("." + host) for h in allow_hosts):
                 rejected_log.append(f"mitm_removed_by_allowlist\t{host}\t{module_id}\t{source_url}")
                 continue
+            if "%" in host or "{{{" in host or "}}}" in host:
+                rejected_log.append(f"mitm_removed_by_sanitize\t{host}\t{module_id}\t{source_url}")
+                continue
             mitm_hosts.add(host)
 
         for line in module.get("url_rewrite", []):
-            s = strip_no_resolve_and_trailing_commas(line)
+            s = sanitize_final_module_line(line)
             if not s:
                 continue
             if filter_line_by_whitelist(s, allow_hosts, allow_regexes):
@@ -247,7 +293,7 @@ def main() -> int:
             url_rewrite.add(s)
 
         for line in module.get("header_rewrite", []):
-            s = strip_no_resolve_and_trailing_commas(line)
+            s = sanitize_final_module_line(line)
             if not s:
                 continue
             if filter_line_by_whitelist(s, allow_hosts, allow_regexes):
@@ -256,7 +302,7 @@ def main() -> int:
             header_rewrite.add(s)
 
         for line in module.get("body_rewrite", []):
-            s = strip_no_resolve_and_trailing_commas(line)
+            s = sanitize_final_module_line(line)
             if not s:
                 continue
             if filter_line_by_whitelist(s, allow_hosts, allow_regexes):
@@ -265,7 +311,7 @@ def main() -> int:
             body_rewrite.add(s)
 
         for item in module.get("scripts", []):
-            line = (item.get("line") or "").strip()
+            line = sanitize_final_module_line(item.get("line") or "")
             script_url = (item.get("script_url") or "").strip()
 
             if not line:
@@ -282,7 +328,7 @@ def main() -> int:
             script_lines.add(line)
 
         for line in module.get("host", []):
-            s = strip_no_resolve_and_trailing_commas(line)
+            s = sanitize_final_module_line(line)
             if not s:
                 continue
             if filter_line_by_whitelist(s, allow_hosts, allow_regexes):
