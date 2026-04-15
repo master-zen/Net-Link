@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import json
 import re
 from pathlib import Path
 from urllib.parse import urlparse
@@ -44,7 +43,7 @@ SURGE_SCRIPT_TYPE_MAP = {
 
 BAD_TEMPLATE_RE = re.compile(r"\{\{\{.*?\}\}\}")
 MODULE_OPERATOR_RE = re.compile(r"(?i)%\s*(APPEND|INSERT|REPLACE)\s*%")
-REWRITE_REJECT_TAIL_RE = re.compile(r"(?i)\s(?:_|-)?\s*reject(?:-\w+)?\s*$")
+HOST_LIKE_RE = re.compile(r"^[*.-]*[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+$")
 
 
 def read_url_list(path: Path) -> list[str]:
@@ -95,7 +94,7 @@ def split_sections(text: str) -> tuple[dict[str, list[str]], dict[str, str]]:
             continue
 
         if current is None:
-            # 没有明确 section 的内容，一律丢弃，避免污染最终模块
+            # 严格模式：不在合法 section 里的行一律丢弃
             continue
 
         sections[current].append(line)
@@ -120,8 +119,7 @@ def is_obviously_broken_line(text: str) -> bool:
         return True
     if lower.startswith("ttp-request") or lower.startswith("ttp-response"):
         return True
-    if lower.startswith("script-") and " url " not in lower:
-        # 残缺 QX 行
+    if "jq-path=" in lower:
         return True
     return False
 
@@ -147,9 +145,8 @@ def normalize_mitm_line(line: str) -> list[str]:
         if "{{{" in part or "}}}" in part:
             continue
         if " " in part:
-            # 多个 token 黏在一起时直接丢弃，防止坏数据污染 MITM
             continue
-        if "." not in part and "*" not in part:
+        if not HOST_LIKE_RE.match(part):
             continue
 
         hosts.append(part)
@@ -158,21 +155,19 @@ def normalize_mitm_line(line: str) -> list[str]:
 
 
 def is_supported_surge_url_rewrite(line: str) -> bool:
-    # 只保留明确像 Surge URL Rewrite 的格式：
-    # ^... _ reject
-    # ^... http://... header
-    # ^... https://... 302
+    # Surge 文档允许的 URL Rewrite 三类：header / 302 / reject
     s = line.strip()
     if not s.startswith("^"):
         return False
 
     lower = s.lower()
 
-    if " _ reject" in lower or re.search(r"\s-\s*reject(?:-\w+)?$", lower):
-        return True
-    if lower.endswith(" header"):
+    if re.search(r"\sheader$", lower):
         return True
     if re.search(r"\s302$", lower):
+        return True
+    if re.search(r"\s(?:_|-)?\s*reject(?:-\w+)?$", lower):
+        # 这里只接受最终会进一步规整为 _ reject 的行
         return True
 
     return False
@@ -183,6 +178,20 @@ def normalize_rewrite_line(line: str) -> str | None:
     if not s or is_obviously_broken_line(s):
         return None
 
+    lower = s.lower()
+
+    # 明确丢弃非 Surge 最终语法
+    banned_tokens = [
+        "reject-dict",
+        "reject-200",
+        "response-body-json-jq",
+        "response-body-json-del",
+        "response-body-replace-regex",
+        "jq-path=",
+    ]
+    if any(token in lower for token in banned_tokens):
+        return None
+
     # QX-style reject: ^https://... url reject
     if " url " in s:
         left, right = s.split(" url ", 1)
@@ -191,11 +200,15 @@ def normalize_rewrite_line(line: str) -> str | None:
             return f"{left.strip()} _ reject"
         return None
 
-    # 只保留明确像 Surge URL Rewrite 的行
-    if is_supported_surge_url_rewrite(s):
-        return s
+    if not is_supported_surge_url_rewrite(s):
+        return None
 
-    return None
+    # 统一 reject 的写法成 "_ reject"
+    if re.search(r"\s(?:-|_)?\s*reject(?:-\w+)?$", lower):
+        rule = re.sub(r"\s(?:-|_)?\s*reject(?:-\w+)?$", "", s, flags=re.IGNORECASE).strip()
+        return f"{rule} _ reject"
+
+    return s
 
 
 def extract_script_path(line: str) -> str | None:
@@ -239,7 +252,7 @@ def normalize_script_line(line: str) -> dict | None:
                     "script_url": script_url,
                 }
 
-    # Surge style: 必须同时含 type/pattern/script-path
+    # Surge style: 必须同时有 type / pattern / script-path
     lower = s.lower()
     if "type=" in lower and "pattern=" in lower and "script-path=" in lower:
         return {
@@ -250,20 +263,61 @@ def normalize_script_line(line: str) -> dict | None:
     return None
 
 
-def normalize_header_or_body_line(line: str) -> str | None:
+def normalize_header_line(line: str) -> str | None:
     s = strip_no_resolve_and_trailing_commas(line.strip())
     if not s or is_obviously_broken_line(s):
         return None
 
     lower = s.lower()
 
-    # 保守策略：只保留明确像 Surge rewrite 的行
+    # 只保留 Surge Header Rewrite 文档定义动作
+    valid_actions = ("header-add", "header-del", "header-replace", "header-replace-regex")
+    if (lower.startswith("http-request ") or lower.startswith("http-response ")) and any(
+        f" {action} " in lower for action in valid_actions
+    ):
+        return s
+
+    return None
+
+
+def normalize_body_line(line: str) -> str | None:
+    s = strip_no_resolve_and_trailing_commas(line.strip())
+    if not s or is_obviously_broken_line(s):
+        return None
+
+    lower = s.lower()
+
+    # 先支持 Surge 官方 Body Rewrite 基础语法
     if lower.startswith("http-request ") or lower.startswith("http-response "):
         return s
-    if " header-replace " in lower or " header-add " in lower or " header-del " in lower:
-        return s
-    if " body-replace " in lower or " response-body-replace" in lower:
-        return s
+
+    # 有些来源是 QX 风格的 response-body-json-jq / response-body-json-del
+    # 这里只做“严格且明确”的可转换：
+    # 1. response-body-json-jq '<jq表达式>'  -> http-response-jq
+    # 2. response-body-json-del <path>      -> 丢弃（不猜）
+    if " response-body-json-jq " in s:
+        try:
+            pattern, jq_expr = s.split(" response-body-json-jq ", 1)
+            pattern = pattern.strip()
+            jq_expr = jq_expr.strip()
+
+            # Surge 文档没有 jq-path= 这种参数，必须是内联 jq 表达式
+            if "jq-path=" in jq_expr.lower():
+                return None
+
+            if pattern.startswith("^") and jq_expr:
+                return f"http-response-jq {pattern} {jq_expr}"
+        except Exception:
+            return None
+
+    # response-body-json-del / response-body-replace-regex 这种不做不安全猜测
+    banned_tokens = [
+        "response-body-json-del",
+        "response-body-replace-regex",
+        "jq-path=",
+    ]
+    if any(token in lower for token in banned_tokens):
+        return None
 
     return None
 
@@ -333,12 +387,12 @@ def main() -> int:
                 url_rewrite.append(norm)
 
         for line in sections["header_rewrite"]:
-            norm = normalize_header_or_body_line(line)
+            norm = normalize_header_line(line)
             if norm:
                 header_rewrite.append(norm)
 
         for line in sections["body_rewrite"]:
-            norm = normalize_header_or_body_line(line)
+            norm = normalize_body_line(line)
             if norm:
                 body_rewrite.append(norm)
 
