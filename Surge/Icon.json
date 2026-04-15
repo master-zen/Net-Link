@@ -1064,6 +1064,398 @@
     {
       "name": "Reddit",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Reddit.png"
+    },
+    {
+      "name": "Region_AR",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_AR.png"
+    },
+    {
+      "name": "Region_Argentina",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Argentina.png"
+    },
+    {
+      "name": "Region_AU",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_AU.png"
+    },
+    {
+      "name": "Region_Australia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Australia.png"
+    },
+    {
+      "name": "Region_BGP",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_BGP.png"
+    },
+    {
+      "name": "Region_BR",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_BR.png"
+    },
+    {
+      "name": "Region_Brazil",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Brazil.png"
+    },
+    {
+      "name": "Region_CA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_CA.png"
+    },
+    {
+      "name": "Region_Canada",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Canada.png"
+    },
+    {
+      "name": "Region_CC",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_CC.png"
+    },
+    {
+      "name": "Region_China",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_China.png"
+    },
+    {
+      "name": "Region_CN",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_CN.png"
+    },
+    {
+      "name": "Region_DE",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_DE.png"
+    },
+    {
+      "name": "Region_EG",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_EG.png"
+    },
+    {
+      "name": "Region_Egypt",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Egypt.png"
+    },
+    {
+      "name": "Region_EU",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_EU.png"
+    },
+    {
+      "name": "Region_EuropeanUnion",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_EuropeanUnion.png"
+    },
+    {
+      "name": "Region_FI",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_FI.png"
+    },
+    {
+      "name": "Region_Finland",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Finland.png"
+    },
+    {
+      "name": "Region_FR",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_FR.png"
+    },
+    {
+      "name": "Region_France",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_France.png"
+    },
+    {
+      "name": "Region_Germany",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Germany.png"
+    },
+    {
+      "name": "Region_GIA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_GIA.png"
+    },
+    {
+      "name": "Region_HC",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_HC.png"
+    },
+    {
+      "name": "Region_HK",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_HK.png"
+    },
+    {
+      "name": "Region_HongKong",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_HongKong.png"
+    },
+    {
+      "name": "Region_IEPL",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_IEPL.png"
+    },
+    {
+      "name": "Region_IN",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_IN.png"
+    },
+    {
+      "name": "Region_India",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_India.png"
+    },
+    {
+      "name": "Region_IPLC",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_IPLC.png"
+    },
+    {
+      "name": "Region_Japan",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Japan.png"
+    },
+    {
+      "name": "Region_JP",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_JP.png"
+    },
+    {
+      "name": "Region_Korea",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Korea.png"
+    },
+    {
+      "name": "Region_KR",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_KR.png"
+    },
+    {
+      "name": "Region_LA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_LA.png"
+    },
+    {
+      "name": "Region_Macao",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Macao.png"
+    },
+    {
+      "name": "Region_Malaysia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Malaysia.png"
+    },
+    {
+      "name": "Region_MO",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_MO.png"
+    },
+    {
+      "name": "Region_MY",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_MY.png"
+    },
+    {
+      "name": "Region_NullNation",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_NullNation.png"
+    },
+    {
+      "name": "Region_PH",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_PH.png"
+    },
+    {
+      "name": "Region_Philippines",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Philippines.png"
+    },
+    {
+      "name": "Region_PirateNation",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_PirateNation.png"
+    },
+    {
+      "name": "Region_Rainbow",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Rainbow.png"
+    },
+    {
+      "name": "Region_RU",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_RU.png"
+    },
+    {
+      "name": "Region_Russia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Russia.png"
+    },
+    {
+      "name": "Region_SG",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_SG.png"
+    },
+    {
+      "name": "Region_Singapore",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Singapore.png"
+    },
+    {
+      "name": "Region_Taiwan",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Taiwan.png"
+    },
+    {
+      "name": "Region_TH",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_TH.png"
+    },
+    {
+      "name": "Region_Thailand",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Thailand.png"
+    },
+    {
+      "name": "Region_TR",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_TR.png"
+    },
+    {
+      "name": "Region_Turkey",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Turkey.png"
+    },
+    {
+      "name": "Region_TW",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_TW.png"
+    },
+    {
+      "name": "Region_UA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UA.png"
+    },
+    {
+      "name": "Region_UK",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UK.png"
+    },
+    {
+      "name": "Region_Ukraine",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Ukraine.png"
+    },
+    {
+      "name": "Region_UN",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UN.png"
+    },
+    {
+      "name": "Region_UnitedKingdom",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UnitedKingdom.png"
+    },
+    {
+      "name": "Region_UnitedNations",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UnitedNations.png"
+    },
+    {
+      "name": "Region_UnitedStates",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UnitedStates.png"
+    },
+    {
+      "name": "Region_US",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_US.png"
+    },
+    {
+      "name": "Renzhe",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Renzhe.png"
+    },
+    {
+      "name": "Ring",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ring.png"
+    },
+    {
+      "name": "Ruanmei",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ruanmei.png"
+    },
+    {
+      "name": "Ruanmei_ITzhijia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ruanmei_ITzhijia.png"
+    },
+    {
+      "name": "Ryan",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ryan.png"
+    },
+    {
+      "name": "Samsung-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Samsung-I.png"
+    },
+    {
+      "name": "Samsung",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Samsung.png"
+    },
+    {
+      "name": "Scholar",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Scholar.png"
+    },
+    {
+      "name": "Shansong",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Shansong.png"
+    },
+    {
+      "name": "Shenmezhidemai",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Shenmezhidemai.png"
+    },
+    {
+      "name": "Sina",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sina.png"
+    },
+    {
+      "name": "SlingTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/SlingTV.png"
+    },
+    {
+      "name": "Snap-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Snap-II.png"
+    },
+    {
+      "name": "Snap-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Snap-III.png"
+    },
+    {
+      "name": "Snap",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Snap.png"
+    },
+    {
+      "name": "Sohu-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sohu-I.png"
+    },
+    {
+      "name": "Sohu-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sohu-II.png"
+    },
+    {
+      "name": "Sohu-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sohu-III.png"
+    },
+    {
+      "name": "Sohu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sohu.png"
+    },
+    {
+      "name": "SONY-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/SONY-I.png"
+    },
+    {
+      "name": "SONY",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/SONY.png"
+    },
+    {
+      "name": "Spark",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Spark.png"
+    },
+    {
+      "name": "Speedtest",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Speedtest.png"
+    },
+    {
+      "name": "Spotify",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Spotify.png"
+    },
+    {
+      "name": "ssLinks",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ssLinks.png"
+    },
+    {
+      "name": "Star+",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Star%2B.png"
+    },
+    {
+      "name": "Star-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Star-I.png"
+    },
+    {
+      "name": "Star",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Star.png"
+    },
+    {
+      "name": "Starbucks-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Starbucks-I.png"
+    },
+    {
+      "name": "Starbucks-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Starbucks-II.png"
+    },
+    {
+      "name": "Starbucks",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Starbucks.png"
+    },
+    {
+      "name": "STARZ",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/STARZ.png"
+    },
+    {
+      "name": "Steam",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Steam.png"
+    },
+    {
+      "name": "Strategy_ADBlack",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_ADBlack.png"
+    },
+    {
+      "name": "Strategy_ADVertising",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_ADVertising.png"
+    },
+    {
+      "name": "Strategy_ADWhite",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_ADWhite.png"
     }
   ]
 }
