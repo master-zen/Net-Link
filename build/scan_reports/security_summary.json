@@ -1,5 +1,5 @@
 {
-  "scanned_script_count": 874,
+  "scanned_script_count": 877,
   "tool_status": {
     "clamav": {
       "available": true,
@@ -1458,6 +1458,12 @@
       "script_url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/script/startup/startup.js",
       "script_hash": "431801d369b495d34b7a1c1d6cc43abdb1d159dd0d82491ee756c0ae834b625c",
       "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/431801d369b495d34b7a1c1d6cc43abdb1d159dd0d82491ee756c0ae834b625c.js"
+    },
+    {
+      "module_id": "d9b85405a8899d0b",
+      "script_url": "https://raw.githubusercontent.com/fmz200/wool_scripts/main/QuantumultX/scripts/Flightradar24.js",
+      "script_hash": "2d63591d0d397a07d5e3915ed2a8fa3041eddbe126689efd971c8811f86ccbe7",
+      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/2d63591d0d397a07d5e3915ed2a8fa3041eddbe126689efd971c8811f86ccbe7.js"
     },
     {
       "module_id": "d9b85405a8899d0b",
@@ -5162,6 +5168,12 @@
       "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/b729d3f27bcb4992b7dc8d82ef7563af7b2a1380976f55975166f68defe3c393.js"
     },
     {
+      "module_id": "e7b9ee710eabfa13",
+      "script_url": "https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js",
+      "script_hash": "b729d3f27bcb4992b7dc8d82ef7563af7b2a1380976f55975166f68defe3c393",
+      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/b729d3f27bcb4992b7dc8d82ef7563af7b2a1380976f55975166f68defe3c393.js"
+    },
+    {
       "module_id": "19eda2d427723526",
       "script_url": "https://raw.githubusercontent.com/xream/scripts/main/surge/modules/network-info/net-lsp-x.js",
       "script_hash": "0d332b68843225a043c1e057c02305af5cd2703387f308a9c4896d04f1b0a470",
@@ -5268,6 +5280,12 @@
       "script_url": "https://raw.githubusercontent.com/app2smile/rules/master/js/adsense.js",
       "script_hash": "171f97bb25c6cb29aeb134acdddca5c96b06e0e70a6e4f670914eba1c8f3b662",
       "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/171f97bb25c6cb29aeb134acdddca5c96b06e0e70a6e4f670914eba1c8f3b662.js"
+    },
+    {
+      "module_id": "df83bcced1f75521",
+      "script_url": "https://raw.githubusercontent.com/Keywos/rule/main/script/wy/js/wyres.js",
+      "script_hash": "b729d3f27bcb4992b7dc8d82ef7563af7b2a1380976f55975166f68defe3c393",
+      "file": "/home/runner/work/Net-Link/Net-Link/build/scan_reports/scripts_cache/b729d3f27bcb4992b7dc8d82ef7563af7b2a1380976f55975166f68defe3c393.js"
     },
     {
       "module_id": "df83bcced1f75521",
