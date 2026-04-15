@@ -94,7 +94,7 @@ def split_sections(text: str) -> tuple[dict[str, list[str]], dict[str, str]]:
             continue
 
         if current is None:
-            # 严格模式：不在合法 section 里的行一律丢弃
+            # 不在合法 section 里的内容一律丢弃
             continue
 
         sections[current].append(line)
@@ -155,7 +155,6 @@ def normalize_mitm_line(line: str) -> list[str]:
 
 
 def is_supported_surge_url_rewrite(line: str) -> bool:
-    # Surge 文档允许的 URL Rewrite 三类：header / 302 / reject
     s = line.strip()
     if not s.startswith("^"):
         return False
@@ -167,7 +166,6 @@ def is_supported_surge_url_rewrite(line: str) -> bool:
     if re.search(r"\s302$", lower):
         return True
     if re.search(r"\s(?:_|-)?\s*reject(?:-\w+)?$", lower):
-        # 这里只接受最终会进一步规整为 _ reject 的行
         return True
 
     return False
@@ -180,7 +178,6 @@ def normalize_rewrite_line(line: str) -> str | None:
 
     lower = s.lower()
 
-    # 明确丢弃非 Surge 最终语法
     banned_tokens = [
         "reject-dict",
         "reject-200",
@@ -192,7 +189,7 @@ def normalize_rewrite_line(line: str) -> str | None:
     if any(token in lower for token in banned_tokens):
         return None
 
-    # QX-style reject: ^https://... url reject
+    # QX-style reject -> Surge reject
     if " url " in s:
         left, right = s.split(" url ", 1)
         action = right.strip().lower()
@@ -203,7 +200,7 @@ def normalize_rewrite_line(line: str) -> str | None:
     if not is_supported_surge_url_rewrite(s):
         return None
 
-    # 统一 reject 的写法成 "_ reject"
+    # 统一 reject 写法
     if re.search(r"\s(?:-|_)?\s*reject(?:-\w+)?$", lower):
         rule = re.sub(r"\s(?:-|_)?\s*reject(?:-\w+)?$", "", s, flags=re.IGNORECASE).strip()
         return f"{rule} _ reject"
@@ -218,7 +215,6 @@ def extract_script_path(line: str) -> str | None:
         tail = s.split(marker, 1)[1].strip()
         return tail.split(",", 1)[0].strip()
 
-    # QX style: ^... url script-response-body https://xx.js
     if " url script-" in s:
         parts = s.split()
         if parts and parts[-1].startswith(("http://", "https://")):
@@ -234,7 +230,7 @@ def normalize_script_line(line: str) -> dict | None:
 
     script_url = extract_script_path(s)
 
-    # QX → Surge
+    # QX -> Surge
     if " url script-" in s:
         parts = s.split()
         if len(parts) >= 4:
@@ -252,7 +248,6 @@ def normalize_script_line(line: str) -> dict | None:
                     "script_url": script_url,
                 }
 
-    # Surge style: 必须同时有 type / pattern / script-path
     lower = s.lower()
     if "type=" in lower and "pattern=" in lower and "script-path=" in lower:
         return {
@@ -269,9 +264,8 @@ def normalize_header_line(line: str) -> str | None:
         return None
 
     lower = s.lower()
-
-    # 只保留 Surge Header Rewrite 文档定义动作
     valid_actions = ("header-add", "header-del", "header-replace", "header-replace-regex")
+
     if (lower.startswith("http-request ") or lower.startswith("http-response ")) and any(
         f" {action} " in lower for action in valid_actions
     ):
@@ -287,21 +281,17 @@ def normalize_body_line(line: str) -> str | None:
 
     lower = s.lower()
 
-    # 先支持 Surge 官方 Body Rewrite 基础语法
+    # Surge 原生 body rewrite
     if lower.startswith("http-request ") or lower.startswith("http-response "):
         return s
 
-    # 有些来源是 QX 风格的 response-body-json-jq / response-body-json-del
-    # 这里只做“严格且明确”的可转换：
-    # 1. response-body-json-jq '<jq表达式>'  -> http-response-jq
-    # 2. response-body-json-del <path>      -> 丢弃（不猜）
+    # 仅做严格可确认的 QX -> Surge JQ 转换
     if " response-body-json-jq " in s:
         try:
             pattern, jq_expr = s.split(" response-body-json-jq ", 1)
             pattern = pattern.strip()
             jq_expr = jq_expr.strip()
 
-            # Surge 文档没有 jq-path= 这种参数，必须是内联 jq 表达式
             if "jq-path=" in jq_expr.lower():
                 return None
 
@@ -310,7 +300,7 @@ def normalize_body_line(line: str) -> str | None:
         except Exception:
             return None
 
-    # response-body-json-del / response-body-replace-regex 这种不做不安全猜测
+    # 这些不做猜测转换，直接丢弃
     banned_tokens = [
         "response-body-json-del",
         "response-body-replace-regex",
@@ -417,7 +407,6 @@ def main() -> int:
         )
         module["host"] = dedupe_sorted(host_lines)
 
-        # 全空模块直接丢
         if not any(
             [
                 module["mitm_hosts"],
