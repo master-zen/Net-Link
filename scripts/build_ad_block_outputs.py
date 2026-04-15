@@ -141,12 +141,24 @@ def sanitize_final_module_line(line: str) -> str | None:
 
     lower = s.lower()
 
+    # 不能有未展开模板
     if "{{{" in s or "}}}" in s:
         return None
-    if "%" in s and not s.lower().startswith("hostname = %append% "):
-        # 最终模块里除 MITM 追加行外，不允许残留运算符/占位符
-        return None
+
+    # 不能有明显坏行
     if lower.startswith("ttp-request") or lower.startswith("ttp-response"):
+        return None
+
+    # 不能出现 QX/Loon 残留关键字
+    banned_tokens = [
+        "reject-dict",
+        "reject-200",
+        "response-body-json-jq",
+        "response-body-json-del",
+        "response-body-replace-regex",
+        "jq-path=",
+    ]
+    if any(token in lower for token in banned_tokens):
         return None
 
     return s
@@ -234,7 +246,7 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
     if not lines:
         return False, "empty file"
 
-    # 1. 头部必须先是 metadata
+    # 1. 第一条非空行必须是 #!name=
     first_nonempty = None
     for line in lines:
         s = line.strip()
@@ -248,17 +260,30 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
     if not first_nonempty.startswith("#!name="):
         return False, "first non-empty line is not #!name="
 
-    # 2. 不允许未展开模板
+    # 2. 不能有未展开模板
     if "{{{" in text or "}}}" in text:
         return False, "contains unresolved template placeholders"
 
-    # 3. 不允许坏行
+    # 3. 不能有明显坏行或残留非 Surge 关键字
+    banned_tokens = [
+        "reject-dict",
+        "reject-200",
+        "response-body-json-jq",
+        "response-body-json-del",
+        "response-body-replace-regex",
+        "jq-path=",
+    ]
+    lower_text = text.lower()
+    for token in banned_tokens:
+        if token in lower_text:
+            return False, f"contains unsupported token: {token}"
+
     for line in lines:
         s = line.strip().lower()
         if s.startswith("ttp-request") or s.startswith("ttp-response"):
             return False, f"contains broken line: {line.strip()}"
 
-    # 4. 必须按模块结构分段
+    # 4. metadata 只能在 section 之前
     current_section = None
     seen_any_section = False
     metadata_phase = True
@@ -288,7 +313,7 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
     if not seen_any_section:
         return False, "no valid sections found"
 
-    # 5. [MITM] 里的 hostname = %APPEND% 只能整行出现一次
+    # 5. MITM 里 %APPEND% 只能在 hostname 行出现一次
     current_section = None
     for raw in lines:
         s = raw.strip()
@@ -299,12 +324,10 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
             current_section = s
             continue
 
-        if current_section == "[MITM]":
-            lower = s.lower()
-            if lower.startswith("hostname"):
-                count = len(re.findall(r"(?i)%\s*append\s*%", s))
-                if count > 1:
-                    return False, "multiple %APPEND% tokens found in MITM hostname line"
+        if current_section == "[MITM]" and s.lower().startswith("hostname"):
+            count = len(re.findall(r"(?i)%\s*append\s*%", s))
+            if count > 1:
+                return False, "multiple %APPEND% tokens found in MITM hostname line"
 
     return True, "ok"
 
@@ -355,7 +378,7 @@ def main() -> int:
             rejected_log.append(f"module_excluded_by_security\t{module_id}\t{module_name}\t{source_url}")
             continue
 
-        # 抽模块里的 REJECT / REJECT-TINYGIF 到 Ad_Block.list
+        # 从模块 [Rule] 抽 REJECT / REJECT-TINYGIF 到 Ad_Block.list
         for rule in module.get("rules", []):
             reject_rule = extract_reject_rule_from_module_rule(rule)
             if not reject_rule:
@@ -432,11 +455,11 @@ def main() -> int:
                 continue
             host_lines.add(s)
 
-    # 先写规则文件：这部分是合并，不是覆盖旧来源池
+    # Ad_Block.list：合并旧文件与本次新增规则，不覆盖
     final_rules = [r for r in dedupe_sorted(merged_rules) if not rule_matches_allowlist(r, allow_hosts)]
     write_lines(AD_BLOCK_LIST, final_rules)
 
-    # 再生成最终模块文本，并校验合法性
+    # Ad_Block.sgmodule：只输出 Surge 合法模块结构
     module_text = build_module_text(
         mitm_hosts=mitm_hosts,
         url_rewrite=url_rewrite,
