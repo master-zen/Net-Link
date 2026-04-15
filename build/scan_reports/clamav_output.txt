@@ -274,7 +274,7 @@ Scanned files: 267
 Infected files: 0
 Data scanned: 27.94 MB
 Data read: 11.87 MB (ratio 2.35:1)
-Time: 12.193 sec (0 m 12 s)
-Start Date: 2026:04:15 19:59:09
-End Date:   2026:04:15 19:59:21
+Time: 11.550 sec (0 m 11 s)
+Start Date: 2026:04:15 20:54:15
+End Date:   2026:04:15 20:54:26
 
