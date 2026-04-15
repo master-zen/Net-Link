@@ -1,0 +1,15 @@
+DOMAIN,dns.alidns.com
+DOMAIN,dns.rubyfish.cn
+DOMAIN,rubyfish.cn
+DOMAIN,doh.360.cn
+DOMAIN,doh.pub
+IP-CIDR,1.12.12.12/32,no-resolve
+IP-CIDR,114.114.114.114/32,no-resolve
+IP-CIDR,223.5.5.5/32,no-resolve
+IP-CIDR,223.6.6.6/32,no-resolve
+IP-CIDR,220.248.179.9/32,no-resolve
+IP-CIDR,119.29.29.29/32,no-resolve
+IP-CIDR,119.29.107.85/32,no-resolve
+IP-CIDR,58.20.127.170/32,no-resolve
+IP-CIDR,58.20.127.238/32,no-resolve
+IP-CIDR,47.96.179.163/32,no-resolve
