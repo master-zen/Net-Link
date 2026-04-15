@@ -1,0 +1,7 @@
+https://easylist-downloads.adblockplus.org/exceptionrules.txt
+https://letyshops.com/adblock.txt
+https://multiup.io/list_adblock.txt
+https://multiup.org/list_adblock.txt
+https://raw.githubusercontent.com/anudeepND/whitelist/master/referral-sites.txt
+https://raw.githubusercontent.com/anudeepND/whitelist/master/whitelist.txt
+https://slickdeals.net/attachment/extension/allowlist.txt

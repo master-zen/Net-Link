@@ -1,0 +1,36 @@
+rules:
+  - id: js-eval
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "Use of eval() is high-risk in downloaded module scripts"
+    pattern: eval(...)
+
+  - id: js-new-function
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: "Use of new Function() is high-risk in downloaded module scripts"
+    pattern: new Function(...)
+
+  - id: js-cookie-read
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: "Reads document.cookie"
+    pattern: document.cookie
+
+  - id: js-localstorage-read
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: "Reads localStorage"
+    pattern: localStorage
+
+  - id: js-xhr
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: "Uses XMLHttpRequest"
+    pattern: new XMLHttpRequest(...)
+
+  - id: js-fetch
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: "Uses fetch()"
+    pattern: fetch(...)
