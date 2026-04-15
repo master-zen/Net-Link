@@ -42,6 +42,27 @@ def canonical_section_name(raw: str) -> str | None:
     return SECTION_ALIASES.get(name)
 
 
+def has_unresolved_template(text: str) -> bool:
+    s = text.strip()
+    return "{{{" in s or "}}}" in s
+
+
+def strip_module_operator_tokens(text: str) -> str:
+
+    return re.sub(r"(?i)%\s*(APPEND|INSERT|REPLACE)\s*%", "", text).strip()
+
+
+def is_obviously_broken_line(text: str) -> bool:
+    s = text.strip().lower()
+    if not s:
+        return True
+    if has_unresolved_template(s):
+        return True
+    if s.startswith("ttp-request") or s.startswith("ttp-response"):
+        return True
+    return False
+
+
 def parse_metadata(lines: list[str]) -> dict[str, str]:
     meta: dict[str, str] = {}
     for line in lines:
@@ -91,11 +112,38 @@ def normalize_mitm_line(line: str) -> list[str]:
         return []
 
     s = line.strip()
+    if is_obviously_broken_line(s):
+        return []
+
     if s.lower().startswith("hostname") and "=" in s:
         s = s.split("=", 1)[1].strip()
 
+    s = strip_module_operator_tokens(s)
+
     parts = [p.strip().lower().lstrip(".") for p in s.split(",") if p.strip()]
-    return [p for p in parts if p]
+    hosts: list[str] = []
+
+    for part in parts:
+        part = strip_module_operator_tokens(part)
+        if not part:
+            continue
+
+        if "%" in part:
+            continue
+
+        if " " in part:
+            tokens = [t.strip().lower().lstrip(".") for t in part.split() if t.strip()]
+            for token in tokens:
+                if token and "%" not in token and ("." in token or "*" in token):
+                    hosts.append(token)
+            continue
+
+        if "." not in part and "*" not in part:
+            continue
+
+        hosts.append(part)
+
+    return hosts
 
 
 def normalize_rewrite_line(line: str) -> str | None:
@@ -103,7 +151,7 @@ def normalize_rewrite_line(line: str) -> str | None:
         return None
 
     s = strip_no_resolve_and_trailing_commas(line.strip())
-    if not s:
+    if not s or is_obviously_broken_line(s):
         return None
 
     # QX-style: ^https://... url reject
@@ -112,12 +160,13 @@ def normalize_rewrite_line(line: str) -> str | None:
         action = right.strip().lower()
 
         if action.startswith("reject"):
-            return f"{left.strip()} - reject"
+            result = f"{left.strip()} - reject"
+            if is_obviously_broken_line(result):
+                return None
+            return result
 
-        # conservative: only keep direct reject mapping
         return None
 
-    # Surge/Loon-style: already a rewrite line
     return s
 
 
@@ -143,12 +192,12 @@ def normalize_script_line(line: str) -> dict | None:
         return None
 
     s = strip_no_resolve_and_trailing_commas(line.strip())
-    if not s:
+    if not s or is_obviously_broken_line(s):
         return None
 
     script_url = extract_script_path(s)
 
-    # QX-style to conservative Surge script
+    # QX-style -> Surge
     if " url script-" in s:
         parts = s.split()
         if len(parts) >= 4:
@@ -173,10 +222,15 @@ def normalize_script_line(line: str) -> dict | None:
                     "script_url": script_url,
                 }
 
-    return {
-        "line": s,
-        "script_url": script_url,
-    }
+    # Surge 风格脚本：至少要有 type/pattern/script-path
+    lower = s.lower()
+    if "script-path=" in lower and "pattern=" in lower and "type=" in lower:
+        return {
+            "line": s,
+            "script_url": script_url,
+        }
+
+    return None
 
 
 def load_url_list(path: Path) -> list[str]:
@@ -242,13 +296,15 @@ def main() -> int:
 
         for line in sections["header_rewrite"]:
             norm = strip_no_resolve_and_trailing_commas(line.strip())
-            if norm and not is_comment_or_empty(norm):
-                header_rewrite.append(norm)
+            if not norm or is_comment_or_empty(norm) or is_obviously_broken_line(norm):
+                continue
+            header_rewrite.append(norm)
 
         for line in sections["body_rewrite"]:
             norm = strip_no_resolve_and_trailing_commas(line.strip())
-            if norm and not is_comment_or_empty(norm):
-                body_rewrite.append(norm)
+            if not norm or is_comment_or_empty(norm) or is_obviously_broken_line(norm):
+                continue
+            body_rewrite.append(norm)
 
         for line in sections["script"]:
             norm = normalize_script_line(line)
@@ -257,8 +313,9 @@ def main() -> int:
 
         for line in sections["host"]:
             norm = strip_no_resolve_and_trailing_commas(line.strip())
-            if norm and not is_comment_or_empty(norm):
-                host_lines.append(norm)
+            if not norm or is_comment_or_empty(norm) or is_obviously_broken_line(norm):
+                continue
+            host_lines.append(norm)
 
         module["mitm_hosts"] = dedupe_sorted(mitm_hosts)
         module["rules"] = dedupe_sorted(rules)
@@ -271,7 +328,6 @@ def main() -> int:
         )
         module["host"] = dedupe_sorted(host_lines)
 
-        # note if module has reject rules to be extracted later
         extracted = [extract_reject_rule_from_module_rule(r) for r in module["rules"]]
         extracted = [r for r in extracted if r]
         if extracted:
