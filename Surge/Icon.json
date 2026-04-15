@@ -1,0 +1,401 @@
+{
+  "name": "Icon ZEN",
+  "icons": [
+    {
+      "name": "AdGuard",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AdGuard.png"
+    },
+    {
+      "name": "Adobe-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Adobe-I.png"
+    },
+    {
+      "name": "Adobe-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Adobe-II.png"
+    },
+    {
+      "name": "Adobe-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Adobe-III.png"
+    },
+    {
+      "name": "Adobe",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Adobe.png"
+    },
+    {
+      "name": "AdobeCreativeCloud",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AdobeCreativeCloud.png"
+    },
+    {
+      "name": "AfreecaTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AfreecaTV.png"
+    },
+    {
+      "name": "AGA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AGA.png"
+    },
+    {
+      "name": "AIA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AIA.png"
+    },
+    {
+      "name": "AirChina",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AirChina.png"
+    },
+    {
+      "name": "Akamai-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Akamai-II.png"
+    },
+    {
+      "name": "Akamai",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Akamai.png"
+    },
+    {
+      "name": "Alibaba",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Alibaba.png"
+    },
+    {
+      "name": "AliPay",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AliPay.png"
+    },
+    {
+      "name": "Amazon-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Amazon-I.png"
+    },
+    {
+      "name": "Amazon-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Amazon-II.png"
+    },
+    {
+      "name": "Amazon-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Amazon-III.png"
+    },
+    {
+      "name": "Amazon-IV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Amazon-IV.png"
+    },
+    {
+      "name": "AMD-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AMD-I.png"
+    },
+    {
+      "name": "AMD-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AMD-II.png"
+    },
+    {
+      "name": "AMD",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AMD.png"
+    },
+    {
+      "name": "AOL",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AOL.png"
+    },
+    {
+      "name": "Apple-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Apple-I.png"
+    },
+    {
+      "name": "Apple-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Apple-II.png"
+    },
+    {
+      "name": "Apple-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Apple-III.png"
+    },
+    {
+      "name": "Apple-IV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Apple-IV.png"
+    },
+    {
+      "name": "Apple",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Apple.png"
+    },
+    {
+      "name": "AppleAppStore",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleAppStore.png"
+    },
+    {
+      "name": "AppleArcade",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleArcade.png"
+    },
+    {
+      "name": "AppleBooks",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleBooks.png"
+    },
+    {
+      "name": "AppleFindMy",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleFindMy.png"
+    },
+    {
+      "name": "AppleFitness+",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleFitness%2B.png"
+    },
+    {
+      "name": "AppleFitness+Letter",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleFitness%2BLetter.png"
+    },
+    {
+      "name": "AppleFitness",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleFitness.png"
+    },
+    {
+      "name": "AppleGameCenter",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleGameCenter.png"
+    },
+    {
+      "name": "AppleHome",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleHome.png"
+    },
+    {
+      "name": "AppleiCloud",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleiCloud.png"
+    },
+    {
+      "name": "AppleiRingo",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleiRingo.png"
+    },
+    {
+      "name": "AppleiTunesStore",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleiTunesStore.png"
+    },
+    {
+      "name": "AppleMail",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleMail.png"
+    },
+    {
+      "name": "AppleMusic",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleMusic.png"
+    },
+    {
+      "name": "AppleNews",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleNews.png"
+    },
+    {
+      "name": "AppleOriginal",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleOriginal.png"
+    },
+    {
+      "name": "ApplePay",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ApplePay.png"
+    },
+    {
+      "name": "AppleSafari-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleSafari-I.png"
+    },
+    {
+      "name": "AppleSafari",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleSafari.png"
+    },
+    {
+      "name": "AppleSiri",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleSiri.png"
+    },
+    {
+      "name": "AppleSpringLoaded",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleSpringLoaded.png"
+    },
+    {
+      "name": "AppleTestFlight-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleTestFlight-I.png"
+    },
+    {
+      "name": "AppleTestFlight-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleTestFlight-II.png"
+    },
+    {
+      "name": "AppleTestFlight",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleTestFlight.png"
+    },
+    {
+      "name": "AppleTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleTV.png"
+    },
+    {
+      "name": "AppleTVPlus",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleTVPlus.png"
+    },
+    {
+      "name": "AppleUpdate",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleUpdate.png"
+    },
+    {
+      "name": "AppleWallet",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleWallet.png"
+    },
+    {
+      "name": "AppleWeather",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleWeather.png"
+    },
+    {
+      "name": "Azure",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Azure.png"
+    },
+    {
+      "name": "Baidu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Baidu.png"
+    },
+    {
+      "name": "BBC",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/BBC.png"
+    },
+    {
+      "name": "Bilibili-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Bilibili-I.png"
+    },
+    {
+      "name": "Bilibili-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Bilibili-II.png"
+    },
+    {
+      "name": "bilibili-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/bilibili-III.png"
+    },
+    {
+      "name": "bilibili-IV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/bilibili-IV.png"
+    },
+    {
+      "name": "Canon-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Canon-I.png"
+    },
+    {
+      "name": "Canon",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Canon.png"
+    },
+    {
+      "name": "CCTV-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CCTV-I.png"
+    },
+    {
+      "name": "CCTV-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CCTV-II.png"
+    },
+    {
+      "name": "CCTV-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CCTV-III.png"
+    },
+    {
+      "name": "CCTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CCTV.png"
+    },
+    {
+      "name": "ChatGPT-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ChatGPT-I.png"
+    },
+    {
+      "name": "ChatGPT",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ChatGPT.png"
+    },
+    {
+      "name": "Cisco-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cisco-I.png"
+    },
+    {
+      "name": "Cisco",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cisco.png"
+    },
+    {
+      "name": "Cloudflare-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cloudflare-I.png"
+    },
+    {
+      "name": "Cloudflare",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cloudflare.png"
+    },
+    {
+      "name": "Clubhouse-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Clubhouse-I.png"
+    },
+    {
+      "name": "Clubhouse-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Clubhouse-II.png"
+    },
+    {
+      "name": "Clubhouse",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Clubhouse.png"
+    },
+    {
+      "name": "CNN",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CNN.png"
+    },
+    {
+      "name": "CNTV-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CNTV-II.png"
+    },
+    {
+      "name": "CNTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CNTV.png"
+    },
+    {
+      "name": "Cryptocurrency-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cryptocurrency-I.png"
+    },
+    {
+      "name": "Cryptocurrency",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cryptocurrency.png"
+    },
+    {
+      "name": "CSDN-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CSDN-I.png"
+    },
+    {
+      "name": "CSDN",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CSDN.png"
+    },
+    {
+      "name": "Ctfile",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ctfile.png"
+    },
+    {
+      "name": "Cydia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cydia.png"
+    },
+    {
+      "name": "Daily",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Daily.png"
+    },
+    {
+      "name": "Dailymotion-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Dailymotion-I.png"
+    },
+    {
+      "name": "Dailymotion",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Dailymotion.png"
+    },
+    {
+      "name": "Damai",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Damai.png"
+    },
+    {
+      "name": "Dangdang",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Dangdang.png"
+    },
+    {
+      "name": "Dazongdianpin",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Dazongdianpin.png"
+    },
+    {
+      "name": "Didi",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Didi.png"
+    },
+    {
+      "name": "Direct",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Direct.png"
+    },
+    {
+      "name": "Discord-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Discord-I.png"
+    },
+    {
+      "name": "Discord-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Discord-II.png"
+    },
+    {
+      "name": "Discord",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Discord.png"
+    },
+    {
+      "name": "Discovery",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Discovery.png"
+    }
+  ]
+}
