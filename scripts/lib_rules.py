@@ -11,8 +11,8 @@ import re
 from pathlib import Path
 from typing import Iterable
 from urllib.parse import quote, urlparse
+from urllib.request import Request, urlopen
 
-import requests
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -29,12 +29,14 @@ SURGE_MODULE_DIR = ROOT / "Surge" / "Module"
 DISCOVERED_MODULE_URLS = BUILD_DIR / "discovered_module_urls.txt"
 DISCOVERED_ALLOWLIST_URLS = BUILD_DIR / "discovered_allowlist_urls.txt"
 NORMALIZED_MODULES_JSON = BUILD_DIR / "normalized_modules.json"
+
 WHITELIST_HOSTS_TXT = BUILD_DIR / "whitelist_hosts.txt"
 REJECTED_RULES_TXT = BUILD_DIR / "rejected_rules.txt"
 SECURITY_SUMMARY_JSON = SCAN_REPORTS_DIR / "security_summary.json"
 
 AD_BLOCK_LIST = SURGE_RULES_DIR / "Ad_Block.list"
 AD_BLOCK_MODULE = SURGE_MODULE_DIR / "Ad_Block.sgmodule"
+
 STAGING_DIR = BUILD_DIR / "staging"
 STAGED_AD_BLOCK_LIST = STAGING_DIR / "Ad_Block.list"
 STAGED_AD_BLOCK_MODULE = STAGING_DIR / "Ad_Block.sgmodule"
@@ -63,7 +65,6 @@ RULE_TYPES = {
 }
 
 MODULE_RULE_POLICIES = {"DIRECT", "REJECT", "REJECT-TINYGIF"}
-
 COMMENT_PREFIXES = ("#", ";", "//", "!")
 
 
@@ -132,7 +133,7 @@ def strip_no_resolve_and_trailing_commas(line: str) -> str:
 def extract_urls_from_text(text: str) -> list[str]:
     urls = []
     for match in URL_RE.findall(text):
-        url = match.strip().rstrip(".,;:)]】）")
+        url = match.strip().rstrip(".,;:)]〗）")
         while url and ord(url[-1]) > 127:
             url = url[:-1]
         if url:
@@ -157,27 +158,37 @@ def github_headers(token: str | None = None) -> dict[str, str]:
     return headers
 
 
+def _read_url_bytes(url: str, headers: dict[str, str] | None = None, timeout: int = 30) -> tuple[bytes, str]:
+    req = Request(url, headers=headers or {})
+    with urlopen(req, timeout=timeout) as resp:
+        data = resp.read()
+        charset = resp.headers.get_content_charset() or "utf-8"
+    return data, charset
+
+
 def request_text(url: str, timeout: int = 30) -> str:
-    resp = requests.get(
+    data, charset = _read_url_bytes(
         url,
-        timeout=timeout,
         headers={"User-Agent": "Net-Link-AdBlock-Automation"},
+        timeout=timeout,
     )
-    resp.raise_for_status()
-    return resp.text
+    return data.decode(charset, errors="replace")
 
 
 def request_json(url: str, token: str | None = None, timeout: int = 30) -> dict:
-    resp = requests.get(url, headers=github_headers(token), timeout=timeout)
-    resp.raise_for_status()
-    return resp.json()
+    data, charset = _read_url_bytes(
+        url,
+        headers=github_headers(token),
+        timeout=timeout,
+    )
+    text = data.decode(charset, errors="replace")
+    return json.loads(text)
 
 
 def parse_github_repo_url(url: str) -> tuple[str, str] | None:
     parsed = urlparse(url)
     if parsed.netloc.lower() != "github.com":
         return None
-
     parts = [p for p in parsed.path.strip("/").split("/") if p]
     if len(parts) < 2:
         return None
@@ -219,6 +230,7 @@ def normalize_ip_or_network_value(value: str) -> tuple[str, str] | None:
     value = value.strip().strip("[]")
     if not value:
         return None
+
     try:
         network = ipaddress.ip_network(value, strict=False)
         if isinstance(network, ipaddress.IPv6Network):
@@ -243,6 +255,7 @@ def normalize_rule_line(line: str, strip_policy: bool = False) -> str | None:
     head = parts[0].upper()
     if head not in RULE_TYPES:
         return None
+
     if len(parts) < 2 or not parts[1]:
         return None
 
@@ -259,6 +272,7 @@ def normalize_rule_line(line: str, strip_policy: bool = False) -> str | None:
 
     if head in {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD"}:
         raw_value = value.lstrip(".") if head == "DOMAIN-SUFFIX" else value
+
         ip_norm = normalize_ip_or_network_value(raw_value)
         if ip_norm:
             head, value = ip_norm
@@ -287,11 +301,13 @@ def extract_reject_rule_from_module_rule(line: str) -> str | None:
     norm = normalize_rule_line(line, strip_policy=False)
     if not norm:
         return None
+
     parts = [p.strip() for p in norm.split(",") if p.strip()]
     if len(parts) < 3:
         return None
     if parts[-1].upper() not in {"REJECT", "REJECT-TINYGIF"}:
         return None
+
     return normalize_rule_line(norm, strip_policy=True)
 
 
@@ -350,6 +366,7 @@ def host_or_parent_matches(host: str, allow_hosts: set[str]) -> bool:
     value = host.strip().lower().lstrip(".")
     if not value:
         return False
+
     if value in allow_hosts:
         return True
 
@@ -358,6 +375,7 @@ def host_or_parent_matches(host: str, allow_hosts: set[str]) -> bool:
         parent = ".".join(labels[idx:])
         if parent in allow_hosts:
             return True
+
     return False
 
 
@@ -373,10 +391,8 @@ def normalized_rule_matches_allowlist(norm: str, allow_hosts: set[str]) -> bool:
 
     if head == "DOMAIN":
         return host_or_parent_matches(value, allow_hosts)
-
     if head == "DOMAIN-SUFFIX":
         return host_or_parent_matches(value, allow_hosts)
-
     if head == "DOMAIN-KEYWORD":
         return any(value in host for host in allow_hosts)
 
