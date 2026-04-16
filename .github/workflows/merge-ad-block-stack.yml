@@ -9,13 +9,13 @@ on:
       - "data/sources/**"
       - "data/allowlists/**"
       - "scripts/**"
-      - ".github/workflows/update-ad-block-stack.yml"
+      - ".github/workflows/merge-ad-block-stack.yml"
 
 permissions:
   contents: write
 
 concurrency:
-  group: update-ad-block-stack-${{ github.ref }}
+  group: merge-ad-block-stack-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -23,18 +23,16 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GH_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
       VT_API_KEY: ${{ secrets.VT_API_KEY }}
       SOCKET_TOKEN: ${{ secrets.SOCKET_TOKEN }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -97,8 +95,4 @@ jobs:
           fi
 
           git commit -m "chore: update ad block stack"
-
-          git fetch origin main
-          git pull --rebase origin main
-
-          git push origin HEAD:main
+          git push
