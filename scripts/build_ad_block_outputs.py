@@ -15,7 +15,6 @@ from lib_rules import (
     DATA_ALLOWLISTS_DIR,
     DISCOVERED_ALLOWLIST_URLS,
     NORMALIZED_MODULES_JSON,
-    NORMALIZED_RULES_JSON,
     REJECTED_RULES_TXT,
     SECURITY_SUMMARY_JSON,
     STAGED_AD_BLOCK_LIST,
@@ -87,13 +86,6 @@ def load_modules() -> list[dict]:
         return []
     data = json.loads(NORMALIZED_MODULES_JSON.read_text(encoding="utf-8"))
     return data.get("modules", [])
-
-
-def load_rule_sources() -> list[dict]:
-    if not NORMALIZED_RULES_JSON.exists():
-        return []
-    data = json.loads(NORMALIZED_RULES_JSON.read_text(encoding="utf-8"))
-    return data.get("sources", [])
 
 
 def load_security_summary() -> dict:
@@ -524,7 +516,6 @@ def build_module_text(
 
     if clean_mitm_hosts:
         lines.append("[MITM]")
-        # use lowercase %append% for consistency and compatibility
         lines.append("hostname = %append% " + ", ".join(clean_mitm_hosts))
         lines.append("")
 
@@ -644,14 +635,11 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
             return False, f"content appears before any section: {s[:120]}"
 
         if current_section == "[MITM]":
-            # allow either "hostname = %append% ..." or "hostname = ..."
             if not s.lower().startswith("hostname ="):
                 return False, f"invalid MITM line: {s}"
             tail = s.split("=", 1)[1].strip()
-            # remove optional %append% token (case-insensitive)
             if tail.lower().startswith("%append%"):
                 tail = tail[len("%append%"):].strip()
-            # tail now should be a comma-separated list of hosts
             host_items = [x.strip() for x in tail.split(",") if x.strip()]
             if not host_items:
                 return False, f"invalid MITM hostname list: {s}"
@@ -690,7 +678,6 @@ def main() -> int:
     BUILD_DIR.mkdir(parents=True, exist_ok=True)
 
     modules = load_modules()
-    rule_sources = load_rule_sources()
     security = load_security_summary()
 
     suspicious_modules = set(security.get("suspicious_modules", []))
@@ -724,21 +711,6 @@ def main() -> int:
     module_argument_items: list[str] = []
     seen_argument_items: set[str] = set()
     argument_catalog: list[dict[str, object]] = []
-
-    for source in rule_sources:
-        source_url = source.get("source_url", "")
-        source_name = source.get("source_name", "")
-        for normalized_rule in source.get("rules", []):
-            if not normalized_rule:
-                continue
-
-            if normalized_rule_matches_allowlist(normalized_rule, allow_hosts):
-                rejected_log.append(
-                    f"raw_rule_removed_by_allowlist\t{normalized_rule}\t{source_name}\t{source_url}"
-                )
-                continue
-
-            merged_rules.add(normalized_rule)
 
     for module in modules:
         module_id = module.get("module_id", "")
@@ -867,7 +839,6 @@ def main() -> int:
                     }
                 )
 
-    # Ad_Block.list：仅由当前发现到的规则源与模块 REJECT 规则构建，避免历史脏数据永久残留
     final_rules = [
         r
         for r in dedupe_sorted(merged_rules)
@@ -878,7 +849,6 @@ def main() -> int:
     write_lines(STAGED_AD_BLOCK_LIST, final_rules)
     write_text(ARGUMENT_CATALOG_JSON, json.dumps(argument_catalog, ensure_ascii=False, indent=2) + "\n")
 
-    # Ad_Block.sgmodule：只输出 Surge 官方白名单语法
     arguments_text = "&".join(module_argument_items)
     module_text = build_module_text(
         arguments_text=arguments_text,
