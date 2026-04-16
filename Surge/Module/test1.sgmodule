@@ -1,0 +1,4 @@
+#!name=Ad-Block
+#!desc=Auto-merged, normalized, deduplicated and security-scanned ad blocking module for Surge
+#!system=iOS
+#!requirement=CORE_VERSION>=20
