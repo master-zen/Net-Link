@@ -23,16 +23,18 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      GH_TOKEN: ${{ github.token }}
       VT_API_KEY: ${{ secrets.VT_API_KEY }}
       SOCKET_TOKEN: ${{ secrets.SOCKET_TOKEN }}
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
@@ -95,4 +97,8 @@ jobs:
           fi
 
           git commit -m "chore: update ad block stack"
-          git push
+
+          git fetch origin main
+          git pull --rebase origin main
+
+          git push origin HEAD:main
