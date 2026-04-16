@@ -425,6 +425,7 @@ DOMAIN,open.demonii.si
 DOMAIN,open.demonoid.ch
 DOMAIN,open.dstud.io
 DOMAIN,open.free-tracker.ga
+DOMAIN,open.ftorrent.com
 DOMAIN,open.kickasstracker.com
 DOMAIN,open.lolicon.eu
 DOMAIN,open.miotracker.com
@@ -1339,6 +1340,7 @@ IP-CIDR,110.187.214.6/32,no-resolve
 IP-CIDR,110.187.215.166/32,no-resolve
 IP-CIDR,111.90.151.241/32,no-resolve
 IP-CIDR,113.13.6.40/32,no-resolve
+IP-CIDR,113.16.155.116/32,no-resolve
 IP-CIDR,113.16.155.146/32,no-resolve
 IP-CIDR,113.17.152.163/32,no-resolve
 IP-CIDR,114.55.113.60/32,no-resolve

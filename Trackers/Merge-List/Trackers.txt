@@ -4,6 +4,7 @@ http://00.xxtor.com:443/announce
 http://004430.xyz/announce
 http://004430.xyz:80/announce
 http://0123456789nonexistent.com/announce
+http://0123456789nonexistent.com:80/announce
 http://0205.uptm.ch:6969/announce
 http://0d.kebhana.mx:443/announce
 http://0x7c.space:7070/announce
@@ -30,6 +31,7 @@ http://110.187.214.29:6969/announce
 http://110.187.214.6:6969/announce
 http://110.187.215.166:6969/announce
 http://113.13.6.40:6969/announce
+http://113.16.155.116:6969/announce
 http://113.16.155.146:6969/announce
 http://113.17.152.163:6969/announce
 http://114.55.113.60:6969/announce
@@ -915,6 +917,7 @@ http://joczo.duckdns.org:6969/announce
 http://jp.moeweb.pw:6969/announce
 http://jsb.by00/announce
 http://jvavav.com/announce
+http://jvavav.com:80/announce
 http://kamikazee.duckdns.org:7777/announce
 http://kinorun.com/announce
 http://kiryuu-test.mywaifu.best:6969/announce
@@ -1015,6 +1018,7 @@ http://retracker.ohys.net/announce
 http://retracker.seven-sky.net/announce
 http://retracker.sevstar.net:2710/announce
 http://retracker.spark-rostov.ru/announce
+http://retracker.spark-rostov.ru:80/announce
 http://retracker.telecom.by/announce
 http://retracker.x2k.ru/announce
 http://retracker.xxtor.com/announce
@@ -1107,9 +1111,9 @@ http://tr.cili001.com:8070/announce
 http://tr.highstar.shop/announce
 http://tr.highstar.shop:80/announce
 http://tr.kxmp.cf/announce
+http://tr.kxmp.cf:80/announce
 http://tr.nyacat.pw/announce
 http://tr.nyacat.pw:443/announce
-http://tr.nyacat.pw:80/announce
 http://tr1.aag.moe:2095/announce
 http://tracker-cdn.moeking.me:2095/announce
 http://tracker-rh.zhuqiy.eu.org/announce
@@ -1151,6 +1155,7 @@ http://tracker.btcake.com/announce
 http://tracker.btsync.gq:233/announce
 http://tracker.btzero.net:8080/announce
 http://tracker.bz/announce
+http://tracker.bz:80/announce
 http://tracker.calculate.ru:6969/announce
 http://tracker.ccc.de/announce
 http://tracker.ccp.ovh:6969/announce
@@ -1160,7 +1165,6 @@ http://tracker.computel.fr/announce
 http://tracker.coppersurfer.site:2710/announce
 http://tracker.coppersurfer.tk:6969/announce
 http://tracker.corpscorp.online/announce
-http://tracker.corpscorp.online:80/announce
 http://tracker.cubicview.site/announce
 http://tracker.cubonegro.org/announce
 http://tracker.cutie.dating/announce
@@ -1211,7 +1215,6 @@ http://tracker.ilibr.org/announce
 http://tracker.imgdump.lol:6969/announce
 http://tracker.internetwarriors.net:1337/announce
 http://tracker.ipv6tracker.org/announce
-http://tracker.ipv6tracker.org:80/announce
 http://tracker.ipv6tracker.ru/announce
 http://tracker.iro.moe/announce
 http://tracker.ismaarino.com:8880/announce
@@ -1339,6 +1342,7 @@ http://tracker.zhuqiy.com/announce
 http://tracker.zhuqiy.com:443/announce
 http://tracker.zhuqiy.com:80/announce
 http://tracker.zhuqiy.dgj055.icu/announce
+http://tracker.zhuqiy.dgj055.icu:80/announce
 http://tracker.zhuqiy.eu.org:36107/announce
 http://tracker.zhuqiy.top/announce
 http://tracker01.loveapp.com:6789/announce
@@ -1519,6 +1523,7 @@ https://chihaya-heroku.120181311.xyz/announce
 https://chihaya.de/announce
 https://cny.fan/announce
 https://colibri.parrot.run/announce
+https://colibri.parrot.run:443/announce
 https://danielcloud.ddns.net/announce
 https://dev.tracker.cf-identity-wallet.metadata.dev.cf-deployments.org/announce
 https://docker-tracker-production.up.railway.app/announce
@@ -1634,7 +1639,6 @@ https://tr.highstar.shop/announce
 https://tr.kxmp.cf/announce
 https://tr.kxmp.cf:80/announce
 https://tr.nyacat.pw/announce
-https://tr.nyacat.pw:443/announce
 https://tr.qfruiti.com/announce
 https://tr.qfruiti.in/announce
 https://tr.ready4.icu/announce
@@ -1678,7 +1682,6 @@ https://tracker.coalition.space/announce
 https://tracker.coalition.space:443/announce
 https://tracker.crawfish.cf/announce
 https://tracker.cutie.dating/announce
-https://tracker.cutie.dating:443/announce
 https://tracker.cybar.xyz/announce
 https://tracker.cyber-hub.net/announce
 https://tracker.dev-null.rocks/announce
@@ -1704,7 +1707,6 @@ https://tracker.foreverpirates.co:443/announce
 https://tracker.fr.eu.org/announce
 https://tracker.gbitt.info/announce
 https://tracker.gcrenwp.top/announce
-https://tracker.gcrenwp.top:443/announce
 https://tracker.gcrreen.xyz/announce
 https://tracker.ghostchu-services.top/announce
 https://tracker.ghostchu-services.top:443/announce
@@ -1817,7 +1819,6 @@ https://tracker.vectahosting.eu:8443/announce
 https://tracker.wsaoa.eu.org/announce
 https://tracker.yarr.pt/announce
 https://tracker.yemekyedim.com/announce
-https://tracker.yemekyedim.com:443/announce
 https://tracker.yggleak.top/announce
 https://tracker.yggleak.top:443/announce
 https://tracker.yoshi210.com:6969/announce
@@ -2864,6 +2865,7 @@ udp://open.demonii.si:80/announce
 udp://open.demonoid.ch:6969/announce
 udp://open.dstud.io:6969/announce
 udp://open.free-tracker.ga:6969/announce
+udp://open.ftorrent.com:443/announce
 udp://open.nyap2p.com:6969/announce
 udp://open.publictracker.xyz:6969/announce
 udp://open.stealth.si/announce
