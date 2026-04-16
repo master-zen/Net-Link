@@ -1,6 +1,5 @@
 #!name=Ad Block
 #!desc=Auto-merged, normalized, deduplicated and security-scanned ad blocking module for Surge
-#!system=iOS
 #!author=master-zen
 #!icon=https://raw.githubusercontent.com/master-zen/Net-Link/refs/heads/main/Surge/Icon/Strategy_ADVertising.png
 #!category=AD Block
