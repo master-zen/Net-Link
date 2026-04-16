@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+from datetime import datetime, timezone
 import ipaddress
 import json
 import re
@@ -16,10 +17,14 @@ from lib_rules import (
     NORMALIZED_MODULES_JSON,
     REJECTED_RULES_TXT,
     SECURITY_SUMMARY_JSON,
+    STAGED_AD_BLOCK_LIST,
+    STAGED_AD_BLOCK_MODULE,
     WHITELIST_HOSTS_TXT,
     dedupe_sorted,
     ensure_project_dirs,
     extract_reject_rule_from_module_rule,
+    expand_hosts_with_parents,
+    is_comment_or_empty,
     line_matches_any_regex,
     line_mentions_allowlisted_host,
     normalize_rule_line,
@@ -32,11 +37,17 @@ from lib_rules import (
     write_text,
 )
 
-MODULE_HEADER = """#!name=Ad Block
-#!desc=Auto-merged, normalized, deduplicated and security-scanned ad blocking module for Surge
-#!system=iOS
-#!requirement=CORE_VERSION>=20
-"""
+STANDARD_MODULE_STATIC_HEADER_LINES = [
+    "#!name=Ad Block",
+    "#!desc=Auto-merged, normalized, deduplicated and security-scanned ad blocking module for Surge",
+    "#!author=master-zen",
+    "#!icon=https://raw.githubusercontent.com/master-zen/Net-Link/refs/heads/main/Surge/Icon/Strategy_ADVertising.png",
+    "#!category=AD Block",
+    "#!openUrl=https://apps.apple.com/us/app/surge-5/id1442620678",
+    "#!tag=AD Block",
+    "#!homepage=https://github.com/master-zen/Net-Link/",
+]
+HEADER_DATE_RE = re.compile(r"^#!date=\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$")
 
 VALID_SECTION_HEADERS = {
     "[MITM]",
@@ -56,6 +67,7 @@ BODY_REWRITE_RE = re.compile(
     r"^(http-request|http-response|http-request-jq|http-response-jq)\s+\S+",
     re.IGNORECASE,
 )
+SCRIPT_FIELD_SPLIT_RE = re.compile(r",\s*(?=[a-z-]+=)", re.IGNORECASE)
 HOST_MAPPING_RE = re.compile(
     r"""^(
         DOMAIN-SET:[^=\s]+|
@@ -82,13 +94,26 @@ def load_security_summary() -> dict:
     return json.loads(SECURITY_SUMMARY_JSON.read_text(encoding="utf-8"))
 
 
-def load_existing_rules() -> set[str]:
-    rules: set[str] = set()
-    for line in read_lines(AD_BLOCK_LIST):
-        norm = normalize_rule_line(line, strip_policy=True)
-        if norm:
-            rules.add(norm)
-    return rules
+def build_converted_script_url_map(security: dict) -> dict[str, str]:
+    mapping: dict[str, str] = {}
+    for item in security.get("downloaded_scripts", []):
+        source_url = (item.get("script_url") or "").strip()
+        converted_url = (item.get("converted_url") or "").strip()
+        if source_url and converted_url:
+            mapping[source_url] = converted_url
+    return mapping
+
+
+def build_reachable_script_urls(security: dict) -> set[str]:
+    reachable: set[str] = set()
+    for item in security.get("downloaded_scripts", []):
+        script_url = (item.get("script_url") or "").strip()
+        if script_url:
+            reachable.add(script_url)
+        converted_url = (item.get("converted_url") or "").strip()
+        if converted_url:
+            reachable.add(converted_url)
+    return reachable
 
 
 def load_allowlist_hosts_from_remote() -> set[str]:
@@ -181,9 +206,22 @@ def looks_like_regex_residue(value: str) -> bool:
     return any(x in lower for x in bad_substrings)
 
 
+def unwrap_quoted_token(value: str) -> str:
+    s = value.strip()
+    if len(s) >= 2 and s[0] == s[-1] and s[0] in {'"', "'"}:
+        return s[1:-1]
+    return s
+
+
+def has_domain_like_letters(value: str) -> bool:
+    return any(ch.isalpha() for ch in value)
+
+
 def sanitize_mitm_host(host: str) -> str | None:
     s = host.strip().lower().lstrip(".")
     if not s:
+        return None
+    if is_comment_or_empty(s):
         return None
     if "%" in s or "{{{" in s or "}}}" in s:
         return None
@@ -212,6 +250,8 @@ def sanitize_mitm_host(host: str) -> str | None:
         return None
     if looks_like_regex_residue(host_part):
         return None
+    if not has_domain_like_letters(host_part.replace("*", "").replace("?", "")):
+        return None
     if not re.fullmatch(r"[*?a-z0-9._-]+", host_part):
         return None
     if "." not in host_part and "*" not in host_part and "?" not in host_part:
@@ -223,6 +263,8 @@ def sanitize_mitm_host(host: str) -> str | None:
 def sanitize_url_rewrite_line(line: str) -> str | None:
     s = line.strip()
     if not s:
+        return None
+    if is_comment_or_empty(s):
         return None
     if "{{{" in s or "}}}" in s:
         return None
@@ -247,12 +289,19 @@ def sanitize_url_rewrite_line(line: str) -> str | None:
     if rewrite_type not in {"header", "302", "reject"}:
         return None
 
-    return s
+    pattern = unwrap_quoted_token(parts[0])
+    replacement = unwrap_quoted_token(" ".join(parts[1:-1]).strip())
+    if not pattern or not replacement:
+        return None
+
+    return f"{pattern} {replacement} {rewrite_type}"
 
 
 def sanitize_header_line(line: str) -> str | None:
     s = line.strip()
     if not s:
+        return None
+    if is_comment_or_empty(s):
         return None
     if "{{{" in s or "}}}" in s:
         return None
@@ -262,6 +311,8 @@ def sanitize_header_line(line: str) -> str | None:
 def sanitize_body_line(line: str) -> str | None:
     s = line.strip()
     if not s:
+        return None
+    if is_comment_or_empty(s):
         return None
     if "{{{" in s or "}}}" in s:
         return None
@@ -282,18 +333,32 @@ def sanitize_script_line(line: str) -> str | None:
     s = line.strip()
     if not s:
         return None
+    if is_comment_or_empty(s):
+        return None
     if "{{{" in s or "}}}" in s:
         return None
 
-    lower = s.lower()
+    if "=" not in s:
+        return None
+
+    name, rhs = s.split("=", 1)
+    name = name.strip()
+    rhs = rhs.strip()
+    if not name or any(ch in name for ch in "[]"):
+        return None
+
+    lower = rhs.lower()
     if "type=" not in lower or "pattern=" not in lower or "script-path=" not in lower:
         return None
-    return s
+
+    return f"{name} = {rhs}"
 
 
 def sanitize_host_mapping_line(line: str) -> str | None:
     s = line.strip()
     if not s:
+        return None
+    if is_comment_or_empty(s):
         return None
     if "{{{" in s or "}}}" in s:
         return None
@@ -302,7 +367,118 @@ def sanitize_host_mapping_line(line: str) -> str | None:
     return s if HOST_MAPPING_RE.match(s) else None
 
 
+def split_argument_items(raw: str) -> list[str]:
+    text = raw.strip()
+    if not text:
+        return []
+
+    items: list[str] = []
+    current: list[str] = []
+    quote = ""
+
+    for ch in text:
+        if quote:
+            current.append(ch)
+            if ch == quote:
+                quote = ""
+            continue
+
+        if ch in {'"', "'"}:
+            quote = ch
+            current.append(ch)
+            continue
+
+        if ch in {",", "，"}:
+            item = "".join(current).strip()
+            if item:
+                items.append(item)
+            current = []
+            continue
+
+        current.append(ch)
+
+    tail = "".join(current).strip()
+    if tail:
+        items.append(tail)
+
+    return items
+
+
+def collect_module_argument_items(module: dict) -> list[str]:
+    metadata = module.get("metadata") or {}
+    raw = str(metadata.get("arguments") or "").strip()
+    return split_argument_items(raw)
+
+
+def build_standard_module_header(arguments_text: str) -> str:
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    lines = list(STANDARD_MODULE_STATIC_HEADER_LINES)
+    lines.append(f"#!date={timestamp}")
+    lines.append(f"#!arguments={arguments_text}")
+    return "\n".join(lines)
+
+
+def parse_script_line(line: str) -> tuple[str, dict[str, str]] | None:
+    s = sanitize_script_line(line)
+    if not s or "=" not in s:
+        return None
+
+    name, rhs = s.split("=", 1)
+    name = name.strip()
+    rhs = rhs.strip()
+    fields: dict[str, str] = {}
+
+    for part in SCRIPT_FIELD_SPLIT_RE.split(rhs):
+        if "=" not in part:
+            continue
+        key, value = part.split("=", 1)
+        fields[key.strip().lower()] = value.strip()
+
+    if not {"type", "pattern", "script-path"} <= set(fields):
+        return None
+
+    return name, fields
+
+
+def replace_script_path(line: str, new_url: str) -> str:
+    if not new_url:
+        return line
+    return re.sub(r"(script-path=)([^,]+)", lambda m: m.group(1) + new_url, line, count=1)
+
+
+def normalize_script_field_value(key: str, value: str) -> str:
+    normalized = unwrap_quoted_token(value.strip())
+    lower_key = key.lower()
+    if lower_key == "type":
+        return normalized.lower()
+    if lower_key in {"requires-body", "binary-body-mode"}:
+        lowered = normalized.lower()
+        if lowered in {"1", "true", "yes"}:
+            return "1"
+        if lowered in {"0", "false", "no"}:
+            return "0"
+    return normalized
+
+
+def semantic_script_key(line: str) -> tuple[str, ...] | None:
+    parsed = parse_script_line(line)
+    if not parsed:
+        return None
+
+    _, fields = parsed
+    relevant = (
+        "type",
+        "pattern",
+        "script-path",
+        "argument",
+        "requires-body",
+        "binary-body-mode",
+    )
+    return tuple(normalize_script_field_value(key, fields.get(key, "")) for key in relevant)
+
+
 def build_module_text(
+    arguments_text: str,
     mitm_hosts: set[str],
     url_rewrite: set[str],
     header_rewrite: set[str],
@@ -310,7 +486,7 @@ def build_module_text(
     scripts: set[str],
     host_lines: set[str],
 ) -> str:
-    lines: list[str] = [MODULE_HEADER.strip(), ""]
+    lines: list[str] = [build_standard_module_header(arguments_text), ""]
 
     clean_mitm_hosts = [
         h for h in (sanitize_mitm_host(x) for x in sorted(mitm_hosts, key=lambda s: s.casefold()))
@@ -319,7 +495,8 @@ def build_module_text(
 
     if clean_mitm_hosts:
         lines.append("[MITM]")
-        lines.append("hostname = %APPEND% " + ", ".join(clean_mitm_hosts))
+        # use lowercase %append% for consistency and compatibility
+        lines.append("hostname = %append% " + ", ".join(clean_mitm_hosts))
         lines.append("")
 
     clean_url_rewrite = [
@@ -378,18 +555,35 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
     if not lines:
         return False, "empty file"
 
-    first_nonempty = None
-    for line in lines:
-        s = line.strip()
-        if s:
-            first_nonempty = s
+    metadata_lines: list[str] = []
+    for raw in lines:
+        s = raw.strip()
+        if not s:
+            continue
+        if s.startswith("[") and s.endswith("]"):
             break
+        if s.startswith("#!"):
+            metadata_lines.append(s)
+            continue
+        return False, f"content appears before metadata or section: {s[:120]}"
 
-    if first_nonempty is None:
-        return False, "empty file"
+    if not metadata_lines:
+        return False, "missing metadata header"
 
-    if not first_nonempty.startswith("#!name="):
-        return False, "first non-empty line is not #!name="
+    expected_metadata_count = len(STANDARD_MODULE_STATIC_HEADER_LINES) + 2
+    if len(metadata_lines) != expected_metadata_count:
+        return False, f"unexpected metadata header length: {len(metadata_lines)}"
+
+    if metadata_lines[: len(STANDARD_MODULE_STATIC_HEADER_LINES)] != STANDARD_MODULE_STATIC_HEADER_LINES:
+        return False, "metadata header does not match required standard header"
+
+    date_line = metadata_lines[len(STANDARD_MODULE_STATIC_HEADER_LINES)]
+    if not HEADER_DATE_RE.match(date_line):
+        return False, f"invalid standard date header: {date_line}"
+
+    arguments_line = metadata_lines[len(STANDARD_MODULE_STATIC_HEADER_LINES) + 1]
+    if not arguments_line.startswith("#!arguments="):
+        return False, f"missing standard arguments header: {arguments_line}"
 
     if "{{{" in text or "}}}" in text:
         return False, "contains unresolved template placeholders"
@@ -421,9 +615,17 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
             return False, f"content appears before any section: {s[:120]}"
 
         if current_section == "[MITM]":
-            if not s.lower().startswith("hostname = %append% "):
+            # allow either "hostname = %append% ..." or "hostname = ..."
+            if not s.lower().startswith("hostname ="):
                 return False, f"invalid MITM line: {s}"
-            host_items = [x.strip() for x in s.split("=", 1)[1].strip()[9:].split(",")]
+            tail = s.split("=", 1)[1].strip()
+            # remove optional %append% token (case-insensitive)
+            if tail.lower().startswith("%append%"):
+                tail = tail[len("%append%"):].strip()
+            # tail now should be a comma-separated list of hosts
+            host_items = [x.strip() for x in tail.split(",") if x.strip()]
+            if not host_items:
+                return False, f"invalid MITM hostname list: {s}"
             for item in host_items:
                 if not sanitize_mitm_host(item):
                     return False, f"invalid MITM hostname item: {item}"
@@ -463,6 +665,8 @@ def main() -> int:
 
     suspicious_modules = set(security.get("suspicious_modules", []))
     suspicious_hashes = set(security.get("suspicious_script_hashes", []))
+    converted_script_urls = build_converted_script_url_map(security)
+    reachable_script_urls = build_reachable_script_urls(security)
     suspicious_script_urls = {
         item.get("script_url", "")
         for item in security.get("downloaded_scripts", [])
@@ -471,21 +675,24 @@ def main() -> int:
 
     allow_hosts = load_allowlist_hosts_from_remote()
     allow_hosts |= load_local_allowlist_hosts()
+    allow_hosts = expand_hosts_with_parents(allow_hosts)
     allow_hosts = set(dedupe_sorted(allow_hosts))
     write_lines(WHITELIST_HOSTS_TXT, sorted(allow_hosts, key=lambda s: s.casefold()))
 
     allow_regexes = load_local_allowlist_regexes()
     allow_module_ids = load_local_module_ids()
 
-    merged_rules = load_existing_rules()
+    merged_rules: set[str] = set()
     rejected_log: list[str] = []
 
     mitm_hosts: set[str] = set()
     url_rewrite: set[str] = set()
     header_rewrite: set[str] = set()
     body_rewrite: set[str] = set()
-    script_lines: set[str] = set()
+    script_lines_by_key: dict[tuple[str, ...] | str, str] = {}
     host_lines: set[str] = set()
+    module_argument_items: list[str] = []
+    seen_argument_items: set[str] = set()
 
     for module in modules:
         module_id = module.get("module_id", "")
@@ -499,6 +706,12 @@ def main() -> int:
         if module_id in suspicious_modules:
             rejected_log.append(f"module_excluded_by_security\t{module_id}\t{module_name}\t{source_url}")
             continue
+
+        for argument_item in collect_module_argument_items(module):
+            if argument_item in seen_argument_items:
+                continue
+            seen_argument_items.add(argument_item)
+            module_argument_items.append(argument_item)
 
         # 从模块 [Rule] 抽 REJECT / REJECT-TINYGIF 到 Ad_Block.list
         for rule in module.get("rules", []):
@@ -516,7 +729,8 @@ def main() -> int:
             host = sanitize_mitm_host(host or "")
             if not host:
                 continue
-            if host in allow_hosts or any(h == host or h.endswith("." + host) for h in allow_hosts):
+            host_plain = host.lstrip("-")
+            if any(host_plain == h or host_plain.endswith("." + h) for h in allow_hosts):
                 rejected_log.append(f"mitm_removed_by_allowlist\t{host}\t{module_id}\t{source_url}")
                 continue
             mitm_hosts.add(host)
@@ -555,6 +769,10 @@ def main() -> int:
             if not line:
                 continue
 
+            if script_url.startswith(("http://", "https://")) and script_url not in reachable_script_urls:
+                rejected_log.append(f"script_removed_unreachable\t{script_url}\t{module_id}\t{source_url}")
+                continue
+
             if script_url and script_url in suspicious_script_urls:
                 rejected_log.append(f"script_removed_by_security\t{script_url}\t{module_id}\t{source_url}")
                 continue
@@ -563,7 +781,13 @@ def main() -> int:
                 rejected_log.append(f"script_removed_by_allowlist\t{line}\t{module_id}\t{source_url}")
                 continue
 
-            script_lines.add(line)
+            if script_url in converted_script_urls:
+                line = replace_script_path(line, converted_script_urls[script_url])
+
+            key = semantic_script_key(line) or line
+            existing = script_lines_by_key.get(key)
+            if existing is None or line.casefold() < existing.casefold():
+                script_lines_by_key[key] = line
 
         for line in module.get("host", []):
             s = sanitize_host_mapping_line(line)
@@ -574,17 +798,25 @@ def main() -> int:
                 continue
             host_lines.add(s)
 
-    # Ad_Block.list：合并旧文件和本次新增，不覆盖
-    final_rules = [r for r in dedupe_sorted(merged_rules) if not rule_matches_allowlist(r, allow_hosts)]
-    write_lines(AD_BLOCK_LIST, final_rules)
+    # Ad_Block.list：仅由当前发现到的模块规则构建，避免历史脏数据永久残留
+    final_rules = [
+        r
+        for r in dedupe_sorted(merged_rules)
+        if not rule_matches_allowlist(r, allow_hosts)
+        and not line_mentions_allowlisted_host(r, allow_hosts)
+        and not line_matches_any_regex(r, allow_regexes)
+    ]
+    write_lines(STAGED_AD_BLOCK_LIST, final_rules)
 
     # Ad_Block.sgmodule：只输出 Surge 官方白名单语法
+    arguments_text = ",".join(module_argument_items)
     module_text = build_module_text(
+        arguments_text=arguments_text,
         mitm_hosts=mitm_hosts,
         url_rewrite=url_rewrite,
         header_rewrite=header_rewrite,
         body_rewrite=body_rewrite,
-        scripts=script_lines,
+        scripts=set(script_lines_by_key.values()),
         host_lines=host_lines,
     )
 
@@ -592,11 +824,11 @@ def main() -> int:
     if not ok:
         raise RuntimeError(f"Generated invalid Surge module: {reason}")
 
-    write_text(AD_BLOCK_MODULE, module_text)
+    write_text(STAGED_AD_BLOCK_MODULE, module_text)
     write_lines(REJECTED_RULES_TXT, rejected_log)
 
-    print(f"Wrote {AD_BLOCK_LIST} with {len(final_rules)} rules.")
-    print(f"Wrote {AD_BLOCK_MODULE}")
+    print(f"Wrote {STAGED_AD_BLOCK_LIST} with {len(final_rules)} rules.")
+    print(f"Wrote {STAGED_AD_BLOCK_MODULE}")
     print(f"Wrote {REJECTED_RULES_TXT} with {len(rejected_log)} entries.")
     return 0
 

@@ -3,8 +3,10 @@
 
 from __future__ import annotations
 
+import os
 import ipaddress
 import re
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -13,6 +15,7 @@ from lib_rules import (
     NORMALIZED_MODULES_JSON,
     dedupe_sorted,
     ensure_project_dirs,
+    is_comment_or_empty,
     normalize_rule_line,
     request_text,
     save_json,
@@ -157,6 +160,17 @@ def looks_like_regex_residue(value: str) -> bool:
     return any(x in lower for x in bad_substrings)
 
 
+def unwrap_quoted_token(value: str) -> str:
+    s = value.strip()
+    if len(s) >= 2 and s[0] == s[-1] and s[0] in {'"', "'"}:
+        return s[1:-1]
+    return s
+
+
+def has_domain_like_letters(value: str) -> bool:
+    return any(ch.isalpha() for ch in value)
+
+
 def normalize_hostlist_item(value: str) -> str | None:
     item = value.strip().lower().lstrip(".")
     item = strip_module_operator_tokens(item)
@@ -195,6 +209,10 @@ def normalize_hostlist_item(value: str) -> str | None:
     if looks_like_regex_residue(host_part):
         return None
 
+    # Host List is for hostnames plus wildcards, not raw IP patterns like 1.2.3.*
+    if not has_domain_like_letters(host_part.replace("*", "").replace("?", "")):
+        return None
+
     # Host List 允许 * ? 通配
     if not re.fullmatch(r"[*?a-z0-9._-]+", host_part):
         return None
@@ -210,6 +228,8 @@ def is_obviously_broken_line(text: str) -> bool:
     lower = s.lower()
 
     if not s:
+        return True
+    if is_comment_or_empty(s):
         return True
     if has_unresolved_template(s):
         return True
@@ -281,11 +301,15 @@ def normalize_url_rewrite_line(line: str) -> str | None:
     if rewrite_type not in {"header", "302", "reject"}:
         return None
 
-    pattern = parts[0]
+    pattern = unwrap_quoted_token(parts[0])
     if not pattern:
         return None
 
-    return s
+    replacement = unwrap_quoted_token(" ".join(parts[1:-1]).strip())
+    if not replacement:
+        return None
+
+    return f"{pattern} {replacement} {rewrite_type}"
 
 
 def extract_script_path(line: str) -> str | None:
@@ -329,9 +353,18 @@ def normalize_script_line(line: str) -> dict | None:
                 }
 
     lower = s.lower()
-    if "type=" in lower and "pattern=" in lower and "script-path=" in lower:
+    if "=" in s:
+        name, rhs = s.split("=", 1)
+        name = name.strip()
+        rhs = rhs.strip()
+    else:
+        name = ""
+        rhs = s
+
+    lower_rhs = rhs.lower()
+    if name and "type=" in lower_rhs and "pattern=" in lower_rhs and "script-path=" in lower_rhs:
         return {
-            "line": s,
+            "line": f"{name} = {rhs}",
             "script_url": script_url,
         }
 
@@ -407,112 +440,139 @@ def module_name_from_url(url: str) -> str:
     return Path(path).stem
 
 
+def normalize_module_from_url(url: str) -> dict:
+    result = {
+        "source_url": url,
+        "module": None,
+        "skip_reason": "",
+    }
+
+    try:
+        text = request_text(url)
+    except Exception as exc:
+        result["skip_reason"] = f"fetch_failed:{type(exc).__name__}"
+        return result
+
+    sections, metadata = split_sections(text)
+
+    module = {
+        "module_id": stable_module_id(url),
+        "source_url": url,
+        "module_name": metadata.get("name") or module_name_from_url(url),
+        "metadata": metadata,
+        "mitm_hosts": [],
+        "rules": [],
+        "url_rewrite": [],
+        "header_rewrite": [],
+        "body_rewrite": [],
+        "scripts": [],
+        "host": [],
+        "notes": [],
+    }
+
+    mitm_hosts: list[str] = []
+    rules: list[str] = []
+    url_rewrite: list[str] = []
+    header_rewrite: list[str] = []
+    body_rewrite: list[str] = []
+    scripts: list[dict] = []
+    host_lines: list[str] = []
+
+    for line in sections["mitm"]:
+        mitm_hosts.extend(normalize_mitm_line(line))
+
+    for line in sections["rule"]:
+        norm = normalize_rule_line(line, strip_policy=False)
+        if norm:
+            rules.append(norm)
+
+    for line in sections["url_rewrite"]:
+        norm = normalize_url_rewrite_line(line)
+        if norm:
+            url_rewrite.append(norm)
+
+    for line in sections["header_rewrite"]:
+        norm = normalize_header_line(line)
+        if norm:
+            header_rewrite.append(norm)
+
+    for line in sections["body_rewrite"]:
+        norm = normalize_body_line(line)
+        if norm:
+            body_rewrite.append(norm)
+
+    for line in sections["script"]:
+        norm = normalize_script_line(line)
+        if norm:
+            scripts.append(norm)
+
+    for line in sections["host"]:
+        norm = normalize_host_line(line)
+        if norm:
+            host_lines.append(norm)
+
+    module["mitm_hosts"] = dedupe_sorted(mitm_hosts)
+    module["rules"] = dedupe_sorted(rules)
+    module["url_rewrite"] = dedupe_sorted(url_rewrite)
+    module["header_rewrite"] = dedupe_sorted(header_rewrite)
+    module["body_rewrite"] = dedupe_sorted(body_rewrite)
+    module["scripts"] = sorted(
+        {f'{item["line"]}\u0000{item.get("script_url","")}': item for item in scripts}.values(),
+        key=lambda x: x["line"].casefold(),
+    )
+    module["host"] = dedupe_sorted(host_lines)
+
+    if not any(
+        [
+            module["mitm_hosts"],
+            module["rules"],
+            module["url_rewrite"],
+            module["header_rewrite"],
+            module["body_rewrite"],
+            module["scripts"],
+            module["host"],
+        ]
+    ):
+        result["skip_reason"] = "no_supported_sections"
+        return result
+
+    result["module"] = module
+    return result
+
+
 def main() -> int:
     ensure_project_dirs()
 
     urls = read_url_list(DISCOVERED_MODULE_URLS)
-    modules: list[dict] = []
+    max_workers = max(4, min(16, (os.cpu_count() or 4) * 2))
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        outcomes = list(executor.map(normalize_module_from_url, urls))
 
-    for url in urls:
-        try:
-            text = request_text(url)
-        except Exception:
-            continue
-
-        sections, metadata = split_sections(text)
-
-        module = {
-            "module_id": stable_module_id(url),
-            "source_url": url,
-            "module_name": metadata.get("name") or module_name_from_url(url),
-            "metadata": metadata,
-            "mitm_hosts": [],
-            "rules": [],
-            "url_rewrite": [],
-            "header_rewrite": [],
-            "body_rewrite": [],
-            "scripts": [],
-            "host": [],
-            "notes": [],
+    modules = [item["module"] for item in outcomes if item.get("module")]
+    skipped_sources = [
+        {
+            "source_url": item["source_url"],
+            "skip_reason": item["skip_reason"],
         }
-
-        mitm_hosts: list[str] = []
-        rules: list[str] = []
-        url_rewrite: list[str] = []
-        header_rewrite: list[str] = []
-        body_rewrite: list[str] = []
-        scripts: list[dict] = []
-        host_lines: list[str] = []
-
-        for line in sections["mitm"]:
-            mitm_hosts.extend(normalize_mitm_line(line))
-
-        for line in sections["rule"]:
-            norm = normalize_rule_line(line, strip_policy=False)
-            if norm:
-                rules.append(norm)
-
-        for line in sections["url_rewrite"]:
-            norm = normalize_url_rewrite_line(line)
-            if norm:
-                url_rewrite.append(norm)
-
-        for line in sections["header_rewrite"]:
-            norm = normalize_header_line(line)
-            if norm:
-                header_rewrite.append(norm)
-
-        for line in sections["body_rewrite"]:
-            norm = normalize_body_line(line)
-            if norm:
-                body_rewrite.append(norm)
-
-        for line in sections["script"]:
-            norm = normalize_script_line(line)
-            if norm:
-                scripts.append(norm)
-
-        for line in sections["host"]:
-            norm = normalize_host_line(line)
-            if norm:
-                host_lines.append(norm)
-
-        module["mitm_hosts"] = dedupe_sorted(mitm_hosts)
-        module["rules"] = dedupe_sorted(rules)
-        module["url_rewrite"] = dedupe_sorted(url_rewrite)
-        module["header_rewrite"] = dedupe_sorted(header_rewrite)
-        module["body_rewrite"] = dedupe_sorted(body_rewrite)
-        module["scripts"] = sorted(
-            {f'{item["line"]}\u0000{item.get("script_url","")}': item for item in scripts}.values(),
-            key=lambda x: x["line"].casefold(),
-        )
-        module["host"] = dedupe_sorted(host_lines)
-
-        if not any(
-            [
-                module["mitm_hosts"],
-                module["rules"],
-                module["url_rewrite"],
-                module["header_rewrite"],
-                module["body_rewrite"],
-                module["scripts"],
-                module["host"],
-            ]
-        ):
-            continue
-
-        modules.append(module)
+        for item in outcomes
+        if not item.get("module")
+    ]
 
     save_json(
         NORMALIZED_MODULES_JSON,
         {
             "generated_from": str(DISCOVERED_MODULE_URLS),
             "module_count": len(modules),
+            "skipped_source_count": len(skipped_sources),
+            "skipped_sources": skipped_sources,
             "modules": modules,
         },
     )
 
-    print(f"Wrote {NORMALIZED_MODULES_JSON} with {len(modules)} modules.")
+    print(
+        f"Wrote {NORMALIZED_MODULES_JSON} with {len(modules)} modules "
+        f"and {len(skipped_sources)} skipped sources."
+    )
     return 0
 
 

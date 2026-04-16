@@ -1,0 +1,21 @@
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Local build caches and staging
+build/discovered_allowlist_urls.txt
+build/discovered_module_urls.txt
+build/normalized_modules.json
+build/rejected_rules.txt
+build/staging/
+build/scan_reports/clamav_output.txt
+build/scan_reports/js_xray_output.txt
+build/scan_reports/output_validation.json
+build/scan_reports/security_summary.json
+build/scan_reports/semgrep_output.json
+build/scan_reports/scripts_cache/
+build/scan_reports/semgrep_rules.yml
+build/whitelist_hosts.txt
+
+# Common local noise
+.DS_Store

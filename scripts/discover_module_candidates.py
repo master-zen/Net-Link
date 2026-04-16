@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import os
+import re
 from pathlib import Path
 
 from lib_rules import (
@@ -22,7 +23,7 @@ from lib_rules import (
     write_lines,
 )
 
-EXTENSIONS = {".sgmodule", ".module", ".plugin", ".snippet", ".conf"}
+EXTENSIONS = {".sgmodule", ".module", ".plugin"}
 
 PATH_HINTS = {
     "surge/",
@@ -36,23 +37,57 @@ PATH_HINTS = {
     "ruleset/",
 }
 
-AD_HINTS = {
+TOKEN_HINTS = {
     "ad",
     "ads",
     "adblock",
     "advertising",
-    "privacy",
-    "hijack",
+    "antiad",
     "startup",
-    "block",
+    "splash",
+    "blockads",
+    "httpdns",
+    "hijack",
     "reject",
+    "mitm",
+    "zhihuads",
+}
+
+CHINESE_HINTS = {
     "去广告",
     "广告",
+    "开屏",
     "拦截",
     "屏蔽",
-    "antiad",
-    "anti-ad",
+    "过滤",
 }
+
+NEGATIVE_TOKENS = {
+    "adobe",
+    "upgrade",
+    "redirect",
+    "safredirect",
+    "saferedirect",
+    "getcookie",
+    "cookie",
+    "debug",
+    "sample",
+    "demo",
+}
+
+TOKEN_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z]|[0-9]|$)|[A-Z]?[a-z]+|[0-9]+|[\u4e00-\u9fff]+")
+
+
+def tokenize_path(path: str) -> set[str]:
+    tokens: set[str] = set()
+    for chunk in re.split(r"[^A-Za-z0-9\u4e00-\u9fff]+", path):
+        if not chunk:
+            continue
+        for token in TOKEN_RE.findall(chunk):
+            normalized = token.lower()
+            if normalized:
+                tokens.add(normalized)
+    return tokens
 
 
 def looks_like_module_path(path: str) -> bool:
@@ -60,10 +95,17 @@ def looks_like_module_path(path: str) -> bool:
     if not any(lower.endswith(ext) for ext in EXTENSIONS):
         return False
 
-    if any(hint in lower for hint in PATH_HINTS):
+    if not any(hint in lower for hint in PATH_HINTS):
+        return False
+
+    tokens = tokenize_path(path)
+    if tokens & NEGATIVE_TOKENS:
+        return False
+
+    if any(hint in lower for hint in CHINESE_HINTS):
         return True
 
-    return any(hint in lower for hint in AD_HINTS)
+    return bool(tokens & TOKEN_HINTS)
 
 
 def discover_from_repo(repo_url: str, gh_token: str | None) -> list[str]:

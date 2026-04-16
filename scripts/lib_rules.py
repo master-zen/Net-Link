@@ -35,9 +35,13 @@ SECURITY_SUMMARY_JSON = SCAN_REPORTS_DIR / "security_summary.json"
 
 AD_BLOCK_LIST = SURGE_RULES_DIR / "Ad_Block.list"
 AD_BLOCK_MODULE = SURGE_MODULE_DIR / "Ad_Block.sgmodule"
+STAGING_DIR = BUILD_DIR / "staging"
+STAGED_AD_BLOCK_LIST = STAGING_DIR / "Ad_Block.list"
+STAGED_AD_BLOCK_MODULE = STAGING_DIR / "Ad_Block.sgmodule"
 
 URL_RE = re.compile(r"https?://[^\s<>'\"）)]+", re.IGNORECASE)
 DOMAIN_RE = re.compile(r"^(?:\*\.)?(?:[A-Za-z0-9-]+\.)+[A-Za-z]{2,63}$")
+DOMAIN_TOKEN_RE = re.compile(r"(?:\*\.)?(?:[a-z0-9-]+\.)+[a-z]{2,63}", re.IGNORECASE)
 
 RULE_TYPES = {
     "DOMAIN",
@@ -129,6 +133,8 @@ def extract_urls_from_text(text: str) -> list[str]:
     urls = []
     for match in URL_RE.findall(text):
         url = match.strip().rstrip(".,;:)]】）")
+        while url and ord(url[-1]) > 127:
+            url = url[:-1]
         if url:
             urls.append(url)
     return urls
@@ -352,10 +358,10 @@ def rule_matches_allowlist(rule: str, allow_hosts: set[str]) -> bool:
     head, value = parts[0].upper(), parts[1].lower()
 
     if head == "DOMAIN":
-        return value in allow_hosts
+        return any(value == host or value.endswith("." + host) for host in allow_hosts)
 
     if head == "DOMAIN-SUFFIX":
-        return any(host == value or host.endswith("." + value) for host in allow_hosts)
+        return any(value == host or value.endswith("." + host) for host in allow_hosts)
 
     if head == "DOMAIN-KEYWORD":
         return any(value in host for host in allow_hosts)
@@ -364,8 +370,28 @@ def rule_matches_allowlist(rule: str, allow_hosts: set[str]) -> bool:
 
 
 def line_mentions_allowlisted_host(line: str, allow_hosts: set[str]) -> bool:
-    s = line.lower()
-    return any(host in s for host in allow_hosts)
+    normalized = (
+        line.lower()
+        .replace(r"\.", ".")
+        .replace(r"\/", "/")
+        .replace(",", " ")
+        .replace("=", " ")
+    )
+
+    for token in DOMAIN_TOKEN_RE.findall(normalized):
+        host = token.lstrip("*.").strip(".")
+        if not host:
+            continue
+        if host in allow_hosts:
+            return True
+
+        labels = host.split(".")
+        for idx in range(1, len(labels) - 1):
+            parent = ".".join(labels[idx:])
+            if parent in allow_hosts:
+                return True
+
+    return False
 
 
 def line_matches_any_regex(line: str, regex_list: list[re.Pattern[str]]) -> bool:
@@ -383,6 +409,18 @@ def safe_compile_regexes(lines: Iterable[str]) -> list[re.Pattern[str]]:
         except re.error:
             continue
     return regexes
+
+
+def expand_hosts_with_parents(hosts: Iterable[str]) -> set[str]:
+    expanded: set[str] = set()
+    for host in hosts:
+        s = host.strip().lower().lstrip(".")
+        if not s:
+            continue
+        labels = s.split(".")
+        for idx in range(0, max(len(labels) - 1, 1)):
+            expanded.add(".".join(labels[idx:]))
+    return expanded
 
 
 def slugify(text: str) -> str:

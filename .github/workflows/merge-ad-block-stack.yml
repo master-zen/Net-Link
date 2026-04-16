@@ -6,9 +6,18 @@ on:
     - cron: "20 2 * * *"
   push:
     paths:
-      - "data/sources/**"
+      - "data/sources/ad_allowlist_seed_urls.txt"
+      - "data/sources/ad_module_seed_urls.txt"
+      - "data/sources/repo_seed_urls.txt"
       - "data/allowlists/**"
-      - "scripts/**"
+      - "scripts/run_ad_block_pipeline.py"
+      - "scripts/discover_module_candidates.py"
+      - "scripts/discover_allowlist_candidates.py"
+      - "scripts/fetch_and_normalize_modules.py"
+      - "scripts/scan_js_security.py"
+      - "scripts/build_ad_block_outputs.py"
+      - "scripts/validate_ad_block_outputs.py"
+      - "scripts/lib_rules.py"
       - ".github/workflows/merge-ad-block-stack.yml"
 
 permissions:
@@ -57,42 +66,93 @@ jobs:
 
       - name: Update ClamAV database
         run: |
-          sudo freshclam || true
+          sudo systemctl stop clamav-freshclam.service || true
+          sudo pkill -x freshclam || true
+          mkdir -p "$RUNNER_TEMP/clamav-db"
+          awk '!/^UpdateLogFile /' /etc/clamav/freshclam.conf > "$RUNNER_TEMP/freshclam.conf"
+          sudo freshclam --stdout --config-file="$RUNNER_TEMP/freshclam.conf" --datadir="$RUNNER_TEMP/clamav-db" || true
+          echo "CLAMAV_DB_DIR=$RUNNER_TEMP/clamav-db" >> "$GITHUB_ENV"
 
-      - name: Discover module candidates
-        run: python scripts/discover_module_candidates.py
+      - name: Validate required ad-block inputs
+        run: |
+          test -f data/sources/ad_allowlist_seed_urls.txt
+          test -f data/sources/ad_module_seed_urls.txt
+          test -f data/sources/repo_seed_urls.txt
+          test -f scripts/discover_module_candidates.py
+          test -f scripts/discover_allowlist_candidates.py
+          test -f scripts/fetch_and_normalize_modules.py
+          test -f scripts/scan_js_security.py
+          test -f scripts/build_ad_block_outputs.py
+          test -f scripts/validate_ad_block_outputs.py
+          test -f scripts/run_ad_block_pipeline.py
 
-      - name: Discover allowlist candidates
-        run: python scripts/discover_allowlist_candidates.py
+      - name: Run Ad Block pipeline
+        run: python -u scripts/run_ad_block_pipeline.py
 
-      - name: Fetch and normalize modules
-        run: python scripts/fetch_and_normalize_modules.py
-
-      - name: Scan JS security
-        run: python scripts/scan_js_security.py
-
-      - name: Build final Ad_Block outputs
-        run: python scripts/build_ad_block_outputs.py
+      - name: Upload ad-block diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ad-block-diagnostics
+          if-no-files-found: ignore
+          path: |
+            build/discovered_module_urls.txt
+            build/discovered_allowlist_urls.txt
+            build/normalized_modules.json
+            build/whitelist_hosts.txt
+            build/rejected_rules.txt
+            build/scan_reports/**
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add \
+          stage_path() {
+            path="$1"
+            if [ -e "$path" ] || git ls-files --error-unmatch -- "$path" >/dev/null 2>&1; then
+              git add -A -- "$path"
+            fi
+          }
+
+          # Stage final outputs and final validation reports only.
+          for path in \
             Surge/Rules/Ad_Block.list \
             Surge/Module/Ad_Block.sgmodule \
-            build/discovered_module_urls.txt \
-            build/discovered_allowlist_urls.txt \
-            build/normalized_modules.json \
-            build/whitelist_hosts.txt \
-            build/rejected_rules.txt \
-            build/scan_reports || true
+            Surge/Scripts/Converted
+          do
+            stage_path "$path"
+          done
 
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0
           fi
 
-          git commit -m "chore: update ad block stack"
-          git push
+          git commit -m "chore: update ad block stack" || echo "nothing to commit"
+
+          # Ensure we can push even if remote updated in the meantime: try rebase+push with retries.
+          # Use token-authenticated remote to allow non-interactive push.
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/$GITHUB_REPOSITORY"
+
+          max_attempts=5
+          attempt=1
+          while [ $attempt -le $max_attempts ]; do
+            git fetch origin main || true
+            # Try rebase local commit(s) on top of remote main
+            git rebase origin/main || (git rebase --abort || true)
+
+            if git push origin main; then
+              echo "push succeeded"
+              break
+            fi
+
+            echo "push failed, attempt $attempt/$max_attempts, retrying after brief sleep..."
+            sleep $((RANDOM % 5 + 1))
+            attempt=$((attempt + 1))
+          done
+
+          if [ $attempt -gt $max_attempts ]; then
+            echo "push failed after $max_attempts attempts"
+            exit 1
+          fi

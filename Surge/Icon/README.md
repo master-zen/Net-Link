@@ -1,17 +1,8 @@
-# Icons
+# Surge Icons
 
-The icon files in this directory were organized and standardized by me for project use.
+This folder stores icon source assets used to generate `Surge/Icon.json`.
 
-This includes:
+## Notes
 
-- unified file formats
-- unified dimensions
-- unified naming
-- necessary adaptation for use in this project
-
-## Notice
-
-- These files are prepared for interface use and asset management within the project.
-- I only organized and adapted the files, and do not claim original ownership of the source icons unless explicitly stated.
-- Any rights related to third-party icons remain with their respective owners.
-- Please verify licensing and usage rights based on the original source before using them in other contexts.
+- Keep icon filenames stable and descriptive.
+- `Icon.json` is generated from this directory and should not be maintained by hand unless a recovery workflow requires it.
