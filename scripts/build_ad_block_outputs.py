@@ -27,7 +27,6 @@ from lib_rules import (
     request_text,
     rule_matches_allowlist,
     safe_compile_regexes,
-    strip_no_resolve_and_trailing_commas,
     write_lines,
     write_text,
 )
@@ -46,6 +45,27 @@ VALID_SECTION_HEADERS = {
     "[Script]",
     "[Host]",
 }
+
+URL_REWRITE_RE = re.compile(r"^\^.+\s+.+\s+(header|302|reject)$", re.IGNORECASE)
+HEADER_ACTION_RE = re.compile(
+    r"^(http-request|http-response)\s+.+\s+(header-add|header-del|header-replace|header-replace-regex)\s+.+$",
+    re.IGNORECASE,
+)
+BODY_REWRITE_RE = re.compile(
+    r"^(http-request|http-response|http-request-jq|http-response-jq)\s+.+$",
+    re.IGNORECASE,
+)
+HOST_MAPPING_RE = re.compile(
+    r"""^(
+        (DOMAIN-SET:[^=\s]+)|
+        (RULE-SET:[^=\s]+)|
+        ([*A-Za-z0-9._-]+)
+    )\s*=\s*(
+        server:[^=\s]+|
+        [*A-Za-z0-9._:-]+
+    )$""",
+    re.IGNORECASE | re.VERBOSE,
+)
 
 
 def load_modules() -> list[dict]:
@@ -134,31 +154,72 @@ def filter_line_by_whitelist(line: str, allow_hosts: set[str], regexes) -> bool:
     return False
 
 
-def sanitize_final_module_line(line: str) -> str | None:
-    s = strip_no_resolve_and_trailing_commas(line.strip())
+def sanitize_mitm_host(host: str) -> str | None:
+    s = host.strip().lower().lstrip(".")
     if not s:
         return None
+    if "%" in s or "{{{" in s or "}}}" in s:
+        return None
+    if " " in s:
+        return None
+    if "." not in s and "*" not in s:
+        return None
+    return s
 
-    lower = s.lower()
 
+def sanitize_url_rewrite_line(line: str) -> str | None:
+    s = line.strip()
+    if not s:
+        return None
     if "{{{" in s or "}}}" in s:
         return None
-
-    if lower.startswith("ttp-request") or lower.startswith("ttp-response"):
+    if any(token in s.lower() for token in ["reject-dict", "reject-200", "response-body-json-", "jq-path="]):
         return None
+    return s if URL_REWRITE_RE.match(s) else None
 
-    banned_tokens = [
-        "reject-dict",
-        "reject-200",
-        "response-body-json-jq",
-        "response-body-json-del",
-        "response-body-replace-regex",
-        "jq-path=",
-    ]
-    if any(token in lower for token in banned_tokens):
+
+def sanitize_header_line(line: str) -> str | None:
+    s = line.strip()
+    if not s:
         return None
+    if "{{{" in s or "}}}" in s:
+        return None
+    return s if HEADER_ACTION_RE.match(s) else None
 
+
+def sanitize_body_line(line: str) -> str | None:
+    s = line.strip()
+    if not s:
+        return None
+    if "{{{" in s or "}}}" in s:
+        return None
+    if any(token in s.lower() for token in ["response-body-json-del", "response-body-replace-regex", "jq-path="]):
+        return None
+    return s if BODY_REWRITE_RE.match(s) else None
+
+
+def sanitize_script_line(line: str) -> str | None:
+    s = line.strip()
+    if not s:
+        return None
+    if "{{{" in s or "}}}" in s:
+        return None
+    lower = s.lower()
+    if "type=" not in lower or "pattern=" not in lower or "script-path=" not in lower:
+        return None
     return s
+
+
+def sanitize_host_mapping_line(line: str) -> str | None:
+    s = line.strip()
+    if not s:
+        return None
+    if "{{{" in s or "}}}" in s:
+        return None
+    # data=/data-type=/status-code= 属于 Map Local，不属于 Host
+    if "data=" in s.lower() or "data-type=" in s.lower() or "status-code=" in s.lower():
+        return None
+    return s if HOST_MAPPING_RE.match(s) else None
 
 
 def build_module_text(
@@ -172,13 +233,8 @@ def build_module_text(
     lines: list[str] = [MODULE_HEADER.strip(), ""]
 
     clean_mitm_hosts = [
-        h.strip().lower().lstrip(".")
-        for h in sorted(mitm_hosts, key=lambda s: s.casefold())
+        h for h in (sanitize_mitm_host(x) for x in sorted(mitm_hosts, key=lambda s: s.casefold()))
         if h
-        and "%" not in h
-        and "{{{" not in h
-        and "}}}" not in h
-        and " " not in h
     ]
 
     if clean_mitm_hosts:
@@ -187,8 +243,8 @@ def build_module_text(
         lines.append("")
 
     clean_url_rewrite = [
-        s for s in sorted(url_rewrite, key=lambda s: s.casefold())
-        if sanitize_final_module_line(s)
+        s for s in (sanitize_url_rewrite_line(x) for x in sorted(url_rewrite, key=lambda s: s.casefold()))
+        if s
     ]
     if clean_url_rewrite:
         lines.append("[URL Rewrite]")
@@ -196,8 +252,8 @@ def build_module_text(
         lines.append("")
 
     clean_header_rewrite = [
-        s for s in sorted(header_rewrite, key=lambda s: s.casefold())
-        if sanitize_final_module_line(s)
+        s for s in (sanitize_header_line(x) for x in sorted(header_rewrite, key=lambda s: s.casefold()))
+        if s
     ]
     if clean_header_rewrite:
         lines.append("[Header Rewrite]")
@@ -205,8 +261,8 @@ def build_module_text(
         lines.append("")
 
     clean_body_rewrite = [
-        s for s in sorted(body_rewrite, key=lambda s: s.casefold())
-        if sanitize_final_module_line(s)
+        s for s in (sanitize_body_line(x) for x in sorted(body_rewrite, key=lambda s: s.casefold()))
+        if s
     ]
     if clean_body_rewrite:
         lines.append("[Body Rewrite]")
@@ -214,8 +270,8 @@ def build_module_text(
         lines.append("")
 
     clean_scripts = [
-        s for s in sorted(scripts, key=lambda s: s.casefold())
-        if sanitize_final_module_line(s)
+        s for s in (sanitize_script_line(x) for x in sorted(scripts, key=lambda s: s.casefold()))
+        if s
     ]
     if clean_scripts:
         lines.append("[Script]")
@@ -223,8 +279,8 @@ def build_module_text(
         lines.append("")
 
     clean_host_lines = [
-        s for s in sorted(host_lines, key=lambda s: s.casefold())
-        if sanitize_final_module_line(s)
+        s for s in (sanitize_host_mapping_line(x) for x in sorted(host_lines, key=lambda s: s.casefold()))
+        if s
     ]
     if clean_host_lines:
         lines.append("[Host]")
@@ -239,7 +295,6 @@ def build_module_text(
 
 def validate_final_module_text(text: str) -> tuple[bool, str]:
     lines = text.splitlines()
-
     if not lines:
         return False, "empty file"
 
@@ -258,24 +313,6 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
 
     if "{{{" in text or "}}}" in text:
         return False, "contains unresolved template placeholders"
-
-    banned_tokens = [
-        "reject-dict",
-        "reject-200",
-        "response-body-json-jq",
-        "response-body-json-del",
-        "response-body-replace-regex",
-        "jq-path=",
-    ]
-    lower_text = text.lower()
-    for token in banned_tokens:
-        if token in lower_text:
-            return False, f"contains unsupported token: {token}"
-
-    for line in lines:
-        s = line.strip().lower()
-        if s.startswith("ttp-request") or s.startswith("ttp-response"):
-            return False, f"contains broken line: {line.strip()}"
 
     current_section = None
     seen_any_section = False
@@ -303,23 +340,32 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
         if current_section is None:
             return False, f"content appears before any section: {s[:120]}"
 
+        if current_section == "[MITM]":
+            if not s.lower().startswith("hostname = %append% "):
+                return False, f"invalid MITM line: {s}"
+
+        elif current_section == "[URL Rewrite]":
+            if not sanitize_url_rewrite_line(s):
+                return False, f"invalid URL Rewrite line: {s}"
+
+        elif current_section == "[Header Rewrite]":
+            if not sanitize_header_line(s):
+                return False, f"invalid Header Rewrite line: {s}"
+
+        elif current_section == "[Body Rewrite]":
+            if not sanitize_body_line(s):
+                return False, f"invalid Body Rewrite line: {s}"
+
+        elif current_section == "[Script]":
+            if not sanitize_script_line(s):
+                return False, f"invalid Script line: {s}"
+
+        elif current_section == "[Host]":
+            if not sanitize_host_mapping_line(s):
+                return False, f"invalid Host line: {s}"
+
     if not seen_any_section:
         return False, "no valid sections found"
-
-    current_section = None
-    for raw in lines:
-        s = raw.strip()
-        if not s:
-            continue
-
-        if s.startswith("[") and s.endswith("]"):
-            current_section = s
-            continue
-
-        if current_section == "[MITM]" and s.lower().startswith("hostname"):
-            count = len(re.findall(r"(?i)%\s*append\s*%", s))
-            if count > 1:
-                return False, "multiple %APPEND% tokens found in MITM hostname line"
 
     return True, "ok"
 
@@ -370,7 +416,7 @@ def main() -> int:
             rejected_log.append(f"module_excluded_by_security\t{module_id}\t{module_name}\t{source_url}")
             continue
 
-        # 抽模块里的 REJECT / REJECT-TINYGIF 到 Ad_Block.list
+        # 模块内 [Rule] 的 REJECT / REJECT-TINYGIF 抽到 Ad_Block.list
         for rule in module.get("rules", []):
             reject_rule = extract_reject_rule_from_module_rule(rule)
             if not reject_rule:
@@ -383,19 +429,16 @@ def main() -> int:
             merged_rules.add(reject_rule)
 
         for host in module.get("mitm_hosts", []):
-            host = host.strip().lower().lstrip(".")
+            host = sanitize_mitm_host(host or "")
             if not host:
                 continue
             if host in allow_hosts or any(h == host or h.endswith("." + host) for h in allow_hosts):
                 rejected_log.append(f"mitm_removed_by_allowlist\t{host}\t{module_id}\t{source_url}")
                 continue
-            if "%" in host or "{{{" in host or "}}}" in host or " " in host:
-                rejected_log.append(f"mitm_removed_by_sanitize\t{host}\t{module_id}\t{source_url}")
-                continue
             mitm_hosts.add(host)
 
         for line in module.get("url_rewrite", []):
-            s = sanitize_final_module_line(line)
+            s = sanitize_url_rewrite_line(line)
             if not s:
                 continue
             if filter_line_by_whitelist(s, allow_hosts, allow_regexes):
@@ -404,7 +447,7 @@ def main() -> int:
             url_rewrite.add(s)
 
         for line in module.get("header_rewrite", []):
-            s = sanitize_final_module_line(line)
+            s = sanitize_header_line(line)
             if not s:
                 continue
             if filter_line_by_whitelist(s, allow_hosts, allow_regexes):
@@ -413,7 +456,7 @@ def main() -> int:
             header_rewrite.add(s)
 
         for line in module.get("body_rewrite", []):
-            s = sanitize_final_module_line(line)
+            s = sanitize_body_line(line)
             if not s:
                 continue
             if filter_line_by_whitelist(s, allow_hosts, allow_regexes):
@@ -422,7 +465,7 @@ def main() -> int:
             body_rewrite.add(s)
 
         for item in module.get("scripts", []):
-            line = sanitize_final_module_line(item.get("line") or "")
+            line = sanitize_script_line(item.get("line") or "")
             script_url = (item.get("script_url") or "").strip()
 
             if not line:
@@ -439,7 +482,7 @@ def main() -> int:
             script_lines.add(line)
 
         for line in module.get("host", []):
-            s = sanitize_final_module_line(line)
+            s = sanitize_host_mapping_line(line)
             if not s:
                 continue
             if filter_line_by_whitelist(s, allow_hosts, allow_regexes):
@@ -447,9 +490,11 @@ def main() -> int:
                 continue
             host_lines.add(s)
 
+    # Ad_Block.list：合并旧文件和本次新增，不覆盖
     final_rules = [r for r in dedupe_sorted(merged_rules) if not rule_matches_allowlist(r, allow_hosts)]
     write_lines(AD_BLOCK_LIST, final_rules)
 
+    # 最终模块：只输出 Surge 官方白名单语法
     module_text = build_module_text(
         mitm_hosts=mitm_hosts,
         url_rewrite=url_rewrite,
