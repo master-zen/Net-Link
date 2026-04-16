@@ -17,6 +17,7 @@ on:
       - "scripts/scan_js_security.py"
       - "scripts/build_ad_block_outputs.py"
       - "scripts/validate_ad_block_outputs.py"
+      - "scripts/build_ad_block.py"
       - "scripts/lib_rules.py"
       - ".github/workflows/merge-ad-block-stack.yml"
 
@@ -30,7 +31,6 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     env:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
       VT_API_KEY: ${{ secrets.VT_API_KEY }}
@@ -65,12 +65,27 @@ jobs:
           sudo apt-get install -y clamav clamav-freshclam || true
 
       - name: Update ClamAV database
+        shell: bash
         run: |
           sudo systemctl stop clamav-freshclam.service || true
           sudo pkill -x freshclam || true
+
           mkdir -p "$RUNNER_TEMP/clamav-db"
-          awk '!/^UpdateLogFile /' /etc/clamav/freshclam.conf > "$RUNNER_TEMP/freshclam.conf"
-          sudo freshclam --stdout --config-file="$RUNNER_TEMP/freshclam.conf" --datadir="$RUNNER_TEMP/clamav-db" || true
+
+          cat > "$RUNNER_TEMP/freshclam.conf" <<EOF
+          DatabaseDirectory $RUNNER_TEMP/clamav-db
+          DatabaseMirror database.clamav.net
+          DNSDatabaseInfo current.cvd.clamav.net
+          Checks 1
+          Foreground true
+          ConnectTimeout 30
+          ReceiveTimeout 30
+          TestDatabases no
+          CompressLocalDatabase no
+          ScriptedUpdates yes
+          EOF
+
+          sudo freshclam --stdout --config-file="$RUNNER_TEMP/freshclam.conf" || true
           echo "CLAMAV_DB_DIR=$RUNNER_TEMP/clamav-db" >> "$GITHUB_ENV"
 
       - name: Validate required ad-block inputs
@@ -85,6 +100,8 @@ jobs:
           test -f scripts/build_ad_block_outputs.py
           test -f scripts/validate_ad_block_outputs.py
           test -f scripts/run_ad_block_pipeline.py
+          test -f scripts/build_ad_block.py
+          test -f scripts/lib_rules.py
 
       - name: Run Ad Block pipeline
         run: python -u scripts/run_ad_block_pipeline.py
@@ -104,6 +121,7 @@ jobs:
             build/scan_reports/**
 
       - name: Commit and push if changed
+        shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -115,7 +133,6 @@ jobs:
             fi
           }
 
-          # Stage final outputs and final validation reports only.
           for path in \
             Surge/Rules/Ad_Block.list \
             Surge/Module/Ad_Block.sgmodule \
@@ -131,15 +148,12 @@ jobs:
 
           git commit -m "chore: update ad block stack" || echo "nothing to commit"
 
-          # Ensure we can push even if remote updated in the meantime: try rebase+push with retries.
-          # Use token-authenticated remote to allow non-interactive push.
           git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/$GITHUB_REPOSITORY"
 
           max_attempts=5
           attempt=1
           while [ $attempt -le $max_attempts ]; do
             git fetch origin main || true
-            # Try rebase local commit(s) on top of remote main
             git rebase origin/main || (git rebase --abort || true)
 
             if git push origin main; then
