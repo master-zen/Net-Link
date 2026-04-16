@@ -2,3 +2,12 @@
 #!desc=Auto-merged, normalized, deduplicated and security-scanned ad blocking module for Surge
 #!system=iOS
 #!requirement=CORE_VERSION>=20
+#!author=ADtest[https://github.com/luestr/ProxyResource/blob/main/README.md]
+#!icon=https://raw.githubusercontent.com/luestr/IconResource/main/App_icon/120px/IThome.png
+#!category=iKeLeeADtest
+#!openUrl=https://apps.apple.com/app/id570610859
+#!tag=去广告ADtest
+#!loon_version=3.2.4(787)
+#!homepage=https://hub.kelee.one
+#!date=2025-12-01 01:25:27
+#!arguments=removePinnedArticles:false,removeAllBanners:false
