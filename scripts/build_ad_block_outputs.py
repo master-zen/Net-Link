@@ -8,9 +8,12 @@ import ipaddress
 import json
 import re
 
+from build_ad_block import (
+    LEGACY_SOURCES,
+    fetch_text as legacy_fetch_text,
+    normalize_line as legacy_normalize_line,
+)
 from lib_rules import (
-    AD_BLOCK_LIST,
-    AD_BLOCK_MODULE,
     BUILD_DIR,
     DATA_ALLOWLISTS_DIR,
     DISCOVERED_ALLOWLIST_URLS,
@@ -46,6 +49,7 @@ STANDARD_MODULE_STATIC_HEADER_LINES = [
     "#!tag=AD Block",
     "#!homepage=https://github.com/master-zen/Net-Link/",
 ]
+
 ARGUMENT_CATALOG_JSON = BUILD_DIR / "scan_reports" / "ad_block_arguments_catalog.json"
 HEADER_DATE_RE = re.compile(r"^#!date=\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$")
 
@@ -408,6 +412,7 @@ def collect_module_argument_items(module: dict) -> list[str]:
     metadata = module.get("metadata") or {}
     raw = str(metadata.get("arguments") or "").strip()
     items: list[str] = []
+
     for item in split_argument_items(raw):
         item = item.strip()
         if not item:
@@ -423,12 +428,123 @@ def collect_module_argument_items(module: dict) -> list[str]:
                 items.append(f"{key}={value}")
             continue
         items.append(item)
+
     return items
 
 
 def collect_module_argument_desc(module: dict) -> str:
     metadata = module.get("metadata") or {}
     return str(metadata.get("arguments-desc") or "").strip()
+
+
+def parse_argument_item(raw: str) -> tuple[str, str] | None:
+    s = raw.strip()
+    if not s or "=" not in s:
+        return None
+    key, value = s.split("=", 1)
+    key = key.strip()
+    value = value.strip()
+    if not key:
+        return None
+    return key, value
+
+
+def normalize_group_title(text: str) -> str:
+    s = str(text or "").strip()
+    if not s:
+        s = "Unnamed Module"
+    s = re.sub(r"\s+", " ", s)
+    s = s.replace("&", "／").replace("=", "－")
+    return s
+
+
+def make_unique_group_marker(module_name: str, used_markers: set[str]) -> str:
+    base = normalize_group_title(module_name)
+    candidate = f"↓"
+    if candidate not in used_markers:
+        used_markers.add(candidate)
+        return f"{candidate}=--"
+
+    index = 2
+    while True:
+        candidate = f"↓"
+        if candidate not in used_markers:
+            used_markers.add(candidate)
+            return f"{candidate}=--"
+        index += 1
+
+
+def build_argument_bundle(module_argument_blocks: list[dict]) -> tuple[list[str], list[dict[str, object]]]:
+    key_owners: dict[str, set[str]] = {}
+
+    for block in module_argument_blocks:
+        module_id = str(block["module_id"])
+        seen_keys_in_this_block: set[str] = set()
+
+        for raw in block["arguments"]:
+            parsed = parse_argument_item(raw)
+            if not parsed:
+                continue
+            key, _ = parsed
+            if key in seen_keys_in_this_block:
+                continue
+            seen_keys_in_this_block.add(key)
+            key_owners.setdefault(key, set()).add(module_id)
+
+    header_items: list[str] = []
+    catalog: list[dict[str, object]] = []
+    used_markers: set[str] = set()
+
+    for block in module_argument_blocks:
+        original_items: list[str] = list(block["arguments"])
+        kept_items: list[str] = []
+        skipped_conflicts: list[str] = []
+        skipped_invalid: list[str] = []
+        skipped_duplicates_in_module: list[str] = []
+        seen_keys_in_this_block: set[str] = set()
+
+        for raw in original_items:
+            parsed = parse_argument_item(raw)
+            if not parsed:
+                skipped_invalid.append(raw)
+                continue
+
+            key, value = parsed
+            normalized_raw = f"{key}={value}"
+
+            if key in seen_keys_in_this_block:
+                skipped_duplicates_in_module.append(normalized_raw)
+                continue
+            seen_keys_in_this_block.add(key)
+
+            if len(key_owners.get(key, set())) > 1:
+                skipped_conflicts.append(normalized_raw)
+                continue
+
+            kept_items.append(normalized_raw)
+
+        group_marker = ""
+        if kept_items:
+            group_marker = make_unique_group_marker(str(block["module_name"]), used_markers)
+            header_items.append(group_marker)
+            header_items.extend(kept_items)
+
+        catalog.append(
+            {
+                "module_name": block["module_name"],
+                "module_id": block["module_id"],
+                "source_url": block["source_url"],
+                "group_marker": group_marker,
+                "arguments_desc": block["arguments_desc"],
+                "original_arguments": original_items,
+                "kept_arguments": kept_items,
+                "skipped_conflicting_arguments": skipped_conflicts,
+                "skipped_invalid_arguments": skipped_invalid,
+                "skipped_duplicate_keys_in_module": skipped_duplicates_in_module,
+            }
+        )
+
+    return header_items, catalog
 
 
 def build_standard_module_header(arguments_text: str) -> str:
@@ -513,7 +629,6 @@ def build_module_text(
         h for h in (sanitize_mitm_host(x) for x in sorted(mitm_hosts, key=lambda s: s.casefold()))
         if h
     ]
-
     if clean_mitm_hosts:
         lines.append("[MITM]")
         lines.append("hostname = %append% " + ", ".join(clean_mitm_hosts))
@@ -673,6 +788,33 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
     return True, "ok"
 
 
+def load_legacy_rules(allow_hosts: set[str]) -> tuple[set[str], list[str]]:
+    rules: set[str] = set()
+    rejected_log: list[str] = []
+
+    for source_url in LEGACY_SOURCES:
+        try:
+            text = legacy_fetch_text(source_url)
+        except Exception as exc:
+            rejected_log.append(f"legacy_source_fetch_failed\t{source_url}\t{type(exc).__name__}")
+            continue
+
+        for raw_line in text.splitlines():
+            normalized_rule = legacy_normalize_line(raw_line)
+            if not normalized_rule:
+                continue
+
+            if normalized_rule_matches_allowlist(normalized_rule, allow_hosts):
+                rejected_log.append(
+                    f"legacy_rule_removed_by_allowlist\t{normalized_rule}\tlegacy\t{source_url}"
+                )
+                continue
+
+            rules.add(normalized_rule)
+
+    return rules, rejected_log
+
+
 def main() -> int:
     ensure_project_dirs()
     BUILD_DIR.mkdir(parents=True, exist_ok=True)
@@ -702,15 +844,17 @@ def main() -> int:
     merged_rules: set[str] = set()
     rejected_log: list[str] = []
 
+    legacy_rules, legacy_rejected = load_legacy_rules(allow_hosts)
+    merged_rules |= legacy_rules
+    rejected_log.extend(legacy_rejected)
+
     mitm_hosts: set[str] = set()
     url_rewrite: set[str] = set()
     header_rewrite: set[str] = set()
     body_rewrite: set[str] = set()
     script_lines_by_key: dict[tuple[str, ...] | str, str] = {}
     host_lines: set[str] = set()
-    module_argument_items: list[str] = []
-    seen_argument_items: set[str] = set()
-    argument_catalog: list[dict[str, object]] = []
+    module_argument_blocks: list[dict[str, object]] = []
 
     for module in modules:
         module_id = module.get("module_id", "")
@@ -820,24 +964,15 @@ def main() -> int:
             module_contributed_to_final_module = True
 
         if module_contributed_to_final_module and module_argument_candidates:
-            kept_items: list[str] = []
-            for argument_item in module_argument_candidates:
-                if argument_item in seen_argument_items:
-                    continue
-                seen_argument_items.add(argument_item)
-                module_argument_items.append(argument_item)
-                kept_items.append(argument_item)
-
-            if kept_items:
-                argument_catalog.append(
-                    {
-                        "module_name": module_name,
-                        "module_id": module_id,
-                        "source_url": source_url,
-                        "arguments": kept_items,
-                        "arguments_desc": module_argument_desc,
-                    }
-                )
+            module_argument_blocks.append(
+                {
+                    "module_name": module_name,
+                    "module_id": module_id,
+                    "source_url": source_url,
+                    "arguments": module_argument_candidates,
+                    "arguments_desc": module_argument_desc,
+                }
+            )
 
     final_rules = [
         r
@@ -847,6 +982,8 @@ def main() -> int:
         and not line_matches_any_regex(r, allow_regexes)
     ]
     write_lines(STAGED_AD_BLOCK_LIST, final_rules)
+
+    module_argument_items, argument_catalog = build_argument_bundle(module_argument_blocks)
     write_text(ARGUMENT_CATALOG_JSON, json.dumps(argument_catalog, ensure_ascii=False, indent=2) + "\n")
 
     arguments_text = "&".join(module_argument_items)
@@ -867,8 +1004,10 @@ def main() -> int:
     write_text(STAGED_AD_BLOCK_MODULE, module_text)
     write_lines(REJECTED_RULES_TXT, rejected_log)
 
+    print(f"Loaded {len(legacy_rules)} legacy raw rules from {len(LEGACY_SOURCES)} sources.")
     print(f"Wrote {STAGED_AD_BLOCK_LIST} with {len(final_rules)} rules.")
     print(f"Wrote {STAGED_AD_BLOCK_MODULE}")
+    print(f"Wrote {ARGUMENT_CATALOG_JSON} with {len(argument_catalog)} module argument blocks.")
     print(f"Wrote {REJECTED_RULES_TXT} with {len(rejected_log)} entries.")
     return 0
 
