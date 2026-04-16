@@ -5,9 +5,14 @@ __pycache__/
 # Local build caches and staging
 build/discovered_allowlist_urls.txt
 build/discovered_module_urls.txt
+build/discovered_rule_urls.txt
+build/china_validation.json
+build/legacy/
 build/normalized_modules.json
+build/normalized_rules.json
 build/rejected_rules.txt
 build/staging/
+build/scan_reports/ad_block_arguments_catalog.json
 build/scan_reports/clamav_output.txt
 build/scan_reports/js_xray_output.txt
 build/scan_reports/output_validation.json

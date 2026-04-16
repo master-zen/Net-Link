@@ -15,6 +15,7 @@ from lib_rules import (
     DATA_ALLOWLISTS_DIR,
     DISCOVERED_ALLOWLIST_URLS,
     NORMALIZED_MODULES_JSON,
+    NORMALIZED_RULES_JSON,
     REJECTED_RULES_TXT,
     SECURITY_SUMMARY_JSON,
     STAGED_AD_BLOCK_LIST,
@@ -27,11 +28,10 @@ from lib_rules import (
     is_comment_or_empty,
     line_matches_any_regex,
     line_mentions_allowlisted_host,
-    normalize_rule_line,
+    normalized_rule_matches_allowlist,
     parse_allowlist_host_line,
     read_lines,
     request_text,
-    rule_matches_allowlist,
     safe_compile_regexes,
     write_lines,
     write_text,
@@ -47,6 +47,7 @@ STANDARD_MODULE_STATIC_HEADER_LINES = [
     "#!tag=AD Block",
     "#!homepage=https://github.com/master-zen/Net-Link/",
 ]
+ARGUMENT_CATALOG_JSON = BUILD_DIR / "scan_reports" / "ad_block_arguments_catalog.json"
 HEADER_DATE_RE = re.compile(r"^#!date=\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$")
 
 VALID_SECTION_HEADERS = {
@@ -86,6 +87,13 @@ def load_modules() -> list[dict]:
         return []
     data = json.loads(NORMALIZED_MODULES_JSON.read_text(encoding="utf-8"))
     return data.get("modules", [])
+
+
+def load_rule_sources() -> list[dict]:
+    if not NORMALIZED_RULES_JSON.exists():
+        return []
+    data = json.loads(NORMALIZED_RULES_JSON.read_text(encoding="utf-8"))
+    return data.get("sources", [])
 
 
 def load_security_summary() -> dict:
@@ -407,7 +415,28 @@ def split_argument_items(raw: str) -> list[str]:
 def collect_module_argument_items(module: dict) -> list[str]:
     metadata = module.get("metadata") or {}
     raw = str(metadata.get("arguments") or "").strip()
-    return split_argument_items(raw)
+    items: list[str] = []
+    for item in split_argument_items(raw):
+        item = item.strip()
+        if not item:
+            continue
+        if "=" in item:
+            items.append(item)
+            continue
+        if ":" in item:
+            key, value = item.split(":", 1)
+            key = key.strip()
+            value = value.strip()
+            if key:
+                items.append(f"{key}={value}")
+            continue
+        items.append(item)
+    return items
+
+
+def collect_module_argument_desc(module: dict) -> str:
+    metadata = module.get("metadata") or {}
+    return str(metadata.get("arguments-desc") or "").strip()
 
 
 def build_standard_module_header(arguments_text: str) -> str:
@@ -661,6 +690,7 @@ def main() -> int:
     BUILD_DIR.mkdir(parents=True, exist_ok=True)
 
     modules = load_modules()
+    rule_sources = load_rule_sources()
     security = load_security_summary()
 
     suspicious_modules = set(security.get("suspicious_modules", []))
@@ -693,11 +723,30 @@ def main() -> int:
     host_lines: set[str] = set()
     module_argument_items: list[str] = []
     seen_argument_items: set[str] = set()
+    argument_catalog: list[dict[str, object]] = []
+
+    for source in rule_sources:
+        source_url = source.get("source_url", "")
+        source_name = source.get("source_name", "")
+        for normalized_rule in source.get("rules", []):
+            if not normalized_rule:
+                continue
+
+            if normalized_rule_matches_allowlist(normalized_rule, allow_hosts):
+                rejected_log.append(
+                    f"raw_rule_removed_by_allowlist\t{normalized_rule}\t{source_name}\t{source_url}"
+                )
+                continue
+
+            merged_rules.add(normalized_rule)
 
     for module in modules:
         module_id = module.get("module_id", "")
         source_url = module.get("source_url", "")
         module_name = module.get("module_name", "")
+        module_argument_candidates = collect_module_argument_items(module)
+        module_argument_desc = collect_module_argument_desc(module)
+        module_contributed_to_final_module = False
 
         if module_is_excluded(module, allow_module_ids):
             rejected_log.append(f"module_excluded_by_module_ids\t{module_id}\t{module_name}\t{source_url}")
@@ -707,19 +756,13 @@ def main() -> int:
             rejected_log.append(f"module_excluded_by_security\t{module_id}\t{module_name}\t{source_url}")
             continue
 
-        for argument_item in collect_module_argument_items(module):
-            if argument_item in seen_argument_items:
-                continue
-            seen_argument_items.add(argument_item)
-            module_argument_items.append(argument_item)
-
         # 从模块 [Rule] 抽 REJECT / REJECT-TINYGIF 到 Ad_Block.list
         for rule in module.get("rules", []):
             reject_rule = extract_reject_rule_from_module_rule(rule)
             if not reject_rule:
                 continue
 
-            if rule_matches_allowlist(reject_rule, allow_hosts):
+            if normalized_rule_matches_allowlist(reject_rule, allow_hosts):
                 rejected_log.append(f"rule_removed_by_allowlist\t{reject_rule}\t{module_id}\t{source_url}")
                 continue
 
@@ -734,6 +777,7 @@ def main() -> int:
                 rejected_log.append(f"mitm_removed_by_allowlist\t{host}\t{module_id}\t{source_url}")
                 continue
             mitm_hosts.add(host)
+            module_contributed_to_final_module = True
 
         for line in module.get("url_rewrite", []):
             s = sanitize_url_rewrite_line(line)
@@ -743,6 +787,7 @@ def main() -> int:
                 rejected_log.append(f"url_rewrite_removed_by_allowlist\t{s}\t{module_id}\t{source_url}")
                 continue
             url_rewrite.add(s)
+            module_contributed_to_final_module = True
 
         for line in module.get("header_rewrite", []):
             s = sanitize_header_line(line)
@@ -752,6 +797,7 @@ def main() -> int:
                 rejected_log.append(f"header_rewrite_removed_by_allowlist\t{s}\t{module_id}\t{source_url}")
                 continue
             header_rewrite.add(s)
+            module_contributed_to_final_module = True
 
         for line in module.get("body_rewrite", []):
             s = sanitize_body_line(line)
@@ -761,6 +807,7 @@ def main() -> int:
                 rejected_log.append(f"body_rewrite_removed_by_allowlist\t{s}\t{module_id}\t{source_url}")
                 continue
             body_rewrite.add(s)
+            module_contributed_to_final_module = True
 
         for item in module.get("scripts", []):
             line = sanitize_script_line(item.get("line") or "")
@@ -788,6 +835,7 @@ def main() -> int:
             existing = script_lines_by_key.get(key)
             if existing is None or line.casefold() < existing.casefold():
                 script_lines_by_key[key] = line
+                module_contributed_to_final_module = True
 
         for line in module.get("host", []):
             s = sanitize_host_mapping_line(line)
@@ -797,19 +845,41 @@ def main() -> int:
                 rejected_log.append(f"host_removed_by_allowlist\t{s}\t{module_id}\t{source_url}")
                 continue
             host_lines.add(s)
+            module_contributed_to_final_module = True
 
-    # Ad_Block.list：仅由当前发现到的模块规则构建，避免历史脏数据永久残留
+        if module_contributed_to_final_module and module_argument_candidates:
+            kept_items: list[str] = []
+            for argument_item in module_argument_candidates:
+                if argument_item in seen_argument_items:
+                    continue
+                seen_argument_items.add(argument_item)
+                module_argument_items.append(argument_item)
+                kept_items.append(argument_item)
+
+            if kept_items:
+                argument_catalog.append(
+                    {
+                        "module_name": module_name,
+                        "module_id": module_id,
+                        "source_url": source_url,
+                        "arguments": kept_items,
+                        "arguments_desc": module_argument_desc,
+                    }
+                )
+
+    # Ad_Block.list：仅由当前发现到的规则源与模块 REJECT 规则构建，避免历史脏数据永久残留
     final_rules = [
         r
         for r in dedupe_sorted(merged_rules)
-        if not rule_matches_allowlist(r, allow_hosts)
+        if not normalized_rule_matches_allowlist(r, allow_hosts)
         and not line_mentions_allowlisted_host(r, allow_hosts)
         and not line_matches_any_regex(r, allow_regexes)
     ]
     write_lines(STAGED_AD_BLOCK_LIST, final_rules)
+    write_text(ARGUMENT_CATALOG_JSON, json.dumps(argument_catalog, ensure_ascii=False, indent=2) + "\n")
 
     # Ad_Block.sgmodule：只输出 Surge 官方白名单语法
-    arguments_text = ",".join(module_argument_items)
+    arguments_text = "&".join(module_argument_items)
     module_text = build_module_text(
         arguments_text=arguments_text,
         mitm_hosts=mitm_hosts,

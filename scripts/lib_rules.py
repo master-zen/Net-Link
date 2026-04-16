@@ -346,8 +346,22 @@ def parse_abp_exception_to_host(line: str) -> str | None:
     return None
 
 
-def rule_matches_allowlist(rule: str, allow_hosts: set[str]) -> bool:
-    norm = normalize_rule_line(rule, strip_policy=True)
+def host_or_parent_matches(host: str, allow_hosts: set[str]) -> bool:
+    value = host.strip().lower().lstrip(".")
+    if not value:
+        return False
+    if value in allow_hosts:
+        return True
+
+    labels = value.split(".")
+    for idx in range(1, len(labels) - 1):
+        parent = ".".join(labels[idx:])
+        if parent in allow_hosts:
+            return True
+    return False
+
+
+def normalized_rule_matches_allowlist(norm: str, allow_hosts: set[str]) -> bool:
     if not norm:
         return False
 
@@ -358,15 +372,22 @@ def rule_matches_allowlist(rule: str, allow_hosts: set[str]) -> bool:
     head, value = parts[0].upper(), parts[1].lower()
 
     if head == "DOMAIN":
-        return any(value == host or value.endswith("." + host) for host in allow_hosts)
+        return host_or_parent_matches(value, allow_hosts)
 
     if head == "DOMAIN-SUFFIX":
-        return any(value == host or value.endswith("." + host) for host in allow_hosts)
+        return host_or_parent_matches(value, allow_hosts)
 
     if head == "DOMAIN-KEYWORD":
         return any(value in host for host in allow_hosts)
 
     return False
+
+
+def rule_matches_allowlist(rule: str, allow_hosts: set[str]) -> bool:
+    norm = normalize_rule_line(rule, strip_policy=True)
+    if not norm:
+        return False
+    return normalized_rule_matches_allowlist(norm, allow_hosts)
 
 
 def line_mentions_allowlisted_host(line: str, allow_hosts: set[str]) -> bool:
@@ -382,14 +403,8 @@ def line_mentions_allowlisted_host(line: str, allow_hosts: set[str]) -> bool:
         host = token.lstrip("*.").strip(".")
         if not host:
             continue
-        if host in allow_hosts:
+        if host_or_parent_matches(host, allow_hosts):
             return True
-
-        labels = host.split(".")
-        for idx in range(1, len(labels) - 1):
-            parent = ".".join(labels[idx:])
-            if parent in allow_hosts:
-                return True
 
     return False
 
