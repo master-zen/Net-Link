@@ -412,7 +412,6 @@ def collect_module_argument_items(module: dict) -> list[str]:
     metadata = module.get("metadata") or {}
     raw = str(metadata.get("arguments") or "").strip()
     items: list[str] = []
-
     for item in split_argument_items(raw):
         item = item.strip()
         if not item:
@@ -428,7 +427,6 @@ def collect_module_argument_items(module: dict) -> list[str]:
                 items.append(f"{key}={value}")
             continue
         items.append(item)
-
     return items
 
 
@@ -458,6 +456,15 @@ def normalize_group_title(text: str) -> str:
     return s
 
 
+def escape_header_value(text: str) -> str:
+    return (
+        text.replace("\\", "\\\\")
+        .replace("\r\n", "\n")
+        .replace("\r", "\n")
+        .replace("\n", "\\n")
+    )
+
+
 def make_unique_group_marker(module_name: str, used_markers: set[str]) -> str:
     base = normalize_group_title(module_name)
     candidate = f"↓"
@@ -474,34 +481,28 @@ def make_unique_group_marker(module_name: str, used_markers: set[str]) -> str:
         index += 1
 
 
-def build_argument_bundle(module_argument_blocks: list[dict]) -> tuple[list[str], list[dict[str, object]]]:
-    key_owners: dict[str, set[str]] = {}
-
-    for block in module_argument_blocks:
-        module_id = str(block["module_id"])
-        seen_keys_in_this_block: set[str] = set()
-
-        for raw in block["arguments"]:
-            parsed = parse_argument_item(raw)
-            if not parsed:
-                continue
-            key, _ = parsed
-            if key in seen_keys_in_this_block:
-                continue
-            seen_keys_in_this_block.add(key)
-            key_owners.setdefault(key, set()).add(module_id)
+def build_argument_bundle(module_argument_blocks: list[dict]) -> tuple[list[str], str, list[dict[str, object]]]:
+    used_markers: set[str] = set()
+    global_used_keys: set[str] = set()
 
     header_items: list[str] = []
+    desc_lines: list[str] = []
     catalog: list[dict[str, object]] = []
-    used_markers: set[str] = set()
 
+    section_index = 1
     for block in module_argument_blocks:
+        module_name = str(block["module_name"])
+        module_id = str(block["module_id"])
+        source_url = str(block["source_url"])
         original_items: list[str] = list(block["arguments"])
+        module_desc = str(block["arguments_desc"] or "").strip()
+
         kept_items: list[str] = []
         skipped_conflicts: list[str] = []
         skipped_invalid: list[str] = []
-        skipped_duplicates_in_module: list[str] = []
-        seen_keys_in_this_block: set[str] = set()
+        skipped_duplicate_keys_in_module: list[str] = []
+
+        seen_keys_in_module: set[str] = set()
 
         for raw in original_items:
             parsed = parse_argument_item(raw)
@@ -512,46 +513,78 @@ def build_argument_bundle(module_argument_blocks: list[dict]) -> tuple[list[str]
             key, value = parsed
             normalized_raw = f"{key}={value}"
 
-            if key in seen_keys_in_this_block:
-                skipped_duplicates_in_module.append(normalized_raw)
+            if key in seen_keys_in_module:
+                skipped_duplicate_keys_in_module.append(normalized_raw)
                 continue
-            seen_keys_in_this_block.add(key)
+            seen_keys_in_module.add(key)
 
-            if len(key_owners.get(key, set())) > 1:
+            if key in global_used_keys:
                 skipped_conflicts.append(normalized_raw)
                 continue
 
+            global_used_keys.add(key)
             kept_items.append(normalized_raw)
 
         group_marker = ""
         if kept_items:
-            group_marker = make_unique_group_marker(str(block["module_name"]), used_markers)
+            group_marker = make_unique_group_marker(module_name, used_markers)
             header_items.append(group_marker)
             header_items.extend(kept_items)
 
+            desc_lines.append(f"{section_index}️⃣ {normalize_group_title(module_name)}")
+            desc_lines.append("")
+            for item in kept_items:
+                desc_lines.append(f"• {normalize_group_title(module_name)}：{item}")
+            if module_desc:
+                desc_lines.append("")
+                desc_lines.append("说明：")
+                desc_lines.extend(module_desc.replace("\r\n", "\n").replace("\r", "\n").split("\n"))
+            if skipped_conflicts:
+                desc_lines.append("")
+                desc_lines.append("已跳过冲突参数：")
+                for item in skipped_conflicts:
+                    desc_lines.append(f"- {item}")
+            if skipped_duplicate_keys_in_module:
+                desc_lines.append("")
+                desc_lines.append("已跳过模块内重复参数：")
+                for item in skipped_duplicate_keys_in_module:
+                    desc_lines.append(f"- {item}")
+            if skipped_invalid:
+                desc_lines.append("")
+                desc_lines.append("已跳过无效参数：")
+                for item in skipped_invalid:
+                    desc_lines.append(f"- {item}")
+            desc_lines.append("")
+            section_index += 1
+
         catalog.append(
             {
-                "module_name": block["module_name"],
-                "module_id": block["module_id"],
-                "source_url": block["source_url"],
+                "module_name": module_name,
+                "module_id": module_id,
+                "source_url": source_url,
                 "group_marker": group_marker,
-                "arguments_desc": block["arguments_desc"],
                 "original_arguments": original_items,
                 "kept_arguments": kept_items,
+                "arguments_desc": module_desc,
                 "skipped_conflicting_arguments": skipped_conflicts,
                 "skipped_invalid_arguments": skipped_invalid,
-                "skipped_duplicate_keys_in_module": skipped_duplicates_in_module,
+                "skipped_duplicate_keys_in_module": skipped_duplicate_keys_in_module,
             }
         )
 
-    return header_items, catalog
+    if not desc_lines:
+        desc_lines = ["No module arguments were kept."]
+
+    arguments_desc_text = "\n".join(desc_lines).rstrip()
+    return header_items, arguments_desc_text, catalog
 
 
-def build_standard_module_header(arguments_text: str) -> str:
+def build_standard_module_header(arguments_text: str, arguments_desc_text: str) -> str:
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
     lines = list(STANDARD_MODULE_STATIC_HEADER_LINES)
     lines.append(f"#!date={timestamp}")
     lines.append(f"#!arguments={arguments_text}")
+    lines.append(f"#!arguments-desc={escape_header_value(arguments_desc_text)}")
     return "\n".join(lines)
 
 
@@ -616,6 +649,7 @@ def semantic_script_key(line: str) -> tuple[str, ...] | None:
 
 def build_module_text(
     arguments_text: str,
+    arguments_desc_text: str,
     mitm_hosts: set[str],
     url_rewrite: set[str],
     header_rewrite: set[str],
@@ -623,7 +657,7 @@ def build_module_text(
     scripts: set[str],
     host_lines: set[str],
 ) -> str:
-    lines: list[str] = [build_standard_module_header(arguments_text), ""]
+    lines: list[str] = [build_standard_module_header(arguments_text, arguments_desc_text), ""]
 
     clean_mitm_hosts = [
         h for h in (sanitize_mitm_host(x) for x in sorted(mitm_hosts, key=lambda s: s.casefold()))
@@ -705,7 +739,7 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
     if not metadata_lines:
         return False, "missing metadata header"
 
-    expected_metadata_count = len(STANDARD_MODULE_STATIC_HEADER_LINES) + 2
+    expected_metadata_count = len(STANDARD_MODULE_STATIC_HEADER_LINES) + 3
     if len(metadata_lines) != expected_metadata_count:
         return False, f"unexpected metadata header length: {len(metadata_lines)}"
 
@@ -719,6 +753,10 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
     arguments_line = metadata_lines[len(STANDARD_MODULE_STATIC_HEADER_LINES) + 1]
     if not arguments_line.startswith("#!arguments="):
         return False, f"missing standard arguments header: {arguments_line}"
+
+    arguments_desc_line = metadata_lines[len(STANDARD_MODULE_STATIC_HEADER_LINES) + 2]
+    if not arguments_desc_line.startswith("#!arguments-desc="):
+        return False, f"missing standard arguments-desc header: {arguments_desc_line}"
 
     if "{{{" in text or "}}}" in text:
         return False, "contains unresolved template placeholders"
@@ -796,7 +834,7 @@ def load_legacy_rules(allow_hosts: set[str]) -> tuple[set[str], list[str]]:
         try:
             text = legacy_fetch_text(source_url)
         except Exception as exc:
-            rejected_log.append(f"legacy_source_fetch_failed\t{source_url}\t{type(exc).__name__}")
+            rejected_log.append(f"legacy_source_fetch_failed\t{source_url}\t{type(exc).__name__}: {exc}")
             continue
 
         for raw_line in text.splitlines():
@@ -872,7 +910,6 @@ def main() -> int:
             rejected_log.append(f"module_excluded_by_security\t{module_id}\t{module_name}\t{source_url}")
             continue
 
-        # 从模块 [Rule] 抽 REJECT / REJECT-TINYGIF 到 Ad_Block.list
         for rule in module.get("rules", []):
             reject_rule = extract_reject_rule_from_module_rule(rule)
             if not reject_rule:
@@ -983,12 +1020,13 @@ def main() -> int:
     ]
     write_lines(STAGED_AD_BLOCK_LIST, final_rules)
 
-    module_argument_items, argument_catalog = build_argument_bundle(module_argument_blocks)
+    module_argument_items, arguments_desc_text, argument_catalog = build_argument_bundle(module_argument_blocks)
     write_text(ARGUMENT_CATALOG_JSON, json.dumps(argument_catalog, ensure_ascii=False, indent=2) + "\n")
 
     arguments_text = "&".join(module_argument_items)
     module_text = build_module_text(
         arguments_text=arguments_text,
+        arguments_desc_text=arguments_desc_text,
         mitm_hosts=mitm_hosts,
         url_rewrite=url_rewrite,
         header_rewrite=header_rewrite,
