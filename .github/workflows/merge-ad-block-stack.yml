@@ -119,7 +119,7 @@ jobs:
 
       - name: Upload ad-block diagnostics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ad-block-diagnostics
           if-no-files-found: ignore
