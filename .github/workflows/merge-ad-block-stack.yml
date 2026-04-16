@@ -70,46 +70,29 @@ jobs:
           sudo systemctl stop clamav-freshclam.service || true
           sudo pkill -x freshclam || true
 
+          if ! command -v freshclam >/dev/null 2>&1; then
+            echo "freshclam not found, skip database update"
+            exit 0
+          fi
+
           mkdir -p "$RUNNER_TEMP/clamav-db"
 
-          clamconf -g freshclam.conf > "$RUNNER_TEMP/freshclam.conf"
-
-          sed -i \
-            -e '/^[[:space:]]*Example[[:space:]]*$/d' \
-            -e '/^[[:space:]]*DatabaseDirectory[[:space:]]\+/d' \
-            -e '/^[[:space:]]*UpdateLogFile[[:space:]]\+/d' \
-            -e '/^[[:space:]]*DatabaseOwner[[:space:]]\+/d' \
-            -e '/^[[:space:]]*Checks[[:space:]]\+/d' \
-            -e '/^[[:space:]]*DatabaseMirror[[:space:]]\+/d' \
-            -e '/^[[:space:]]*DNSDatabaseInfo[[:space:]]\+/d' \
-            -e '/^[[:space:]]*Foreground[[:space:]]\+/d' \
-            -e '/^[[:space:]]*NotifyClamd[[:space:]]\+/d' \
-            -e '/^[[:space:]]*ScriptedUpdates[[:space:]]\+/d' \
-            -e '/^[[:space:]]*TestDatabases[[:space:]]\+/d' \
-            -e '/^[[:space:]]*CompressLocalDatabase[[:space:]]\+/d' \
-            -e '/^[[:space:]]*ConnectTimeout[[:space:]]\+/d' \
-            -e '/^[[:space:]]*ReceiveTimeout[[:space:]]\+/d' \
-            "$RUNNER_TEMP/freshclam.conf"
-
-          cat >> "$RUNNER_TEMP/freshclam.conf" <<EOF
+          cat > "$RUNNER_TEMP/freshclam.conf" <<EOF
           DatabaseDirectory $RUNNER_TEMP/clamav-db
-          DatabaseOwner root
           DatabaseMirror database.clamav.net
-          DNSDatabaseInfo current.cvd.clamav.net
-          Checks 1
-          Foreground true
-          ConnectTimeout 30
-          ReceiveTimeout 60
-          ScriptedUpdates yes
-          TestDatabases no
-          CompressLocalDatabase no
           EOF
 
           echo "===== freshclam.conf ====="
           cat "$RUNNER_TEMP/freshclam.conf"
           echo "=========================="
 
-          sudo freshclam --stdout --config-file="$RUNNER_TEMP/freshclam.conf" || {
+          sudo freshclam \
+            --stdout \
+            --config-file="$RUNNER_TEMP/freshclam.conf" \
+            --datadir="$RUNNER_TEMP/clamav-db" \
+            --checks=1 \
+            -u root \
+          || {
             echo "freshclam update skipped, but workflow will continue"
             exit 0
           }
