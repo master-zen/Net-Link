@@ -72,20 +72,48 @@ jobs:
 
           mkdir -p "$RUNNER_TEMP/clamav-db"
 
-          cat > "$RUNNER_TEMP/freshclam.conf" <<EOF
+          clamconf -g freshclam.conf > "$RUNNER_TEMP/freshclam.conf"
+
+          sed -i \
+            -e '/^[[:space:]]*Example[[:space:]]*$/d' \
+            -e '/^[[:space:]]*DatabaseDirectory[[:space:]]\+/d' \
+            -e '/^[[:space:]]*UpdateLogFile[[:space:]]\+/d' \
+            -e '/^[[:space:]]*DatabaseOwner[[:space:]]\+/d' \
+            -e '/^[[:space:]]*Checks[[:space:]]\+/d' \
+            -e '/^[[:space:]]*DatabaseMirror[[:space:]]\+/d' \
+            -e '/^[[:space:]]*DNSDatabaseInfo[[:space:]]\+/d' \
+            -e '/^[[:space:]]*Foreground[[:space:]]\+/d' \
+            -e '/^[[:space:]]*NotifyClamd[[:space:]]\+/d' \
+            -e '/^[[:space:]]*ScriptedUpdates[[:space:]]\+/d' \
+            -e '/^[[:space:]]*TestDatabases[[:space:]]\+/d' \
+            -e '/^[[:space:]]*CompressLocalDatabase[[:space:]]\+/d' \
+            -e '/^[[:space:]]*ConnectTimeout[[:space:]]\+/d' \
+            -e '/^[[:space:]]*ReceiveTimeout[[:space:]]\+/d' \
+            "$RUNNER_TEMP/freshclam.conf"
+
+          cat >> "$RUNNER_TEMP/freshclam.conf" <<EOF
           DatabaseDirectory $RUNNER_TEMP/clamav-db
+          DatabaseOwner root
           DatabaseMirror database.clamav.net
           DNSDatabaseInfo current.cvd.clamav.net
           Checks 1
           Foreground true
           ConnectTimeout 30
-          ReceiveTimeout 30
+          ReceiveTimeout 60
+          ScriptedUpdates yes
           TestDatabases no
           CompressLocalDatabase no
-          ScriptedUpdates yes
           EOF
 
-          sudo freshclam --stdout --config-file="$RUNNER_TEMP/freshclam.conf" || true
+          echo "===== freshclam.conf ====="
+          cat "$RUNNER_TEMP/freshclam.conf"
+          echo "=========================="
+
+          sudo freshclam --stdout --config-file="$RUNNER_TEMP/freshclam.conf" || {
+            echo "freshclam update skipped, but workflow will continue"
+            exit 0
+          }
+
           echo "CLAMAV_DB_DIR=$RUNNER_TEMP/clamav-db" >> "$GITHUB_ENV"
 
       - name: Validate required ad-block inputs
