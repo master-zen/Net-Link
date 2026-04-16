@@ -5126,19 +5126,3 @@ YouTube翻译定时文本响应 = type=http-response, pattern=^https?:\/\/(www|m
 高德地图 = type=http-response, pattern=^https:\/\/m5\.amap\.com\/ws\/shield\/search_poi\/(?:mps|search\/sp|sug|tips_operation_location), script-path=https://raw.perzikkop.com/Scripts/Amap.js, requires-body=true
 高德地图 = type=http-response, pattern=^https:\/\/m5\.amap\.com\/ws\/valueadded\/alimama\/splash_screen\?, script-path=https://raw.perzikkop.com/Scripts/Amap.js, requires-body=true
 📺 TV.umc.request = type=http-request, pattern=^https?:\/\/umc-tempo-api\.apple\.com\/(v1|v2|v3)\/, requires-body=1, script-path=https://github.com/NSRingo/TV/releases/download/v3.4.4/request.bundle.js, argument=
-
-[Host]
-*.cdn-go.cn = server:https://doh.pub/dns-query
-*.gtimg.cn = server:https://doh.pub/dns-query
-*.idqqimg.com = server:https://doh.pub/dns-query
-*.qlogo.cn = server:https://doh.pub/dns-query
-*.qpic.cn = server:https://doh.pub/dns-query
-*.qq.com = server:https://doh.pub/dns-query
-*.servicewechat.com = server:https://doh.pub/dns-query
-*.tencent.com = server:https://doh.pub/dns-query
-*.wechat.com = server:https://doh.pub/dns-query
-*.weixin.com = server:https://doh.pub/dns-query
-*.weixin.qq.com = server:https://doh.pub/dns-query
-*.weixinbridge.com = server:https://doh.pub/dns-query
-*.wx.qq.com = server:https://doh.pub/dns-query
-url.cn = server:https://doh.pub/dns-query
