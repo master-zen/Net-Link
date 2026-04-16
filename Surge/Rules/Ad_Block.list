@@ -425,7 +425,7 @@ URL-REGEX,^https?:\/\/api\.zhihu\.com\/moments\/recent
 URL-REGEX,^https?:\/\/api\.zhihu\.com\/root\/window
 URL-REGEX,^https?:\/\/api\.zhihu\.com\/settings\/new\/notification
 URL-REGEX,^https?:\/\/www\.zhihu\.com\/api\/v\d+\/brand\/question/\d+/card\?
-USER-AGENT,"Httpdns*"
 USER-AGENT,"httpdns*"
+USER-AGENT,"Httpdns*"
 USER-AGENT,"Httpsdns*"
 USER-AGENT,"httpsdns*"

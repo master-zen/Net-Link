@@ -6,7 +6,7 @@
 #!openUrl=https://apps.apple.com/us/app/surge-5/id1442620678
 #!tag=AD Block
 #!homepage=https://github.com/master-zen/Net-Link/
-#!date=2026-04-16 13:19:58
+#!date=2026-04-16 13:44:11
 #!arguments=glgclmmg_enable:true,per_filter_video_thread:"true",removePinnedArticles:false,removeAllBanners:false,tab:false,useractivity:true,隐藏底部标签开关↓:--,发现:0,漫游:1,笔记:0,隐藏首页卡片开关↓:--,问候语:1,每日推荐:0,推荐歌单:0,最近常听:0,音乐合伙人:0,雷达歌单:1,排行榜:0,推荐专属歌单:1,你的专属歌单:1,脚本伪vip:#,per_filter_video:0,Splash:true,Feed.AD:true,Feed.Activity:false,Feed.Vertical:false,Feed.BlockUpLiveList:"",Feed.Story:true,Search.AD:true,Search.HotSearch:true,PGC.AD:true,Xlive.AD:true,Dynamic.HotTopics:true,Dynamic.MostVisited:false,Dynamic.MostVisitedLiveOnly:false,Dynamic.AdCard:true,View.AD:true,DM.Command:false,DM.Colorful:false,Reply.AD:true,LogLevel:"WARN",动态最常访问:auto,创作中心:0,过滤置顶评论广告:1,空降助手:bilibili.airborne,空降助手弹幕版:#,替换鉴权字段:#,Authorization:identify_v1 xxx,NSFW:"Nsfw",TRANSLATION:"http-request",屏蔽上传按钮:true,屏蔽选段按钮:true,屏蔽Shorts按钮:false,字幕翻译语言:off,歌词翻译语言:off,启用调试模式:false
 
 [MITM]
