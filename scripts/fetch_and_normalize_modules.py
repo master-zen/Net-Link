@@ -31,7 +31,8 @@ SECTION_ALIASES = {
     "script": "script",
     "scriptlocal": "script",
     "host": "host",
-    "maplocal": "host",
+    "maplocal": None,   # 严格模式：不把 Map Local 塞进最终模块
+    "mock": None,
 }
 
 SURGE_SCRIPT_TYPE_MAP = {
@@ -44,6 +45,26 @@ SURGE_SCRIPT_TYPE_MAP = {
 BAD_TEMPLATE_RE = re.compile(r"\{\{\{.*?\}\}\}")
 MODULE_OPERATOR_RE = re.compile(r"(?i)%\s*(APPEND|INSERT|REPLACE)\s*%")
 HOST_LIKE_RE = re.compile(r"^[*.-]*[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+$")
+URL_REWRITE_RE = re.compile(r"^\^.+\s+.+\s+(header|302|reject)$", re.IGNORECASE)
+HEADER_ACTION_RE = re.compile(
+    r"^(http-request|http-response)\s+.+\s+(header-add|header-del|header-replace|header-replace-regex)\s+.+$",
+    re.IGNORECASE,
+)
+BODY_REWRITE_RE = re.compile(
+    r"^(http-request|http-response|http-request-jq|http-response-jq)\s+.+$",
+    re.IGNORECASE,
+)
+HOST_MAPPING_RE = re.compile(
+    r"""^(
+        (DOMAIN-SET:[^=\s]+)|
+        (RULE-SET:[^=\s]+)|
+        ([*A-Za-z0-9._-]+)
+    )\s*=\s*(
+        server:[^=\s]+|
+        [*A-Za-z0-9._:-]+
+    )$""",
+    re.IGNORECASE | re.VERBOSE,
+)
 
 
 def read_url_list(path: Path) -> list[str]:
@@ -94,7 +115,7 @@ def split_sections(text: str) -> tuple[dict[str, list[str]], dict[str, str]]:
             continue
 
         if current is None:
-            # 不在合法 section 里的内容一律丢弃
+            # 任何不在合法 section 里的内容一律丢弃
             continue
 
         sections[current].append(line)
@@ -137,7 +158,6 @@ def normalize_mitm_line(line: str) -> list[str]:
     hosts: list[str] = []
     for part in [p.strip().lower().lstrip(".") for p in s.split(",") if p.strip()]:
         part = strip_module_operator_tokens(part)
-
         if not part:
             continue
         if "%" in part:
@@ -148,36 +168,19 @@ def normalize_mitm_line(line: str) -> list[str]:
             continue
         if not HOST_LIKE_RE.match(part):
             continue
-
         hosts.append(part)
 
     return hosts
 
 
-def is_supported_surge_url_rewrite(line: str) -> bool:
-    s = line.strip()
-    if not s.startswith("^"):
-        return False
-
-    lower = s.lower()
-
-    if re.search(r"\sheader$", lower):
-        return True
-    if re.search(r"\s302$", lower):
-        return True
-    if re.search(r"\s(?:_|-)?\s*reject(?:-\w+)?$", lower):
-        return True
-
-    return False
-
-
-def normalize_rewrite_line(line: str) -> str | None:
+def normalize_url_rewrite_line(line: str) -> str | None:
     s = strip_no_resolve_and_trailing_commas(line.strip())
     if not s or is_obviously_broken_line(s):
         return None
 
     lower = s.lower()
 
+    # 这些都不是 Surge 最终 URL Rewrite 语法
     banned_tokens = [
         "reject-dict",
         "reject-200",
@@ -189,7 +192,7 @@ def normalize_rewrite_line(line: str) -> str | None:
     if any(token in lower for token in banned_tokens):
         return None
 
-    # QX-style reject -> Surge reject
+    # QX 风格：^... url reject  -> Surge: ^... _ reject
     if " url " in s:
         left, right = s.split(" url ", 1)
         action = right.strip().lower()
@@ -197,13 +200,13 @@ def normalize_rewrite_line(line: str) -> str | None:
             return f"{left.strip()} _ reject"
         return None
 
-    if not is_supported_surge_url_rewrite(s):
-        return None
-
-    # 统一 reject 写法
+    # 统一 reject 写法到 Surge 官方例子风格：_ reject
     if re.search(r"\s(?:-|_)?\s*reject(?:-\w+)?$", lower):
         rule = re.sub(r"\s(?:-|_)?\s*reject(?:-\w+)?$", "", s, flags=re.IGNORECASE).strip()
-        return f"{rule} _ reject"
+        s = f"{rule} _ reject"
+
+    if not URL_REWRITE_RE.match(s):
+        return None
 
     return s
 
@@ -263,12 +266,7 @@ def normalize_header_line(line: str) -> str | None:
     if not s or is_obviously_broken_line(s):
         return None
 
-    lower = s.lower()
-    valid_actions = ("header-add", "header-del", "header-replace", "header-replace-regex")
-
-    if (lower.startswith("http-request ") or lower.startswith("http-response ")) and any(
-        f" {action} " in lower for action in valid_actions
-    ):
+    if HEADER_ACTION_RE.match(s):
         return s
 
     return None
@@ -281,11 +279,11 @@ def normalize_body_line(line: str) -> str | None:
 
     lower = s.lower()
 
-    # Surge 原生 body rewrite
-    if lower.startswith("http-request ") or lower.startswith("http-response "):
+    # 原生 Surge body rewrite
+    if BODY_REWRITE_RE.match(s):
         return s
 
-    # 仅做严格可确认的 QX -> Surge JQ 转换
+    # 严格可确认的 QX -> Surge JQ 转换
     if " response-body-json-jq " in s:
         try:
             pattern, jq_expr = s.split(" response-body-json-jq ", 1)
@@ -296,11 +294,13 @@ def normalize_body_line(line: str) -> str | None:
                 return None
 
             if pattern.startswith("^") and jq_expr:
-                return f"http-response-jq {pattern} {jq_expr}"
+                candidate = f"http-response-jq {pattern} {jq_expr}"
+                if BODY_REWRITE_RE.match(candidate):
+                    return candidate
         except Exception:
             return None
 
-    # 这些不做猜测转换，直接丢弃
+    # 以下不做猜测转换
     banned_tokens = [
         "response-body-json-del",
         "response-body-replace-regex",
@@ -316,9 +316,13 @@ def normalize_host_line(line: str) -> str | None:
     s = strip_no_resolve_and_trailing_commas(line.strip())
     if not s or is_obviously_broken_line(s):
         return None
-    if "=" not in s:
-        return None
-    return s
+
+    # Host 段只允许 Surge Local DNS Mapping 语法
+    if HOST_MAPPING_RE.match(s):
+        return s
+
+    # data= / data-type= / status-code= 这些属于 Map Local/Mock，不允许混进 Host
+    return None
 
 
 def module_name_from_url(url: str) -> str:
@@ -372,7 +376,7 @@ def main() -> int:
                 rules.append(norm)
 
         for line in sections["url_rewrite"]:
-            norm = normalize_rewrite_line(line)
+            norm = normalize_url_rewrite_line(line)
             if norm:
                 url_rewrite.append(norm)
 
