@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import hashlib
 import ipaddress
 import json
 import os
@@ -15,8 +14,8 @@ import struct
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from functools import lru_cache
 from pathlib import Path
+from threading import Lock
 from typing import Iterable
 from urllib.request import Request, urlopen
 
@@ -38,29 +37,55 @@ VALIDATION_REPORT = BUILD_DIR / "china_validation.json"
 REVIEW_REPORT = BUILD_DIR / "china_review.json"
 REJECTED_REPORT = BUILD_DIR / "china_rejected.json"
 UNRESOLVED_REPORT = BUILD_DIR / "china_unresolved.json"
+DNS_CACHE_FILE = BUILD_DIR / "china_dns_cache.json"
 
 COMMENT_PREFIXES = ("#", ";", "//")
 DOMAIN_RULE_TYPES = {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD"}
 IP_RULE_TYPES = {"IP-CIDR", "IP-CIDR6", "IP-ASN"}
 NO_RESOLVE_RE = re.compile(r"(?i),\s*no-resolve\b")
 
-# 多家大陆公共 DNS，避免单家限速/污染/视角偏差
-DEFAULT_DNS_SERVERS = [
+# 国内公共 DNS：串行回退，前一台有有效答案就不再继续试下一台
+DEFAULT_CN_DNS_SERVERS = [
     "119.29.29.29",      # DNSPod
     "180.76.76.76",      # Baidu
     "223.5.5.5",         # AliDNS
     "223.6.6.6",         # AliDNS
     "114.114.114.114",   # 114DNS
+    "114.114.115.115",   # 114DNS
     "1.2.4.8",           # CNNIC SDNS
     "210.2.4.8",         # CNNIC SDNS
-    "101.226.4.6",       # 360 电信/移动
-    "218.30.118.6",      # 360 电信/移动
-    "123.125.81.6",      # 360 联通
-    "140.207.198.6",     # 360 联通
+    "101.226.4.6",       # 360
+    "218.30.118.6",      # 360
+    "123.125.81.6",      # 360
+    "140.207.198.6",     # 360
+]
+
+# 国际公共 DNS：串行回退，前一台有有效答案就不再继续试下一台
+DEFAULT_INTL_DNS_SERVERS = [
+    "1.1.1.1",           # Cloudflare
+    "1.0.0.1",           # Cloudflare
+    "8.8.8.8",           # Google
+    "8.8.4.4",           # Google
+    "9.9.9.9",           # Quad9
+    "149.112.112.112",   # Quad9
+    "208.67.222.222",    # OpenDNS
+    "208.67.220.220",    # OpenDNS
+    "64.6.64.6",         # Verisign
+    "64.6.65.6",         # Verisign
+    "4.2.2.1",           # Level3 / CenturyLink
+    "4.2.2.2",
+    "4.2.2.3",
+    "4.2.2.4",
+    "4.2.2.5",
+    "4.2.2.6",
+    "156.154.70.1",      # Neustar
+    "156.154.71.1",      # Neustar
+    "77.88.8.8",         # Yandex
+    "77.88.8.1",         # Yandex
 ]
 
 SAMPLE_PREFIXES = [
-    "",         # apex
+    "",
     "www",
     "m",
     "api",
@@ -74,14 +99,10 @@ SAMPLE_PREFIXES = [
 
 DNS_TIMEOUT = float(os.getenv("CHINA_DNS_TIMEOUT", "1.5"))
 DNS_TCP_TIMEOUT = float(os.getenv("CHINA_DNS_TCP_TIMEOUT", "2.5"))
-DNS_MAX_VIEWS = int(os.getenv("CHINA_DNS_MAX_VIEWS", "8"))
-DNS_MIN_SUCCESS_VIEWS = int(os.getenv("CHINA_DNS_MIN_SUCCESS_VIEWS", "4"))
 MAX_CNAME_DEPTH = int(os.getenv("CHINA_DNS_MAX_CNAME_DEPTH", "8"))
-MAX_WORKERS = int(os.getenv("CHINA_MAX_WORKERS", "48"))
+MAX_WORKERS = int(os.getenv("CHINA_MAX_WORKERS", "32"))
 MIN_SUFFIX_CONFIRMED_HOSTS = int(os.getenv("CHINA_MIN_SUFFIX_CONFIRMED_HOSTS", "2"))
-
-ENV_DNS_SERVERS = [x.strip() for x in os.getenv("CHINA_DNS_SERVERS", "").split(",") if x.strip()]
-DNS_SERVERS = ENV_DNS_SERVERS or DEFAULT_DNS_SERVERS
+DNS_CACHE_TTL_SECONDS = int(os.getenv("CHINA_DNS_CACHE_TTL_SECONDS", str(48 * 60 * 60)))
 
 TYPE_A = 1
 TYPE_CNAME = 5
@@ -92,6 +113,13 @@ STATUS_KEEP = "keep"
 STATUS_REJECT = "reject"
 STATUS_REVIEW = "review"
 STATUS_NO_RECORD = "no_record"
+
+ENV_CN_DNS = [x.strip() for x in os.getenv("CHINA_CN_DNS_SERVERS", "").split(",") if x.strip()]
+ENV_INTL_DNS = [x.strip() for x in os.getenv("CHINA_INTL_DNS_SERVERS", "").split(",") if x.strip()]
+CN_DNS_SERVERS = ENV_CN_DNS or DEFAULT_CN_DNS_SERVERS
+INTL_DNS_SERVERS = ENV_INTL_DNS or DEFAULT_INTL_DNS_SERVERS
+
+CACHE_LOCK = Lock()
 
 
 def fetch_text(url: str, timeout: int = 30, retries: int = 3) -> str:
@@ -119,6 +147,7 @@ def fetch_text(url: str, timeout: int = 30, retries: int = 3) -> str:
 def ensure_parent_dirs() -> None:
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     VALIDATION_REPORT.parent.mkdir(parents=True, exist_ok=True)
+    DNS_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 
 def is_comment_or_empty(line: str) -> bool:
@@ -137,14 +166,17 @@ def normalize_domain_rule(line: str) -> str | None:
     s = strip_no_resolve_and_trailing_commas(line.strip())
     if is_comment_or_empty(s):
         return None
+
     normalized = normalize_rule_line(s, strip_policy=True)
     if not normalized:
         if s.startswith("."):
             normalized = normalize_rule_line(f"DOMAIN-SUFFIX,{s[1:]}", strip_policy=True)
         else:
             normalized = normalize_rule_line(f"DOMAIN,{s}", strip_policy=True)
+
     if not normalized:
         return None
+
     head = normalized.split(",", 1)[0].upper()
     if head not in DOMAIN_RULE_TYPES:
         return None
@@ -162,7 +194,6 @@ def normalize_ip_rule(line: str) -> str | None:
         if head in IP_RULE_TYPES:
             return normalized
 
-    # 支持纯 CIDR / 纯 IP 输入
     try:
         network = ipaddress.ip_network(s, strict=False)
         if isinstance(network, ipaddress.IPv6Network):
@@ -216,6 +247,7 @@ def fetch_and_normalize(sources: list[str], normalizer) -> tuple[set[str], list[
                     "error": str(exc),
                 }
             )
+
     return merged, source_status, failures
 
 
@@ -403,8 +435,70 @@ def tcp_dns_exchange(server: str, name: str, qtype: int, timeout: float) -> dict
     return parse_dns_message(data, txid)
 
 
-@lru_cache(maxsize=262144)
-def dns_query(server: str, name: str, qtype: int) -> dict:
+def load_dns_cache() -> dict:
+    if not DNS_CACHE_FILE.exists():
+        return {}
+    try:
+        data = json.loads(DNS_CACHE_FILE.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def save_dns_cache(cache: dict) -> None:
+    DNS_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
+    DNS_CACHE_FILE.write_text(
+        json.dumps(cache, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+def prune_dns_cache(cache: dict) -> dict:
+    now = int(time.time())
+    pruned = {}
+    for key, value in cache.items():
+        if not isinstance(value, dict):
+            continue
+        ts = int(value.get("timestamp", 0))
+        if now - ts <= DNS_CACHE_TTL_SECONDS:
+            pruned[key] = value
+    return pruned
+
+
+def make_dns_query_cache_key(server: str, host: str, qtype: int) -> str:
+    return f"dnsq|{server}|{host.rstrip('.').lower()}|{qtype}"
+
+
+def make_group_cache_key(group_name: str, host: str) -> str:
+    return f"group|{group_name}|{host.rstrip('.').lower()}"
+
+
+def get_cached_result(cache: dict, key: str) -> dict | None:
+    with CACHE_LOCK:
+        item = cache.get(key)
+        if not isinstance(item, dict):
+            return None
+        ts = int(item.get("timestamp", 0))
+        if int(time.time()) - ts > DNS_CACHE_TTL_SECONDS:
+            return None
+        result = item.get("result")
+        return result if isinstance(result, dict) else None
+
+
+def set_cached_result(cache: dict, key: str, result: dict) -> None:
+    with CACHE_LOCK:
+        cache[key] = {
+            "timestamp": int(time.time()),
+            "result": result,
+        }
+
+
+def dns_query(server: str, name: str, qtype: int, cache: dict) -> dict:
+    key = make_dns_query_cache_key(server, name, qtype)
+    cached = get_cached_result(cache, key)
+    if cached is not None:
+        return cached
+
     try:
         result = udp_dns_exchange(server, name, qtype, DNS_TIMEOUT)
         if result.get("truncated"):
@@ -412,9 +506,8 @@ def dns_query(server: str, name: str, qtype: int) -> dict:
         result["server"] = server
         result["name"] = name
         result["error"] = ""
-        return result
     except Exception as exc:
-        return {
+        result = {
             "server": server,
             "name": name,
             "rcode": None,
@@ -424,14 +517,11 @@ def dns_query(server: str, name: str, qtype: int) -> dict:
             "error": f"{type(exc).__name__}: {exc}",
         }
 
-
-def ordered_dns_servers(host: str) -> list[str]:
-    def keyfunc(server: str) -> str:
-        return hashlib.sha1(f"{host}|{server}".encode("utf-8")).hexdigest()
-    return sorted(DNS_SERVERS, key=keyfunc)
+    set_cached_result(cache, key, result)
+    return result
 
 
-def resolve_host_via_server(server: str, host: str) -> dict:
+def resolve_host_via_server(server: str, host: str, cache: dict) -> dict:
     pending = [host.rstrip(".")]
     seen_names: set[str] = set()
     all_ips: set[str] = set()
@@ -447,7 +537,7 @@ def resolve_host_via_server(server: str, host: str) -> dict:
         seen_names.add(current)
 
         for qtype in (TYPE_A, TYPE_AAAA):
-            resp = dns_query(server, current, qtype)
+            resp = dns_query(server, current, qtype, cache)
             if resp["error"]:
                 had_error = True
                 continue
@@ -487,76 +577,143 @@ def resolve_host_via_server(server: str, host: str) -> dict:
     }
 
 
-def verify_exact_host_strict(host: str, cn_networks: list[ipaddress._BaseNetwork]) -> dict:
-    host = host.strip().lower().lstrip(".")
-    servers = ordered_dns_servers(host)
-    max_views = min(max(DNS_MIN_SUCCESS_VIEWS, 1), max(DNS_MAX_VIEWS, 1), len(servers))
+def signatures_equal(a: dict, b: dict) -> bool:
+    return (
+        sorted(a.get("ips", [])) == sorted(b.get("ips", []))
+        and sorted(a.get("cnames", [])) == sorted(b.get("cnames", []))
+    )
 
-    views: list[dict] = []
-    cn_ips: set[str] = set()
-    non_cn_ips: set[str] = set()
-    success_views = 0
-    no_record_views = 0
 
-    for server in servers[:max_views]:
-        view = resolve_host_via_server(server, host)
-        views.append(view)
+def resolve_host_group_serial(group_name: str, servers: list[str], host: str, cache: dict) -> dict:
+    key = make_group_cache_key(group_name, host)
+    cached = get_cached_result(cache, key)
+    if cached is not None:
+        return cached
+
+    tried_views: list[dict] = []
+    no_record_like = True
+
+    for server in servers:
+        view = resolve_host_via_server(server, host, cache)
+        tried_views.append(view)
 
         if view["status"] == "answered":
-            success_views += 1
-            for ip_text in view["ips"]:
-                if ip_is_in_cn_networks(ip_text, cn_networks):
-                    cn_ips.add(ip_text)
-                else:
-                    non_cn_ips.add(ip_text)
-        elif view["status"] in {"nxdomain", "nodata"}:
-            no_record_views += 1
+            result = {
+                "group": group_name,
+                "host": host,
+                "status": "answered",
+                "ips": sorted(view["ips"]),
+                "cnames": sorted(view["cnames"]),
+                "chosen_server": server,
+                "tried_views": tried_views,
+            }
+            set_cached_result(cache, key, result)
+            return result
 
+        if view["status"] not in {"nxdomain", "nodata"}:
+            no_record_like = False
+
+    result = {
+        "group": group_name,
+        "host": host,
+        "status": "no_record" if no_record_like else "error",
+        "ips": [],
+        "cnames": [],
+        "chosen_server": "",
+        "tried_views": tried_views,
+    }
+    set_cached_result(cache, key, result)
+    return result
+
+
+def classify_ip_set(ip_list: list[str], cn_networks: list[ipaddress._BaseNetwork]) -> tuple[set[str], set[str]]:
+    cn_ips = set()
+    non_cn_ips = set()
+    for ip_text in ip_list:
+        if ip_is_in_cn_networks(ip_text, cn_networks):
+            cn_ips.add(ip_text)
+        else:
+            non_cn_ips.add(ip_text)
+    return cn_ips, non_cn_ips
+
+
+def verify_exact_host_dual_group(host: str, cn_networks: list[ipaddress._BaseNetwork], cache: dict) -> dict:
+    host = host.strip().lower().lstrip(".")
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        future_cn = executor.submit(resolve_host_group_serial, "cn", CN_DNS_SERVERS, host, cache)
+        future_intl = executor.submit(resolve_host_group_serial, "intl", INTL_DNS_SERVERS, host, cache)
+        cn_group = future_cn.result()
+        intl_group = future_intl.result()
+
+    # 两组结果不同，直接剔除
+    if cn_group["status"] != intl_group["status"]:
+        return {
+            "status": STATUS_REJECT,
+            "host": host,
+            "reason": "cn_intl_status_diverged",
+            "cn_group": cn_group,
+            "intl_group": intl_group,
+        }
+
+    if cn_group["status"] == "answered":
+        if not signatures_equal(cn_group, intl_group):
+            return {
+                "status": STATUS_REJECT,
+                "host": host,
+                "reason": "cn_intl_answer_diverged",
+                "cn_group": cn_group,
+                "intl_group": intl_group,
+            }
+
+        cn_ips, non_cn_ips = classify_ip_set(cn_group["ips"], cn_networks)
         if non_cn_ips:
             return {
                 "status": STATUS_REJECT,
                 "host": host,
+                "reason": "answered_but_contains_non_cn_ip",
+                "cn_group": cn_group,
+                "intl_group": intl_group,
                 "cn_ips": sorted(cn_ips),
                 "non_cn_ips": sorted(non_cn_ips),
-                "success_views": success_views,
-                "no_record_views": no_record_views,
-                "views": views,
-                "reason": "found_non_cn_ip",
             }
 
-    if success_views >= DNS_MIN_SUCCESS_VIEWS and cn_ips and not non_cn_ips:
+        if not cn_ips:
+            return {
+                "status": STATUS_REJECT,
+                "host": host,
+                "reason": "answered_but_no_cn_ip",
+                "cn_group": cn_group,
+                "intl_group": intl_group,
+                "cn_ips": [],
+                "non_cn_ips": [],
+            }
+
         return {
             "status": STATUS_KEEP,
             "host": host,
+            "reason": "cn_intl_same_and_cn_only",
+            "cn_group": cn_group,
+            "intl_group": intl_group,
             "cn_ips": sorted(cn_ips),
             "non_cn_ips": [],
-            "success_views": success_views,
-            "no_record_views": no_record_views,
-            "views": views,
-            "reason": "enough_cn_views",
         }
 
-    if success_views == 0 and no_record_views == len(views) and len(views) == max_views:
+    if cn_group["status"] == "no_record":
         return {
             "status": STATUS_NO_RECORD,
             "host": host,
-            "cn_ips": [],
-            "non_cn_ips": [],
-            "success_views": 0,
-            "no_record_views": no_record_views,
-            "views": views,
-            "reason": "all_views_no_record",
+            "reason": "cn_intl_both_no_record",
+            "cn_group": cn_group,
+            "intl_group": intl_group,
         }
 
     return {
-        "status": STATUS_REVIEW,
+        "status": STATUS_REJECT,
         "host": host,
-        "cn_ips": sorted(cn_ips),
-        "non_cn_ips": sorted(non_cn_ips),
-        "success_views": success_views,
-        "no_record_views": no_record_views,
-        "views": views,
-        "reason": "insufficient_confidence",
+        "reason": "cn_intl_both_error_or_empty",
+        "cn_group": cn_group,
+        "intl_group": intl_group,
     }
 
 
@@ -571,37 +728,30 @@ def sample_hosts_for_suffix(suffix: str) -> list[str]:
     return hosts
 
 
-def verify_suffix_strict(suffix: str, cn_networks: list[ipaddress._BaseNetwork]) -> dict:
+def verify_suffix_dual_group(suffix: str, cn_networks: list[ipaddress._BaseNetwork], cache: dict) -> dict:
     suffix = suffix.strip().lower().lstrip(".")
     sampled_hosts = sample_hosts_for_suffix(suffix)
     host_results: list[dict] = []
 
     confirmed_keep = 0
-    saw_reject = False
-    saw_review = False
 
     for host in sampled_hosts:
-        result = verify_exact_host_strict(host, cn_networks)
+        result = verify_exact_host_dual_group(host, cn_networks, cache)
         host_results.append(result)
 
         if result["status"] == STATUS_REJECT:
-            saw_reject = True
-            break
+            return {
+                "status": STATUS_REJECT,
+                "suffix": suffix,
+                "sampled_hosts": sampled_hosts,
+                "host_results": host_results,
+                "reason": "sample_contains_rejected_host",
+            }
+
         if result["status"] == STATUS_KEEP:
             confirmed_keep += 1
-        elif result["status"] == STATUS_REVIEW:
-            saw_review = True
 
-    if saw_reject:
-        return {
-            "status": STATUS_REJECT,
-            "suffix": suffix,
-            "sampled_hosts": sampled_hosts,
-            "host_results": host_results,
-            "reason": "sample_contains_non_cn_ip",
-        }
-
-    if confirmed_keep >= MIN_SUFFIX_CONFIRMED_HOSTS and not saw_review:
+    if confirmed_keep >= MIN_SUFFIX_CONFIRMED_HOSTS:
         return {
             "status": STATUS_KEEP,
             "suffix": suffix,
@@ -610,8 +760,7 @@ def verify_suffix_strict(suffix: str, cn_networks: list[ipaddress._BaseNetwork])
             "reason": "enough_confirmed_hosts",
         }
 
-    only_no_record = all(x["status"] == STATUS_NO_RECORD for x in host_results)
-    if only_no_record:
+    if all(x["status"] == STATUS_NO_RECORD for x in host_results):
         return {
             "status": STATUS_NO_RECORD,
             "suffix": suffix,
@@ -629,7 +778,7 @@ def verify_suffix_strict(suffix: str, cn_networks: list[ipaddress._BaseNetwork])
     }
 
 
-def verify_domain_rule_strict(rule: str, cn_networks: list[ipaddress._BaseNetwork]) -> tuple[str, dict]:
+def verify_domain_rule(rule: str, cn_networks: list[ipaddress._BaseNetwork], cache: dict) -> tuple[str, dict]:
     parsed = extract_rule_value(rule)
     if not parsed:
         return STATUS_REVIEW, {"rule": rule, "reason": "malformed_rule"}
@@ -637,7 +786,7 @@ def verify_domain_rule_strict(rule: str, cn_networks: list[ipaddress._BaseNetwor
     head, value = parsed
 
     if head == "DOMAIN":
-        result = verify_exact_host_strict(value, cn_networks)
+        result = verify_exact_host_dual_group(value, cn_networks, cache)
         record = {
             "rule": rule,
             "rule_type": head,
@@ -647,7 +796,7 @@ def verify_domain_rule_strict(rule: str, cn_networks: list[ipaddress._BaseNetwor
         return result["status"], record
 
     if head == "DOMAIN-SUFFIX":
-        result = verify_suffix_strict(value, cn_networks)
+        result = verify_suffix_dual_group(value, cn_networks, cache)
         record = {
             "rule": rule,
             "rule_type": head,
@@ -656,7 +805,7 @@ def verify_domain_rule_strict(rule: str, cn_networks: list[ipaddress._BaseNetwor
         }
         return result["status"], record
 
-    # 严格模式下，DOMAIN-KEYWORD 不自动进入最终列表
+    # 严格模式下不自动放行 DOMAIN-KEYWORD
     record = {
         "rule": rule,
         "rule_type": head,
@@ -688,7 +837,7 @@ def validate_final_rules(
         if head in {"DOMAIN", "DOMAIN-SUFFIX"}:
             domain_count += 1
             if rule not in final_domain_rules:
-                issues.append(f"China.list:{idx}: domain rule not in strict-kept set: {rule}")
+                issues.append(f"China.list:{idx}: domain rule not in kept set: {rule}")
         elif head == "DOMAIN-KEYWORD":
             issues.append(f"China.list:{idx}: DOMAIN-KEYWORD leaked into strict output: {rule}")
         elif head in {"IP-CIDR", "IP-CIDR6"}:
@@ -713,6 +862,7 @@ def validate_final_rules(
 
 def main() -> int:
     ensure_parent_dirs()
+    dns_cache = prune_dns_cache(load_dns_cache())
 
     trusted_domain_rules, domain_status, domain_failures = fetch_and_normalize(DOMAIN_SOURCES, normalize_domain_rule)
     trusted_ip_rules, ip_status, ip_failures = fetch_and_normalize(IP_SOURCES, normalize_ip_rule)
@@ -731,7 +881,7 @@ def main() -> int:
 
     with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
         futures = {
-            executor.submit(verify_domain_rule_strict, rule, cn_networks): rule
+            executor.submit(verify_domain_rule, rule, cn_networks, dns_cache): rule
             for rule in domain_rules
         }
 
@@ -760,33 +910,39 @@ def main() -> int:
 
     final_rules = unique_sorted(kept_domain_rules | trusted_ip_rules)
     if not final_rules:
-        print("No valid strict China rules generated.", file=sys.stderr)
+        print("No valid China rules generated.", file=sys.stderr)
+        save_dns_cache(dns_cache)
         return 1
 
     issues, summary = validate_final_rules(final_rules, kept_domain_rules, trusted_ip_rules)
 
     report = {
         "ok": not issues,
-        "mode": "strict_dns_validation",
+        "mode": "dual_group_serial_fallback_parallel_compare",
         "generated_at_unix": int(time.time()),
         "config": {
-            "dns_servers": DNS_SERVERS,
+            "cn_dns_servers": CN_DNS_SERVERS,
+            "intl_dns_servers": INTL_DNS_SERVERS,
             "dns_timeout": DNS_TIMEOUT,
             "dns_tcp_timeout": DNS_TCP_TIMEOUT,
-            "dns_max_views": DNS_MAX_VIEWS,
-            "dns_min_success_views": DNS_MIN_SUCCESS_VIEWS,
-            "min_suffix_confirmed_hosts": MIN_SUFFIX_CONFIRMED_HOSTS,
-            "sample_prefixes": SAMPLE_PREFIXES,
+            "max_cname_depth": MAX_CNAME_DEPTH,
             "max_workers": MAX_WORKERS,
+            "min_suffix_confirmed_hosts": MIN_SUFFIX_CONFIRMED_HOSTS,
+            "dns_cache_ttl_seconds": DNS_CACHE_TTL_SECONDS,
+            "cn_group_serial": True,
+            "intl_group_serial": True,
+            "cn_intl_parallel": True,
+            "cn_intl_diverged_direct_reject": True,
         },
         "summary": {
             **summary,
             "input_domain_rule_count": len(trusted_domain_rules),
-            "strict_kept_domain_rule_count": len(kept_domain_rules),
+            "kept_domain_rule_count": len(kept_domain_rules),
             "review_domain_rule_count": len(review_records),
             "rejected_domain_rule_count": len(rejected_records),
             "unresolved_domain_rule_count": len(unresolved_records),
             "cn_network_count": len(cn_networks),
+            "dns_cache_entries": len(dns_cache),
         },
         "sources": {
             "domain_sources": domain_status,
@@ -815,6 +971,7 @@ def main() -> int:
         json.dumps(unresolved_records, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+    save_dns_cache(dns_cache)
 
     if issues:
         print(json.dumps(report, ensure_ascii=False, indent=2), file=sys.stderr)
@@ -826,6 +983,7 @@ def main() -> int:
     print(f"{REVIEW_REPORT}: {len(review_records)} entries")
     print(f"{REJECTED_REPORT}: {len(rejected_records)} entries")
     print(f"{UNRESOLVED_REPORT}: {len(unresolved_records)} entries")
+    print(f"{DNS_CACHE_FILE}: {len(dns_cache)} entries")
     return 0
 
 
