@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import ipaddress
 import re
 from pathlib import Path
 from urllib.parse import urlparse
@@ -31,7 +32,7 @@ SECTION_ALIASES = {
     "script": "script",
     "scriptlocal": "script",
     "host": "host",
-    "maplocal": None,   # 严格模式：不把 Map Local 塞进最终模块
+    "maplocal": None,   # 严格模式：Map Local / Mock 不并入最终模块
     "mock": None,
 }
 
@@ -44,21 +45,20 @@ SURGE_SCRIPT_TYPE_MAP = {
 
 BAD_TEMPLATE_RE = re.compile(r"\{\{\{.*?\}\}\}")
 MODULE_OPERATOR_RE = re.compile(r"(?i)%\s*(APPEND|INSERT|REPLACE)\s*%")
-HOST_LIKE_RE = re.compile(r"^[*.-]*[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)+$")
-URL_REWRITE_RE = re.compile(r"^\^.+\s+.+\s+(header|302|reject)$", re.IGNORECASE)
 HEADER_ACTION_RE = re.compile(
-    r"^(http-request|http-response)\s+.+\s+(header-add|header-del|header-replace|header-replace-regex)\s+.+$",
+    r"^(http-request|http-response)\s+\S+\s+"
+    r"(header-add|header-del|header-replace|header-replace-regex)\b",
     re.IGNORECASE,
 )
 BODY_REWRITE_RE = re.compile(
-    r"^(http-request|http-response|http-request-jq|http-response-jq)\s+.+$",
+    r"^(http-request|http-response|http-request-jq|http-response-jq)\s+\S+",
     re.IGNORECASE,
 )
 HOST_MAPPING_RE = re.compile(
     r"""^(
-        (DOMAIN-SET:[^=\s]+)|
-        (RULE-SET:[^=\s]+)|
-        ([*A-Za-z0-9._-]+)
+        DOMAIN-SET:[^=\s]+|
+        RULE-SET:[^=\s]+|
+        [*A-Za-z0-9._?-]+
     )\s*=\s*(
         server:[^=\s]+|
         [*A-Za-z0-9._:-]+
@@ -115,7 +115,7 @@ def split_sections(text: str) -> tuple[dict[str, list[str]], dict[str, str]]:
             continue
 
         if current is None:
-            # 任何不在合法 section 里的内容一律丢弃
+            # 不在合法 section 里的内容，一律丢弃
             continue
 
         sections[current].append(line)
@@ -131,9 +131,84 @@ def strip_module_operator_tokens(text: str) -> str:
     return MODULE_OPERATOR_RE.sub("", text).strip()
 
 
+def is_ip_literal(value: str) -> bool:
+    try:
+        ipaddress.ip_address(value)
+        return True
+    except ValueError:
+        return False
+
+
+def looks_like_regex_residue(value: str) -> bool:
+    lower = value.lower()
+    bad_substrings = [
+        "a-z",
+        "0-9",
+        "_-",
+        "[",
+        "]",
+        "(",
+        ")",
+        "{",
+        "}",
+        "|",
+        "\\",
+    ]
+    return any(x in lower for x in bad_substrings)
+
+
+def normalize_hostlist_item(value: str) -> str | None:
+    item = value.strip().lower().lstrip(".")
+    item = strip_module_operator_tokens(item)
+
+    if not item:
+        return None
+    if "{{{" in item or "}}}" in item:
+        return None
+    if " " in item:
+        return None
+
+    # 允许 Surge Host List 的 IP 占位符，但不允许把真实 IP 当 hostname 项
+    if item in {"<ip-address>", "<ipv4-address>", "<ipv6-address>"}:
+        return item
+
+    # 允许负向排除
+    prefix = ""
+    if item.startswith("-"):
+        prefix = "-"
+        item = item[1:].strip()
+        if not item:
+            return None
+
+    # 允许端口后缀
+    host_part = item
+    port_part = ""
+    if ":" in item:
+        maybe_host, maybe_port = item.rsplit(":", 1)
+        if maybe_port.isdigit():
+            host_part = maybe_host
+            port_part = ":" + maybe_port
+
+    if is_ip_literal(host_part):
+        return None
+
+    if looks_like_regex_residue(host_part):
+        return None
+
+    # Host List 允许 * ? 通配
+    if not re.fullmatch(r"[*?a-z0-9._-]+", host_part):
+        return None
+
+    if "." not in host_part and "*" not in host_part and "?" not in host_part:
+        return None
+
+    return prefix + host_part + port_part
+
+
 def is_obviously_broken_line(text: str) -> bool:
     s = text.strip()
     lower = s.lower()
+
     if not s:
         return True
     if has_unresolved_template(s):
@@ -142,6 +217,7 @@ def is_obviously_broken_line(text: str) -> bool:
         return True
     if "jq-path=" in lower:
         return True
+
     return False
 
 
@@ -155,22 +231,13 @@ def normalize_mitm_line(line: str) -> list[str]:
 
     s = strip_module_operator_tokens(s)
 
-    hosts: list[str] = []
-    for part in [p.strip().lower().lstrip(".") for p in s.split(",") if p.strip()]:
-        part = strip_module_operator_tokens(part)
-        if not part:
-            continue
-        if "%" in part:
-            continue
-        if "{{{" in part or "}}}" in part:
-            continue
-        if " " in part:
-            continue
-        if not HOST_LIKE_RE.match(part):
-            continue
-        hosts.append(part)
+    results: list[str] = []
+    for part in [p.strip() for p in s.split(",") if p.strip()]:
+        norm = normalize_hostlist_item(part)
+        if norm:
+            results.append(norm)
 
-    return hosts
+    return results
 
 
 def normalize_url_rewrite_line(line: str) -> str | None:
@@ -192,20 +259,30 @@ def normalize_url_rewrite_line(line: str) -> str | None:
     if any(token in lower for token in banned_tokens):
         return None
 
-    # QX 风格：^... url reject  -> Surge: ^... _ reject
+    # QX: ^... url reject  -> Surge: ^... _ reject
     if " url " in s:
         left, right = s.split(" url ", 1)
         action = right.strip().lower()
         if action.startswith("reject"):
-            return f"{left.strip()} _ reject"
+            s = f"{left.strip()} _ reject"
+        else:
+            return None
+
+    # 统一 reject 为 `_ reject`
+    if re.search(r"\s(?:_|-)?\s*reject(?:-\w+)?$", lower):
+        left = re.sub(r"\s(?:_|-)?\s*reject(?:-\w+)?$", "", s, flags=re.IGNORECASE).strip()
+        s = f"{left} _ reject"
+
+    parts = s.split()
+    if len(parts) < 3:
         return None
 
-    # 统一 reject 写法到 Surge 官方例子风格：_ reject
-    if re.search(r"\s(?:-|_)?\s*reject(?:-\w+)?$", lower):
-        rule = re.sub(r"\s(?:-|_)?\s*reject(?:-\w+)?$", "", s, flags=re.IGNORECASE).strip()
-        s = f"{rule} _ reject"
+    rewrite_type = parts[-1].lower()
+    if rewrite_type not in {"header", "302", "reject"}:
+        return None
 
-    if not URL_REWRITE_RE.match(s):
+    pattern = parts[0]
+    if not pattern:
         return None
 
     return s
@@ -279,7 +356,7 @@ def normalize_body_line(line: str) -> str | None:
 
     lower = s.lower()
 
-    # 原生 Surge body rewrite
+    # Surge 原生语法
     if BODY_REWRITE_RE.match(s):
         return s
 
@@ -293,7 +370,7 @@ def normalize_body_line(line: str) -> str | None:
             if "jq-path=" in jq_expr.lower():
                 return None
 
-            if pattern.startswith("^") and jq_expr:
+            if pattern and jq_expr:
                 candidate = f"http-response-jq {pattern} {jq_expr}"
                 if BODY_REWRITE_RE.match(candidate):
                     return candidate
@@ -317,11 +394,11 @@ def normalize_host_line(line: str) -> str | None:
     if not s or is_obviously_broken_line(s):
         return None
 
-    # Host 段只允许 Surge Local DNS Mapping 语法
+    # [Host] 只允许 Local DNS Mapping，绝不允许 Mock(Map Local) 语法混入
+    if "data=" in s.lower() or "data-type=" in s.lower() or "status-code=" in s.lower():
+        return None
     if HOST_MAPPING_RE.match(s):
         return s
-
-    # data= / data-type= / status-code= 这些属于 Map Local/Mock，不允许混进 Host
     return None
 
 
