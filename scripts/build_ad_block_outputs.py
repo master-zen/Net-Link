@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import ipaddress
 import json
 import re
 
@@ -46,20 +47,20 @@ VALID_SECTION_HEADERS = {
     "[Host]",
 }
 
-URL_REWRITE_RE = re.compile(r"^\^.+\s+.+\s+(header|302|reject)$", re.IGNORECASE)
 HEADER_ACTION_RE = re.compile(
-    r"^(http-request|http-response)\s+.+\s+(header-add|header-del|header-replace|header-replace-regex)\s+.+$",
+    r"^(http-request|http-response)\s+\S+\s+"
+    r"(header-add|header-del|header-replace|header-replace-regex)\b",
     re.IGNORECASE,
 )
 BODY_REWRITE_RE = re.compile(
-    r"^(http-request|http-response|http-request-jq|http-response-jq)\s+.+$",
+    r"^(http-request|http-response|http-request-jq|http-response-jq)\s+\S+",
     re.IGNORECASE,
 )
 HOST_MAPPING_RE = re.compile(
     r"""^(
-        (DOMAIN-SET:[^=\s]+)|
-        (RULE-SET:[^=\s]+)|
-        ([*A-Za-z0-9._-]+)
+        DOMAIN-SET:[^=\s]+|
+        RULE-SET:[^=\s]+|
+        [*A-Za-z0-9._?-]+
     )\s*=\s*(
         server:[^=\s]+|
         [*A-Za-z0-9._:-]+
@@ -154,6 +155,32 @@ def filter_line_by_whitelist(line: str, allow_hosts: set[str], regexes) -> bool:
     return False
 
 
+def is_ip_literal(value: str) -> bool:
+    try:
+        ipaddress.ip_address(value)
+        return True
+    except ValueError:
+        return False
+
+
+def looks_like_regex_residue(value: str) -> bool:
+    lower = value.lower()
+    bad_substrings = [
+        "a-z",
+        "0-9",
+        "_-",
+        "[",
+        "]",
+        "(",
+        ")",
+        "{",
+        "}",
+        "|",
+        "\\",
+    ]
+    return any(x in lower for x in bad_substrings)
+
+
 def sanitize_mitm_host(host: str) -> str | None:
     s = host.strip().lower().lstrip(".")
     if not s:
@@ -162,9 +189,35 @@ def sanitize_mitm_host(host: str) -> str | None:
         return None
     if " " in s:
         return None
-    if "." not in s and "*" not in s:
+
+    if s in {"<ip-address>", "<ipv4-address>", "<ipv6-address>"}:
+        return s
+
+    prefix = ""
+    if s.startswith("-"):
+        prefix = "-"
+        s = s[1:].strip()
+        if not s:
+            return None
+
+    host_part = s
+    port_part = ""
+    if ":" in s:
+        maybe_host, maybe_port = s.rsplit(":", 1)
+        if maybe_port.isdigit():
+            host_part = maybe_host
+            port_part = ":" + maybe_port
+
+    if is_ip_literal(host_part):
         return None
-    return s
+    if looks_like_regex_residue(host_part):
+        return None
+    if not re.fullmatch(r"[*?a-z0-9._-]+", host_part):
+        return None
+    if "." not in host_part and "*" not in host_part and "?" not in host_part:
+        return None
+
+    return prefix + host_part + port_part
 
 
 def sanitize_url_rewrite_line(line: str) -> str | None:
@@ -173,9 +226,28 @@ def sanitize_url_rewrite_line(line: str) -> str | None:
         return None
     if "{{{" in s or "}}}" in s:
         return None
-    if any(token in s.lower() for token in ["reject-dict", "reject-200", "response-body-json-", "jq-path="]):
+
+    lower = s.lower()
+    banned_tokens = [
+        "reject-dict",
+        "reject-200",
+        "response-body-json-jq",
+        "response-body-json-del",
+        "response-body-replace-regex",
+        "jq-path=",
+    ]
+    if any(token in lower for token in banned_tokens):
         return None
-    return s if URL_REWRITE_RE.match(s) else None
+
+    parts = s.split()
+    if len(parts) < 3:
+        return None
+
+    rewrite_type = parts[-1].lower()
+    if rewrite_type not in {"header", "302", "reject"}:
+        return None
+
+    return s
 
 
 def sanitize_header_line(line: str) -> str | None:
@@ -193,8 +265,16 @@ def sanitize_body_line(line: str) -> str | None:
         return None
     if "{{{" in s or "}}}" in s:
         return None
-    if any(token in s.lower() for token in ["response-body-json-del", "response-body-replace-regex", "jq-path="]):
+
+    lower = s.lower()
+    banned_tokens = [
+        "response-body-json-del",
+        "response-body-replace-regex",
+        "jq-path=",
+    ]
+    if any(token in lower for token in banned_tokens):
         return None
+
     return s if BODY_REWRITE_RE.match(s) else None
 
 
@@ -204,6 +284,7 @@ def sanitize_script_line(line: str) -> str | None:
         return None
     if "{{{" in s or "}}}" in s:
         return None
+
     lower = s.lower()
     if "type=" not in lower or "pattern=" not in lower or "script-path=" not in lower:
         return None
@@ -216,7 +297,6 @@ def sanitize_host_mapping_line(line: str) -> str | None:
         return None
     if "{{{" in s or "}}}" in s:
         return None
-    # data=/data-type=/status-code= 属于 Map Local，不属于 Host
     if "data=" in s.lower() or "data-type=" in s.lower() or "status-code=" in s.lower():
         return None
     return s if HOST_MAPPING_RE.match(s) else None
@@ -343,6 +423,10 @@ def validate_final_module_text(text: str) -> tuple[bool, str]:
         if current_section == "[MITM]":
             if not s.lower().startswith("hostname = %append% "):
                 return False, f"invalid MITM line: {s}"
+            host_items = [x.strip() for x in s.split("=", 1)[1].strip()[9:].split(",")]
+            for item in host_items:
+                if not sanitize_mitm_host(item):
+                    return False, f"invalid MITM hostname item: {item}"
 
         elif current_section == "[URL Rewrite]":
             if not sanitize_url_rewrite_line(s):
@@ -416,7 +500,7 @@ def main() -> int:
             rejected_log.append(f"module_excluded_by_security\t{module_id}\t{module_name}\t{source_url}")
             continue
 
-        # 模块内 [Rule] 的 REJECT / REJECT-TINYGIF 抽到 Ad_Block.list
+        # 从模块 [Rule] 抽 REJECT / REJECT-TINYGIF 到 Ad_Block.list
         for rule in module.get("rules", []):
             reject_rule = extract_reject_rule_from_module_rule(rule)
             if not reject_rule:
@@ -494,7 +578,7 @@ def main() -> int:
     final_rules = [r for r in dedupe_sorted(merged_rules) if not rule_matches_allowlist(r, allow_hosts)]
     write_lines(AD_BLOCK_LIST, final_rules)
 
-    # 最终模块：只输出 Surge 官方白名单语法
+    # Ad_Block.sgmodule：只输出 Surge 官方白名单语法
     module_text = build_module_text(
         mitm_hosts=mitm_hosts,
         url_rewrite=url_rewrite,
