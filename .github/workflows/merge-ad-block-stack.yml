@@ -9,6 +9,7 @@ on:
       - "data/sources/ad_allowlist_seed_urls.txt"
       - "data/sources/ad_module_seed_urls.txt"
       - "data/sources/repo_seed_urls.txt"
+      - "data/sources/ad_legacy_rule_seed_urls.txt"
       - "data/allowlists/**"
       - "scripts/run_ad_block_pipeline.py"
       - "scripts/discover_module_candidates.py"
@@ -32,12 +33,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
       VT_API_KEY: ${{ secrets.VT_API_KEY }}
       SOCKET_TOKEN: ${{ secrets.SOCKET_TOKEN }}
-      ENABLE_SEMGREP: "0"
 
     steps:
       - name: Checkout repository
@@ -61,7 +60,8 @@ jobs:
           pip install requests pyyaml
 
       - name: Install JS-X-Ray
-        run: npm install -g @nodesecure/js-x-ray || true
+        run: |
+          npm install -g @nodesecure/js-x-ray || true
 
       - name: Install ClamAV
         run: |
@@ -81,10 +81,10 @@ jobs:
 
           mkdir -p "$RUNNER_TEMP/clamav-db"
 
-          cat > "$RUNNER_TEMP/freshclam.conf" <<EOF
+          cat > "$RUNNER_TEMP/freshclam.conf" <<EOF2
           DatabaseDirectory $RUNNER_TEMP/clamav-db
           DatabaseMirror database.clamav.net
-          EOF
+          EOF2
 
           echo "===== freshclam.conf ====="
           cat "$RUNNER_TEMP/freshclam.conf"
@@ -108,6 +108,7 @@ jobs:
           test -f data/sources/ad_allowlist_seed_urls.txt
           test -f data/sources/ad_module_seed_urls.txt
           test -f data/sources/repo_seed_urls.txt
+          test -f data/sources/ad_legacy_rule_seed_urls.txt
           test -f scripts/discover_module_candidates.py
           test -f scripts/discover_allowlist_candidates.py
           test -f scripts/fetch_and_normalize_modules.py
@@ -120,7 +121,7 @@ jobs:
           test -f scripts/lib_rules.py
 
       - name: Run Ad Block pipeline
-        timeout-minutes: 70
+        timeout-minutes: 90
         run: python -u scripts/run_ad_block_pipeline.py
 
       - name: Upload ad-block diagnostics
@@ -152,16 +153,9 @@ jobs:
           }
 
           for path in \
+            data/sources/ad_legacy_rule_seed_urls.txt \
             Surge/Rules/Ad_Block.list \
-            Surge/Module/Ad_Block.sgmodule \
-            Surge/Scripts/Converted \
-            build/discovered_module_urls.txt \
-            build/discovered_allowlist_urls.txt \
-            build/normalized_modules.json \
-            build/whitelist_hosts.txt \
-            build/rejected_rules.txt \
-            build/cache \
-            build/scan_reports
+            Surge/Module/Ad_Block.sgmodule
           do
             stage_path "$path"
           done
@@ -180,6 +174,7 @@ jobs:
 
           max_attempts=5
           attempt=1
+
           while [ $attempt -le $max_attempts ]; do
             echo "Push attempt $attempt/$max_attempts"
 
@@ -191,16 +186,9 @@ jobs:
               git reset --soft HEAD~1
               git reset
               for path in \
+                data/sources/ad_legacy_rule_seed_urls.txt \
                 Surge/Rules/Ad_Block.list \
-                Surge/Module/Ad_Block.sgmodule \
-                Surge/Scripts/Converted \
-                build/discovered_module_urls.txt \
-                build/discovered_allowlist_urls.txt \
-                build/normalized_modules.json \
-                build/whitelist_hosts.txt \
-                build/rejected_rules.txt \
-                build/cache \
-                build/scan_reports
+                Surge/Module/Ad_Block.sgmodule
               do
                 stage_path "$path"
               done
