@@ -8,10 +8,9 @@ on:
     paths:
       - "data/sources/ad_allowlist_seed_urls.txt"
       - "data/sources/ad_module_seed_urls.txt"
-      - "data/sources/repo_seed_urls.txt"
       - "data/sources/ad_legacy_rule_seed_urls.txt"
+      - "data/sources/repo_seed_urls.txt"
       - "data/allowlists/**"
-      - "scripts/run_ad_block_pipeline.py"
       - "scripts/discover_module_candidates.py"
       - "scripts/discover_allowlist_candidates.py"
       - "scripts/fetch_and_normalize_modules.py"
@@ -19,6 +18,7 @@ on:
       - "scripts/scan_js_security.py"
       - "scripts/build_ad_block_outputs.py"
       - "scripts/validate_ad_block_outputs.py"
+      - "scripts/run_ad_block_pipeline.py"
       - "scripts/build_ad_block.py"
       - "scripts/lib_rules.py"
       - ".github/workflows/merge-ad-block-stack.yml"
@@ -33,6 +33,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
       VT_API_KEY: ${{ secrets.VT_API_KEY }}
@@ -121,7 +122,6 @@ jobs:
           test -f scripts/lib_rules.py
 
       - name: Run Ad Block pipeline
-        timeout-minutes: 90
         run: python -u scripts/run_ad_block_pipeline.py
 
       - name: Upload ad-block diagnostics
@@ -138,6 +138,7 @@ jobs:
             build/rejected_rules.txt
             build/cache/**
             build/scan_reports/**
+            build/ad_block_validation_report.json
 
       - name: Commit and push if changed
         shell: bash
@@ -148,14 +149,14 @@ jobs:
           stage_path() {
             path="$1"
             if [ -e "$path" ] || git ls-files --error-unmatch -- "$path" >/dev/null 2>&1; then
-              git add -A -- "$path"
+              git add -f -A -- "$path"
             fi
           }
 
           for path in \
-            data/sources/ad_legacy_rule_seed_urls.txt \
             Surge/Rules/Ad_Block.list \
-            Surge/Module/Ad_Block.sgmodule
+            Surge/Module/Ad_Block.sgmodule \
+            build/scan_reports/ad_block_arguments_catalog.json
           do
             stage_path "$path"
           done
@@ -178,27 +179,37 @@ jobs:
           while [ $attempt -le $max_attempts ]; do
             echo "Push attempt $attempt/$max_attempts"
 
+            if [ -n "$(git status --porcelain)" ]; then
+              echo "Working tree is not clean before rebase:"
+              git status --porcelain
+              exit 1
+            fi
+
             git fetch origin main
 
             if ! git rebase origin/main; then
               git rebase --abort || true
-              echo "Rebase failed. Re-applying commit on top of latest origin/main..."
-              git reset --soft HEAD~1
-              git reset
+              echo "Rebase failed, retrying from latest origin/main..."
+
+              git fetch origin main
+              git reset --hard origin/main
+
+              python -u scripts/run_ad_block_pipeline.py
+
               for path in \
-                data/sources/ad_legacy_rule_seed_urls.txt \
                 Surge/Rules/Ad_Block.list \
-                Surge/Module/Ad_Block.sgmodule
+                Surge/Module/Ad_Block.sgmodule \
+                build/scan_reports/ad_block_arguments_catalog.json
               do
                 stage_path "$path"
               done
+
               if git diff --cached --quiet; then
-                echo "No changes after syncing with origin/main."
+                echo "No changes after rebuilding on top of origin/main."
                 exit 0
               fi
+
               git commit -m "chore: update ad block stack"
-              git fetch origin main
-              git rebase origin/main
             fi
 
             if git push origin HEAD:main; then
