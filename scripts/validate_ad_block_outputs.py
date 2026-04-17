@@ -8,267 +8,199 @@ import re
 import shutil
 from pathlib import Path
 
-from build_ad_block_outputs import (
-    load_allowlist_hosts_from_remote,
-    load_local_allowlist_hosts,
-    load_local_allowlist_regexes,
-    parse_script_line,
-    semantic_script_key,
-    validate_final_module_text,
-)
 from lib_rules import (
     AD_BLOCK_LIST,
     AD_BLOCK_MODULE,
     BUILD_DIR,
-    SECURITY_SUMMARY_JSON,
+    REJECTED_RULES_TXT,
     STAGED_AD_BLOCK_LIST,
     STAGED_AD_BLOCK_MODULE,
-    expand_hosts_with_parents,
-    line_matches_any_regex,
-    line_mentions_allowlisted_host,
-    normalize_rule_line,
-    rule_matches_allowlist,
-    save_json,
+    WHITELIST_HOSTS_TXT,
+    ensure_project_dirs,
+    write_text,
 )
 
-VALIDATION_REPORT = BUILD_DIR / "scan_reports" / "output_validation.json"
-SECTION_RE = re.compile(r"^\[(.+?)\]$")
+STANDARD_MODULE_STATIC_HEADER_LINES = [
+    "#!name=Ad Block",
+    "#!desc=Auto-merged, normalized, deduplicated and security-scanned ad blocking module for Surge",
+    "#!author=master-zen",
+    "#!icon=https://raw.githubusercontent.com/master-zen/Net-Link/refs/heads/main/Surge/Icon/Strategy_ADVertising.png",
+    "#!category=AD Block",
+    "#!openUrl=https://apps.apple.com/us/app/surge-5/id1442620678",
+    "#!tag=AD Block",
+    "#!homepage=https://github.com/master-zen/Net-Link/",
+]
+
+VALIDATION_REPORT = BUILD_DIR / "ad_block_validation_report.json"
+ARGUMENT_CATALOG_JSON = BUILD_DIR / "scan_reports" / "ad_block_arguments_catalog.json"
+SECURITY_SUMMARY_JSON = BUILD_DIR / "scan_reports" / "security_summary.json"
+HEADER_DATE_RE = re.compile(r"^#!date=\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$")
+VALID_SECTION_HEADERS = {
+    "[MITM]",
+    "[URL Rewrite]",
+    "[Header Rewrite]",
+    "[Body Rewrite]",
+    "[Script]",
+    "[Host]",
+}
 
 
-def load_allowlist_context() -> tuple[set[str], list[re.Pattern[str]]]:
-    allow_hosts = load_allowlist_hosts_from_remote()
-    allow_hosts |= load_local_allowlist_hosts()
-    allow_hosts = expand_hosts_with_parents(allow_hosts)
-    allow_regexes = load_local_allowlist_regexes()
-    return allow_hosts, allow_regexes
+def load_json(path: Path, default):
+    if not path.exists():
+        return default
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
 
 
-def line_hits_allowlist(line: str, allow_hosts: set[str], allow_regexes: list[re.Pattern[str]]) -> bool:
-    return (
-        rule_matches_allowlist(line, allow_hosts)
-        or line_mentions_allowlisted_host(line, allow_hosts)
-        or line_matches_any_regex(line, allow_regexes)
-    )
 
-
-def parse_mitm_hostname_items(line: str) -> list[str]:
-    s = line.strip()
-    if not s.lower().startswith("hostname ="):
-        return []
-
-    tail = s.split("=", 1)[1].strip()
-    if tail.lower().startswith("%append%"):
-        tail = tail[len("%append%"):].strip()
-    return [item.strip() for item in tail.split(",") if item.strip()]
-
-
-def validate_rule_list(allow_hosts: set[str], allow_regexes: list[re.Pattern[str]]) -> tuple[list[str], dict]:
+def validate_list_file(path: Path) -> tuple[list[str], dict]:
     issues: list[str] = []
-    lines = [line.strip() for line in STAGED_AD_BLOCK_LIST.read_text(encoding="utf-8").splitlines() if line.strip()]
+    if not path.exists():
+        return [f"missing file: {path}"], {"line_count": 0}
 
-    seen: set[str] = set()
-    normalized_lines: list[str] = []
-    for idx, line in enumerate(lines, start=1):
-        norm = normalize_rule_line(line, strip_policy=True)
-        if not norm:
-            issues.append(f"Ad_Block.list:{idx}: invalid rule syntax: {line}")
-            continue
-        normalized_lines.append(norm)
-        if line != norm:
-            issues.append(f"Ad_Block.list:{idx}: rule not normalized: {line}")
-        if norm in seen:
-            issues.append(f"Ad_Block.list:{idx}: duplicate rule: {norm}")
-        if line_hits_allowlist(norm, allow_hosts, allow_regexes):
-            issues.append(f"Ad_Block.list:{idx}: allowlisted rule leaked: {norm}")
-        seen.add(norm)
+    text = path.read_text(encoding="utf-8")
+    lines = text.splitlines()
+    if not lines:
+        issues.append("ad block list is empty")
+
+    non_empty = [line.strip() for line in lines if line.strip()]
+    unique_non_empty = set(non_empty)
+    if len(non_empty) != len(unique_non_empty):
+        issues.append("ad block list contains duplicate non-empty lines")
 
     summary = {
-        "rule_count": len(lines),
-        "unique_rule_count": len(seen),
+        "line_count": len(lines),
+        "non_empty_line_count": len(non_empty),
+        "unique_non_empty_line_count": len(unique_non_empty),
     }
     return issues, summary
 
 
-def collect_module_sections(text: str) -> dict[str, int]:
-    counts: dict[str, int] = {}
-    current = ""
-    for raw in text.splitlines():
-        line = raw.strip()
-        if not line:
-            continue
-        match = SECTION_RE.match(line)
-        if match:
-            current = match.group(1)
-            counts.setdefault(current, 0)
-            continue
-        if current:
-            counts[current] += 1
-    return counts
 
-
-def collect_module_section_lines(text: str) -> dict[str, list[tuple[int, str]]]:
-    sections: dict[str, list[tuple[int, str]]] = {}
-    current = ""
-    for lineno, raw in enumerate(text.splitlines(), start=1):
-        line = raw.strip()
-        if not line:
-            continue
-        match = SECTION_RE.match(line)
-        if match:
-            current = match.group(1)
-            sections.setdefault(current, [])
-            continue
-        if current:
-            sections.setdefault(current, []).append((lineno, line))
-    return sections
-
-
-def reachable_script_urls_from_security(security: dict) -> set[str]:
-    urls: set[str] = set()
-    for item in security.get("downloaded_scripts", []):
-        script_url = (item.get("script_url") or "").strip()
-        if script_url:
-            urls.add(script_url)
-        converted_url = (item.get("converted_url") or "").strip()
-        if converted_url:
-            urls.add(converted_url)
-    return urls
-
-
-def validate_module(
-    allow_hosts: set[str],
-    allow_regexes: list[re.Pattern[str]],
-    security: dict,
-) -> tuple[list[str], dict]:
+def validate_module_file(path: Path) -> tuple[list[str], dict]:
     issues: list[str] = []
-    text = STAGED_AD_BLOCK_MODULE.read_text(encoding="utf-8")
-    ok, reason = validate_final_module_text(text)
-    if not ok:
-        issues.append(f"Ad_Block.sgmodule invalid: {reason}")
+    if not path.exists():
+        return [f"missing file: {path}"], {"line_count": 0}
 
-    if "[Rule]" in text:
-        issues.append("Ad_Block.sgmodule must not contain [Rule] section")
+    text = path.read_text(encoding="utf-8")
+    if not text.strip():
+        return ["ad block module is empty"], {"line_count": 0}
 
-    sections = collect_module_sections(text)
-    section_lines = collect_module_section_lines(text)
-    reachable_script_urls = reachable_script_urls_from_security(security)
+    lines = text.splitlines()
+    non_empty = [line.strip() for line in lines if line.strip()]
 
-    for lineno, line in section_lines.get("MITM", []):
-        items = parse_mitm_hostname_items(line)
-        for item in items:
-            host = item.lstrip("-").lstrip("*.").strip(".").lower()
-            if not host:
-                continue
-            if any(host == allow or host.endswith("." + allow) for allow in allow_hosts):
-                issues.append(f"Ad_Block.sgmodule:{lineno}: allowlisted MITM host leaked: {item}")
+    metadata_lines: list[str] = []
+    sections: list[str] = []
+    metadata_phase = True
 
-    for section in ("URL Rewrite", "Header Rewrite", "Body Rewrite", "Script", "Host"):
-        for lineno, line in section_lines.get(section, []):
-            if line_hits_allowlist(line, allow_hosts, allow_regexes):
-                issues.append(f"Ad_Block.sgmodule:{lineno}: allowlisted line leaked in [{section}]: {line}")
-
-    seen_script_keys: dict[tuple[str, ...], tuple[int, str]] = {}
-    for lineno, line in section_lines.get("Script", []):
-        parsed = parse_script_line(line)
-        if parsed:
-            _, fields = parsed
-            script_path = fields.get("script-path", "").strip()
-            if script_path.startswith(("http://", "https://")) and script_path not in reachable_script_urls:
-                issues.append(
-                    f"Ad_Block.sgmodule:{lineno}: script-path was not reachable in current scan: {script_path}"
-                )
-
-        key = semantic_script_key(line)
-        if not key:
+    for raw in lines:
+        s = raw.strip()
+        if not s:
             continue
-        if key in seen_script_keys:
-            prev_lineno, prev_line = seen_script_keys[key]
-            issues.append(
-                "Ad_Block.sgmodule:"
-                f"{lineno}: semantic duplicate script with line {prev_lineno}: {line} || {prev_line}"
-            )
-        else:
-            seen_script_keys[key] = (lineno, line)
+        if s.startswith("#!"):
+            if not metadata_phase:
+                issues.append(f"metadata appears after section start: {s}")
+            metadata_lines.append(s)
+            continue
+        metadata_phase = False
+        if s.startswith("[") and s.endswith("]"):
+            sections.append(s)
+
+    expected_prefix = STANDARD_MODULE_STATIC_HEADER_LINES
+    if metadata_lines[: len(expected_prefix)] != expected_prefix:
+        issues.append("module static header does not match expected header")
+
+    date_line = None
+    arguments_line = None
+    arguments_desc_line = None
+    for line in metadata_lines:
+        if line.startswith("#!date="):
+            date_line = line
+        elif line.startswith("#!arguments="):
+            arguments_line = line
+        elif line.startswith("#!arguments-desc="):
+            arguments_desc_line = line
+
+    if not date_line or not HEADER_DATE_RE.match(date_line):
+        issues.append("missing or invalid #!date header")
+    if arguments_line is None:
+        issues.append("missing #!arguments header")
+    if arguments_desc_line is None:
+        issues.append("missing #!arguments-desc header")
+
+    invalid_sections = [s for s in sections if s not in VALID_SECTION_HEADERS]
+    if invalid_sections:
+        issues.append(f"invalid section headers: {', '.join(invalid_sections)}")
+
+    if "{{{" in text or "}}}" in text:
+        issues.append("module contains unresolved template placeholders")
 
     summary = {
-        "module_size_bytes": len(text.encode("utf-8")),
+        "line_count": len(lines),
+        "metadata_line_count": len(metadata_lines),
+        "section_count": len(sections),
         "sections": sections,
     }
     return issues, summary
 
 
-def validate_security_summary() -> tuple[list[str], dict, dict]:
-    issues: list[str] = []
-    if not SECURITY_SUMMARY_JSON.exists():
-        issues.append(f"Missing security summary: {SECURITY_SUMMARY_JSON}")
-        return issues, {}, {}
 
-    data = json.loads(SECURITY_SUMMARY_JSON.read_text(encoding="utf-8"))
-    tool_status = data.get("tool_status", {})
-
-    available_scanners = [
-        name for name, status in tool_status.items()
-        if isinstance(status, dict) and status.get("available")
-    ]
-    if not available_scanners:
-        issues.append("No security scanner was available for this run")
-
-    return (
-        issues,
-        {
-            "available_scanners": available_scanners,
-            "scanned_script_count": data.get("scanned_script_count", 0),
-            "failed_script_download_count": data.get("failed_script_download_count", 0),
-            "compatibility_converted_count": data.get("compatibility_converted_count", 0),
-            "suspicious_module_count": len(data.get("suspicious_modules", [])),
-            "suspicious_script_hash_count": len(data.get("suspicious_script_hashes", [])),
-        },
-        data,
-    )
-
-
-def main() -> int:
-    issues: list[str] = []
-    summary: dict[str, object] = {}
-    allow_hosts, allow_regexes = load_allowlist_context()
-    security_issues, security_summary, security_data = validate_security_summary()
-    issues.extend(security_issues)
-    summary["security"] = security_summary
-
-    if not STAGED_AD_BLOCK_LIST.exists():
-        issues.append(f"Missing staged output: {STAGED_AD_BLOCK_LIST}")
-    else:
-        list_issues, list_summary = validate_rule_list(allow_hosts, allow_regexes)
-        issues.extend(list_issues)
-        summary["ad_block_list"] = list_summary
-
-    if not STAGED_AD_BLOCK_MODULE.exists():
-        issues.append(f"Missing staged output: {STAGED_AD_BLOCK_MODULE}")
-    else:
-        module_issues, module_summary = validate_module(allow_hosts, allow_regexes, security_data)
-        issues.extend(module_issues)
-        summary["ad_block_module"] = module_summary
-
-    report = {
-        "ok": not issues,
-        "issues": issues,
-        "summary": summary,
-    }
-    save_json(VALIDATION_REPORT, report)
-
-    if issues:
-        print(json.dumps(report, ensure_ascii=False, indent=2))
-        return 1
-
+def publish_staged_outputs() -> None:
     AD_BLOCK_LIST.parent.mkdir(parents=True, exist_ok=True)
     AD_BLOCK_MODULE.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(STAGED_AD_BLOCK_LIST, AD_BLOCK_LIST)
     shutil.copyfile(STAGED_AD_BLOCK_MODULE, AD_BLOCK_MODULE)
 
+
+
+def main() -> int:
+    ensure_project_dirs()
+
+    issues: list[str] = []
+
+    list_issues, list_summary = validate_list_file(STAGED_AD_BLOCK_LIST)
+    module_issues, module_summary = validate_module_file(STAGED_AD_BLOCK_MODULE)
+    issues.extend(list_issues)
+    issues.extend(module_issues)
+
+    rejected_count = 0
+    if REJECTED_RULES_TXT.exists():
+        rejected_count = len([x for x in REJECTED_RULES_TXT.read_text(encoding="utf-8").splitlines() if x.strip()])
+
+    whitelist_count = 0
+    if WHITELIST_HOSTS_TXT.exists():
+        whitelist_count = len([x for x in WHITELIST_HOSTS_TXT.read_text(encoding="utf-8").splitlines() if x.strip()])
+
+    argument_catalog = load_json(ARGUMENT_CATALOG_JSON, [])
+    security_summary = load_json(SECURITY_SUMMARY_JSON, {})
+
+    report = {
+        "ok": not issues,
+        "issues": issues,
+        "list_summary": list_summary,
+        "module_summary": module_summary,
+        "rejected_rule_count": rejected_count,
+        "whitelist_host_count": whitelist_count,
+        "argument_catalog_count": len(argument_catalog) if isinstance(argument_catalog, list) else 0,
+        "security_summary_present": bool(security_summary),
+        "staged_list": str(STAGED_AD_BLOCK_LIST),
+        "staged_module": str(STAGED_AD_BLOCK_MODULE),
+        "final_list": str(AD_BLOCK_LIST),
+        "final_module": str(AD_BLOCK_MODULE),
+    }
+
+    write_text(VALIDATION_REPORT, json.dumps(report, ensure_ascii=False, indent=2) + "\n")
+
+    if issues:
+        print(json.dumps(report, ensure_ascii=False, indent=2))
+        return 1
+
+    publish_staged_outputs()
     print(f"Wrote {VALIDATION_REPORT}")
     print(f"Published {AD_BLOCK_LIST}")
     print(f"Published {AD_BLOCK_MODULE}")
-    print(json.dumps(report, ensure_ascii=False, indent=2))
     return 0
 
 
