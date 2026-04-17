@@ -45,7 +45,7 @@ jobs:
           stage_path() {
             path="$1"
             if [ -e "$path" ] || git ls-files --error-unmatch -- "$path" >/dev/null 2>&1; then
-              git add -A -- "$path"
+              git add -f -A -- "$path"
             fi
           }
 
