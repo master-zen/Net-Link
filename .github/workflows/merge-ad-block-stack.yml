@@ -14,6 +14,7 @@ on:
       - "scripts/discover_module_candidates.py"
       - "scripts/discover_allowlist_candidates.py"
       - "scripts/fetch_and_normalize_modules.py"
+      - "scripts/fetch_and_cache_adblock_inputs.py"
       - "scripts/scan_js_security.py"
       - "scripts/build_ad_block_outputs.py"
       - "scripts/validate_ad_block_outputs.py"
@@ -31,14 +32,18 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     env:
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
       VT_API_KEY: ${{ secrets.VT_API_KEY }}
       SOCKET_TOKEN: ${{ secrets.SOCKET_TOKEN }}
+      ENABLE_SEMGREP: "0"
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -53,11 +58,10 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests pyyaml semgrep
+          pip install requests pyyaml
 
       - name: Install JS-X-Ray
-        run: |
-          npm install -g @nodesecure/js-x-ray || true
+        run: npm install -g @nodesecure/js-x-ray || true
 
       - name: Install ClamAV
         run: |
@@ -107,6 +111,7 @@ jobs:
           test -f scripts/discover_module_candidates.py
           test -f scripts/discover_allowlist_candidates.py
           test -f scripts/fetch_and_normalize_modules.py
+          test -f scripts/fetch_and_cache_adblock_inputs.py
           test -f scripts/scan_js_security.py
           test -f scripts/build_ad_block_outputs.py
           test -f scripts/validate_ad_block_outputs.py
@@ -115,6 +120,7 @@ jobs:
           test -f scripts/lib_rules.py
 
       - name: Run Ad Block pipeline
+        timeout-minutes: 70
         run: python -u scripts/run_ad_block_pipeline.py
 
       - name: Upload ad-block diagnostics
@@ -129,6 +135,7 @@ jobs:
             build/normalized_modules.json
             build/whitelist_hosts.txt
             build/rejected_rules.txt
+            build/cache/**
             build/scan_reports/**
 
       - name: Commit and push if changed
@@ -147,7 +154,14 @@ jobs:
           for path in \
             Surge/Rules/Ad_Block.list \
             Surge/Module/Ad_Block.sgmodule \
-            Surge/Scripts/Converted
+            Surge/Scripts/Converted \
+            build/discovered_module_urls.txt \
+            build/discovered_allowlist_urls.txt \
+            build/normalized_modules.json \
+            build/whitelist_hosts.txt \
+            build/rejected_rules.txt \
+            build/cache \
+            build/scan_reports
           do
             stage_path "$path"
           done
@@ -157,27 +171,57 @@ jobs:
             exit 0
           fi
 
-          git commit -m "chore: update ad block stack" || echo "nothing to commit"
+          git commit -m "chore: update ad block stack" || {
+            echo "Nothing to commit."
+            exit 0
+          }
 
-          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/$GITHUB_REPOSITORY"
+          git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}"
 
           max_attempts=5
           attempt=1
           while [ $attempt -le $max_attempts ]; do
-            git fetch origin main || true
-            git rebase origin/main || (git rebase --abort || true)
+            echo "Push attempt $attempt/$max_attempts"
 
-            if git push origin main; then
-              echo "push succeeded"
-              break
+            git fetch origin main
+
+            if ! git rebase origin/main; then
+              git rebase --abort || true
+              echo "Rebase failed. Re-applying commit on top of latest origin/main..."
+              git reset --soft HEAD~1
+              git reset
+              for path in \
+                Surge/Rules/Ad_Block.list \
+                Surge/Module/Ad_Block.sgmodule \
+                Surge/Scripts/Converted \
+                build/discovered_module_urls.txt \
+                build/discovered_allowlist_urls.txt \
+                build/normalized_modules.json \
+                build/whitelist_hosts.txt \
+                build/rejected_rules.txt \
+                build/cache \
+                build/scan_reports
+              do
+                stage_path "$path"
+              done
+              if git diff --cached --quiet; then
+                echo "No changes after syncing with origin/main."
+                exit 0
+              fi
+              git commit -m "chore: update ad block stack"
+              git fetch origin main
+              git rebase origin/main
             fi
 
-            echo "push failed, attempt $attempt/$max_attempts, retrying after brief sleep..."
-            sleep $((RANDOM % 5 + 1))
+            if git push origin HEAD:main; then
+              echo "Push succeeded."
+              exit 0
+            fi
+
+            echo "Push failed, retrying..."
+            sleep $((RANDOM % 5 + 2))
             attempt=$((attempt + 1))
           done
 
-          if [ $attempt -gt $max_attempts ]; then
-            echo "push failed after $max_attempts attempts"
-            exit 1
-          fi
+          echo "Push failed after $max_attempts attempts."
+          exit 1
