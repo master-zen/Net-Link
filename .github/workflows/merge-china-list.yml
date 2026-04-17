@@ -1,9 +1,14 @@
-name: Update China Rules
+name: Update China List
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "40 2 * * *"
+    - cron: "25 2 * * *"
+  push:
+    paths:
+      - "scripts/build_china.py"
+      - "scripts/lib_rules.py"
+      - ".github/workflows/merge-china-list.yml"
 
 permissions:
   contents: write
@@ -15,10 +20,14 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -30,11 +39,16 @@ jobs:
 
       - name: Upload china diagnostics
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: china-diagnostics
           if-no-files-found: ignore
-          path: build/china_validation.json
+          path: |
+            build/china_validation.json
+            build/china_review.json
+            build/china_rejected.json
+            build/china_unresolved.json
+            build/china_dns_cache.json
 
       - name: Commit and push if changed
         shell: bash
@@ -54,7 +68,8 @@ jobs:
             build/china_validation.json \
             build/china_review.json \
             build/china_rejected.json \
-            build/china_unresolved.json
+            build/china_unresolved.json \
+            build/china_dns_cache.json
           do
             stage_path "$path"
           done
@@ -69,7 +84,7 @@ jobs:
             exit 0
           }
 
-          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}"
+          git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}"
 
           max_attempts=5
           attempt=1
@@ -82,21 +97,26 @@ jobs:
             if ! git rebase origin/main; then
               git rebase --abort || true
               echo "Rebase failed. Re-applying commit on top of latest origin/main..."
+
               git reset --soft HEAD~1
               git reset
+
               for path in \
                 Surge/Rules/China.list \
                 build/china_validation.json \
                 build/china_review.json \
                 build/china_rejected.json \
-                build/china_unresolved.json
+                build/china_unresolved.json \
+                build/china_dns_cache.json
               do
                 stage_path "$path"
               done
+
               if git diff --cached --quiet; then
                 echo "No changes after syncing with origin/main."
                 exit 0
               fi
+
               git commit -m "chore: update china rules"
               git fetch origin main
               git rebase origin/main
