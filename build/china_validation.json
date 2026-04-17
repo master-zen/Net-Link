@@ -1,1 +1,102 @@
-
+{
+  "ok": true,
+  "mode": "dual_group_serial_fallback_parallel_compare",
+  "generated_at_unix": 1776408019,
+  "config": {
+    "cn_dns_servers": [
+      "119.29.29.29",
+      "180.76.76.76",
+      "223.5.5.5",
+      "223.6.6.6",
+      "114.114.114.114",
+      "114.114.115.115",
+      "1.2.4.8",
+      "210.2.4.8",
+      "101.226.4.6",
+      "218.30.118.6",
+      "123.125.81.6",
+      "140.207.198.6"
+    ],
+    "intl_dns_servers": [
+      "1.1.1.1",
+      "1.0.0.1",
+      "8.8.8.8",
+      "8.8.4.4",
+      "9.9.9.9",
+      "149.112.112.112",
+      "208.67.222.222",
+      "208.67.220.220",
+      "64.6.64.6",
+      "64.6.65.6",
+      "4.2.2.1",
+      "4.2.2.2",
+      "4.2.2.3",
+      "4.2.2.4",
+      "4.2.2.5",
+      "4.2.2.6",
+      "156.154.70.1",
+      "156.154.71.1",
+      "77.88.8.8",
+      "77.88.8.1"
+    ],
+    "dns_timeout": 1.5,
+    "dns_tcp_timeout": 2.5,
+    "max_cname_depth": 8,
+    "max_workers": 32,
+    "min_suffix_confirmed_hosts": 2,
+    "dns_cache_ttl_seconds": 172800,
+    "cn_group_serial": true,
+    "intl_group_serial": true,
+    "cn_intl_parallel": true,
+    "cn_intl_diverged_direct_reject": true
+  },
+  "summary": {
+    "rule_count": 23871,
+    "domain_rule_count": 0,
+    "ip_rule_count": 22862,
+    "asn_rule_count": 1009,
+    "input_domain_rule_count": 3695,
+    "kept_domain_rule_count": 0,
+    "review_domain_rule_count": 0,
+    "rejected_domain_rule_count": 3695,
+    "unresolved_domain_rule_count": 0,
+    "cn_network_count": 22862,
+    "dns_cache_entries": 243870
+  },
+  "sources": {
+    "domain_sources": [
+      {
+        "source_url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_Domain.list",
+        "ok": true,
+        "normalized_count": 3695
+      }
+    ],
+    "ip_sources": [
+      {
+        "source_url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaIPs/ChinaIPs_Resolve.list",
+        "ok": true,
+        "normalized_count": 22862
+      },
+      {
+        "source_url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaASN/ChinaASN_Resolve.list",
+        "ok": true,
+        "normalized_count": 1009
+      },
+      {
+        "source_url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/cncidr.txt",
+        "ok": true,
+        "normalized_count": 8631
+      },
+      {
+        "source_url": "https://raw.githubusercontent.com/Hackl0us/GeoIP2-CN/release/CN-ip-cidr.txt",
+        "ok": true,
+        "normalized_count": 7055
+      }
+    ]
+  },
+  "failures": {
+    "domain_sources": [],
+    "ip_sources": []
+  },
+  "issues": []
+}
