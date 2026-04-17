@@ -1,5 +1,4 @@
-from pathlib import Path
-content = """#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from __future__ import annotations
@@ -43,7 +42,7 @@ DNS_CACHE_FILE = BUILD_DIR / "china_dns_cache.json"
 COMMENT_PREFIXES = ("#", ";", "//")
 DOMAIN_RULE_TYPES = {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD"}
 IP_RULE_TYPES = {"IP-CIDR", "IP-CIDR6", "IP-ASN"}
-NO_RESOLVE_RE = re.compile(r"(?i),\\s*no-resolve\\b")
+NO_RESOLVE_RE = re.compile(r"(?i),\s*no-resolve\b")
 
 DEFAULT_CN_DNS_SERVERS = [
     "119.29.29.29",
@@ -150,7 +149,7 @@ def ensure_parent_dirs() -> None:
 
 
 def is_comment_or_empty(line: str) -> bool:
-    s = line.strip().lstrip("\\ufeff")
+    s = line.strip().lstrip("\ufeff")
     return not s or any(s.startswith(prefix) for prefix in COMMENT_PREFIXES)
 
 
@@ -453,7 +452,7 @@ def load_dns_cache() -> dict:
 def save_dns_cache(cache: dict) -> None:
     DNS_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
     DNS_CACHE_FILE.write_text(
-        json.dumps(cache, ensure_ascii=False, indent=2) + "\\n",
+        json.dumps(cache, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
 
@@ -977,19 +976,19 @@ def main() -> int:
     }
 
     VALIDATION_REPORT.write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + "\\n",
+        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     REVIEW_REPORT.write_text(
-        json.dumps(review_records, ensure_ascii=False, indent=2) + "\\n",
+        json.dumps(review_records, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     REJECTED_REPORT.write_text(
-        json.dumps(rejected_records, ensure_ascii=False, indent=2) + "\\n",
+        json.dumps(rejected_records, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     UNRESOLVED_REPORT.write_text(
-        json.dumps(unresolved_records, ensure_ascii=False, indent=2) + "\\n",
+        json.dumps(unresolved_records, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
     save_dns_cache(dns_cache)
@@ -998,7 +997,7 @@ def main() -> int:
         print(json.dumps(report, ensure_ascii=False, indent=2), file=sys.stderr)
         return 1
 
-    OUTPUT.write_text("\\n".join(final_rules) + "\\n", encoding="utf-8")
+    OUTPUT.write_text("\n".join(final_rules) + "\n", encoding="utf-8")
     print(f"{OUTPUT}: {len(final_rules)} lines")
     print(f"{VALIDATION_REPORT}: ok")
     print(f"{REVIEW_REPORT}: {len(review_records)} entries")
@@ -1010,7 +1009,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-"""
-path = Path('/mnt/data/build_china.py')
-path.write_text(content, encoding='utf-8')
-print(path)
