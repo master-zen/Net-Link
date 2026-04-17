@@ -1,0 +1,399 @@
+! Title: Hide Open-in-App / Smart App Banner Pack
+! Description: Broad rules to suppress common open-in-app banners and related prompts in Safari
+! Author: ChatGPT
+! Version: 2026-04-17-01
+
+! =========================
+! 1. 通用网页层横幅隐藏
+! =========================
+
+##.smart-app-banner
+##.smartbanner
+##.smart-banner
+##.app-banner
+##.app_banner
+##.app-download-banner
+##.appDownloadBanner
+##.open-in-app
+##.openinapp
+##.open-in-app-banner
+##.open-app-banner
+##.open-app
+##.app-open-banner
+##.app-promo-banner
+##.app-promote-banner
+##.app-promotion-banner
+##.download-app-banner
+##.install-app-banner
+##.banner-app
+##.mobile-app-banner
+##.native-app-banner
+##.app-upsell-banner
+##.app-cta-banner
+##.app-launch-banner
+##.app-link-banner
+##.deeplink-banner
+##.deep-link-banner
+##.app-interstitial
+##.app-callout
+##.app-ad-banner
+##.app-toast
+##.open-app-toast
+##.sticky-app-banner
+##.top-app-banner
+##.header-app-banner
+##.app-header-banner
+##.appbar-banner
+##.appbar-promo
+##.store-banner
+##.store-promo-banner
+##.app-store-banner
+##.appstore-banner
+##.itunes-banner
+##.itunes-app-banner
+##.ios-app-banner
+##.android-app-banner
+##.mobile-banner-app
+##.download-our-app
+##.use-app-banner
+##.continue-in-app
+##.continue-on-app
+##.view-in-app
+##.open-in-google-app
+##.open-in-youtube-app
+##.open-in-reddit-app
+##.open-in-facebook-app
+##.open-in-instagram-app
+##.open-in-x-app
+##.open-in-twitter-app
+##.open-in-tiktok-app
+##.open-in-pinterest-app
+##.open-in-linkedin-app
+##.open-in-amazon-app
+##.open-in-ebay-app
+##.open-in-taobao-app
+##.open-in-jd-app
+##.open-in-douyin-app
+##.open-in-weibo-app
+##.open-in-zhihu-app
+
+! =========================
+! 2. 通用 ID / class 模糊匹配
+! =========================
+
+##[id*="smart-app"]
+##[id*="smartapp"]
+##[id*="app-banner"]
+##[id*="appbanner"]
+##[id*="open-in-app"]
+##[id*="openapp"]
+##[id*="open-app"]
+##[id*="app-promo"]
+##[id*="apppromo"]
+##[id*="app-download"]
+##[id*="appdownload"]
+##[id*="download-app"]
+##[id*="install-app"]
+##[id*="deeplink"]
+##[id*="deep-link"]
+##[id*="continue-in-app"]
+##[id*="view-in-app"]
+##[id*="appstore"]
+##[id*="itunes"]
+##[id*="mobile-app"]
+
+##[class*="smart-app"]
+##[class*="smartapp"]
+##[class*="app-banner"]
+##[class*="appbanner"]
+##[class*="open-in-app"]
+##[class*="openapp"]
+##[class*="open-app"]
+##[class*="app-promo"]
+##[class*="apppromo"]
+##[class*="app-download"]
+##[class*="appdownload"]
+##[class*="download-app"]
+##[class*="install-app"]
+##[class*="deeplink"]
+##[class*="deep-link"]
+##[class*="continue-in-app"]
+##[class*="view-in-app"]
+##[class*="appstore"]
+##[class*="itunes"]
+##[class*="mobile-app"]
+
+! =========================
+! 3. 常见 data-* / aria / role 特征
+! =========================
+
+##[data-testid*="app-banner"]
+##[data-testid*="open-in-app"]
+##[data-testid*="smart-app"]
+##[data-test*="app-banner"]
+##[data-test*="open-in-app"]
+##[data-qa*="app-banner"]
+##[data-qa*="open-in-app"]
+##[data-cy*="app-banner"]
+##[data-cy*="open-in-app"]
+##[data-component*="app-banner"]
+##[data-component*="smart-app"]
+##[data-module*="app-banner"]
+##[data-module*="open-in-app"]
+##[data-role*="app-banner"]
+##[data-role*="smart-app"]
+##[aria-label*="Open in app"]
+##[aria-label*="Open in App"]
+##[aria-label*="open in app"]
+##[aria-label*="Download app"]
+##[aria-label*="Use app"]
+##[aria-label*="Continue in app"]
+##[aria-label*="View in app"]
+##[role="dialog"][class*="app"]
+##[role="dialog"][id*="app"]
+##[role="banner"][class*="app"]
+##[role="banner"][id*="app"]
+
+! =========================
+! 4. Smart App Banner 触发线索
+! 注：不保证这几条本身就能灭横幅
+! 只是做尽量处理
+! =========================
+
+##meta[name="apple-itunes-app"]
+##link[rel="alternate"][href^="android-app://"]
+##link[rel="alternate"][href^="ios-app://"]
+##link[rel="alternate"][href^="apple-app-site-association"]
+##script[type="application/ld+json"]:has-text("OpenApp")
+##script:has-text("apple-itunes-app")
+##script:has-text("smartbanner")
+##script:has-text("smart app banner")
+##script:has-text("open in app")
+##script:has-text("deep link")
+##script:has-text("deeplink")
+
+! =========================
+! 5. 常见页面文案特征
+! 有些站会直接做文字按钮或提示条
+! =========================
+
+##a[title*="Open in app"]
+##a[title*="Open in App"]
+##a[title*="Download app"]
+##a[title*="Use app"]
+##a[title*="Continue in app"]
+##button[title*="Open in app"]
+##button[title*="Open in App"]
+##button[title*="Download app"]
+##button[title*="Use app"]
+##button[title*="Continue in app"]
+
+##a[href^="google://"]
+##a[href^="youtube://"]
+##a[href^="reddit://"]
+##a[href^="fb://"]
+##a[href^="facebook://"]
+##a[href^="instagram://"]
+##a[href^="twitter://"]
+##a[href^="x://"]
+##a[href^="tiktok://"]
+##a[href^="pinterest://"]
+##a[href^="linkedin://"]
+##a[href^="amazon://"]
+##a[href^="taobao://"]
+##a[href^="jd://"]
+##a[href^="douyin://"]
+##a[href^="weibo://"]
+##a[href^="zhihu://"]
+
+! =========================
+! 6. 常见大站定向处理
+! 这是经验型覆盖，不保证长期稳定
+! =========================
+
+google.com##.smart-app-banner
+google.com##.app-banner
+google.com##[class*="app"]
+google.com##[id*="app"]
+
+www.google.com##.smart-app-banner
+www.google.com##.app-banner
+www.google.com##[class*="app"]
+www.google.com##[id*="app"]
+
+youtube.com##.smart-app-banner
+youtube.com##.app-banner
+youtube.com##[class*="app"]
+youtube.com##[id*="app"]
+
+m.youtube.com##.smart-app-banner
+m.youtube.com##.app-banner
+m.youtube.com##[class*="app"]
+m.youtube.com##[id*="app"]
+
+reddit.com##.XPromoPopup
+reddit.com##.XPromoBottomBar
+reddit.com##.GetAppFooter
+reddit.com##.smart-app-banner
+reddit.com##.app-banner
+reddit.com##[class*="xpromo"]
+reddit.com##[id*="xpromo"]
+
+www.reddit.com##.XPromoPopup
+www.reddit.com##.XPromoBottomBar
+www.reddit.com##.GetAppFooter
+www.reddit.com##.smart-app-banner
+www.reddit.com##.app-banner
+www.reddit.com##[class*="xpromo"]
+www.reddit.com##[id*="xpromo"]
+
+facebook.com##.smart-app-banner
+facebook.com##.app-banner
+facebook.com##[class*="app"]
+facebook.com##[id*="app"]
+
+m.facebook.com##.smart-app-banner
+m.facebook.com##.app-banner
+m.facebook.com##[class*="app"]
+m.facebook.com##[id*="app"]
+
+instagram.com##.smart-app-banner
+instagram.com##.app-banner
+instagram.com##[class*="app"]
+instagram.com##[id*="app"]
+
+www.instagram.com##.smart-app-banner
+www.instagram.com##.app-banner
+www.instagram.com##[class*="app"]
+www.instagram.com##[id*="app"]
+
+x.com##.smart-app-banner
+x.com##.app-banner
+x.com##[class*="app"]
+x.com##[id*="app"]
+
+twitter.com##.smart-app-banner
+twitter.com##.app-banner
+twitter.com##[class*="app"]
+twitter.com##[id*="app"]
+
+tiktok.com##.smart-app-banner
+tiktok.com##.app-banner
+tiktok.com##[class*="app"]
+tiktok.com##[id*="app"]
+
+www.tiktok.com##.smart-app-banner
+www.tiktok.com##.app-banner
+www.tiktok.com##[class*="app"]
+www.tiktok.com##[id*="app"]
+
+pinterest.com##.smart-app-banner
+pinterest.com##.app-banner
+pinterest.com##[class*="app"]
+pinterest.com##[id*="app"]
+
+www.pinterest.com##.smart-app-banner
+www.pinterest.com##.app-banner
+www.pinterest.com##[class*="app"]
+www.pinterest.com##[id*="app"]
+
+linkedin.com##.smart-app-banner
+linkedin.com##.app-banner
+linkedin.com##[class*="app"]
+linkedin.com##[id*="app"]
+
+www.linkedin.com##.smart-app-banner
+www.linkedin.com##.app-banner
+www.linkedin.com##[class*="app"]
+www.linkedin.com##[id*="app"]
+
+amazon.com##.smart-app-banner
+amazon.com##.app-banner
+amazon.com##[class*="app"]
+amazon.com##[id*="app"]
+
+www.amazon.com##.smart-app-banner
+www.amazon.com##.app-banner
+www.amazon.com##[class*="app"]
+www.amazon.com##[id*="app"]
+
+taobao.com##.smart-app-banner
+taobao.com##.app-banner
+taobao.com##[class*="app"]
+taobao.com##[id*="app"]
+
+m.taobao.com##.smart-app-banner
+m.taobao.com##.app-banner
+m.taobao.com##[class*="app"]
+m.taobao.com##[id*="app"]
+
+jd.com##.smart-app-banner
+jd.com##.app-banner
+jd.com##[class*="app"]
+jd.com##[id*="app"]
+
+m.jd.com##.smart-app-banner
+m.jd.com##.app-banner
+m.jd.com##[class*="app"]
+m.jd.com##[id*="app"]
+
+weibo.com##.smart-app-banner
+weibo.com##.app-banner
+weibo.com##[class*="app"]
+weibo.com##[id*="app"]
+
+m.weibo.cn##.smart-app-banner
+m.weibo.cn##.app-banner
+m.weibo.cn##[class*="app"]
+m.weibo.cn##[id*="app"]
+
+zhihu.com##.smart-app-banner
+zhihu.com##.app-banner
+zhihu.com##[class*="app"]
+zhihu.com##[id*="app"]
+
+www.zhihu.com##.smart-app-banner
+www.zhihu.com##.app-banner
+www.zhihu.com##[class*="app"]
+www.zhihu.com##[id*="app"]
+
+! =========================
+! 7. 尝试拦部分 deeplink / app 跳转脚本
+! 可能误伤少量站点功能，必要时删掉这一段
+! =========================
+
+||google.com^$removeparam=deep_link
+||google.com^$removeparam=deeplink
+||google.com^$removeparam=openApp
+||google.com^$removeparam=open_app
+||google.com^$removeparam=app
+||youtube.com^$removeparam=deep_link
+||youtube.com^$removeparam=deeplink
+||reddit.com^$removeparam=deep_link
+||reddit.com^$removeparam=deeplink
+||facebook.com^$removeparam=deep_link
+||instagram.com^$removeparam=deep_link
+||x.com^$removeparam=deep_link
+||twitter.com^$removeparam=deep_link
+||tiktok.com^$removeparam=deep_link
+
+! =========================
+! 8. 激进规则
+! 误伤概率更高
+! 如果你发现某些网站顶栏/弹层异常，就先删掉这一段
+! =========================
+
+##div[class*="app"][class*="banner"]
+##div[id*="app"][id*="banner"]
+##section[class*="app"][class*="banner"]
+##aside[class*="app"][class*="banner"]
+##div[class*="smart"][class*="banner"]
+##div[id*="smart"][id*="banner"]
+##div[class*="open"][class*="app"]
+##div[id*="open"][id*="app"]
+##div[class*="download"][class*="app"]
+##div[id*="download"][id*="app"]
+##div[class*="install"][class*="app"]
+##div[id*="install"][id*="app"]
+
+! End
