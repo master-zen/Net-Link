@@ -44,44 +44,42 @@ DOMAIN_RULE_TYPES = {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD"}
 IP_RULE_TYPES = {"IP-CIDR", "IP-CIDR6", "IP-ASN"}
 NO_RESOLVE_RE = re.compile(r"(?i),\s*no-resolve\b")
 
-# 国内公共 DNS：串行回退，前一台有有效答案就不再继续试下一台
 DEFAULT_CN_DNS_SERVERS = [
-    "119.29.29.29",      # DNSPod
-    "180.76.76.76",      # Baidu
-    "223.5.5.5",         # AliDNS
-    "223.6.6.6",         # AliDNS
-    "114.114.114.114",   # 114DNS
-    "114.114.115.115",   # 114DNS
-    "1.2.4.8",           # CNNIC SDNS
-    "210.2.4.8",         # CNNIC SDNS
-    "101.226.4.6",       # 360
-    "218.30.118.6",      # 360
-    "123.125.81.6",      # 360
-    "140.207.198.6",     # 360
+    "119.29.29.29",
+    "180.76.76.76",
+    "223.5.5.5",
+    "223.6.6.6",
+    "114.114.114.114",
+    "114.114.115.115",
+    "1.2.4.8",
+    "210.2.4.8",
+    "101.226.4.6",
+    "218.30.118.6",
+    "123.125.81.6",
+    "140.207.198.6",
 ]
 
-# 国际公共 DNS：串行回退，前一台有有效答案就不再继续试下一台
 DEFAULT_INTL_DNS_SERVERS = [
-    "1.1.1.1",           # Cloudflare
-    "1.0.0.1",           # Cloudflare
-    "8.8.8.8",           # Google
-    "8.8.4.4",           # Google
-    "9.9.9.9",           # Quad9
-    "149.112.112.112",   # Quad9
-    "208.67.222.222",    # OpenDNS
-    "208.67.220.220",    # OpenDNS
-    "64.6.64.6",         # Verisign
-    "64.6.65.6",         # Verisign
-    "4.2.2.1",           # Level3 / CenturyLink
+    "1.1.1.1",
+    "1.0.0.1",
+    "8.8.8.8",
+    "8.8.4.4",
+    "9.9.9.9",
+    "149.112.112.112",
+    "208.67.222.222",
+    "208.67.220.220",
+    "64.6.64.6",
+    "64.6.65.6",
+    "4.2.2.1",
     "4.2.2.2",
     "4.2.2.3",
     "4.2.2.4",
     "4.2.2.5",
     "4.2.2.6",
-    "156.154.70.1",      # Neustar
-    "156.154.71.1",      # Neustar
-    "77.88.8.8",         # Yandex
-    "77.88.8.1",         # Yandex
+    "156.154.70.1",
+    "156.154.71.1",
+    "77.88.8.8",
+    "77.88.8.1",
 ]
 
 SAMPLE_PREFIXES = [
@@ -637,6 +635,32 @@ def classify_ip_set(ip_list: list[str], cn_networks: list[ipaddress._BaseNetwork
     return cn_ips, non_cn_ips
 
 
+def should_reject_answered_host(cn_group: dict, intl_group: dict, cn_networks: list[ipaddress._BaseNetwork]) -> tuple[bool, dict]:
+    if not signatures_equal(cn_group, intl_group):
+        return True, {"reason": "cn_intl_answer_diverged"}
+
+    cn_ips, non_cn_ips = classify_ip_set(cn_group["ips"], cn_networks)
+    if non_cn_ips:
+        return True, {
+            "reason": "answered_but_contains_non_cn_ip",
+            "cn_ips": sorted(cn_ips),
+            "non_cn_ips": sorted(non_cn_ips),
+        }
+
+    if not cn_ips:
+        return True, {
+            "reason": "answered_but_no_cn_ip",
+            "cn_ips": [],
+            "non_cn_ips": [],
+        }
+
+    return False, {
+        "reason": "answered_and_cn_only",
+        "cn_ips": sorted(cn_ips),
+        "non_cn_ips": [],
+    }
+
+
 def verify_exact_host_dual_group(host: str, cn_networks: list[ipaddress._BaseNetwork], cache: dict) -> dict:
     host = host.strip().lower().lstrip(".")
 
@@ -646,72 +670,65 @@ def verify_exact_host_dual_group(host: str, cn_networks: list[ipaddress._BaseNet
         cn_group = future_cn.result()
         intl_group = future_intl.result()
 
-    # 两组结果不同，直接剔除
-    if cn_group["status"] != intl_group["status"]:
-        return {
-            "status": STATUS_REJECT,
-            "host": host,
-            "reason": "cn_intl_status_diverged",
-            "cn_group": cn_group,
-            "intl_group": intl_group,
-        }
-
-    if cn_group["status"] == "answered":
-        if not signatures_equal(cn_group, intl_group):
+    # 只在“有明确负面证据”时剔除
+    if cn_group["status"] == "answered" and intl_group["status"] == "answered":
+        reject, detail = should_reject_answered_host(cn_group, intl_group, cn_networks)
+        if reject:
             return {
                 "status": STATUS_REJECT,
                 "host": host,
-                "reason": "cn_intl_answer_diverged",
                 "cn_group": cn_group,
                 "intl_group": intl_group,
+                **detail,
             }
+        return {
+            "status": STATUS_KEEP,
+            "host": host,
+            "reason": "answered_same_and_cn_only",
+            "cn_group": cn_group,
+            "intl_group": intl_group,
+            **detail,
+        }
 
-        cn_ips, non_cn_ips = classify_ip_set(cn_group["ips"], cn_networks)
+    # 任一组未给出明确结果时，不把域名踢掉；保留并记 review
+    if cn_group["status"] == "answered" or intl_group["status"] == "answered":
+        answered_group = cn_group if cn_group["status"] == "answered" else intl_group
+        cn_ips, non_cn_ips = classify_ip_set(answered_group["ips"], cn_networks)
         if non_cn_ips:
             return {
                 "status": STATUS_REJECT,
                 "host": host,
-                "reason": "answered_but_contains_non_cn_ip",
+                "reason": "single_group_answered_with_non_cn_ip",
                 "cn_group": cn_group,
                 "intl_group": intl_group,
                 "cn_ips": sorted(cn_ips),
                 "non_cn_ips": sorted(non_cn_ips),
             }
-
-        if not cn_ips:
-            return {
-                "status": STATUS_REJECT,
-                "host": host,
-                "reason": "answered_but_no_cn_ip",
-                "cn_group": cn_group,
-                "intl_group": intl_group,
-                "cn_ips": [],
-                "non_cn_ips": [],
-            }
-
         return {
             "status": STATUS_KEEP,
             "host": host,
-            "reason": "cn_intl_same_and_cn_only",
+            "reason": "single_group_answered_cn_only_keep_domain",
             "cn_group": cn_group,
             "intl_group": intl_group,
             "cn_ips": sorted(cn_ips),
             "non_cn_ips": [],
         }
 
-    if cn_group["status"] == "no_record":
+    # 两组都没结果：保留域名规则，但记录 unresolved
+    if cn_group["status"] == "no_record" and intl_group["status"] == "no_record":
         return {
-            "status": STATUS_NO_RECORD,
+            "status": STATUS_KEEP,
             "host": host,
-            "reason": "cn_intl_both_no_record",
+            "reason": "both_groups_no_record_keep_domain",
             "cn_group": cn_group,
             "intl_group": intl_group,
         }
 
+    # 其他不稳定状态：保留域名规则，但标记 review
     return {
-        "status": STATUS_REJECT,
+        "status": STATUS_KEEP,
         "host": host,
-        "reason": "cn_intl_both_error_or_empty",
+        "reason": "unstable_dns_keep_domain",
         "cn_group": cn_group,
         "intl_group": intl_group,
     }
@@ -757,16 +774,7 @@ def verify_suffix_dual_group(suffix: str, cn_networks: list[ipaddress._BaseNetwo
             "suffix": suffix,
             "sampled_hosts": sampled_hosts,
             "host_results": host_results,
-            "reason": "enough_confirmed_hosts",
-        }
-
-    if all(x["status"] == STATUS_NO_RECORD for x in host_results):
-        return {
-            "status": STATUS_NO_RECORD,
-            "suffix": suffix,
-            "sampled_hosts": sampled_hosts,
-            "host_results": host_results,
-            "reason": "all_samples_no_record",
+            "reason": "default_keep_suffix",
         }
 
     return {
@@ -774,7 +782,7 @@ def verify_suffix_dual_group(suffix: str, cn_networks: list[ipaddress._BaseNetwo
         "suffix": suffix,
         "sampled_hosts": sampled_hosts,
         "host_results": host_results,
-        "reason": "suffix_not_confident_enough",
+        "reason": "suffix_low_confidence_but_not_rejected",
     }
 
 
@@ -805,7 +813,7 @@ def verify_domain_rule(rule: str, cn_networks: list[ipaddress._BaseNetwork], cac
         }
         return result["status"], record
 
-    # 严格模式下不自动放行 DOMAIN-KEYWORD
+    # DOMAIN-KEYWORD 继续不自动进最终文件
     record = {
         "rule": rule,
         "rule_type": head,
@@ -818,7 +826,7 @@ def verify_domain_rule(rule: str, cn_networks: list[ipaddress._BaseNetwork], cac
 
 def validate_final_rules(
     final_rules: list[str],
-    final_domain_rules: set[str],
+    kept_domain_rules: set[str],
     trusted_ip_rules: set[str],
 ) -> tuple[list[str], dict]:
     issues: list[str] = []
@@ -836,10 +844,10 @@ def validate_final_rules(
 
         if head in {"DOMAIN", "DOMAIN-SUFFIX"}:
             domain_count += 1
-            if rule not in final_domain_rules:
+            if rule not in kept_domain_rules:
                 issues.append(f"China.list:{idx}: domain rule not in kept set: {rule}")
         elif head == "DOMAIN-KEYWORD":
-            issues.append(f"China.list:{idx}: DOMAIN-KEYWORD leaked into strict output: {rule}")
+            issues.append(f"China.list:{idx}: DOMAIN-KEYWORD leaked into output: {rule}")
         elif head in {"IP-CIDR", "IP-CIDR6"}:
             ip_count += 1
             if rule not in trusted_ip_rules:
@@ -897,16 +905,21 @@ def main() -> int:
                         "reason": f"exception:{type(exc).__name__}: {exc}",
                     }
                 )
+                kept_domain_rules.add(rule)
                 continue
 
-            if status == STATUS_KEEP:
-                kept_domain_rules.add(rule)
-            elif status == STATUS_REJECT:
+            if status == STATUS_REJECT:
                 rejected_records.append(record)
-            elif status == STATUS_NO_RECORD:
-                unresolved_records.append(record)
-            else:
+            elif status == STATUS_REVIEW:
                 review_records.append(record)
+                # review 不踢掉，保留域名规则
+                kept_domain_rules.add(rule)
+            else:
+                kept_domain_rules.add(rule)
+                if record.get("reason") in {"both_groups_no_record_keep_domain"}:
+                    unresolved_records.append(record)
+                elif record.get("reason") not in {"answered_same_and_cn_only", "single_group_answered_cn_only_keep_domain", "default_keep_suffix"}:
+                    review_records.append(record)
 
     final_rules = unique_sorted(kept_domain_rules | trusted_ip_rules)
     if not final_rules:
@@ -918,7 +931,7 @@ def main() -> int:
 
     report = {
         "ok": not issues,
-        "mode": "dual_group_serial_fallback_parallel_compare",
+        "mode": "domain_keep_ip_keep_dns_only_for_exclusion",
         "generated_at_unix": int(time.time()),
         "config": {
             "cn_dns_servers": CN_DNS_SERVERS,
@@ -933,6 +946,8 @@ def main() -> int:
             "intl_group_serial": True,
             "cn_intl_parallel": True,
             "cn_intl_diverged_direct_reject": True,
+            "unresolved_domain_keep": True,
+            "ip_and_domain_keep_together": True,
         },
         "summary": {
             **summary,
