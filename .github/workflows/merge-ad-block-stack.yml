@@ -153,6 +153,11 @@ jobs:
             fi
           }
 
+          cleanup_untracked_artifacts() {
+            rm -f build/ad_block_validation_report.json || true
+            rm -rf build/cache || true
+          }
+
           for path in \
             Surge/Rules/Ad_Block.list \
             Surge/Module/Ad_Block.sgmodule \
@@ -179,11 +184,7 @@ jobs:
           while [ $attempt -le $max_attempts ]; do
             echo "Push attempt $attempt/$max_attempts"
 
-            if [ -n "$(git status --porcelain)" ]; then
-              echo "Working tree is not clean before rebase:"
-              git status --porcelain
-              exit 1
-            fi
+            cleanup_untracked_artifacts
 
             git fetch origin main
 
