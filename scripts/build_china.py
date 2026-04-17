@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+from pathlib import Path
+content = """#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from __future__ import annotations
@@ -42,7 +43,7 @@ DNS_CACHE_FILE = BUILD_DIR / "china_dns_cache.json"
 COMMENT_PREFIXES = ("#", ";", "//")
 DOMAIN_RULE_TYPES = {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD"}
 IP_RULE_TYPES = {"IP-CIDR", "IP-CIDR6", "IP-ASN"}
-NO_RESOLVE_RE = re.compile(r"(?i),\s*no-resolve\b")
+NO_RESOLVE_RE = re.compile(r"(?i),\\s*no-resolve\\b")
 
 DEFAULT_CN_DNS_SERVERS = [
     "119.29.29.29",
@@ -149,7 +150,7 @@ def ensure_parent_dirs() -> None:
 
 
 def is_comment_or_empty(line: str) -> bool:
-    s = line.strip().lstrip("\ufeff")
+    s = line.strip().lstrip("\\ufeff")
     return not s or any(s.startswith(prefix) for prefix in COMMENT_PREFIXES)
 
 
@@ -221,6 +222,8 @@ def fetch_and_normalize(sources: list[str], normalizer) -> tuple[set[str], list[
     failures: list[dict] = []
 
     for src in sources:
+        print(f"[source] fetching: {src}", flush=True)
+        started = time.time()
         try:
             text = fetch_text(src)
             kept: set[str] = set()
@@ -234,8 +237,10 @@ def fetch_and_normalize(sources: list[str], normalizer) -> tuple[set[str], list[
                     "source_url": src,
                     "ok": True,
                     "normalized_count": len(kept),
+                    "elapsed_seconds": round(time.time() - started, 2),
                 }
             )
+            print(f"[source] ok: {src} -> {len(kept)} normalized", flush=True)
         except Exception as exc:
             failures.append({"source_url": src, "error": str(exc)})
             source_status.append(
@@ -243,8 +248,10 @@ def fetch_and_normalize(sources: list[str], normalizer) -> tuple[set[str], list[
                     "source_url": src,
                     "ok": False,
                     "error": str(exc),
+                    "elapsed_seconds": round(time.time() - started, 2),
                 }
             )
+            print(f"[source] failed: {src} -> {type(exc).__name__}: {exc}", flush=True)
 
     return merged, source_status, failures
 
@@ -446,7 +453,7 @@ def load_dns_cache() -> dict:
 def save_dns_cache(cache: dict) -> None:
     DNS_CACHE_FILE.parent.mkdir(parents=True, exist_ok=True)
     DNS_CACHE_FILE.write_text(
-        json.dumps(cache, ensure_ascii=False, indent=2) + "\n",
+        json.dumps(cache, ensure_ascii=False, indent=2) + "\\n",
         encoding="utf-8",
     )
 
@@ -670,7 +677,6 @@ def verify_exact_host_dual_group(host: str, cn_networks: list[ipaddress._BaseNet
         cn_group = future_cn.result()
         intl_group = future_intl.result()
 
-    # 只在“有明确负面证据”时剔除
     if cn_group["status"] == "answered" and intl_group["status"] == "answered":
         reject, detail = should_reject_answered_host(cn_group, intl_group, cn_networks)
         if reject:
@@ -690,7 +696,6 @@ def verify_exact_host_dual_group(host: str, cn_networks: list[ipaddress._BaseNet
             **detail,
         }
 
-    # 任一组未给出明确结果时，不把域名踢掉；保留并记 review
     if cn_group["status"] == "answered" or intl_group["status"] == "answered":
         answered_group = cn_group if cn_group["status"] == "answered" else intl_group
         cn_ips, non_cn_ips = classify_ip_set(answered_group["ips"], cn_networks)
@@ -714,7 +719,6 @@ def verify_exact_host_dual_group(host: str, cn_networks: list[ipaddress._BaseNet
             "non_cn_ips": [],
         }
 
-    # 两组都没结果：保留域名规则，但记录 unresolved
     if cn_group["status"] == "no_record" and intl_group["status"] == "no_record":
         return {
             "status": STATUS_KEEP,
@@ -724,7 +728,6 @@ def verify_exact_host_dual_group(host: str, cn_networks: list[ipaddress._BaseNet
             "intl_group": intl_group,
         }
 
-    # 其他不稳定状态：保留域名规则，但标记 review
     return {
         "status": STATUS_KEEP,
         "host": host,
@@ -813,7 +816,6 @@ def verify_domain_rule(rule: str, cn_networks: list[ipaddress._BaseNetwork], cac
         }
         return result["status"], record
 
-    # DOMAIN-KEYWORD 继续不自动进最终文件
     record = {
         "rule": rule,
         "rule_type": head,
@@ -893,8 +895,13 @@ def main() -> int:
             for rule in domain_rules
         }
 
+        total = len(futures)
+        processed = 0
         for future in as_completed(futures):
             rule = futures[future]
+            processed += 1
+            if processed % 200 == 0 or processed == total:
+                print(f"[china] processed {processed}/{total}", flush=True)
             try:
                 status, record = future.result()
             except Exception as exc:
@@ -912,7 +919,6 @@ def main() -> int:
                 rejected_records.append(record)
             elif status == STATUS_REVIEW:
                 review_records.append(record)
-                # review 不踢掉，保留域名规则
                 kept_domain_rules.add(rule)
             else:
                 kept_domain_rules.add(rule)
@@ -971,19 +977,19 @@ def main() -> int:
     }
 
     VALIDATION_REPORT.write_text(
-        json.dumps(report, ensure_ascii=False, indent=2) + "\n",
+        json.dumps(report, ensure_ascii=False, indent=2) + "\\n",
         encoding="utf-8",
     )
     REVIEW_REPORT.write_text(
-        json.dumps(review_records, ensure_ascii=False, indent=2) + "\n",
+        json.dumps(review_records, ensure_ascii=False, indent=2) + "\\n",
         encoding="utf-8",
     )
     REJECTED_REPORT.write_text(
-        json.dumps(rejected_records, ensure_ascii=False, indent=2) + "\n",
+        json.dumps(rejected_records, ensure_ascii=False, indent=2) + "\\n",
         encoding="utf-8",
     )
     UNRESOLVED_REPORT.write_text(
-        json.dumps(unresolved_records, ensure_ascii=False, indent=2) + "\n",
+        json.dumps(unresolved_records, ensure_ascii=False, indent=2) + "\\n",
         encoding="utf-8",
     )
     save_dns_cache(dns_cache)
@@ -992,7 +998,7 @@ def main() -> int:
         print(json.dumps(report, ensure_ascii=False, indent=2), file=sys.stderr)
         return 1
 
-    OUTPUT.write_text("\n".join(final_rules) + "\n", encoding="utf-8")
+    OUTPUT.write_text("\\n".join(final_rules) + "\\n", encoding="utf-8")
     print(f"{OUTPUT}: {len(final_rules)} lines")
     print(f"{VALIDATION_REPORT}: ok")
     print(f"{REVIEW_REPORT}: {len(review_records)} entries")
@@ -1004,3 +1010,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+"""
+path = Path('/mnt/data/build_china.py')
+path.write_text(content, encoding='utf-8')
+print(path)
