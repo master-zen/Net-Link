@@ -480,7 +480,6 @@ DOMAIN,pt.btschool.club
 DOMAIN,pt.lax.mx
 DOMAIN,public-tracker.cf
 DOMAIN,public-tracker.ml
-DOMAIN,public-tracker.zooki.xyz
 DOMAIN,public.demonoid.ch
 DOMAIN,public.popcorn-tracker.org
 DOMAIN,public.publictracker.xyz
@@ -633,6 +632,7 @@ DOMAIN,torrent-team.net
 DOMAIN,torrent-tracker.hama3.net
 DOMAIN,torrent-tracker.ru
 DOMAIN,torrent.arjlover.net
+DOMAIN,torrent.bowed.net
 DOMAIN,torrent.fedoraproject.org
 DOMAIN,torrent.gresille.org
 DOMAIN,torrent.hificode.in
@@ -887,7 +887,6 @@ DOMAIN,tracker.iperson.xyz
 DOMAIN,tracker.ipfsscan.io
 DOMAIN,tracker.ipv6tracker.org
 DOMAIN,tracker.ipv6tracker.ru
-DOMAIN,tracker.iriseden.eu
 DOMAIN,tracker.iriseden.fr
 DOMAIN,tracker.iro.moe
 DOMAIN,tracker.ismaarino.com
@@ -967,7 +966,6 @@ DOMAIN,tracker.noobsubs.net
 DOMAIN,tracker.novalayer.org
 DOMAIN,tracker.novaopcj.eu.org
 DOMAIN,tracker.novy.vip
-DOMAIN,tracker.nrx.me
 DOMAIN,tracker.nucozer-tracker.ml
 DOMAIN,tracker.nyaa.tk
 DOMAIN,tracker.nyaa.uk
@@ -1186,7 +1184,6 @@ DOMAIN,trackme.theom.nz
 DOMAIN,trackr.appolon.dev
 DOMAIN,trackthis.cyber.pz.it
 DOMAIN,trakx.herokuapp.com
-DOMAIN,trk.publictracker.xyz
 DOMAIN,trl-zhuqiy.dgj055.icu
 DOMAIN,trun.tom.ru
 DOMAIN,trunker.ghostchu-services.top
@@ -1226,7 +1223,6 @@ DOMAIN,vps-dd0a0715.vps.ovh.net
 DOMAIN,vps02.net.orel.ru
 DOMAIN,w.wwwww.wtf
 DOMAIN,wambo.club
-DOMAIN,wassermann.online
 DOMAIN,web.open-tracker.cf
 DOMAIN,wegkxfcivgx.chickenkiller.com
 DOMAIN,wegkxfcivgx.ydns.eu
@@ -1553,6 +1549,7 @@ IP-CIDR,177.139.47.40/32,no-resolve
 IP-CIDR,177.139.47.92/32,no-resolve
 IP-CIDR,177.144.178.170/32,no-resolve
 IP-CIDR,177.144.178.39/32,no-resolve
+IP-CIDR,177.16.198.58/32,no-resolve
 IP-CIDR,177.172.61.236/32,no-resolve
 IP-CIDR,177.172.61.249/32,no-resolve
 IP-CIDR,177.172.61.33/32,no-resolve
@@ -2049,6 +2046,7 @@ IP-CIDR,62.210.202.61/32,no-resolve
 IP-CIDR,62.212.85.66/32,no-resolve
 IP-CIDR,62.60.157.92/32,no-resolve
 IP-CIDR,64.112.43.194/32,no-resolve
+IP-CIDR,64.226.122.118/32,no-resolve
 IP-CIDR,64.23.195.62/32,no-resolve
 IP-CIDR,65.108.102.76/32,no-resolve
 IP-CIDR,65.108.2.176/32,no-resolve
