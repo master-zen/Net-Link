@@ -1,0 +1,76 @@
+name: Build China Rule Set From Scratch
+
+on:
+  workflow_dispatch:
+    inputs:
+      force_refresh:
+        description: "Ignore DNS cache and re-query all domains"
+        required: false
+        default: false
+        type: boolean
+  push:
+    paths:
+      - "data/sources/ChinaDomain.txt"
+      - "scripts/build_china_from_scratch.py"
+      - ".github/workflows/build-china-from-scratch.yml"
+  schedule:
+    - cron: "27 19 * * 6"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-china-from-scratch
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install httpx[http2] dnspython
+
+      - name: Build China rules
+        env:
+          FORCE_DNS_REFRESH: ${{ github.event.inputs.force_refresh == 'true' && '1' || '0' }}
+          CHINA_DOMAIN_MAX_CONCURRENCY: "96"
+          CHINA_DOMAIN_REQUEST_TIMEOUT: "4.5"
+          CHINA_DOMAIN_SUCCESS_CACHE_HOURS: "720"
+          CHINA_DOMAIN_FAILURE_CACHE_HOURS: "72"
+        run: |
+          python scripts/build_china_from_scratch.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            data/temporary/ChinaDomainCollection.txt \
+            data/temporary/ChinaDomainDNSresults.txt \
+            data/temporary/ChinaDomainDNSTidy.txt \
+            data/temporary/ChinaDomainTidy.txt \
+            Surge/Rules/China.list
+
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+
+          git commit -m "chore: rebuild China rules"
+          git push
