@@ -480,6 +480,7 @@ DOMAIN,pt.btschool.club
 DOMAIN,pt.lax.mx
 DOMAIN,public-tracker.cf
 DOMAIN,public-tracker.ml
+DOMAIN,public-tracker.zooki.xyz
 DOMAIN,public.demonoid.ch
 DOMAIN,public.popcorn-tracker.org
 DOMAIN,public.publictracker.xyz
@@ -887,6 +888,7 @@ DOMAIN,tracker.iperson.xyz
 DOMAIN,tracker.ipfsscan.io
 DOMAIN,tracker.ipv6tracker.org
 DOMAIN,tracker.ipv6tracker.ru
+DOMAIN,tracker.iriseden.eu
 DOMAIN,tracker.iriseden.fr
 DOMAIN,tracker.iro.moe
 DOMAIN,tracker.ismaarino.com
@@ -966,6 +968,7 @@ DOMAIN,tracker.noobsubs.net
 DOMAIN,tracker.novalayer.org
 DOMAIN,tracker.novaopcj.eu.org
 DOMAIN,tracker.novy.vip
+DOMAIN,tracker.nrx.me
 DOMAIN,tracker.nucozer-tracker.ml
 DOMAIN,tracker.nyaa.tk
 DOMAIN,tracker.nyaa.uk
@@ -1184,6 +1187,7 @@ DOMAIN,trackme.theom.nz
 DOMAIN,trackr.appolon.dev
 DOMAIN,trackthis.cyber.pz.it
 DOMAIN,trakx.herokuapp.com
+DOMAIN,trk.publictracker.xyz
 DOMAIN,trl-zhuqiy.dgj055.icu
 DOMAIN,trun.tom.ru
 DOMAIN,trunker.ghostchu-services.top
@@ -1223,6 +1227,7 @@ DOMAIN,vps-dd0a0715.vps.ovh.net
 DOMAIN,vps02.net.orel.ru
 DOMAIN,w.wwwww.wtf
 DOMAIN,wambo.club
+DOMAIN,wassermann.online
 DOMAIN,web.open-tracker.cf
 DOMAIN,wegkxfcivgx.chickenkiller.com
 DOMAIN,wegkxfcivgx.ydns.eu
@@ -1336,6 +1341,7 @@ IP-CIDR,110.187.214.6/32,no-resolve
 IP-CIDR,110.187.215.166/32,no-resolve
 IP-CIDR,111.90.151.241/32,no-resolve
 IP-CIDR,113.13.6.40/32,no-resolve
+IP-CIDR,113.16.155.111/32,no-resolve
 IP-CIDR,113.16.155.116/32,no-resolve
 IP-CIDR,113.16.155.146/32,no-resolve
 IP-CIDR,113.17.152.163/32,no-resolve
