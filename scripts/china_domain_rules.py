@@ -1,6 +1,4 @@
-from pathlib import Path
-
-content = r'''#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from __future__ import annotations
@@ -12,7 +10,6 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
 
 import dns.exception
 import dns.message
@@ -35,7 +32,7 @@ REQUEST_TIMEOUT = max(1.0, min(8.0, float(os.getenv("CHINA_DOMAIN_REQUEST_TIMEOU
 SUCCESS_CACHE_HOURS = max(24, int(os.getenv("CHINA_DOMAIN_SUCCESS_CACHE_HOURS", "720")))
 FAILURE_CACHE_HOURS = max(12, int(os.getenv("CHINA_DOMAIN_FAILURE_CACHE_HOURS", "72")))
 
-# 保守并且足够快：只对高风险域名做排除性验证。
+# 只把明显高风险的海外基础设施域交给 DNS 复核。
 SUSPICIOUS_TOKENS = {
     "akamaized.net", "akamaiedge.net", "edgekey.net", "edgesuite.net",
     "fastly.net", "fastlylb.net", "cloudfront.net", "amazonaws.com",
@@ -124,8 +121,11 @@ def load_rules() -> list[Rule]:
     return rules
 
 
-def write_lines(path: Path, lines: Iterable[str]) -> None:
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+def write_lines(path: Path, lines) -> None:
+    text = "\n".join(lines)
+    if text:
+        text += "\n"
+    path.write_text(text, encoding="utf-8")
 
 
 def is_suspicious_domain(value: str) -> bool:
@@ -139,19 +139,18 @@ def is_suspicious_domain(value: str) -> bool:
 
 def sample_hosts_for_suffix(suffix: str) -> list[str]:
     suffix = suffix.lower().lstrip(".")
-    hosts: list[str] = []
+    hosts = []
     for prefix in SAMPLE_PREFIXES:
         if prefix:
             hosts.append(f"{prefix}.{suffix}")
         else:
             hosts.append(suffix)
-    # 去重保序
     seen = set()
     out = []
-    for h in hosts:
-        if h not in seen:
-            seen.add(h)
-            out.append(h)
+    for host in hosts:
+        if host not in seen:
+            seen.add(host)
+            out.append(host)
     return out
 
 
@@ -164,15 +163,13 @@ def rule_to_probe_hosts(rule: Rule) -> list[str]:
 
 
 def should_probe(rule: Rule) -> bool:
-    if rule.kind not in {"DOMAIN", "DOMAIN-SUFFIX"}:
-        return False
-    return is_suspicious_domain(rule.value)
+    return rule.kind in {"DOMAIN", "DOMAIN-SUFFIX"} and is_suspicious_domain(rule.value)
 
 
 def load_cache() -> dict:
     if not DNS_CACHE_FILE.exists():
         return {}
-    cache: dict = {}
+    cache = {}
     for line in DNS_CACHE_FILE.read_text(encoding="utf-8", errors="replace").splitlines():
         line = line.strip()
         if not line:
@@ -187,10 +184,8 @@ def load_cache() -> dict:
 
 
 def save_cache(cache: dict) -> None:
-    lines = []
-    for host in sorted(cache):
-        lines.append(json.dumps(cache[host], ensure_ascii=False, sort_keys=True))
-    DNS_CACHE_FILE.write_text("\n".join(lines) + ("\n" if lines else ""), encoding="utf-8")
+    lines = [json.dumps(cache[host], ensure_ascii=False, sort_keys=True) for host in sorted(cache)]
+    write_lines(DNS_CACHE_FILE, lines)
 
 
 def cache_valid(item: dict) -> bool:
@@ -204,14 +199,16 @@ def cache_valid(item: dict) -> bool:
 
 
 def doh_query(url: str, host: str, timeout: float) -> dict:
-    q4 = dns.message.make_query(host, dns.rdatatype.A)
-    q6 = dns.message.make_query(host, dns.rdatatype.AAAA)
+    queries = [
+        dns.message.make_query(host, dns.rdatatype.A),
+        dns.message.make_query(host, dns.rdatatype.AAAA),
+    ]
     ips = set()
     cnames = set()
 
-    for q in (q4, q6):
-        resp = dns.query.https(q, url, timeout=timeout)
-        for rrset in resp.answer:
+    for query in queries:
+        response = dns.query.https(query, url, timeout=timeout)
+        for rrset in response.answer:
             if rrset.rdtype == dns.rdatatype.CNAME:
                 for item in rrset:
                     cnames.add(str(item.target).rstrip(".").lower())
@@ -219,10 +216,7 @@ def doh_query(url: str, host: str, timeout: float) -> dict:
                 for item in rrset:
                     ips.add(item.address)
 
-    return {
-        "ips": sorted(ips),
-        "cnames": sorted(cnames),
-    }
+    return {"ips": sorted(ips), "cnames": sorted(cnames)}
 
 
 def resolve_group(urls: list[str], host: str, timeout: float) -> dict:
@@ -246,30 +240,29 @@ def probe_host(host: str, cache: dict) -> dict:
         return cached
 
     started = time.time()
-    with ThreadPoolExecutor(max_workers=2) as ex:
-        f_cn = ex.submit(resolve_group, CHINA_DOH, host, REQUEST_TIMEOUT)
-        f_gl = ex.submit(resolve_group, GLOBAL_DOH, host, REQUEST_TIMEOUT)
-        cn = f_cn.result()
-        gl = f_gl.result()
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        future_cn = executor.submit(resolve_group, CHINA_DOH, host, REQUEST_TIMEOUT)
+        future_global = executor.submit(resolve_group, GLOBAL_DOH, host, REQUEST_TIMEOUT)
+        cn = future_cn.result()
+        global_ = future_global.result()
 
-    # 默认保留；只有明确负证据才 drop
     status = "keep"
     reason = "default_keep"
 
-    if cn["status"] == "ok" and gl["status"] == "ok":
-        if cn["ips"] != gl["ips"] or cn["cnames"] != gl["cnames"]:
+    if cn["status"] == "ok" and global_["status"] == "ok":
+        if cn["ips"] != global_["ips"] or cn["cnames"] != global_["cnames"]:
             status = "drop"
             reason = "cn_global_diverged"
-        elif not cn["ips"] and not cn["cnames"]:
-            status = "keep"
-            reason = "both_empty_keep"
-        else:
+        elif cn["ips"] or cn["cnames"]:
             status = "keep"
             reason = "same_answer_keep"
-    elif cn["status"] == "ok" and gl["status"] != "ok":
+        else:
+            status = "keep"
+            reason = "both_empty_keep"
+    elif cn["status"] == "ok" and global_["status"] != "ok":
         status = "keep"
         reason = "cn_only_keep"
-    elif cn["status"] != "ok" and gl["status"] == "ok":
+    elif cn["status"] != "ok" and global_["status"] == "ok":
         status = "keep"
         reason = "global_only_keep"
     else:
@@ -283,7 +276,7 @@ def probe_host(host: str, cache: dict) -> dict:
         "timestamp": time.time(),
         "elapsed_seconds": round(time.time() - started, 3),
         "cn": cn,
-        "global": gl,
+        "global": global_,
     }
     cache[host] = item
     return item
@@ -293,17 +286,18 @@ def main() -> int:
     ensure_dirs()
     rules = load_rules()
 
-    collection = sorted({r.render() for r in rules})
+    collection = sorted({rule.render() for rule in rules})
     write_lines(COLLECTION_FILE, collection)
 
     ip_and_asn_rules = sorted(
-        {r.render() for r in rules if r.kind in {"IP-CIDR", "IP-CIDR6", "IP-ASN"}}
+        {rule.render() for rule in rules if rule.kind in {"IP-CIDR", "IP-CIDR6", "IP-ASN"}}
     )
-    domain_rules = [r for r in rules if r.kind in {"DOMAIN", "DOMAIN-SUFFIX"}]
-    non_suspicious_rules = {r.render() for r in domain_rules if not should_probe(r)}
-    suspicious_rules = [r for r in domain_rules if should_probe(r)]
+    domain_rules = [rule for rule in rules if rule.kind in {"DOMAIN", "DOMAIN-SUFFIX"}]
 
-    tidy_lines = sorted(non_suspicious_rules | {r.render() for r in suspicious_rules} | set(ip_and_asn_rules))
+    non_suspicious_rules = {rule.render() for rule in domain_rules if not should_probe(rule)}
+    suspicious_rules = [rule for rule in domain_rules if should_probe(rule)]
+
+    tidy_lines = sorted(non_suspicious_rules | {rule.render() for rule in suspicious_rules} | set(ip_and_asn_rules))
     write_lines(TIDY_FILE, tidy_lines)
 
     cache = load_cache()
@@ -319,7 +313,7 @@ def main() -> int:
     print(f"[china-domain] probe hosts: {len(hosts)}", flush=True)
     print(f"[china-domain] max concurrency: {MAX_CONCURRENCY}", flush=True)
 
-    dns_results: list[dict] = []
+    dns_results = []
     if hosts:
         with ThreadPoolExecutor(max_workers=MAX_CONCURRENCY) as executor:
             futures = {executor.submit(probe_host, host, cache): host for host in hosts}
@@ -327,8 +321,7 @@ def main() -> int:
             done = 0
             for future in as_completed(futures):
                 done += 1
-                result = future.result()
-                dns_results.append(result)
+                dns_results.append(future.result())
                 if done % 100 == 0 or done == total:
                     print(f"[china-domain] processed {done}/{total}", flush=True)
 
@@ -336,7 +329,7 @@ def main() -> int:
 
     drop_rules = set()
     dns_tidy_lines = []
-    for result in sorted(dns_results, key=lambda x: x["host"]):
+    for result in sorted(dns_results, key=lambda item: item["host"]):
         host = result["host"]
         related_rules = sorted(host_to_rules.get(host, set()))
         dns_tidy_lines.append(
@@ -359,7 +352,9 @@ def main() -> int:
     write_lines(DNS_TIDY_FILE, dns_tidy_lines)
 
     final_rules = sorted(
-        (non_suspicious_rules | {r.render() for r in suspicious_rules if r.render() not in drop_rules} | set(ip_and_asn_rules))
+        non_suspicious_rules
+        | {rule.render() for rule in suspicious_rules if rule.render() not in drop_rules}
+        | set(ip_and_asn_rules)
     )
     write_lines(OUTPUT_FILE, final_rules)
 
@@ -375,7 +370,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-'''
-path = Path('/mnt/data/china_domain_rules.py')
-path.write_text(content, encoding='utf-8')
-print(path)
