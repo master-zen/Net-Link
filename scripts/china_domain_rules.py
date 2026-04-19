@@ -1,6 +1,4 @@
-from pathlib import Path
-
-content = r'''#!/usr/bin/env python3
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 from __future__ import annotations
@@ -22,7 +20,7 @@ import httpx
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# 这里放的是“规则源 URL 池”，不是规则本体
+# 注意：这里是“规则源 URL 池”，不是规则本体
 SOURCE_POOL_FILE = ROOT / "data" / "sources" / "ChinaDomain.txt"
 
 TEMP_DIR = ROOT / "data" / "temporary"
@@ -42,7 +40,7 @@ SUCCESS_CACHE_HOURS = max(24, int(os.getenv("CHINA_DOMAIN_SUCCESS_CACHE_HOURS", 
 FAILURE_CACHE_HOURS = max(12, int(os.getenv("CHINA_DOMAIN_FAILURE_CACHE_HOURS", "72")))
 FOLLOW_CNAME_DEPTH = max(0, min(6, int(os.getenv("CHINA_DOMAIN_CNAME_DEPTH", "2"))))
 
-# 直接保留，不进入 DNS 复核
+# 这些直接保留，不进入 DNS 复核
 DIRECT_KEEP_SUFFIXES = (
     ".cn",
     ".com.cn",
@@ -74,6 +72,7 @@ GLOBAL_DNS_SERVERS = [
     "64.6.65.6",
 ]
 
+# 对 DOMAIN-SUFFIX 只能抽样，不可能穷举所有真实子域
 SAMPLE_PREFIXES = ("", "www", "m", "api", "img", "cdn", "static", "passport")
 
 COMMENT_PREFIXES = ("#", ";", "//")
@@ -107,6 +106,9 @@ def clean_line(line: str) -> str:
 
 
 def load_source_urls() -> list[str]:
+    if not SOURCE_POOL_FILE.exists():
+        raise FileNotFoundError(f"source pool not found: {SOURCE_POOL_FILE}")
+
     urls: list[str] = []
     seen = set()
     for line in SOURCE_POOL_FILE.read_text(encoding="utf-8", errors="replace").splitlines():
@@ -139,9 +141,10 @@ def fetch_all_sources(urls: list[str]) -> tuple[list[str], list[dict]]:
             "Accept": "text/plain, */*",
         },
     ) as client:
+        total = len(urls)
         for idx, url in enumerate(urls, start=1):
             started = time.time()
-            print(f"[fetch] {idx}/{len(urls)} {url}", flush=True)
+            print(f"[fetch] {idx}/{total} {url}", flush=True)
             try:
                 text = fetch_text(client, url)
                 fetched_texts.append(text)
@@ -217,6 +220,7 @@ def sample_hosts_for_suffix(suffix: str) -> list[str]:
             hosts.append(f"{prefix}.{suffix}")
         else:
             hosts.append(suffix)
+
     seen = set()
     out = []
     for host in hosts:
@@ -237,6 +241,7 @@ def rule_to_probe_hosts(rule: Rule) -> list[str]:
 def load_cache() -> dict:
     if not DNS_CACHE_FILE.exists():
         return {}
+
     cache = {}
     for line in DNS_CACHE_FILE.read_text(encoding="utf-8", errors="replace").splitlines():
         line = line.strip()
@@ -259,6 +264,7 @@ def save_cache(cache: dict) -> None:
 def cache_valid(item: dict) -> bool:
     if FORCE_DNS_REFRESH:
         return False
+
     ts = float(item.get("timestamp", 0))
     status = item.get("status", "error")
     age_hours = (time.time() - ts) / 3600.0
@@ -366,7 +372,7 @@ def probe_host(host: str, cache: dict) -> dict:
         cn = future_cn.result()
         global_ = future_global.result()
 
-    # 原则：
+    # 工程原则：
     # 1. 默认保留
     # 2. 只有中外两组都成功且答案明确分裂，才剔除
     status = "keep"
@@ -503,7 +509,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-'''
-path = Path('/mnt/data/china_domain_rules_tcp_keep.py')
-path.write_text(content, encoding='utf-8')
-print(path)
