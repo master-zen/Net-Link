@@ -1,568 +1,381 @@
-#!/usr/bin/env python3
+from pathlib import Path
+
+content = r'''#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 from __future__ import annotations
 
-import asyncio
-import hashlib
-import ipaddress
 import json
 import os
 import re
-from collections import defaultdict
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from typing import Any
+from typing import Iterable
 
+import dns.exception
 import dns.message
-import dns.rcode
+import dns.query
 import dns.rdatatype
-import httpx
 
-ROOT = Path(__file__).resolve().parents[1]
-SOURCE_LIST_PATH = ROOT / "data" / "sources" / "ChinaDomain.txt"
+ROOT = Path(__file__).resolve().parent.parent
+SOURCE_FILE = ROOT / "data" / "sources" / "ChinaDomain.txt"
 TEMP_DIR = ROOT / "data" / "temporary"
-COLLECTION_PATH = TEMP_DIR / "ChinaDomainCollection.txt"
-DNS_RESULTS_PATH = TEMP_DIR / "ChinaDomainDNSresults.txt"
-DNS_TIDY_PATH = TEMP_DIR / "ChinaDomainDNSTidy.txt"
-TIDY_PATH = TEMP_DIR / "ChinaDomainTidy.txt"
-OUTPUT_PATH = ROOT / "Surge" / "Rules" / "China.list"
+OUTPUT_FILE = ROOT / "Surge" / "Rules" / "China.list"
+
+COLLECTION_FILE = TEMP_DIR / "ChinaDomainCollection.txt"
+TIDY_FILE = TEMP_DIR / "ChinaDomainTidy.txt"
+DNS_CACHE_FILE = TEMP_DIR / "ChinaDomainDNSresults.txt"
+DNS_TIDY_FILE = TEMP_DIR / "ChinaDomainDNSTidy.txt"
 
 FORCE_DNS_REFRESH = os.getenv("FORCE_DNS_REFRESH", "0") == "1"
-MAX_DOMAIN_CONCURRENCY = int(os.getenv("CHINA_DOMAIN_MAX_CONCURRENCY", "96"))
-REQUEST_TIMEOUT = float(os.getenv("CHINA_DOMAIN_REQUEST_TIMEOUT", "4.5"))
-SUCCESS_CACHE_HOURS = int(os.getenv("CHINA_DOMAIN_SUCCESS_CACHE_HOURS", "720"))
-FAILURE_CACHE_HOURS = int(os.getenv("CHINA_DOMAIN_FAILURE_CACHE_HOURS", "72"))
-DNS_FOLLOW_CNAME_DEPTH = 6
-DNS_WRITE_EVERY = 200
+MAX_CONCURRENCY = max(4, min(32, int(os.getenv("CHINA_DOMAIN_MAX_CONCURRENCY", "24"))))
+REQUEST_TIMEOUT = max(1.0, min(8.0, float(os.getenv("CHINA_DOMAIN_REQUEST_TIMEOUT", "3.5"))))
+SUCCESS_CACHE_HOURS = max(24, int(os.getenv("CHINA_DOMAIN_SUCCESS_CACHE_HOURS", "720")))
+FAILURE_CACHE_HOURS = max(12, int(os.getenv("CHINA_DOMAIN_FAILURE_CACHE_HOURS", "72")))
 
-CN_DOH_RESOLVERS = [
+# 保守并且足够快：只对高风险域名做排除性验证。
+SUSPICIOUS_TOKENS = {
+    "akamaized.net", "akamaiedge.net", "edgekey.net", "edgesuite.net",
+    "fastly.net", "fastlylb.net", "cloudfront.net", "amazonaws.com",
+    "trafficmanager.net", "azureedge.net", "azurefd.net", "github.io",
+    "githubusercontent.com", "workers.dev", "pages.dev", "vercel.app",
+    "netlify.app", "cdn77.org", "b-cdn.net", "cachefly.net", "linodeobjects.com",
+    "digitaloceanspaces.com", "wasabisys.com", "herokuapp.com", "firebaseapp.com",
+    "appspot.com", "onrender.com", "fly.dev", "cloudflare.net", "cloudflare.com",
+    "cf-ipfs.com", "ipfs.io",
+}
+SUSPICIOUS_PREFIXES = ("cdn.", "img.", "static.", "assets.", "media.", "edge.", "cache.")
+SAMPLE_PREFIXES = ("", "www", "m", "api", "img", "cdn", "static", "passport")
+
+CHINA_DOH = [
     "https://doh.pub/dns-query",
     "https://dns.alidns.com/dns-query",
-    "https://doh.360.cn/dns-query",
-    "https://223.5.5.5/dns-query",
-    "https://223.6.6.6/dns-query",
+    "https://sm2.doh.pub/dns-query",
 ]
 
-GLOBAL_DOH_RESOLVERS = [
+GLOBAL_DOH = [
+    "https://1.1.1.1/dns-query",
+    "https://1.0.0.1/dns-query",
     "https://dns.google/dns-query",
-    "https://cloudflare-dns.com/dns-query",
     "https://dns.quad9.net/dns-query",
-    "https://doh.opendns.com/dns-query",
-    "https://dns.sb/dns-query",
 ]
 
-QUERYABLE_RULE_TYPES = {"DOMAIN", "DOMAIN-SUFFIX"}
-PASS_THROUGH_RULE_TYPES = {
-    "DOMAIN-KEYWORD",
-    "DOMAIN-WILDCARD",
-    "IP-CIDR",
-    "IP-CIDR6",
-    "IP-ASN",
-    "USER-AGENT",
-    "URL-REGEX",
-    "DEST-PORT",
-    "SRC-IP",
-    "IN-PORT",
-    "PROCESS-NAME",
-    "AND",
-    "OR",
-    "NOT",
-    "SUBNET",
-    "PROTOCOL",
-    "DEVICE-NAME",
-    "RULE-SET",
-}
-
-RULE_TYPE_ORDER = {
-    "DOMAIN": 10,
-    "DOMAIN-SUFFIX": 20,
-    "DOMAIN-KEYWORD": 30,
-    "DOMAIN-WILDCARD": 40,
-    "URL-REGEX": 45,
-    "USER-AGENT": 46,
-    "PROCESS-NAME": 47,
-    "DEST-PORT": 48,
-    "SRC-IP": 49,
-    "IN-PORT": 50,
-    "SUBNET": 51,
-    "PROTOCOL": 52,
-    "IP-CIDR": 60,
-    "IP-CIDR6": 70,
-    "IP-ASN": 80,
-    "RULE-SET": 90,
-}
-
-DOMAIN_RE = re.compile(
-    r"^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$",
-    re.IGNORECASE,
-)
+COMMENT_PREFIXES = ("#", ";", "//")
+NO_RESOLVE_RE = re.compile(r"(?i),\s*no-resolve\b")
+DOMAIN_RE = re.compile(r"^(?:[a-z0-9](?:[a-z0-9\-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$", re.I)
 
 
-@dataclass
-class ParsedCollection:
-    passthrough_rules: set[str]
-    query_rule_lines_by_domain: dict[str, set[str]]
+@dataclass(frozen=True)
+class Rule:
+    kind: str
+    value: str
 
-
-@dataclass
-class ResolverResult:
-    status: str
-    answers: list[str]
-    resolver: str
-    cname_chain: list[str]
-    rcode: str
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "status": self.status,
-            "answers": self.answers,
-            "resolver": self.resolver,
-            "cname_chain": self.cname_chain,
-            "rcode": self.rcode,
-        }
-
-
-@dataclass
-class CacheEntry:
-    domain: str
-    cn: dict[str, Any]
-    global_: dict[str, Any]
-    verdict: str
-    checked_at: str
-
-    def to_dict(self) -> dict[str, Any]:
-        return {
-            "domain": self.domain,
-            "cn": self.cn,
-            "global": self.global_,
-            "verdict": self.verdict,
-            "checked_at": self.checked_at,
-        }
-
-
-def utc_now_iso() -> str:
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    def render(self) -> str:
+        return f"{self.kind},{self.value}"
 
 
 def ensure_dirs() -> None:
     TEMP_DIR.mkdir(parents=True, exist_ok=True)
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 
-def write_lines(path: Path, lines: list[str]) -> None:
-    normalized = "\n".join(lines).rstrip()
-    path.write_text((normalized + "\n") if normalized else "", encoding="utf-8")
+def clean_line(line: str) -> str:
+    s = line.strip().lstrip("\ufeff")
+    if not s or any(s.startswith(p) for p in COMMENT_PREFIXES):
+        return ""
+    s = NO_RESOLVE_RE.sub("", s).strip()
+    while s.endswith(","):
+        s = s[:-1].rstrip()
+    return s
 
 
-def stable_unique(lines: list[str]) -> list[str]:
-    seen: set[str] = set()
-    out: list[str] = []
-    for raw in lines:
-        line = raw.strip()
-        if not line:
-            continue
-        if line in seen:
-            continue
-        seen.add(line)
-        out.append(line)
+def normalize_rule(line: str) -> Rule | None:
+    s = clean_line(line)
+    if not s:
+        return None
+
+    parts = [p.strip() for p in s.split(",") if p.strip()]
+    if not parts:
+        return None
+
+    if len(parts) >= 2:
+        kind = parts[0].upper()
+        value = parts[1]
+        if kind in {"DOMAIN", "DOMAIN-SUFFIX", "IP-CIDR", "IP-CIDR6", "IP-ASN"}:
+            return Rule(kind, value)
+        if kind == "HOST":
+            return Rule("DOMAIN", value)
+
+    if DOMAIN_RE.match(s):
+        return Rule("DOMAIN-SUFFIX", s.lower())
+
+    return None
+
+
+def load_rules() -> list[Rule]:
+    raw_lines = SOURCE_FILE.read_text(encoding="utf-8", errors="replace").splitlines()
+    rules: list[Rule] = []
+    for line in raw_lines:
+        rule = normalize_rule(line)
+        if rule:
+            rules.append(rule)
+    return rules
+
+
+def write_lines(path: Path, lines: Iterable[str]) -> None:
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def is_suspicious_domain(value: str) -> bool:
+    v = value.lower().lstrip(".")
+    if any(v == token or v.endswith("." + token) for token in SUSPICIOUS_TOKENS):
+        return True
+    if v.startswith(SUSPICIOUS_PREFIXES):
+        return True
+    return False
+
+
+def sample_hosts_for_suffix(suffix: str) -> list[str]:
+    suffix = suffix.lower().lstrip(".")
+    hosts: list[str] = []
+    for prefix in SAMPLE_PREFIXES:
+        if prefix:
+            hosts.append(f"{prefix}.{suffix}")
+        else:
+            hosts.append(suffix)
+    # 去重保序
+    seen = set()
+    out = []
+    for h in hosts:
+        if h not in seen:
+            seen.add(h)
+            out.append(h)
     return out
 
 
-def load_source_urls() -> list[str]:
-    content = SOURCE_LIST_PATH.read_text(encoding="utf-8")
-    urls = stable_unique(re.split(r"\s+", content.strip()))
-    return [url for url in urls if url]
+def rule_to_probe_hosts(rule: Rule) -> list[str]:
+    if rule.kind == "DOMAIN":
+        return [rule.value.lower().lstrip(".")]
+    if rule.kind == "DOMAIN-SUFFIX":
+        return sample_hosts_for_suffix(rule.value)
+    return []
 
 
-def fetch_source_lines(urls: list[str]) -> list[str]:
-    merged: list[str] = []
-    with httpx.Client(follow_redirects=True, timeout=30.0) as client:
-        for url in urls:
-            response = client.get(url)
-            response.raise_for_status()
-            text = response.text.replace("\r\n", "\n").replace("\r", "\n")
-            merged.extend(line.strip() for line in text.split("\n") if line.strip())
-    return merged
-
-
-def normalize_domain(value: str) -> str:
-    return value.strip().rstrip(".").lower()
-
-
-def is_domain(value: str) -> bool:
-    value = normalize_domain(value)
-    if "://" in value:
+def should_probe(rule: Rule) -> bool:
+    if rule.kind not in {"DOMAIN", "DOMAIN-SUFFIX"}:
         return False
-    return bool(DOMAIN_RE.fullmatch(value))
+    return is_suspicious_domain(rule.value)
 
 
-def parse_ip_network(value: str) -> tuple[str, str] | None:
-    value = value.strip()
-    if not value:
-        return None
-    try:
-        network = ipaddress.ip_network(value, strict=False)
-    except ValueError:
-        return None
-    if isinstance(network, ipaddress.IPv4Network):
-        return ("IP-CIDR", network.with_prefixlen)
-    return ("IP-CIDR6", network.with_prefixlen)
-
-
-def normalize_rule_line(keyword: str, payload: str, extras: list[str]) -> str | None:
-    keyword = keyword.strip().upper()
-    payload = payload.strip()
-    extras = [item.strip() for item in extras if item.strip()]
-    if not payload:
-        return None
-
-    if keyword in {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD", "DOMAIN-WILDCARD"}:
-        payload = normalize_domain(payload)
-    elif keyword in {"IP-CIDR", "IP-CIDR6"}:
-        parsed = parse_ip_network(payload)
-        if not parsed:
-            return None
-        keyword, payload = parsed
-    elif keyword == "IP-ASN":
-        payload = payload.upper()
-
-    return ",".join([keyword, payload, *extras])
-
-
-def classify_collection(lines: list[str]) -> ParsedCollection:
-    passthrough_rules: set[str] = set()
-    query_rule_lines_by_domain: dict[str, set[str]] = defaultdict(set)
-
-    for raw in lines:
-        line = raw.strip()
-        if not line or line.startswith("#") or line.startswith("//"):
-            continue
-
-        if "," not in line:
-            parsed_ip = parse_ip_network(line)
-            if parsed_ip:
-                passthrough_rules.add(f"{parsed_ip[0]},{parsed_ip[1]}")
-                continue
-
-            if is_domain(line):
-                domain = normalize_domain(line)
-                query_rule_lines_by_domain[domain].add(f"DOMAIN-SUFFIX,{domain}")
-            continue
-
-        parts = [part.strip() for part in line.split(",")]
-        keyword = parts[0].upper()
-        payload = parts[1] if len(parts) > 1 else ""
-        extras = parts[2:] if len(parts) > 2 else []
-
-        if keyword in QUERYABLE_RULE_TYPES and is_domain(payload):
-            domain = normalize_domain(payload)
-            normalized = normalize_rule_line(keyword, domain, extras)
-            if normalized:
-                query_rule_lines_by_domain[domain].add(normalized)
-            continue
-
-        if keyword in PASS_THROUGH_RULE_TYPES or keyword in {"IP-CIDR", "IP-CIDR6", "IP-ASN"}:
-            normalized = normalize_rule_line(keyword, payload, extras)
-            if normalized:
-                passthrough_rules.add(normalized)
-            continue
-
-        parsed_ip = parse_ip_network(line)
-        if parsed_ip:
-            passthrough_rules.add(f"{parsed_ip[0]},{parsed_ip[1]}")
-
-    return ParsedCollection(
-        passthrough_rules=passthrough_rules,
-        query_rule_lines_by_domain=query_rule_lines_by_domain,
-    )
-
-
-def load_dns_cache() -> dict[str, CacheEntry]:
-    if not DNS_RESULTS_PATH.exists():
+def load_cache() -> dict:
+    if not DNS_CACHE_FILE.exists():
         return {}
-
-    cache: dict[str, CacheEntry] = {}
-    for raw in DNS_RESULTS_PATH.read_text(encoding="utf-8").splitlines():
-        line = raw.strip()
+    cache: dict = {}
+    for line in DNS_CACHE_FILE.read_text(encoding="utf-8", errors="replace").splitlines():
+        line = line.strip()
         if not line:
             continue
         try:
-            payload = json.loads(line)
-        except json.JSONDecodeError:
+            item = json.loads(line)
+            if isinstance(item, dict) and "host" in item:
+                cache[item["host"]] = item
+        except Exception:
             continue
-        domain = payload.get("domain")
-        if not domain:
-            continue
-        cache[domain] = CacheEntry(
-            domain=domain,
-            cn=payload.get("cn", {}),
-            global_=payload.get("global", {}),
-            verdict=payload.get("verdict", "drop"),
-            checked_at=payload.get("checked_at", "1970-01-01T00:00:00+00:00"),
-        )
     return cache
 
 
-def save_dns_cache(cache: dict[str, CacheEntry]) -> None:
-    lines = [json.dumps(cache[domain].to_dict(), ensure_ascii=False, sort_keys=True) for domain in sorted(cache)]
-    write_lines(DNS_RESULTS_PATH, lines)
+def save_cache(cache: dict) -> None:
+    lines = []
+    for host in sorted(cache):
+        lines.append(json.dumps(cache[host], ensure_ascii=False, sort_keys=True))
+    DNS_CACHE_FILE.write_text("\n".join(lines) + ("\n" if lines else ""), encoding="utf-8")
 
 
-def cache_is_fresh(entry: CacheEntry) -> bool:
+def cache_valid(item: dict) -> bool:
     if FORCE_DNS_REFRESH:
         return False
-    try:
-        checked_at = datetime.fromisoformat(entry.checked_at)
-    except ValueError:
-        return False
-
-    success = entry.verdict == "match"
-    max_age = timedelta(hours=SUCCESS_CACHE_HOURS if success else FAILURE_CACHE_HOURS)
-    return datetime.now(timezone.utc) - checked_at < max_age
+    ts = float(item.get("timestamp", 0))
+    status = item.get("status", "error")
+    age_hours = (time.time() - ts) / 3600.0
+    ttl = SUCCESS_CACHE_HOURS if status == "ok" else FAILURE_CACHE_HOURS
+    return age_hours <= ttl
 
 
-def resolver_rotation(resolvers: list[str], domain: str) -> list[str]:
-    if not resolvers:
-        return []
-    digest = hashlib.sha256(domain.encode("utf-8")).digest()
-    index = int.from_bytes(digest[:2], "big") % len(resolvers)
-    return resolvers[index:] + resolvers[:index]
+def doh_query(url: str, host: str, timeout: float) -> dict:
+    q4 = dns.message.make_query(host, dns.rdatatype.A)
+    q6 = dns.message.make_query(host, dns.rdatatype.AAAA)
+    ips = set()
+    cnames = set()
+
+    for q in (q4, q6):
+        resp = dns.query.https(q, url, timeout=timeout)
+        for rrset in resp.answer:
+            if rrset.rdtype == dns.rdatatype.CNAME:
+                for item in rrset:
+                    cnames.add(str(item.target).rstrip(".").lower())
+            elif rrset.rdtype in (dns.rdatatype.A, dns.rdatatype.AAAA):
+                for item in rrset:
+                    ips.add(item.address)
+
+    return {
+        "ips": sorted(ips),
+        "cnames": sorted(cnames),
+    }
 
 
-def extract_a_and_cname(response: dns.message.Message) -> tuple[list[str], list[str]]:
-    answers: set[str] = set()
-    cname_chain: list[str] = []
-    for rrset in response.answer:
-        if rrset.rdtype == dns.rdatatype.CNAME:
-            for item in rrset.items:
-                cname_chain.append(normalize_domain(item.target.to_text()))
-        elif rrset.rdtype == dns.rdatatype.A:
-            for item in rrset.items:
-                answers.add(item.address)
-    return sorted(answers), cname_chain
+def resolve_group(urls: list[str], host: str, timeout: float) -> dict:
+    errors = []
+    for url in urls:
+        try:
+            result = doh_query(url, host, timeout)
+            if result["ips"] or result["cnames"]:
+                return {"status": "ok", "resolver": url, **result}
+            errors.append(f"{url}: empty")
+        except dns.exception.DNSException as exc:
+            errors.append(f"{url}: {type(exc).__name__}: {exc}")
+        except Exception as exc:
+            errors.append(f"{url}: {type(exc).__name__}: {exc}")
+    return {"status": "error", "resolver": "", "ips": [], "cnames": [], "errors": errors[:5]}
 
 
-async def doh_query_wire(
-    client: httpx.AsyncClient,
-    endpoint: str,
-    name: str,
-) -> dns.message.Message:
-    query = dns.message.make_query(name, dns.rdatatype.A)
-    response = await client.post(
-        endpoint,
-        content=query.to_wire(),
-        headers={
-            "accept": "application/dns-message",
-            "content-type": "application/dns-message",
-        },
-        timeout=REQUEST_TIMEOUT,
-    )
-    response.raise_for_status()
-    return dns.message.from_wire(response.content)
+def probe_host(host: str, cache: dict) -> dict:
+    cached = cache.get(host)
+    if cached and cache_valid(cached):
+        return cached
 
+    started = time.time()
+    with ThreadPoolExecutor(max_workers=2) as ex:
+        f_cn = ex.submit(resolve_group, CHINA_DOH, host, REQUEST_TIMEOUT)
+        f_gl = ex.submit(resolve_group, GLOBAL_DOH, host, REQUEST_TIMEOUT)
+        cn = f_cn.result()
+        gl = f_gl.result()
 
-async def resolve_a_via_doh(
-    client: httpx.AsyncClient,
-    endpoint: str,
-    domain: str,
-    depth: int = 0,
-) -> ResolverResult:
-    try:
-        message = await doh_query_wire(client, endpoint, domain)
-    except asyncio.CancelledError:
-        raise
-    except Exception:
-        return ResolverResult(
-            status="request_error",
-            answers=[],
-            resolver=endpoint,
-            cname_chain=[],
-            rcode="REQUEST_ERROR",
-        )
+    # 默认保留；只有明确负证据才 drop
+    status = "keep"
+    reason = "default_keep"
 
-    rcode_text = dns.rcode.to_text(message.rcode())
-    if message.rcode() != dns.rcode.NOERROR:
-        return ResolverResult(
-            status=rcode_text.lower(),
-            answers=[],
-            resolver=endpoint,
-            cname_chain=[],
-            rcode=rcode_text,
-        )
+    if cn["status"] == "ok" and gl["status"] == "ok":
+        if cn["ips"] != gl["ips"] or cn["cnames"] != gl["cnames"]:
+            status = "drop"
+            reason = "cn_global_diverged"
+        elif not cn["ips"] and not cn["cnames"]:
+            status = "keep"
+            reason = "both_empty_keep"
+        else:
+            status = "keep"
+            reason = "same_answer_keep"
+    elif cn["status"] == "ok" and gl["status"] != "ok":
+        status = "keep"
+        reason = "cn_only_keep"
+    elif cn["status"] != "ok" and gl["status"] == "ok":
+        status = "keep"
+        reason = "global_only_keep"
+    else:
+        status = "keep"
+        reason = "both_failed_keep"
 
-    answers, cname_chain = extract_a_and_cname(message)
-    if answers:
-        return ResolverResult(
-            status="ok",
-            answers=answers,
-            resolver=endpoint,
-            cname_chain=cname_chain,
-            rcode=rcode_text,
-        )
-
-    if cname_chain and depth < DNS_FOLLOW_CNAME_DEPTH:
-        target = cname_chain[-1]
-        followed = await resolve_a_via_doh(client, endpoint, target, depth + 1)
-        return ResolverResult(
-            status=followed.status,
-            answers=followed.answers,
-            resolver=endpoint,
-            cname_chain=cname_chain + followed.cname_chain,
-            rcode=followed.rcode,
-        )
-
-    return ResolverResult(
-        status="no_a",
-        answers=[],
-        resolver=endpoint,
-        cname_chain=cname_chain,
-        rcode=rcode_text,
-    )
-
-
-async def race_resolver_group(
-    client: httpx.AsyncClient,
-    domain: str,
-    resolvers: list[str],
-) -> ResolverResult:
-    ordered = resolver_rotation(resolvers, domain)
-    tasks = [asyncio.create_task(resolve_a_via_doh(client, endpoint, domain)) for endpoint in ordered]
-    failures: list[ResolverResult] = []
-
-    try:
-        for future in asyncio.as_completed(tasks):
-            result = await future
-            if result.status == "ok" and result.answers:
-                for task in tasks:
-                    if not task.done():
-                        task.cancel()
-                await asyncio.gather(*tasks, return_exceptions=True)
-                return result
-            failures.append(result)
-    finally:
-        for task in tasks:
-            if not task.done():
-                task.cancel()
-        await asyncio.gather(*tasks, return_exceptions=True)
-
-    if failures:
-        return failures[0]
-
-    return ResolverResult(
-        status="request_error",
-        answers=[],
-        resolver="",
-        cname_chain=[],
-        rcode="REQUEST_ERROR",
-    )
-
-
-async def resolve_domain(
-    client: httpx.AsyncClient,
-    domain: str,
-) -> CacheEntry:
-    cn_task = asyncio.create_task(race_resolver_group(client, domain, CN_DOH_RESOLVERS))
-    global_task = asyncio.create_task(race_resolver_group(client, domain, GLOBAL_DOH_RESOLVERS))
-    cn_result, global_result = await asyncio.gather(cn_task, global_task)
-
-    verdict = (
-        "match"
-        if cn_result.status == "ok"
-        and global_result.status == "ok"
-        and cn_result.answers == global_result.answers
-        else "drop"
-    )
-
-    return CacheEntry(
-        domain=domain,
-        cn=cn_result.to_dict(),
-        global_=global_result.to_dict(),
-        verdict=verdict,
-        checked_at=utc_now_iso(),
-    )
-
-
-async def refresh_dns_cache(domains: list[str], cache: dict[str, CacheEntry]) -> dict[str, CacheEntry]:
-    domains_to_query = [domain for domain in domains if domain not in cache or not cache_is_fresh(cache[domain])]
-    if not domains_to_query:
-        return cache
-
-    limits = httpx.Limits(max_keepalive_connections=64, max_connections=256)
-    semaphore = asyncio.Semaphore(MAX_DOMAIN_CONCURRENCY)
-    updated_count = 0
-
-    async with httpx.AsyncClient(http2=True, limits=limits, follow_redirects=True) as client:
-        async def worker(domain: str) -> tuple[str, CacheEntry]:
-            async with semaphore:
-                entry = await resolve_domain(client, domain)
-                return domain, entry
-
-        tasks = [asyncio.create_task(worker(domain)) for domain in domains_to_query]
-        for future in asyncio.as_completed(tasks):
-            domain, entry = await future
-            cache[domain] = entry
-            updated_count += 1
-            if updated_count % DNS_WRITE_EVERY == 0:
-                save_dns_cache(cache)
-
-    save_dns_cache(cache)
-    return cache
-
-
-def build_dns_tidy(cache: dict[str, CacheEntry], domains: list[str]) -> list[str]:
-    tidy: list[str] = []
-    for domain in domains:
-        entry = cache.get(domain)
-        if not entry:
-            continue
-        if entry.verdict == "match":
-            tidy.append(domain)
-    return sorted(set(tidy))
-
-
-def sort_rule_lines(lines: set[str]) -> list[str]:
-    def sort_key(line: str) -> tuple[int, str, str]:
-        parts = [item.strip() for item in line.split(",")]
-        keyword = parts[0].upper() if parts else ""
-        payload = parts[1].lower() if len(parts) > 1 else ""
-        return (RULE_TYPE_ORDER.get(keyword, 999), payload, line.lower())
-
-    return sorted(lines, key=sort_key)
+    item = {
+        "host": host,
+        "status": status,
+        "reason": reason,
+        "timestamp": time.time(),
+        "elapsed_seconds": round(time.time() - started, 3),
+        "cn": cn,
+        "global": gl,
+    }
+    cache[host] = item
+    return item
 
 
 def main() -> int:
     ensure_dirs()
+    rules = load_rules()
 
-    source_urls = load_source_urls()
-    merged_lines = fetch_source_lines(source_urls)
-    write_lines(COLLECTION_PATH, merged_lines)
+    collection = sorted({r.render() for r in rules})
+    write_lines(COLLECTION_FILE, collection)
 
-    deduped_collection = stable_unique(merged_lines)
-    write_lines(COLLECTION_PATH, deduped_collection)
+    ip_and_asn_rules = sorted(
+        {r.render() for r in rules if r.kind in {"IP-CIDR", "IP-CIDR6", "IP-ASN"}}
+    )
+    domain_rules = [r for r in rules if r.kind in {"DOMAIN", "DOMAIN-SUFFIX"}]
+    non_suspicious_rules = {r.render() for r in domain_rules if not should_probe(r)}
+    suspicious_rules = [r for r in domain_rules if should_probe(r)]
 
-    parsed = classify_collection(deduped_collection)
-    query_domains = sorted(parsed.query_rule_lines_by_domain)
+    tidy_lines = sorted(non_suspicious_rules | {r.render() for r in suspicious_rules} | set(ip_and_asn_rules))
+    write_lines(TIDY_FILE, tidy_lines)
 
-    cache = load_dns_cache()
-    cache = asyncio.run(refresh_dns_cache(query_domains, cache))
+    cache = load_cache()
 
-    dns_tidy_domains = build_dns_tidy(cache, query_domains)
-    write_lines(DNS_TIDY_PATH, dns_tidy_domains)
+    host_to_rules: dict[str, set[str]] = {}
+    for rule in suspicious_rules:
+        for host in rule_to_probe_hosts(rule):
+            host_to_rules.setdefault(host, set()).add(rule.render())
 
-    tidy_lines = sort_rule_lines(parsed.passthrough_rules) + dns_tidy_domains
-    tidy_lines = stable_unique(tidy_lines)
-    write_lines(TIDY_PATH, tidy_lines)
+    hosts = sorted(host_to_rules)
+    print(f"[china-domain] total rules: {len(rules)}", flush=True)
+    print(f"[china-domain] suspicious rules: {len(suspicious_rules)}", flush=True)
+    print(f"[china-domain] probe hosts: {len(hosts)}", flush=True)
+    print(f"[china-domain] max concurrency: {MAX_CONCURRENCY}", flush=True)
 
-    final_rules: set[str] = set(parsed.passthrough_rules)
-    for domain in dns_tidy_domains:
-        final_rules.update(parsed.query_rule_lines_by_domain.get(domain, set()))
+    dns_results: list[dict] = []
+    if hosts:
+        with ThreadPoolExecutor(max_workers=MAX_CONCURRENCY) as executor:
+            futures = {executor.submit(probe_host, host, cache): host for host in hosts}
+            total = len(futures)
+            done = 0
+            for future in as_completed(futures):
+                done += 1
+                result = future.result()
+                dns_results.append(result)
+                if done % 100 == 0 or done == total:
+                    print(f"[china-domain] processed {done}/{total}", flush=True)
 
-    final_sorted = sort_rule_lines(final_rules)
-    write_lines(OUTPUT_PATH, final_sorted)
+    save_cache(cache)
 
-    save_dns_cache(cache)
+    drop_rules = set()
+    dns_tidy_lines = []
+    for result in sorted(dns_results, key=lambda x: x["host"]):
+        host = result["host"]
+        related_rules = sorted(host_to_rules.get(host, set()))
+        dns_tidy_lines.append(
+            json.dumps(
+                {
+                    "host": host,
+                    "status": result["status"],
+                    "reason": result["reason"],
+                    "rules": related_rules,
+                    "cn": result["cn"],
+                    "global": result["global"],
+                },
+                ensure_ascii=False,
+                sort_keys=True,
+            )
+        )
+        if result["status"] == "drop":
+            drop_rules.update(related_rules)
+
+    write_lines(DNS_TIDY_FILE, dns_tidy_lines)
+
+    final_rules = sorted(
+        (non_suspicious_rules | {r.render() for r in suspicious_rules if r.render() not in drop_rules} | set(ip_and_asn_rules))
+    )
+    write_lines(OUTPUT_FILE, final_rules)
+
+    print(f"[china-domain] drop rules: {len(drop_rules)}", flush=True)
+    print(f"[china-domain] final rules: {len(final_rules)}", flush=True)
+    print(f"[china-domain] wrote: {OUTPUT_FILE}", flush=True)
+    print(f"[china-domain] wrote: {COLLECTION_FILE}", flush=True)
+    print(f"[china-domain] wrote: {TIDY_FILE}", flush=True)
+    print(f"[china-domain] wrote: {DNS_CACHE_FILE}", flush=True)
+    print(f"[china-domain] wrote: {DNS_TIDY_FILE}", flush=True)
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
+'''
+path = Path('/mnt/data/china_domain_rules.py')
+path.write_text(content, encoding='utf-8')
+print(path)
