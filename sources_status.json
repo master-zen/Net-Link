@@ -1,5 +1,5 @@
 {
-  "generated_at_unix": 1776748300,
+  "generated_at_unix": 1776834580,
   "sources": {
     "https://git.ustc.edu.cn/cwzsquare/trackerslist/-/raw/master/trackers_all.txt": {
       "ok": true,
@@ -7,17 +7,17 @@
     },
     "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt": {
       "ok": true,
-      "count_after_normalize": 83
+      "count_after_normalize": 103
     },
     "https://raw.githubusercontent.com/adysec/tracker/main/trackers_all.txt": {
       "ok": true,
-      "count_after_normalize": 3288
+      "count_after_normalize": 3289
     },
     "https://cf.trackerslist.com/all.txt": {
       "ok": true,
-      "count_after_normalize": 139
+      "count_after_normalize": 144
     }
   },
-  "merged_url_count": 3355,
-  "surge_rule_count": 2252
+  "merged_url_count": 3363,
+  "surge_rule_count": 2253
 }
