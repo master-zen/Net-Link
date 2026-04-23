@@ -554,6 +554,7 @@ DOMAIN,shogiroom.com
 DOMAIN,shubt.net
 DOMAIN,siambit.com
 DOMAIN,siambit.org
+DOMAIN,siwserver.duckdns.org
 DOMAIN,slicie.icon256.com
 DOMAIN,smtp-relay.odysseylabel.com.au
 DOMAIN,smtp.loki.tel
@@ -1347,6 +1348,7 @@ IP-CIDR,113.16.155.111/32,no-resolve
 IP-CIDR,113.16.155.116/32,no-resolve
 IP-CIDR,113.16.155.146/32,no-resolve
 IP-CIDR,113.17.152.163/32,no-resolve
+IP-CIDR,113.17.152.249/32,no-resolve
 IP-CIDR,114.55.113.60/32,no-resolve
 IP-CIDR,116.16.41.96/32,no-resolve
 IP-CIDR,116.16.42.86/32,no-resolve
