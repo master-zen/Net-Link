@@ -1,13 +1,13 @@
 {
-  "generated_at_unix": 1777181070,
+  "generated_at_unix": 1777268179,
   "sources": {
     "https://git.ustc.edu.cn/cwzsquare/trackerslist/-/raw/master/trackers_all.txt": {
-      "ok": false,
-      "error": "Failed to fetch https://git.ustc.edu.cn/cwzsquare/trackerslist/-/raw/master/trackers_all.txt: The read operation timed out"
+      "ok": true,
+      "count_after_normalize": 113
     },
     "https://raw.githubusercontent.com/ngosang/trackerslist/master/trackers_all.txt": {
       "ok": true,
-      "count_after_normalize": 105
+      "count_after_normalize": 87
     },
     "https://raw.githubusercontent.com/adysec/tracker/main/trackers_all.txt": {
       "ok": true,
@@ -15,9 +15,9 @@
     },
     "https://cf.trackerslist.com/all.txt": {
       "ok": true,
-      "count_after_normalize": 160
+      "count_after_normalize": 143
     }
   },
-  "merged_url_count": 3345,
-  "surge_rule_count": 2252
+  "merged_url_count": 3365,
+  "surge_rule_count": 2257
 }
