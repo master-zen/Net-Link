@@ -1222,6 +1222,7 @@ DOMAIN,valakas.rollo.dnsabr.com
 DOMAIN,vibe.community
 DOMAIN,vibe.sleepyinternetfun.xyz
 DOMAIN,vito-tracker.duckdns.org
+DOMAIN,vito-tracker.space
 DOMAIN,vm3268418.24ssd.had.wf
 DOMAIN,voxhost.fr
 DOMAIN,vps-c1adea63.vps.ovh.net
@@ -1348,6 +1349,7 @@ IP-CIDR,113.16.153.249/32,no-resolve
 IP-CIDR,113.16.155.111/32,no-resolve
 IP-CIDR,113.16.155.116/32,no-resolve
 IP-CIDR,113.16.155.146/32,no-resolve
+IP-CIDR,113.16.155.226/32,no-resolve
 IP-CIDR,113.17.152.163/32,no-resolve
 IP-CIDR,113.17.152.249/32,no-resolve
 IP-CIDR,114.55.113.60/32,no-resolve

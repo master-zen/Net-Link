@@ -1,0 +1,48 @@
+name: Merge Trackers Rules
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *"
+      timezone: "Asia/Shanghai"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: merge-trackers-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Build trackers outputs
+        run: python scripts/build_trackers.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            Surge/Rules/Trackers.list \
+            Trackers.txt \
+            Trackers/Merge-List/Trackers.txt
+
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+
+          git commit -m "chore: update trackers rules"
+          git push
