@@ -21,7 +21,6 @@ ALLOW_SOURCES_FILE = ROOT / "data/sources/AdAllowList_URLs.txt"
 SEED_SOURCES_FILE = ROOT / "data/sources/AdRepoSeed_URLs.txt"
 
 OUTPUT_BLOCK = ROOT / "Surge/Rules/AdblockSet.list"
-OUTPUT_ALLOW = ROOT / "Surge/Rules/AdAllowSet.list"
 
 WEB_DISCOVERY_SEEDS = [
     "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/README.md",
@@ -165,7 +164,6 @@ def fetch_text(url: str, timeout: int = 30, retries: int = 3, max_bytes: int = 2
 
 def ensure_parent_dirs() -> None:
     OUTPUT_BLOCK.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_ALLOW.parent.mkdir(parents=True, exist_ok=True)
 
 
 def is_comment_or_empty(line: str) -> bool:
@@ -675,6 +673,36 @@ def merge_rules_from_sources(source_urls: list[str], default_bucket: str) -> tup
     return merged, warnings
 
 
+def subtract_allow_rules(block_rules: list[str], allow_rules: list[str]) -> list[str]:
+    allow_set = set(allow_rules)
+    if not allow_set:
+        return list(block_rules)
+
+    # Build equivalent-domain removals for common rule variants.
+    eq_domain_pairs: set[tuple[str, str]] = set()
+    for rule in allow_set:
+        head, sep, value = rule.partition(",")
+        if not sep or not value:
+            continue
+        head = head.upper()
+        value = value.strip()
+        if head == "DOMAIN":
+            eq_domain_pairs.add(("DOMAIN-SUFFIX", value))
+        elif head == "DOMAIN-SUFFIX":
+            eq_domain_pairs.add(("DOMAIN", value))
+
+    filtered: list[str] = []
+    for rule in block_rules:
+        if rule in allow_set:
+            continue
+        head, sep, value = rule.partition(",")
+        if sep and (head.upper(), value.strip()) in eq_domain_pairs:
+            continue
+        filtered.append(rule)
+
+    return filtered
+
+
 def write_ruleset(path: Path, rules: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     content = "\n".join(rules).strip()
@@ -683,7 +711,7 @@ def write_ruleset(path: Path, rules: list[str]) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build Surge ad block/allow rule sets and auto-discover new source URLs.",
+        description="Build Surge AdblockSet by subtracting merged allow rules from merged block rules.",
     )
     parser.add_argument(
         "--candidate-cap",
@@ -749,15 +777,20 @@ def main() -> int:
     if not block_rules:
         print("[ERROR] no rules generated for AdblockSet.list", file=sys.stderr)
         return 1
-    if not allow_rules:
-        print("[ERROR] no rules generated for AdAllowSet.list", file=sys.stderr)
+
+    filtered_block_rules = subtract_allow_rules(block_rules, allow_rules)
+    if not filtered_block_rules:
+        print("[ERROR] AdblockSet.list became empty after allow subtraction", file=sys.stderr)
         return 1
 
-    write_ruleset(OUTPUT_BLOCK, block_rules)
-    write_ruleset(OUTPUT_ALLOW, allow_rules)
+    write_ruleset(OUTPUT_BLOCK, filtered_block_rules)
 
-    print(f"[DONE] {OUTPUT_BLOCK.relative_to(ROOT)}: {len(block_rules)} lines")
-    print(f"[DONE] {OUTPUT_ALLOW.relative_to(ROOT)}: {len(allow_rules)} lines")
+    print(f"[DONE] {OUTPUT_BLOCK.relative_to(ROOT)}: {len(filtered_block_rules)} lines")
+    print(
+        "[DONE] subtraction summary: "
+        f"block={len(block_rules)}, allow={len(allow_rules)}, "
+        f"removed={len(block_rules) - len(filtered_block_rules)}"
+    )
     print(f"[DONE] {BLOCK_SOURCES_FILE.relative_to(ROOT)}: {len(block_sources)} URLs")
     print(f"[DONE] {ALLOW_SOURCES_FILE.relative_to(ROOT)}: {len(allow_sources)} URLs")
     return 0

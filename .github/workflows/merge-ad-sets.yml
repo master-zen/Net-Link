@@ -37,7 +37,6 @@ jobs:
           git add \
             data/sources/AdAllowList_URLs.txt \
             data/sources/AdBlockList_URLs.txt \
-            Surge/Rules/AdAllowSet.list \
             Surge/Rules/AdblockSet.list
 
           if git diff --cached --quiet; then
