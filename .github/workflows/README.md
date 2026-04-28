@@ -4,11 +4,9 @@ This directory contains the GitHub Actions workflows that regenerate and publish
 
 ## Scope
 
-- `merge-ad-block-stack.yml` builds and validates the main ad blocking artifacts.
-- `merge-china-list.yml` publishes the China ruleset.
-- `merge-httpdns-block.yml` publishes the HTTPDNS blocking ruleset.
-- `merge-trackers.yml` publishes tracker-related list outputs.
-- `icon-json.yml` rebuilds `Surge/Icon.json` from the icon catalog.
+- `merge-ad-sets.yml` discovers ad source URLs and publishes:
+  - `Surge/Rules/AdblockSet.list`
+  - `Surge/Rules/AdAllowSet.list`
 
 ## Maintenance Notes
 

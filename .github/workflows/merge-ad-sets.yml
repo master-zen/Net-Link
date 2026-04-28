@@ -1,0 +1,49 @@
+name: Merge Ad Allow/Block Sets
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * *"
+      timezone: "Asia/Shanghai"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: merge-ad-sets-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Build ad allow/block sets
+        run: python scripts/build_ad_sets.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            data/sources/AdAllowList_URLs.txt \
+            data/sources/AdBlockList_URLs.txt \
+            Surge/Rules/AdAllowSet.list \
+            Surge/Rules/AdblockSet.list
+
+          if git diff --cached --quiet; then
+            echo "No changes."
+            exit 0
+          fi
+
+          git commit -m "chore: update ad allow/block sets"
+          git push
