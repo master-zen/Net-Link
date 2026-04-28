@@ -22,6 +22,7 @@ COMMENT_PREFIXES = ("#", ";", "//", "!", "[")
 DOMAIN_RE = re.compile(
     r"^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9-]{2,63}$"
 )
+SINGLE_LABEL_RE = re.compile(r"^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$")
 HOSTS_LINE_RE = re.compile(r"^(?:0\.0\.0\.0|127\.0\.0\.1|::1|::)\s+([^\s#;]+)")
 
 
@@ -162,6 +163,46 @@ def normalize_domain_token(raw: str) -> str | None:
     return None
 
 
+def normalize_domain_suffix_token(raw: str) -> str | None:
+    token = raw.strip().lower()
+    if not token:
+        return None
+
+    if token.startswith("*."):
+        token = token[2:]
+    if token.startswith("."):
+        token = token[1:]
+
+    token = token.strip(".")
+    token = token.split("/", 1)[0]
+    token = token.split("^", 1)[0]
+    token = token.split("$", 1)[0]
+
+    if not token:
+        return None
+    if ":" in token:
+        return None
+
+    try:
+        ipaddress.ip_address(token)
+        return None
+    except ValueError:
+        pass
+
+    labels = token.split(".")
+    if labels and labels[-1].isdigit():
+        return None
+
+    if "." in token:
+        if DOMAIN_RE.match(token):
+            return token
+        return None
+
+    if SINGLE_LABEL_RE.match(token):
+        return token
+    return None
+
+
 def normalize_rule(head: str, value: str) -> str | None:
     upper_head = head.upper()
     if upper_head not in RULE_TYPES:
@@ -173,7 +214,10 @@ def normalize_rule(head: str, value: str) -> str | None:
             return None
         return f"{upper_head},{keyword}"
 
-    domain = normalize_domain_token(value)
+    if upper_head == "DOMAIN-SUFFIX":
+        domain = normalize_domain_suffix_token(value)
+    else:
+        domain = normalize_domain_token(value)
     if not domain:
         return None
     return f"{upper_head},{domain}"
