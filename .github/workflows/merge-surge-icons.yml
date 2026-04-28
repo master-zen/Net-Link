@@ -1,10 +1,10 @@
-name: Merge Trackers Rules
+name: Build Surge Icon JSON
 
 on:
   workflow_dispatch:
   schedule:
-    # 04:40 Asia/Shanghai (UTC+8) every day
-    - cron: "40 20 * * *"
+    # 05:10 Asia/Shanghai (UTC+8), every 2 days
+    - cron: "10 21 */2 * *"
 
 permissions:
   contents: write
@@ -26,23 +26,20 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Build trackers outputs
-        run: python scripts/build_trackers.py
+      - name: Build Surge Icon.json
+        run: python scripts/build_icon_json.py
 
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add \
-            Clash/Rules/Trackers.yaml \
-            Surge/Rules/Trackers.list \
-            Trackers/Trackers.txt
+          git add Surge/Icon.json
 
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0
           fi
 
-          git commit -m "chore: update trackers rules"
+          git commit -m "chore: update surge icon index"
           git push

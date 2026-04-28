@@ -3,15 +3,15 @@ name: Merge China Domain Rules
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 4 * * *"
-      timezone: "Asia/Shanghai"
+    # 04:20 Asia/Shanghai (UTC+8) every day
+    - cron: "20 20 * * *"
 
 permissions:
   contents: write
 
 concurrency:
-  group: merge-china-domain-${{ github.ref }}
-  cancel-in-progress: true
+  group: net-link-rules-publish-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   build:
