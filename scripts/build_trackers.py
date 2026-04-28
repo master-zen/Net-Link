@@ -15,8 +15,7 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_URLS_FILE = ROOT / "data/sources/TrackersList_URLs.txt"
 OUTPUT_SURGE = ROOT / "Surge/Rules/Trackers.list"
-OUTPUT_TRACKERS_RAW = ROOT / "Trackers.txt"
-OUTPUT_TRACKERS_MERGE = ROOT / "Trackers/Merge-List/Trackers.txt"
+OUTPUT_TRACKERS_RAW = ROOT / "Trackers/Trackers.txt"
 
 ALLOWED_SCHEMES = {"udp", "http", "https", "ws", "wss"}
 
@@ -148,7 +147,6 @@ def surge_rule_sort_key(rule: str) -> tuple[int, str]:
 def ensure_parent_dirs() -> None:
     OUTPUT_SURGE.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_TRACKERS_RAW.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_TRACKERS_MERGE.parent.mkdir(parents=True, exist_ok=True)
 
 
 def main() -> int:
@@ -196,11 +194,9 @@ def main() -> int:
     surge_content = "\n".join(surge_rules) + "\n"
 
     OUTPUT_TRACKERS_RAW.write_text(raw_content, encoding="utf-8")
-    OUTPUT_TRACKERS_MERGE.write_text(raw_content, encoding="utf-8")
     OUTPUT_SURGE.write_text(surge_content, encoding="utf-8")
 
     print(f"[DONE] {OUTPUT_TRACKERS_RAW.relative_to(ROOT)}: {len(merged_urls)} lines")
-    print(f"[DONE] {OUTPUT_TRACKERS_MERGE.relative_to(ROOT)}: {len(merged_urls)} lines")
     print(f"[DONE] {OUTPUT_SURGE.relative_to(ROOT)}: {len(surge_rules)} lines")
     return 0
 

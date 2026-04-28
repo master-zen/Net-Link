@@ -11,7 +11,7 @@ This directory contains the GitHub Actions workflows that regenerate and publish
   - `Surge/Rules/ChinaDomain.list`
 - `merge-trackers.yml` merges `data/sources/TrackersList_URLs.txt` and publishes:
   - `Surge/Rules/Trackers.list`
-  - `Trackers.txt`
+  - `Trackers/Trackers.txt`
 
 ## Maintenance Notes
 

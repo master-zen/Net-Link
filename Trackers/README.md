@@ -2,4 +2,4 @@
 
 This directory contains tracker-related source material and generated tracker products.
 
-`Merge-List/` stores the merged upstream tracker inputs used to derive published tracker rule outputs.
+`Trackers.txt` is the merged deduplicated tracker URL output (one URL per line, no comments).
