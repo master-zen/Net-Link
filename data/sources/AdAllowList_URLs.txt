@@ -1,6 +1,8 @@
+https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/AdGuardSDNSFilter/Direct/Direct.list
 https://easylist-downloads.adblockplus.org/exceptionrules.txt
-https://raw.githubusercontent.com/anudeepND/whitelist/master/whitelist.txt
-https://raw.githubusercontent.com/anudeepND/whitelist/master/referral-sites.txt
+https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/whitelist.txt
+https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/referral-sites.txt
+https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/optional-list.txt
 https://slickdeals.net/attachment/extension/allowlist.txt
 https://letyshops.com/adblock.txt
 https://multiup.org/list_adblock.txt
