@@ -16,6 +16,7 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_URLS_FILE = ROOT / "data/sources/ChinaDomainList_URLs.txt"
 OUTPUT_FILE = ROOT / "Surge/Rules/ChinaDomain.list"
+OUTPUT_CLASH_FILE = ROOT / "Clash/Rules/ChinaDomain.yaml"
 
 RULE_TYPES = {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD"}
 COMMENT_PREFIXES = ("#", ";", "//", "!", "[")
@@ -61,6 +62,17 @@ def fetch_text(url: str, timeout: int = 30, retries: int = 3, max_bytes: int = 2
 
 def unique_sorted(items: Iterable[str]) -> list[str]:
     return sorted(set(items), key=lambda s: s.casefold())
+
+
+def yaml_quote(value: str) -> str:
+    return "'" + value.replace("'", "''") + "'"
+
+
+def write_clash_ruleset(path: Path, rules: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    lines = ["payload:"]
+    lines.extend(f"  - {yaml_quote(rule)}" for rule in rules)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def normalize_source_url(raw_url: str) -> str | None:
@@ -306,6 +318,7 @@ def is_ip_only_source(url: str) -> bool:
 
 def main() -> int:
     OUTPUT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_CLASH_FILE.parent.mkdir(parents=True, exist_ok=True)
 
     source_urls = read_source_urls(SOURCE_URLS_FILE)
     if not source_urls:
@@ -345,7 +358,9 @@ def main() -> int:
         return 1
 
     OUTPUT_FILE.write_text("\n".join(merged_rules) + "\n", encoding="utf-8")
+    write_clash_ruleset(OUTPUT_CLASH_FILE, merged_rules)
     print(f"[DONE] {OUTPUT_FILE.relative_to(ROOT)}: {len(merged_rules)} lines")
+    print(f"[DONE] {OUTPUT_CLASH_FILE.relative_to(ROOT)}: {len(merged_rules)} lines")
     return 0
 
 

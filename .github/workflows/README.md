@@ -6,10 +6,13 @@ This directory contains the GitHub Actions workflows that regenerate and publish
 
 - `merge-ad-sets.yml` discovers ad source URLs and publishes:
   - `Surge/Rules/AdblockSet.list`
+  - `Clash/Rules/AdblockSet.yaml`
 - `merge-china-domain.yml` merges `data/sources/ChinaDomainList_URLs.txt` and publishes:
   - `Surge/Rules/ChinaDomain.list`
+  - `Clash/Rules/ChinaDomain.yaml`
 - `merge-trackers.yml` merges `data/sources/TrackersList_URLs.txt` and publishes:
   - `Surge/Rules/Trackers.list`
+  - `Clash/Rules/Trackers.yaml`
   - `Trackers/Trackers.txt`
 
 ## Maintenance Notes

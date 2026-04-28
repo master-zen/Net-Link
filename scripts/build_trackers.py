@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_URLS_FILE = ROOT / "data/sources/TrackersList_URLs.txt"
 OUTPUT_SURGE = ROOT / "Surge/Rules/Trackers.list"
 OUTPUT_TRACKERS_RAW = ROOT / "Trackers/Trackers.txt"
+OUTPUT_CLASH = ROOT / "Clash/Rules/Trackers.yaml"
 
 ALLOWED_SCHEMES = {"udp", "http", "https", "ws", "wss"}
 
@@ -55,6 +56,17 @@ def fetch_text(url: str, timeout: int = 30, retries: int = 3, max_bytes: int = 2
 
 def unique_sorted(items: Iterable[str]) -> list[str]:
     return sorted(set(items), key=lambda s: s.casefold())
+
+
+def yaml_quote(value: str) -> str:
+    return "'" + value.replace("'", "''") + "'"
+
+
+def write_clash_ruleset(path: Path, rules: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    lines = ["payload:"]
+    lines.extend(f"  - {yaml_quote(rule)}" for rule in rules)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def read_source_urls(path: Path) -> list[str]:
@@ -147,6 +159,7 @@ def surge_rule_sort_key(rule: str) -> tuple[int, str]:
 def ensure_parent_dirs() -> None:
     OUTPUT_SURGE.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_TRACKERS_RAW.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_CLASH.parent.mkdir(parents=True, exist_ok=True)
 
 
 def main() -> int:
@@ -195,9 +208,11 @@ def main() -> int:
 
     OUTPUT_TRACKERS_RAW.write_text(raw_content, encoding="utf-8")
     OUTPUT_SURGE.write_text(surge_content, encoding="utf-8")
+    write_clash_ruleset(OUTPUT_CLASH, surge_rules)
 
     print(f"[DONE] {OUTPUT_TRACKERS_RAW.relative_to(ROOT)}: {len(merged_urls)} lines")
     print(f"[DONE] {OUTPUT_SURGE.relative_to(ROOT)}: {len(surge_rules)} lines")
+    print(f"[DONE] {OUTPUT_CLASH.relative_to(ROOT)}: {len(surge_rules)} lines")
     return 0
 
 

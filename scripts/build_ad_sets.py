@@ -21,6 +21,7 @@ ALLOW_SOURCES_FILE = ROOT / "data/sources/AdAllowList_URLs.txt"
 SEED_SOURCES_FILE = ROOT / "data/sources/AdRepoSeed_URLs.txt"
 
 OUTPUT_BLOCK = ROOT / "Surge/Rules/AdblockSet.list"
+OUTPUT_CLASH = ROOT / "Clash/Rules/AdblockSet.yaml"
 
 WEB_DISCOVERY_SEEDS = [
     "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/README.md",
@@ -164,6 +165,7 @@ def fetch_text(url: str, timeout: int = 30, retries: int = 3, max_bytes: int = 2
 
 def ensure_parent_dirs() -> None:
     OUTPUT_BLOCK.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT_CLASH.parent.mkdir(parents=True, exist_ok=True)
 
 
 def is_comment_or_empty(line: str) -> bool:
@@ -709,6 +711,17 @@ def write_ruleset(path: Path, rules: list[str]) -> None:
     path.write_text((content + "\n") if content else "", encoding="utf-8")
 
 
+def yaml_quote(value: str) -> str:
+    return "'" + value.replace("'", "''") + "'"
+
+
+def write_clash_ruleset(path: Path, rules: list[str]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    lines = ["payload:"]
+    lines.extend(f"  - {yaml_quote(rule)}" for rule in rules)
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Build Surge AdblockSet by subtracting merged allow rules from merged block rules.",
@@ -784,8 +797,10 @@ def main() -> int:
         return 1
 
     write_ruleset(OUTPUT_BLOCK, filtered_block_rules)
+    write_clash_ruleset(OUTPUT_CLASH, filtered_block_rules)
 
     print(f"[DONE] {OUTPUT_BLOCK.relative_to(ROOT)}: {len(filtered_block_rules)} lines")
+    print(f"[DONE] {OUTPUT_CLASH.relative_to(ROOT)}: {len(filtered_block_rules)} lines")
     print(
         "[DONE] subtraction summary: "
         f"block={len(block_rules)}, allow={len(allow_rules)}, "
