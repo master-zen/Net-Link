@@ -762,6 +762,7 @@ udp://94.136.190.183:6969/announce
 udp://94.23.183.33:6969/announce
 udp://94.23.207.177:6969/announce
 udp://94.243.222.100:6969/announce
+udp://94.250.253.220:6969/announce
 udp://95.211.168.204:2710/announce
 udp://95.216.74.39:6969/announce
 udp://95.31.11.224:6969/announce
@@ -1498,7 +1499,6 @@ http://00.xxtor.com:443/announce
 http://004430.xyz/announce
 http://004430.xyz:80/announce
 http://0123456789nonexistent.com/announce
-http://0123456789nonexistent.com:80/announce
 http://0205.uptm.ch:6969/announce
 http://0d.kebhana.mx:443/announce
 http://0x7c.space:7070/announce
@@ -2424,7 +2424,6 @@ http://joczo.duckdns.org:6969/announce
 http://jp.moeweb.pw:6969/announce
 http://jsb.by00/announce
 http://jvavav.com/announce
-http://jvavav.com:80/announce
 http://kamikazee.duckdns.org:7777/announce
 http://kinorun.com/announce
 http://kiryuu-test.mywaifu.best:6969/announce
@@ -2524,7 +2523,6 @@ http://retracker.ohys.net/announce
 http://retracker.seven-sky.net/announce
 http://retracker.sevstar.net:2710/announce
 http://retracker.spark-rostov.ru/announce
-http://retracker.spark-rostov.ru:80/announce
 http://retracker.telecom.by/announce
 http://retracker.x2k.ru/announce
 http://retracker.xxtor.com/announce
@@ -2542,12 +2540,10 @@ http://s926723.ha016.t.mydomain.zone/announce
 http://saltwood.top:6969/announce
 http://secure.pow7.com/announce
 http://seeders-paradise.org/announce
-http://seeders-paradise.org:80/announce
 http://servandroidkino.ru/announce
 http://share.camoe.cn80/announce
 http://share.camoe.cn:8080/announce
 http://share.hkg-fansub.info/announce
-http://share.hkg-fansub.info:80/announce.php
 http://shogiroom.com:6969/announce
 http://shubt.net:2710/announce
 http://siambit.com/announce
@@ -2659,13 +2655,11 @@ http://tracker.blazing.de:6969/announce
 http://tracker.breizh.pm:6969/announce
 http://tracker.bt-chat.com/announce
 http://tracker.bt-hash.com/announce
-http://tracker.bt-hash.com:80/announce
 http://tracker.bt4g.com:2095/announce
 http://tracker.btcake.com/announce
 http://tracker.btsync.gq:233/announce
 http://tracker.btzero.net:8080/announce
 http://tracker.bz/announce
-http://tracker.bz:80/announce
 http://tracker.calculate.ru:6969/announce
 http://tracker.ccc.de/announce
 http://tracker.ccp.ovh:6969/announce
@@ -2675,7 +2669,6 @@ http://tracker.computel.fr/announce
 http://tracker.coppersurfer.site:2710/announce
 http://tracker.coppersurfer.tk:6969/announce
 http://tracker.corpscorp.online/announce
-http://tracker.corpscorp.online:80/announce
 http://tracker.cubicview.site/announce
 http://tracker.cubonegro.org/announce
 http://tracker.cutie.dating/announce
@@ -2715,7 +2708,6 @@ http://tracker.gcvchp.com:2710/announce
 http://tracker.gdp.pw:900/announce
 http://tracker.ghostchu-services.top/announce
 http://tracker.ghostchu-services.top:443/announce
-http://tracker.ghostchu-services.top:80/announce
 http://tracker.gigatorrents.ws:2710/announce
 http://tracker.grepler.com:6969/announce
 http://tracker.guguan.000.pe/announce
@@ -2726,7 +2718,6 @@ http://tracker.ilibr.org/announce
 http://tracker.imgdump.lol:6969/announce
 http://tracker.internetwarriors.net:1337/announce
 http://tracker.ipv6tracker.org/announce
-http://tracker.ipv6tracker.org:80/announce
 http://tracker.ipv6tracker.ru/announce
 http://tracker.iro.moe/announce
 http://tracker.ismaarino.com:8880/announce
@@ -3125,6 +3116,7 @@ https://torrent-tracker.hama3.net/announce
 https://torrent.gresille.org/announce
 https://torrent.opiums.eu/announce
 https://torrent.tracker.durukanbal.com/announce
+https://torrent.tracker.durukanbal.com:443/announce
 https://torrent.ubuntu.com/announce
 https://torrentonline.cc/announce
 https://torrents.linuxmint.com/announce
@@ -3142,6 +3134,7 @@ https://tr.aag.moe/announce
 https://tr.abiir.top/announce
 https://tr.abiir.top:443/announce
 https://tr.abir.ga/announce
+https://tr.abir.ga:443/announce
 https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
@@ -3224,7 +3217,6 @@ https://tracker.gcrenwp.top/announce
 https://tracker.gcrenwp.top:443/announce
 https://tracker.gcrreen.xyz/announce
 https://tracker.ghostchu-services.top/announce
-https://tracker.ghostchu-services.top:443/announce
 https://tracker.grepler.com:6969/announce
 https://tracker.guguan.dpdns.org/announce
 https://tracker.guguan.us.kg/announce
@@ -3279,8 +3271,8 @@ https://tracker.mg64.net:6881/announce
 https://tracker.midnightprogrammer.net/announce
 https://tracker.mlsub.net/announce
 https://tracker.moeblog.cn/announce
-https://tracker.moeblog.cn:443/announce
 https://tracker.moeking.me/announce
+https://tracker.moeking.me:443/announce
 https://tracker.monikadesign.uk/announce
 https://tracker.morian.icu/announce
 https://tracker.moviesdb.top/announce
@@ -3317,7 +3309,6 @@ https://tracker.renfei.net/announce
 https://tracker.renfei.net:8080/announce
 https://tracker.sakurato.art:23334/announce
 https://tracker.samcze.pl/announce
-https://tracker.samcze.pl:443/announce
 https://tracker.shittyurl.org/announce
 https://tracker.sjtu.edu.cn/announce
 https://tracker.skynetcloud.site:8443/announce
