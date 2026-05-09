@@ -751,6 +751,7 @@ udp://91.216.110.53:451/announce
 udp://91.218.230.81:6969/announce
 udp://91.238.104.240:6969/announce
 udp://91.98.161.68:6969/announce
+udp://92.112.126.44:6969/announce
 udp://93.104.214.40:6969/announce
 udp://93.158.213.92:1337/announce
 udp://94-227-232-84.access.telenet.be:6969/announce
@@ -1536,6 +1537,7 @@ http://113.16.155.226:6969/announce
 http://113.17.152.163:6969/announce
 http://113.17.152.249:6969/announce
 http://113.17.153.206:6969/announce
+http://113.17.153.71:6969/announce
 http://114.55.113.60:6969/announce
 http://116.16.41.96:6969/announce
 http://116.16.42.86:6969/announce
@@ -2233,6 +2235,7 @@ http://91.217.91.21:3218/announce
 http://91.218.230.81:6969/announce
 http://91.224.92.110:6969/announce
 http://91.98.161.68:6969/announce
+http://92.112.126.44:6969/announce
 http://93.158.213.92:1337/announce
 http://93.185.165.29:6969/announce
 http://93.88.129.16/announce
@@ -2845,7 +2848,6 @@ http://tracker.zhuqiy.com/announce
 http://tracker.zhuqiy.com:443/announce
 http://tracker.zhuqiy.com:80/announce
 http://tracker.zhuqiy.dgj055.icu/announce
-http://tracker.zhuqiy.dgj055.icu:80/announce
 http://tracker.zhuqiy.eu.org:36107/announce
 http://tracker.zhuqiy.top/announce
 http://tracker01.loveapp.com:6789/announce
@@ -3116,6 +3118,7 @@ https://torrent-tracker.hama3.net/announce
 https://torrent.gresille.org/announce
 https://torrent.opiums.eu/announce
 https://torrent.tracker.durukanbal.com/announce
+https://torrent.tracker.durukanbal.com:443/announce
 https://torrent.ubuntu.com/announce
 https://torrentonline.cc/announce
 https://torrents.linuxmint.com/announce
@@ -3133,6 +3136,7 @@ https://tr.aag.moe/announce
 https://tr.abiir.top/announce
 https://tr.abiir.top:443/announce
 https://tr.abir.ga/announce
+https://tr.abir.ga:443/announce
 https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
@@ -3180,7 +3184,6 @@ https://tracker.bug38.com/announce
 https://tracker.bulao.ren/announce
 https://tracker.calculate.ru:6969/announce
 https://tracker.cangku.moe/announce
-https://tracker.cangku.moe:443/announce
 https://tracker.carpt.net/announce
 https://tracker.cinefiles.info/announce
 https://tracker.cloudit.top/announce
@@ -3254,7 +3257,6 @@ https://tracker.leechshield.link/announce
 https://tracker.lelux.fi/announce
 https://tracker.lelux.fi:443/announce
 https://tracker.lenition.de/announce
-https://tracker.lenition.de:443/announce
 https://tracker.lilithraws.cf/announce
 https://tracker.lilithraws.org/announce
 https://tracker.linvk.com/announce
@@ -3270,9 +3272,7 @@ https://tracker.mg64.net:6881/announce
 https://tracker.midnightprogrammer.net/announce
 https://tracker.mlsub.net/announce
 https://tracker.moeblog.cn/announce
-https://tracker.moeblog.cn:443/announce
 https://tracker.moeking.me/announce
-https://tracker.moeking.me:443/announce
 https://tracker.monikadesign.uk/announce
 https://tracker.morian.icu/announce
 https://tracker.moviesdb.top/announce
@@ -3309,6 +3309,7 @@ https://tracker.renfei.net/announce
 https://tracker.renfei.net:8080/announce
 https://tracker.sakurato.art:23334/announce
 https://tracker.samcze.pl/announce
+https://tracker.samcze.pl:443/announce
 https://tracker.shittyurl.org/announce
 https://tracker.sjtu.edu.cn/announce
 https://tracker.skynetcloud.site:8443/announce
