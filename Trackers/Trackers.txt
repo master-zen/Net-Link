@@ -86,6 +86,7 @@ udp://143.198.64.177:6969/announce
 udp://144.126.245.19:6969/announce
 udp://144.91.88.22:6969/announce
 udp://145.223.96.109:8000/announce
+udp://147.45.74.251:6969/announce
 udp://147.45.77.75:6969/announce
 udp://147job.com:6969/announce
 udp://148.113.168.115:6969/announce
@@ -264,6 +265,7 @@ udp://189.0.78.33:6969/announce
 udp://189.18.126.32:6969/announce
 udp://189.18.126.49:6969/announce
 udp://189.18.127.125:6969/announce
+udp://189.18.127.21:6969/announce
 udp://189.18.127.57:6969/announce
 udp://189.18.162.106:6969/announce
 udp://189.18.162.54:6969/announce
@@ -1438,6 +1440,7 @@ udp://u4.trakx.crim.ist:1337/announce
 udp://u6.trakx.crim.ist:1337/announce
 udp://uabits.today:6990/announce
 udp://udp-tracker.shittyurl.org:6969/announce
+udp://udp.trackarr.org:6969/announce
 udp://udp.tracker.projectk.org:23333/announce
 udp://udp.yarr.pt:1337/announce
 udp://udp1.torrust-tracker-demo.com:6969/announce
@@ -1824,6 +1827,7 @@ http://189.110.233.96:6969/announce
 http://189.18.126.32:6969/announce
 http://189.18.126.49:6969/announce
 http://189.18.127.125:6969/announce
+http://189.18.127.21:6969/announce
 http://189.18.127.57:6969/announce
 http://189.18.162.106:6969/announce
 http://189.18.162.54:6969/announce
@@ -2658,13 +2662,11 @@ http://tracker.blazing.de:6969/announce
 http://tracker.breizh.pm:6969/announce
 http://tracker.bt-chat.com/announce
 http://tracker.bt-hash.com/announce
-http://tracker.bt-hash.com:80/announce
 http://tracker.bt4g.com:2095/announce
 http://tracker.btcake.com/announce
 http://tracker.btsync.gq:233/announce
 http://tracker.btzero.net:8080/announce
 http://tracker.bz/announce
-http://tracker.bz:80/announce
 http://tracker.calculate.ru:6969/announce
 http://tracker.ccc.de/announce
 http://tracker.ccp.ovh:6969/announce
@@ -3137,6 +3139,7 @@ https://tr.aag.moe/announce
 https://tr.abiir.top/announce
 https://tr.abiir.top:443/announce
 https://tr.abir.ga/announce
+https://tr.abir.ga:443/announce
 https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce

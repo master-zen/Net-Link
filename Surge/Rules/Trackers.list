@@ -1210,6 +1210,7 @@ DOMAIN,u6.trakx.crim.ist
 DOMAIN,uabits.today
 DOMAIN,uatracker.net
 DOMAIN,udp-tracker.shittyurl.org
+DOMAIN,udp.trackarr.org
 DOMAIN,udp.tracker.projectk.org
 DOMAIN,udp.yarr.pt
 DOMAIN,udp1.torrust-tracker-demo.com
@@ -1478,6 +1479,7 @@ IP-CIDR,144.202.33.210/32,no-resolve
 IP-CIDR,144.76.118.107/32,no-resolve
 IP-CIDR,144.91.88.22/32,no-resolve
 IP-CIDR,145.223.96.109/32,no-resolve
+IP-CIDR,147.45.74.251/32,no-resolve
 IP-CIDR,147.45.77.75/32,no-resolve
 IP-CIDR,148.113.168.115/32,no-resolve
 IP-CIDR,148.135.112.164/32,no-resolve
@@ -1720,6 +1722,7 @@ IP-CIDR,189.110.233.96/32,no-resolve
 IP-CIDR,189.18.126.32/32,no-resolve
 IP-CIDR,189.18.126.49/32,no-resolve
 IP-CIDR,189.18.127.125/32,no-resolve
+IP-CIDR,189.18.127.21/32,no-resolve
 IP-CIDR,189.18.127.57/32,no-resolve
 IP-CIDR,189.18.162.106/32,no-resolve
 IP-CIDR,189.18.162.54/32,no-resolve
