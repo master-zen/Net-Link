@@ -215,6 +215,7 @@ udp://185.121.168.96:6969/announce
 udp://185.121.24.141:6969/announce
 udp://185.134.22.3:6969/announce
 udp://185.146.233.150:6969/announce
+udp://185.171.202.111:6969/announce
 udp://185.181.60.155:80/announce
 udp://185.181.60.67:80/announce
 udp://185.189.13.108:6969/announce
@@ -1772,6 +1773,7 @@ http://184.61.17.58:9000/announce
 http://185.121.24.141:6969/announce
 http://185.130.47.2:6969/announce
 http://185.148.3.231/announce
+http://185.171.202.111:6969/announce
 http://185.185.40.51:6969/announce
 http://185.185.40.95:6969/announce
 http://185.197.195.20:1919/announce
@@ -2623,7 +2625,6 @@ http://tr.cili001.com:8070/announce
 http://tr.highstar.shop/announce
 http://tr.highstar.shop:80/announce
 http://tr.kxmp.cf/announce
-http://tr.kxmp.cf:80/announce
 http://tr.nyacat.pw/announce
 http://tr.nyacat.pw:443/announce
 http://tr.nyacat.pw:80/announce
@@ -2852,6 +2853,7 @@ http://tracker.zhuqiy.com/announce
 http://tracker.zhuqiy.com:443/announce
 http://tracker.zhuqiy.com:80/announce
 http://tracker.zhuqiy.dgj055.icu/announce
+http://tracker.zhuqiy.dgj055.icu:80/announce
 http://tracker.zhuqiy.eu.org:36107/announce
 http://tracker.zhuqiy.top/announce
 http://tracker01.loveapp.com:6789/announce
@@ -3034,6 +3036,7 @@ https://chihaya-heroku.120181311.xyz/announce
 https://chihaya.de/announce
 https://cny.fan/announce
 https://colibri.parrot.run/announce
+https://colibri.parrot.run:443/announce
 https://danielcloud.ddns.net/announce
 https://dev.tracker.cf-identity-wallet.metadata.dev.cf-deployments.org/announce
 https://docker-tracker-production.up.railway.app/announce
@@ -3275,6 +3278,7 @@ https://tracker.mg64.net:6881/announce
 https://tracker.midnightprogrammer.net/announce
 https://tracker.mlsub.net/announce
 https://tracker.moeblog.cn/announce
+https://tracker.moeblog.cn:443/announce
 https://tracker.moeking.me/announce
 https://tracker.moeking.me:443/announce
 https://tracker.monikadesign.uk/announce
