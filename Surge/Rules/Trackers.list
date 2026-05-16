@@ -1352,6 +1352,7 @@ IP-CIDR,110.187.215.166/32,no-resolve
 IP-CIDR,111.90.151.241/32,no-resolve
 IP-CIDR,113.13.6.40/32,no-resolve
 IP-CIDR,113.13.7.124/32,no-resolve
+IP-CIDR,113.13.7.90/32,no-resolve
 IP-CIDR,113.16.153.249/32,no-resolve
 IP-CIDR,113.16.153.98/32,no-resolve
 IP-CIDR,113.16.155.111/32,no-resolve
