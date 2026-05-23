@@ -2285,6 +2285,7 @@ payload:
   - 'IP-CIDR,94.250.253.220/32,no-resolve'
   - 'IP-CIDR,94.72.140.51/32,no-resolve'
   - 'IP-CIDR,95.107.48.115/32,no-resolve'
+  - 'IP-CIDR,95.179.232.193/32,no-resolve'
   - 'IP-CIDR,95.211.168.204/32,no-resolve'
   - 'IP-CIDR,95.216.74.39/32,no-resolve'
   - 'IP-CIDR,95.217.161.135/32,no-resolve'
