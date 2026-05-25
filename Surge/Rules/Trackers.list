@@ -735,6 +735,7 @@ DOMAIN,tracker.ali213.net00
 DOMAIN,tracker.ali213.net80
 DOMAIN,tracker.altrosky.nl
 DOMAIN,tracker.amelia.fun
+DOMAIN,tracker.anibt.net
 DOMAIN,tracker.anima.nz
 DOMAIN,tracker.anirena.com
 DOMAIN,tracker.anonwebz.xyz
@@ -1499,6 +1500,7 @@ IP-CIDR,148.113.168.115/32,no-resolve
 IP-CIDR,148.135.112.164/32,no-resolve
 IP-CIDR,148.251.53.72/32,no-resolve
 IP-CIDR,148.252.75.241/32,no-resolve
+IP-CIDR,149.106.106.25/32,no-resolve
 IP-CIDR,149.202.88.193/32,no-resolve
 IP-CIDR,15.204.205.14/32,no-resolve
 IP-CIDR,15.204.239.175/32,no-resolve
