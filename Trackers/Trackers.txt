@@ -1516,6 +1516,7 @@ http://00.xxtor.com:443/announce
 http://004430.xyz/announce
 http://004430.xyz:80/announce
 http://0123456789nonexistent.com/announce
+http://0123456789nonexistent.com:80/announce
 http://0205.uptm.ch:6969/announce
 http://0d.kebhana.mx:443/announce
 http://0x7c.space:7070/announce
@@ -2559,6 +2560,7 @@ http://retracker.ohys.net/announce
 http://retracker.seven-sky.net/announce
 http://retracker.sevstar.net:2710/announce
 http://retracker.spark-rostov.ru/announce
+http://retracker.spark-rostov.ru:80/announce
 http://retracker.telecom.by/announce
 http://retracker.x2k.ru/announce
 http://retracker.xxtor.com/announce
@@ -2705,6 +2707,7 @@ http://tracker.computel.fr/announce
 http://tracker.coppersurfer.site:2710/announce
 http://tracker.coppersurfer.tk:6969/announce
 http://tracker.corpscorp.online/announce
+http://tracker.corpscorp.online:80/announce
 http://tracker.cubicview.site/announce
 http://tracker.cubonegro.org/announce
 http://tracker.cutie.dating/announce
@@ -2881,6 +2884,7 @@ http://tracker.zhuqiy.com/announce
 http://tracker.zhuqiy.com:443/announce
 http://tracker.zhuqiy.com:80/announce
 http://tracker.zhuqiy.dgj055.icu/announce
+http://tracker.zhuqiy.dgj055.icu:80/announce
 http://tracker.zhuqiy.eu.org:36107/announce
 http://tracker.zhuqiy.top/announce
 http://tracker01.loveapp.com:6789/announce
@@ -3202,7 +3206,6 @@ https://tracker.alaskantf.com/announce
 https://tracker.aletorrenty.pl:2710/announce
 https://tracker.amelia.fun/announce
 https://tracker.anibt.net/announce
-https://tracker.anibt.net:443/announce
 https://tracker.babico.name.tr/announce
 https://tracker.baka.ink/announce
 https://tracker.bangumi.zip/announce
@@ -3308,7 +3311,6 @@ https://tracker.midnightprogrammer.net/announce
 https://tracker.mlsub.net/announce
 https://tracker.moeblog.cn/announce
 https://tracker.moeking.me/announce
-https://tracker.moeking.me:443/announce
 https://tracker.monikadesign.uk/announce
 https://tracker.morian.icu/announce
 https://tracker.moviesdb.top/announce
@@ -3402,6 +3404,7 @@ https://ttracker.just-h.party/announce
 https://voxhost.fr/announce
 https://w.wwwww.wtf/announce
 https://wolf.parrot.run/announce
+https://wolf.parrot.run:443/announce
 https://wsad.run.place/announce
 https://www.peckservers.com:9000/announce
 https://www.peckservers.com:9443/announce
