@@ -1516,6 +1516,7 @@ http://00.xxtor.com:443/announce
 http://004430.xyz/announce
 http://004430.xyz:80/announce
 http://0123456789nonexistent.com/announce
+http://0123456789nonexistent.com:80/announce
 http://0205.uptm.ch:6969/announce
 http://0d.kebhana.mx:443/announce
 http://0x7c.space:7070/announce
@@ -2517,6 +2518,7 @@ http://open.touki.ru/announce
 http://open.tracker.cl:1337/announce
 http://open.tracker.ink:6969/announce
 http://open.trackerlist.xyz/announce
+http://open.trackerlist.xyz:80/announce
 http://open.va.wiki:900/announce
 http://openbittorrent.com/announce
 http://opentracker.91kf.top:16969/announce
@@ -2757,6 +2759,7 @@ http://tracker.ilibr.org/announce
 http://tracker.imgdump.lol:6969/announce
 http://tracker.internetwarriors.net:1337/announce
 http://tracker.ipv6tracker.org/announce
+http://tracker.ipv6tracker.org:80/announce
 http://tracker.ipv6tracker.ru/announce
 http://tracker.iro.moe/announce
 http://tracker.ismaarino.com:8880/announce
@@ -2884,7 +2887,6 @@ http://tracker.zhuqiy.com/announce
 http://tracker.zhuqiy.com:443/announce
 http://tracker.zhuqiy.com:80/announce
 http://tracker.zhuqiy.dgj055.icu/announce
-http://tracker.zhuqiy.dgj055.icu:80/announce
 http://tracker.zhuqiy.eu.org:36107/announce
 http://tracker.zhuqiy.top/announce
 http://tracker01.loveapp.com:6789/announce
@@ -3192,6 +3194,7 @@ https://tr.ready4.icu:443/announce
 https://tr.steins-gate.moe:2096/announce
 https://tr.torland.ga/announce
 https://tr.zukizuki.org/announce
+https://tr.zukizuki.org:443/announce
 https://tr2.trkb.ru/announce
 https://track.solcloud.eu/announce
 https://track3r.site/announce
@@ -3305,6 +3308,7 @@ https://tracker.loligirl.cn/announce
 https://tracker.m-team.cc/announce
 https://tracker.madtia.cc/announce
 https://tracker.manager.itislove.cz/announce
+https://tracker.manager.itislove.cz:443/announce
 https://tracker.manager.v6.navy/announce
 https://tracker.manager.v6.navy:443/announce
 https://tracker.maya.no.eu.org/announce
@@ -3313,7 +3317,6 @@ https://tracker.midnightprogrammer.net/announce
 https://tracker.mlsub.net/announce
 https://tracker.moeblog.cn/announce
 https://tracker.moeking.me/announce
-https://tracker.moeking.me:443/announce
 https://tracker.monikadesign.uk/announce
 https://tracker.morian.icu/announce
 https://tracker.moviesdb.top/announce
