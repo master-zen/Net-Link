@@ -4,6 +4,7 @@ DOMAIN,00.xxtor.com
 DOMAIN,004430.xyz
 DOMAIN,0123456789nonexistent.com
 DOMAIN,0205.uptm.ch
+DOMAIN,021912.xyz
 DOMAIN,0d.kebhana.mx
 DOMAIN,0x7c.space
 DOMAIN,1.tracker.eu.org
@@ -78,6 +79,7 @@ DOMAIN,atrack.pow7.com
 DOMAIN,auratorrent.pl
 DOMAIN,axell24.ru
 DOMAIN,baibako.tv
+DOMAIN,banananetwork.qzz.io
 DOMAIN,bananas.space
 DOMAIN,bandito.byterunner.io
 DOMAIN,bclearning.top
@@ -455,6 +457,7 @@ DOMAIN,opentracker.io
 DOMAIN,opentracker.xyz
 DOMAIN,opentrackr.org
 DOMAIN,openwrt.lingyurouqing.xyz
+DOMAIN,orgtgju.org
 DOMAIN,oscar.reyesleon.xyz
 DOMAIN,ourbits.club
 DOMAIN,p2p.0g.cx
@@ -1364,6 +1367,7 @@ IP-CIDR,113.16.153.192/32,no-resolve
 IP-CIDR,113.16.153.249/32,no-resolve
 IP-CIDR,113.16.153.98/32,no-resolve
 IP-CIDR,113.16.154.16/32,no-resolve
+IP-CIDR,113.16.154.70/32,no-resolve
 IP-CIDR,113.16.155.111/32,no-resolve
 IP-CIDR,113.16.155.112/32,no-resolve
 IP-CIDR,113.16.155.116/32,no-resolve
