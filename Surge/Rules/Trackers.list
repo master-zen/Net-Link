@@ -62,6 +62,7 @@ DOMAIN,anime-tracker.aruku.kro.kr
 DOMAIN,anisource.spb.ru
 DOMAIN,anna.bt.bontal.net
 DOMAIN,announce.partis.si
+DOMAIN,announce.sktorrent.eu
 DOMAIN,announce.torrentsmd.com
 DOMAIN,anzix.net
 DOMAIN,api.alarmasqueretaro.com
@@ -1358,6 +1359,7 @@ IP-CIDR,110.187.214.29/32,no-resolve
 IP-CIDR,110.187.214.6/32,no-resolve
 IP-CIDR,110.187.215.166/32,no-resolve
 IP-CIDR,111.90.151.241/32,no-resolve
+IP-CIDR,113.13.6.197/32,no-resolve
 IP-CIDR,113.13.6.40/32,no-resolve
 IP-CIDR,113.13.7.124/32,no-resolve
 IP-CIDR,113.13.7.90/32,no-resolve
