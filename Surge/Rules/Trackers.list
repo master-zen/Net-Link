@@ -1380,6 +1380,7 @@ IP-CIDR,113.16.155.226/32,no-resolve
 IP-CIDR,113.16.155.243/32,no-resolve
 IP-CIDR,113.17.152.163/32,no-resolve
 IP-CIDR,113.17.152.249/32,no-resolve
+IP-CIDR,113.17.152.30/32,no-resolve
 IP-CIDR,113.17.153.206/32,no-resolve
 IP-CIDR,113.17.153.227/32,no-resolve
 IP-CIDR,113.17.153.71/32,no-resolve

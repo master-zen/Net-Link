@@ -1562,6 +1562,7 @@ http://113.16.155.226:6969/announce
 http://113.16.155.243:6969/announce
 http://113.17.152.163:6969/announce
 http://113.17.152.249:6969/announce
+http://113.17.152.30:6969/announce
 http://113.17.153.206:6969/announce
 http://113.17.153.227:6969/announce
 http://113.17.153.71:6969/announce
@@ -2893,7 +2894,6 @@ http://tracker.zhuqiy.com/announce
 http://tracker.zhuqiy.com:443/announce
 http://tracker.zhuqiy.com:80/announce
 http://tracker.zhuqiy.dgj055.icu/announce
-http://tracker.zhuqiy.dgj055.icu:80/announce
 http://tracker.zhuqiy.eu.org:36107/announce
 http://tracker.zhuqiy.top/announce
 http://tracker01.loveapp.com:6789/announce
@@ -3170,7 +3170,6 @@ https://torrent-tracker.hama3.net/announce
 https://torrent.gresille.org/announce
 https://torrent.opiums.eu/announce
 https://torrent.tracker.durukanbal.com/announce
-https://torrent.tracker.durukanbal.com:443/announce
 https://torrent.ubuntu.com/announce
 https://torrentonline.cc/announce
 https://torrents.linuxmint.com/announce
@@ -3188,6 +3187,7 @@ https://tr.aag.moe/announce
 https://tr.abiir.top/announce
 https://tr.abiir.top:443/announce
 https://tr.abir.ga/announce
+https://tr.abir.ga:443/announce
 https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
