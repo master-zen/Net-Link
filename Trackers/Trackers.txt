@@ -1241,6 +1241,7 @@ udp://tracker.dix.tf:6969/announce
 udp://tracker.dler.com:6969/announce
 udp://tracker.dler.org:6969/announce
 udp://tracker.doko.moe:6969/announce
+udp://tracker.dorcus.digital:1337/announce
 udp://tracker.draatman.uk:6969/announce
 udp://tracker.ds.is:6969/announce
 udp://tracker.ducks.party:1984/announce
@@ -1337,6 +1338,7 @@ udp://tracker.opentorrent.top:6969/announce
 udp://tracker.opentrackr.org:1337/announce
 udp://tracker.orsvarn.com:6969/announce
 udp://tracker.pcfreetime.com:6969/announce
+udp://tracker.peerfect.org:6969/announce
 udp://tracker.picotorrent.one:6969/announce
 udp://tracker.pimpmyworld.to:6969/announce
 udp://tracker.pirateparty.gr:6969/announce
@@ -1516,7 +1518,6 @@ http://00.xxtor.com:443/announce
 http://004430.xyz/announce
 http://004430.xyz:80/announce
 http://0123456789nonexistent.com/announce
-http://0123456789nonexistent.com:80/announce
 http://0205.uptm.ch:6969/announce
 http://0d.kebhana.mx:443/announce
 http://0x7c.space:7070/announce
@@ -1568,6 +1569,7 @@ http://113.17.152.30:6969/announce
 http://113.17.153.206:6969/announce
 http://113.17.153.227:6969/announce
 http://113.17.153.71:6969/announce
+http://113.17.66.235:6969/announce
 http://113.17.66.72:6969/announce
 http://113.17.67.93:6969/announce
 http://114.55.113.60:6969/announce
@@ -2524,7 +2526,6 @@ http://open.touki.ru/announce
 http://open.tracker.cl:1337/announce
 http://open.tracker.ink:6969/announce
 http://open.trackerlist.xyz/announce
-http://open.trackerlist.xyz:80/announce
 http://open.va.wiki:900/announce
 http://openbittorrent.com/announce
 http://opentracker.91kf.top:16969/announce
@@ -2570,7 +2571,6 @@ http://retracker.ohys.net/announce
 http://retracker.seven-sky.net/announce
 http://retracker.sevstar.net:2710/announce
 http://retracker.spark-rostov.ru/announce
-http://retracker.spark-rostov.ru:80/announce
 http://retracker.telecom.by/announce
 http://retracker.x2k.ru/announce
 http://retracker.xxtor.com/announce
@@ -2897,6 +2897,7 @@ http://tracker.zhuqiy.com/announce
 http://tracker.zhuqiy.com:443/announce
 http://tracker.zhuqiy.com:80/announce
 http://tracker.zhuqiy.dgj055.icu/announce
+http://tracker.zhuqiy.dgj055.icu:80/announce
 http://tracker.zhuqiy.eu.org:36107/announce
 http://tracker.zhuqiy.top/announce
 http://tracker01.loveapp.com:6789/announce
