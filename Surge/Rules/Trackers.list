@@ -223,6 +223,7 @@ DOMAIN,dataforai.com
 DOMAIN,datascene.net
 DOMAIN,daveking.com
 DOMAIN,db.koikia.eu
+DOMAIN,de7c0e7a567e.sn.mynetname.net
 DOMAIN,debuz.com
 DOMAIN,denis.stalker.h3q.com
 DOMAIN,denis.stalker.upeer.me
@@ -757,6 +758,7 @@ DOMAIN,tracker.baravik.org
 DOMAIN,tracker.beeimg.com
 DOMAIN,tracker.belmult.online
 DOMAIN,tracker.best-torrents.net
+DOMAIN,tracker.bigbewbs.online
 DOMAIN,tracker.birkenwald.de
 DOMAIN,tracker.bitcoinindia.space
 DOMAIN,tracker.bitsearch.to
@@ -1001,6 +1003,7 @@ DOMAIN,tracker.openbtba.com
 DOMAIN,tracker.opendev.cloud
 DOMAIN,tracker.opentorrent.top
 DOMAIN,tracker.opentracker.se
+DOMAIN,tracker.opentrackr.com
 DOMAIN,tracker.opentrackr.org
 DOMAIN,tracker.openwebtorrent.com
 DOMAIN,tracker.openzim.org
@@ -1047,6 +1050,7 @@ DOMAIN,tracker.riverarmy.xyz
 DOMAIN,tracker.sakurato.art
 DOMAIN,tracker.samcze.pl
 DOMAIN,tracker.sbsub.com
+DOMAIN,tracker.segso.net
 DOMAIN,tracker.servequake.com
 DOMAIN,tracker.sharebro.in
 DOMAIN,tracker.sheesh.rip
@@ -1387,6 +1391,7 @@ IP-CIDR,113.17.152.30/32,no-resolve
 IP-CIDR,113.17.153.206/32,no-resolve
 IP-CIDR,113.17.153.227/32,no-resolve
 IP-CIDR,113.17.153.71/32,no-resolve
+IP-CIDR,113.17.66.164/32,no-resolve
 IP-CIDR,113.17.66.235/32,no-resolve
 IP-CIDR,113.17.66.72/32,no-resolve
 IP-CIDR,113.17.67.93/32,no-resolve
