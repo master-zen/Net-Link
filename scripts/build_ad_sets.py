@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+"""
+Build conservative ad-block rule sets for Surge and Clash.
+
+Design goal:
+- Keep the daily-use AdblockSet conservative to reduce false positives.
+- Do NOT turn browser path-level adblock rules into whole-domain rejects.
+- Do NOT include high-risk rule types such as DOMAIN-KEYWORD, URL-REGEX,
+  AND/OR/NOT, USER-AGENT, PROCESS-NAME, PROTOCOL, DEST-PORT, etc.
+- Do NOT include private/reserved/bogon IP ranges.
+- Discovery is opt-in and writes candidates only; it does not mutate the
+  production source URL files automatically.
+"""
 
 from __future__ import annotations
 
@@ -9,6 +21,8 @@ import re
 import ssl
 import sys
 import time
+from collections import Counter
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
 from urllib.parse import urlparse, urlunparse
@@ -19,6 +33,9 @@ ROOT = Path(__file__).resolve().parents[1]
 BLOCK_SOURCES_FILE = ROOT / "data/sources/AdBlockList_URLs.txt"
 ALLOW_SOURCES_FILE = ROOT / "data/sources/AdAllowList_URLs.txt"
 SEED_SOURCES_FILE = ROOT / "data/sources/AdRepoSeed_URLs.txt"
+
+BLOCK_CANDIDATES_FILE = ROOT / "data/sources/AdBlockList_Candidates.txt"
+ALLOW_CANDIDATES_FILE = ROOT / "data/sources/AdAllowList_Candidates.txt"
 
 OUTPUT_BLOCK = ROOT / "Surge/Rules/AdblockSet.list"
 OUTPUT_CLASH = ROOT / "Clash/Rules/AdblockSet.yaml"
@@ -38,7 +55,17 @@ WEB_DISCOVERY_CANDIDATES_ALLOW = [
     "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt",
 ]
 
-RULE_TYPES = {
+# Surge/Clash safe daily-output types.
+# Intentionally excludes DOMAIN-KEYWORD, URL-REGEX, IP-ASN, AND/OR/NOT,
+# USER-AGENT, PROCESS-NAME, PROTOCOL, DEST-PORT, SRC-IP, IN-PORT.
+SAFE_OUTPUT_RULE_TYPES = {
+    "DOMAIN",
+    "DOMAIN-SUFFIX",
+    "IP-CIDR",
+    "IP-CIDR6",
+}
+
+KNOWN_RULE_TYPES = {
     "DOMAIN",
     "DOMAIN-SUFFIX",
     "DOMAIN-KEYWORD",
@@ -125,8 +152,31 @@ RELEVANCE_HINTS = (
 )
 
 COMMENT_PREFIXES = ("#", ";", "//", "! ", "!\t")
-DOMAIN_RE = re.compile(r"^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9-]{2,63}$")
+DOMAIN_RE = re.compile(
+    r"^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9-]{2,63}$"
+)
 URL_RE = re.compile(r"https?://[^\s<>\]\[\"'`]+", re.IGNORECASE)
+
+
+@dataclass
+class ParseStats:
+    parsed: int = 0
+    ignored_known_type: Counter[str] | None = None
+    ignored_non_global_ip: int = 0
+    ignored_path_level_adblock: int = 0
+    ignored_invalid: int = 0
+
+    def __post_init__(self) -> None:
+        if self.ignored_known_type is None:
+            self.ignored_known_type = Counter()
+
+    def add(self, other: "ParseStats") -> None:
+        self.parsed += other.parsed
+        self.ignored_non_global_ip += other.ignored_non_global_ip
+        self.ignored_path_level_adblock += other.ignored_path_level_adblock
+        self.ignored_invalid += other.ignored_invalid
+        if self.ignored_known_type is not None and other.ignored_known_type is not None:
+            self.ignored_known_type.update(other.ignored_known_type)
 
 
 def fetch_text(url: str, timeout: int = 30, retries: int = 3, max_bytes: int = 20_000_000) -> str:
@@ -166,6 +216,8 @@ def fetch_text(url: str, timeout: int = 30, retries: int = 3, max_bytes: int = 2
 def ensure_parent_dirs() -> None:
     OUTPUT_BLOCK.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_CLASH.parent.mkdir(parents=True, exist_ok=True)
+    BLOCK_CANDIDATES_FILE.parent.mkdir(parents=True, exist_ok=True)
+    ALLOW_CANDIDATES_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 
 def is_comment_or_empty(line: str) -> bool:
@@ -297,41 +349,16 @@ def write_source_urls(path: Path, urls: list[str]) -> None:
     path.write_text((content + "\n") if content else "", encoding="utf-8")
 
 
-def parse_adblock_domain(candidate: str) -> str | None:
-    token = candidate.strip().lower()
-    if not token:
-        return None
-
-    token = token.removeprefix("~")
-    token = token.removeprefix("||")
-    token = token.removeprefix("|")
-
-    if token.startswith("http://") or token.startswith("https://"):
-        parsed = urlparse(token)
-        token = parsed.hostname or ""
-
-    token = token.split("^", 1)[0]
-    token = token.split("/", 1)[0]
-    token = token.split("*", 1)[0]
-    token = token.strip(".")
-
+def normalize_domain(host: str) -> str | None:
+    token = host.strip().lower().strip(".")
+    if token.startswith("*."):
+        token = token[2:]
     if token.startswith("www."):
         token = token[4:]
-
     if not token:
         return None
-
-    try:
-        ip = ipaddress.ip_address(token)
-        if isinstance(ip, ipaddress.IPv6Address):
-            return f"IP-CIDR6,{ip.compressed}/128"
-        return f"IP-CIDR,{ip.compressed}/32"
-    except ValueError:
-        pass
-
     if DOMAIN_RE.match(token):
-        return f"DOMAIN-SUFFIX,{token}"
-
+        return token
     return None
 
 
@@ -342,25 +369,119 @@ def normalize_ip_or_network(value: str) -> tuple[str, str] | None:
 
     try:
         network = ipaddress.ip_network(raw, strict=False)
-        if isinstance(network, ipaddress.IPv6Network):
-            return ("IP-CIDR6", network.compressed)
-        return ("IP-CIDR", network.compressed)
     except ValueError:
         return None
 
-
-def normalize_domain(host: str) -> str | None:
-    token = host.strip().lower().strip(".")
-    if token.startswith("*."):
-        token = token[2:]
-    if not token:
+    # AdblockSet is for public ad endpoints only. Private/reserved/multicast/
+    # loopback/link-local/documentation/bogon ranges are not valid ad-block output.
+    if not network.is_global:
         return None
-    if DOMAIN_RE.match(token):
-        return token
+
+    if isinstance(network, ipaddress.IPv6Network):
+        return ("IP-CIDR6", network.compressed)
+    return ("IP-CIDR", network.compressed)
+
+
+def parse_http_host_only_rule(token: str) -> str | None:
+    parsed = urlparse(token)
+    host = parsed.hostname or ""
+    if not host:
+        return None
+
+    # Only convert host-only URL rules. Do not convert path-level rules such as
+    # |https://example.com/ad.js into DOMAIN-SUFFIX,example.com.
+    path = parsed.path or ""
+    if path not in {"", "/"}:
+        return None
+    if parsed.params or parsed.query or parsed.fragment:
+        return None
+
+    domain = normalize_domain(host)
+    if domain:
+        return f"DOMAIN-SUFFIX,{domain}"
+
+    ip_norm = normalize_ip_or_network(host)
+    if ip_norm:
+        return f"{ip_norm[0]},{ip_norm[1]}"
+
     return None
 
 
-def normalize_rule_line(raw_line: str, default_bucket: str) -> tuple[str, str] | None:
+def parse_adblock_domain(candidate: str, stats: ParseStats | None = None) -> str | None:
+    token = candidate.strip().lower()
+    if not token:
+        return None
+
+    token = token.removeprefix("~")
+    token = token.removeprefix("@@")
+
+    # Drop ABP options. Keep only the left matcher, but still refuse path-level
+    # matchers below.
+    token = token.split("$", 1)[0].strip()
+
+    if "#@#" in token or "##" in token:
+        return None
+
+    if token.startswith("||"):
+        token = token[2:]
+
+        # Safe conversion only:
+        #   ||example.com^      -> DOMAIN-SUFFIX,example.com
+        # Refuse:
+        #   ||example.com/path  -> path-level browser rule
+        #   ||*/adserver        -> wildcard/path browser rule
+        if "/" in token or "*" in token:
+            if stats:
+                stats.ignored_path_level_adblock += 1
+            return None
+
+        token = token.split("^", 1)[0].strip(".")
+    elif token.startswith("|"):
+        token = token[1:]
+        if token.startswith("http://") or token.startswith("https://"):
+            normalized = parse_http_host_only_rule(token)
+            if not normalized and stats:
+                stats.ignored_path_level_adblock += 1
+            return normalized
+        if "/" in token or "*" in token:
+            if stats:
+                stats.ignored_path_level_adblock += 1
+            return None
+        token = token.split("^", 1)[0].strip(".")
+    else:
+        if token.startswith("http://") or token.startswith("https://"):
+            normalized = parse_http_host_only_rule(token)
+            if not normalized and stats:
+                stats.ignored_path_level_adblock += 1
+            return normalized
+        if "/" in token or "*" in token:
+            if stats:
+                stats.ignored_path_level_adblock += 1
+            return None
+        token = token.split("^", 1)[0].strip(".")
+
+    if not token:
+        return None
+
+    domain = normalize_domain(token)
+    if domain:
+        return f"DOMAIN-SUFFIX,{domain}"
+
+    ip_norm = normalize_ip_or_network(token)
+    if ip_norm:
+        return f"{ip_norm[0]},{ip_norm[1]}"
+
+    if stats:
+        try:
+            ipaddress.ip_network(token, strict=False)
+            stats.ignored_non_global_ip += 1
+        except ValueError:
+            stats.ignored_invalid += 1
+
+    return None
+
+
+def normalize_rule_line(raw_line: str, default_bucket: str, stats: ParseStats | None = None) -> tuple[str, str] | None:
     line = strip_inline_comment(raw_line)
     if not line:
         return None
@@ -376,7 +497,7 @@ def normalize_rule_line(raw_line: str, default_bucket: str) -> tuple[str, str] |
         return None
 
     if line.startswith("||") or line.startswith("|"):
-        normalized = parse_adblock_domain(line.split("$", 1)[0])
+        normalized = parse_adblock_domain(line, stats=stats)
         if normalized:
             return (normalized, bucket)
         return None
@@ -388,32 +509,36 @@ def normalize_rule_line(raw_line: str, default_bucket: str) -> tuple[str, str] |
             head = parts[0].upper()
             value = parts[1]
 
-            if head in RULE_TYPES:
-                if head in {"DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD"}:
-                    domain = normalize_domain(value.lstrip(".") if head == "DOMAIN-SUFFIX" else value)
-                    if not domain:
-                        ip_norm = normalize_ip_or_network(value)
-                        if not ip_norm:
-                            return None
-                        return (f"{ip_norm[0]},{ip_norm[1]}", bucket)
+            if head in KNOWN_RULE_TYPES and head not in SAFE_OUTPUT_RULE_TYPES:
+                if stats and stats.ignored_known_type is not None:
+                    stats.ignored_known_type[head] += 1
+                return None
 
-                    normalized_value = domain if head in {"DOMAIN", "DOMAIN-SUFFIX"} else value.lower()
-                    return (f"{head},{normalized_value}", bucket)
-
-                if head in {"IP-CIDR", "IP-CIDR6"}:
+            if head in {"DOMAIN", "DOMAIN-SUFFIX"}:
+                domain = normalize_domain(value.lstrip("."))
+                if not domain:
                     ip_norm = normalize_ip_or_network(value)
                     if not ip_norm:
                         return None
-
-                    extras = [token.lower() for token in parts[2:] if token.upper() not in POLICY_TOKENS]
-                    if extras:
-                        return (f"{ip_norm[0]},{ip_norm[1]},{','.join(extras)}", bucket)
                     return (f"{ip_norm[0]},{ip_norm[1]}", bucket)
 
-                extras = [token for token in parts[2:] if token.upper() not in POLICY_TOKENS]
+                return (f"{head},{domain}", bucket)
+
+            if head in {"IP-CIDR", "IP-CIDR6"}:
+                ip_norm = normalize_ip_or_network(value)
+                if not ip_norm:
+                    if stats:
+                        stats.ignored_non_global_ip += 1
+                    return None
+
+                extras = [
+                    token.lower()
+                    for token in parts[2:]
+                    if token.upper() not in POLICY_TOKENS and token.lower() == "no-resolve"
+                ]
                 if extras:
-                    return (f"{head},{value},{','.join(extras)}", bucket)
-                return (f"{head},{value}", bucket)
+                    return (f"{ip_norm[0]},{ip_norm[1]},{','.join(extras)}", bucket)
+                return (f"{ip_norm[0]},{ip_norm[1]}", bucket)
 
     hosts_match = re.match(r"^(?:0\.0\.0\.0|127\.0\.0\.1|::1)\s+([^\s#;]+)", line)
     if hosts_match:
@@ -433,11 +558,27 @@ def normalize_rule_line(raw_line: str, default_bucket: str) -> tuple[str, str] |
     if ip_norm:
         return (f"{ip_norm[0]},{ip_norm[1]}", bucket)
 
+    # Plain URL host-only rules are accepted, but path-level URL rules are skipped.
+    if line.startswith("http://") or line.startswith("https://"):
+        normalized = parse_http_host_only_rule(line)
+        if normalized:
+            return (normalized, bucket)
+        if stats:
+            stats.ignored_path_level_adblock += 1
+        return None
+
     domain = normalize_domain(line)
     if domain:
         if default_bucket == "allow":
             return (f"DOMAIN,{domain}", "allow")
         return (f"DOMAIN,{domain}", bucket)
+
+    if stats:
+        try:
+            ipaddress.ip_network(line.strip().strip("[]"), strict=False)
+            stats.ignored_non_global_ip += 1
+        except ValueError:
+            stats.ignored_invalid += 1
 
     return None
 
@@ -463,21 +604,22 @@ def tokenize_line(raw_line: str) -> list[str]:
     return [line]
 
 
-def parse_rules_from_text(text: str, default_bucket: str) -> tuple[set[str], set[str], int]:
+def parse_rules_from_text(text: str, default_bucket: str) -> tuple[set[str], set[str], ParseStats]:
     block_rules: set[str] = set()
     allow_rules: set[str] = set()
-    parsed_lines = 0
+    stats = ParseStats()
 
     for raw_line in text.splitlines():
-        if raw_line.lstrip().startswith("|"):
+        if raw_line.lstrip().startswith("|") and raw_line.lstrip().startswith("| "):
             # Skip markdown table rows to avoid treating docs as list sources.
             continue
+
         entries = tokenize_line(raw_line)
         if not entries:
             continue
 
         for entry in entries:
-            parsed = normalize_rule_line(entry, default_bucket)
+            parsed = normalize_rule_line(entry, default_bucket, stats=stats)
             if not parsed:
                 continue
 
@@ -486,9 +628,9 @@ def parse_rules_from_text(text: str, default_bucket: str) -> tuple[set[str], set
                 allow_rules.add(rule)
             else:
                 block_rules.add(rule)
-            parsed_lines += 1
+            stats.parsed += 1
 
-    return block_rules, allow_rules, parsed_lines
+    return block_rules, allow_rules, stats
 
 
 def score_candidate_url(url: str) -> int:
@@ -603,8 +745,8 @@ def discover_new_sources(
             print(f"[WARN] candidate fetch failed: {candidate} -> {exc}", file=sys.stderr)
             continue
 
-        block_rules, allow_rules, parsed_count = parse_rules_from_text(text, "block")
-        if parsed_count < 10:
+        block_rules, allow_rules, stats = parse_rules_from_text(text, "block")
+        if stats.parsed < 10:
             continue
 
         if bucket_guess == "allow":
@@ -634,34 +776,25 @@ def rule_type_sort_key(rule: str) -> tuple[int, str, str]:
     order = {
         "DOMAIN": 1,
         "DOMAIN-SUFFIX": 2,
-        "DOMAIN-KEYWORD": 3,
-        "IP-CIDR": 4,
-        "IP-CIDR6": 5,
-        "IP-ASN": 6,
-        "URL-REGEX": 7,
-        "PROCESS-NAME": 8,
-        "USER-AGENT": 9,
-        "PROTOCOL": 10,
-        "DEST-PORT": 11,
-        "SRC-IP": 12,
-        "IN-PORT": 13,
-        "AND": 14,
-        "OR": 15,
-        "NOT": 16,
+        "IP-CIDR": 3,
+        "IP-CIDR6": 4,
     }
     return (order.get(head.upper(), 99), head.upper(), tail.casefold())
 
 
-def merge_rules_from_sources(source_urls: list[str], default_bucket: str) -> tuple[list[str], list[str]]:
+def merge_rules_from_sources(source_urls: list[str], default_bucket: str) -> tuple[list[str], list[str], ParseStats]:
     all_rules: list[str] = []
     warnings: list[str] = []
+    total_stats = ParseStats()
 
     for source in source_urls:
         try:
             text = fetch_text(source)
-            block_rules, allow_rules, parsed = parse_rules_from_text(text, default_bucket)
-            if parsed == 0:
-                warnings.append(f"No rules parsed: {source}")
+            block_rules, allow_rules, stats = parse_rules_from_text(text, default_bucket)
+            total_stats.add(stats)
+
+            if stats.parsed == 0:
+                warnings.append(f"No safe rules parsed: {source}")
                 continue
 
             if default_bucket == "allow":
@@ -672,37 +805,112 @@ def merge_rules_from_sources(source_urls: list[str], default_bucket: str) -> tup
             warnings.append(f"Fetch failed: {source} -> {exc}")
 
     merged = sorted(set(all_rules), key=rule_type_sort_key)
-    return merged, warnings
+    return merged, warnings, total_stats
 
 
-def subtract_allow_rules(block_rules: list[str], allow_rules: list[str]) -> list[str]:
+def rule_domain(rule: str) -> tuple[str, str] | None:
+    head, sep, value = rule.partition(",")
+    if not sep or not value:
+        return None
+
+    head = head.upper()
+    value = value.split(",", 1)[0].strip().lower().strip(".")
+
+    if head not in {"DOMAIN", "DOMAIN-SUFFIX"}:
+        return None
+    if not normalize_domain(value):
+        return None
+
+    return head, value
+
+
+def rule_network(rule: str) -> ipaddress.IPv4Network | ipaddress.IPv6Network | None:
+    head, sep, value = rule.partition(",")
+    if not sep or not value:
+        return None
+
+    head = head.upper()
+    if head not in {"IP-CIDR", "IP-CIDR6"}:
+        return None
+
+    cidr = value.split(",", 1)[0].strip()
+    try:
+        return ipaddress.ip_network(cidr, strict=False)
+    except ValueError:
+        return None
+
+
+def suffix_covers_domain(suffix: str, domain: str) -> bool:
+    suffix = suffix.lower().strip(".")
+    domain = domain.lower().strip(".")
+    return domain == suffix or domain.endswith("." + suffix)
+
+
+def domains_overlap(block_rule: str, allow_rule: str) -> bool:
+    block = rule_domain(block_rule)
+    allow = rule_domain(allow_rule)
+    if not block or not allow:
+        return False
+
+    block_type, block_domain = block
+    allow_type, allow_domain = allow
+
+    if block_type == "DOMAIN" and allow_type == "DOMAIN":
+        return block_domain == allow_domain
+
+    if block_type == "DOMAIN" and allow_type == "DOMAIN-SUFFIX":
+        return suffix_covers_domain(allow_domain, block_domain)
+
+    if block_type == "DOMAIN-SUFFIX" and allow_type == "DOMAIN":
+        # Conservative false-positive prevention:
+        # If allow domain is under a blocked suffix, remove the broad blocked suffix.
+        return suffix_covers_domain(block_domain, allow_domain)
+
+    if block_type == "DOMAIN-SUFFIX" and allow_type == "DOMAIN-SUFFIX":
+        # If either suffix covers the other, remove the block rule. This prefers
+        # underblocking over breaking normal services.
+        return suffix_covers_domain(block_domain, allow_domain) or suffix_covers_domain(allow_domain, block_domain)
+
+    return False
+
+
+def networks_overlap(block_rule: str, allow_rule: str) -> bool:
+    block_net = rule_network(block_rule)
+    allow_net = rule_network(allow_rule)
+    if not block_net or not allow_net:
+        return False
+    if block_net.version != allow_net.version:
+        return False
+    return block_net.overlaps(allow_net)
+
+
+def subtract_allow_rules(block_rules: list[str], allow_rules: list[str]) -> tuple[list[str], int]:
     allow_set = set(allow_rules)
     if not allow_set:
-        return list(block_rules)
+        return list(block_rules), 0
 
-    # Build equivalent-domain removals for common rule variants.
-    eq_domain_pairs: set[tuple[str, str]] = set()
-    for rule in allow_set:
-        head, sep, value = rule.partition(",")
-        if not sep or not value:
-            continue
-        head = head.upper()
-        value = value.strip()
-        if head == "DOMAIN":
-            eq_domain_pairs.add(("DOMAIN-SUFFIX", value))
-        elif head == "DOMAIN-SUFFIX":
-            eq_domain_pairs.add(("DOMAIN", value))
+    allow_domain_rules = [rule for rule in allow_set if rule_domain(rule)]
+    allow_network_rules = [rule for rule in allow_set if rule_network(rule)]
 
     filtered: list[str] = []
+    removed = 0
+
     for rule in block_rules:
         if rule in allow_set:
+            removed += 1
             continue
-        head, sep, value = rule.partition(",")
-        if sep and (head.upper(), value.strip()) in eq_domain_pairs:
+
+        if rule_domain(rule) and any(domains_overlap(rule, allow_rule) for allow_rule in allow_domain_rules):
+            removed += 1
             continue
+
+        if rule_network(rule) and any(networks_overlap(rule, allow_rule) for allow_rule in allow_network_rules):
+            removed += 1
+            continue
+
         filtered.append(rule)
 
-    return filtered
+    return filtered, removed
 
 
 def write_ruleset(path: Path, rules: list[str]) -> None:
@@ -722,20 +930,40 @@ def write_clash_ruleset(path: Path, rules: list[str]) -> None:
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
+def print_stats(label: str, stats: ParseStats) -> None:
+    print(
+        f"[INFO] {label} parsed={stats.parsed}, "
+        f"ignored_path_level_adblock={stats.ignored_path_level_adblock}, "
+        f"ignored_non_global_ip={stats.ignored_non_global_ip}, "
+        f"ignored_invalid={stats.ignored_invalid}"
+    )
+
+    if stats.ignored_known_type:
+        ignored = ", ".join(
+            f"{rule_type}={count}"
+            for rule_type, count in sorted(stats.ignored_known_type.items(), key=lambda item: item[0])
+        )
+        if ignored:
+            print(f"[INFO] {label} ignored_high_risk_types: {ignored}")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Build Surge AdblockSet by subtracting merged allow rules from merged block rules.",
+        description="Build conservative Surge/Clash AdblockSet by subtracting merged allow rules from merged block rules.",
+    )
+    parser.add_argument(
+        "--discovery",
+        action="store_true",
+        help=(
+            "Discover candidate source URLs. New sources are written to candidate files only; "
+            "production source URL files are not mutated."
+        ),
     )
     parser.add_argument(
         "--candidate-cap",
         type=int,
         default=180,
-        help="Maximum number of discovered candidate URLs to validate per run.",
-    )
-    parser.add_argument(
-        "--no-discovery",
-        action="store_true",
-        help="Skip seed discovery and only merge from existing source URL files.",
+        help="Maximum number of discovered candidate URLs to validate per run when --discovery is enabled.",
     )
     return parser.parse_args()
 
@@ -757,8 +985,9 @@ def main() -> int:
 
     print(f"[INFO] block sources: {len(block_sources)}")
     print(f"[INFO] allow sources: {len(allow_sources)}")
+    print(f"[INFO] safe output rule types: {', '.join(sorted(SAFE_OUTPUT_RULE_TYPES))}")
 
-    if not args.no_discovery:
+    if args.discovery:
         discovery_seeds = unique_sorted(seed_sources + WEB_DISCOVERY_SEEDS)
         new_block_sources, new_allow_sources = discover_new_sources(
             seed_urls=discovery_seeds,
@@ -768,17 +997,21 @@ def main() -> int:
         )
 
         if new_block_sources:
-            print(f"[DISCOVERY] new block sources: {len(new_block_sources)}")
-            block_sources = unique_sorted(block_sources + new_block_sources)
-            write_source_urls(BLOCK_SOURCES_FILE, block_sources)
+            print(f"[DISCOVERY] block candidates: {len(new_block_sources)} -> {BLOCK_CANDIDATES_FILE.relative_to(ROOT)}")
+            write_source_urls(BLOCK_CANDIDATES_FILE, new_block_sources)
+        else:
+            print("[DISCOVERY] block candidates: 0")
 
         if new_allow_sources:
-            print(f"[DISCOVERY] new allow sources: {len(new_allow_sources)}")
-            allow_sources = unique_sorted(allow_sources + new_allow_sources)
-            write_source_urls(ALLOW_SOURCES_FILE, allow_sources)
+            print(f"[DISCOVERY] allow candidates: {len(new_allow_sources)} -> {ALLOW_CANDIDATES_FILE.relative_to(ROOT)}")
+            write_source_urls(ALLOW_CANDIDATES_FILE, new_allow_sources)
+        else:
+            print("[DISCOVERY] allow candidates: 0")
+    else:
+        print("[INFO] discovery disabled; source URL files will not be auto-mutated")
 
-    block_rules, block_warnings = merge_rules_from_sources(block_sources, default_bucket="block")
-    allow_rules, allow_warnings = merge_rules_from_sources(allow_sources, default_bucket="allow")
+    block_rules, block_warnings, block_stats = merge_rules_from_sources(block_sources, default_bucket="block")
+    allow_rules, allow_warnings, allow_stats = merge_rules_from_sources(allow_sources, default_bucket="allow")
 
     if block_warnings:
         for warning in block_warnings:
@@ -787,11 +1020,14 @@ def main() -> int:
         for warning in allow_warnings:
             print(f"[WARN] {warning}", file=sys.stderr)
 
+    print_stats("block", block_stats)
+    print_stats("allow", allow_stats)
+
     if not block_rules:
-        print("[ERROR] no rules generated for AdblockSet.list", file=sys.stderr)
+        print("[ERROR] no safe rules generated for AdblockSet.list", file=sys.stderr)
         return 1
 
-    filtered_block_rules = subtract_allow_rules(block_rules, allow_rules)
+    filtered_block_rules, removed_by_allow = subtract_allow_rules(block_rules, allow_rules)
     if not filtered_block_rules:
         print("[ERROR] AdblockSet.list became empty after allow subtraction", file=sys.stderr)
         return 1
@@ -803,8 +1039,7 @@ def main() -> int:
     print(f"[DONE] {OUTPUT_CLASH.relative_to(ROOT)}: {len(filtered_block_rules)} lines")
     print(
         "[DONE] subtraction summary: "
-        f"block={len(block_rules)}, allow={len(allow_rules)}, "
-        f"removed={len(block_rules) - len(filtered_block_rules)}"
+        f"block={len(block_rules)}, allow={len(allow_rules)}, removed={removed_by_allow}"
     )
     print(f"[DONE] {BLOCK_SOURCES_FILE.relative_to(ROOT)}: {len(block_sources)} URLs")
     print(f"[DONE] {ALLOW_SOURCES_FILE.relative_to(ROOT)}: {len(allow_sources)} URLs")
