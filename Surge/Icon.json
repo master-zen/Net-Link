@@ -495,7 +495,7 @@
     },
     {
       "name": "FOX",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/FOX.png"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/FOpng"
     },
     {
       "name": "FriDay-I",
@@ -847,7 +847,7 @@
     },
     {
       "name": "MozillaFirefox",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MozillaFirefox.png"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MozillaFirefopng"
     },
     {
       "name": "myTVSUPER",
@@ -879,7 +879,7 @@
     },
     {
       "name": "Netflix",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Netflix.png"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Netflipng"
     },
     {
       "name": "NetflixLetter",
@@ -951,7 +951,7 @@
     },
     {
       "name": "Ox",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ox.png"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Opng"
     },
     {
       "name": "Panda",
@@ -1023,7 +1023,7 @@
     },
     {
       "name": "PostBox",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PostBox.png"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PostBopng"
     },
     {
       "name": "PrimeVideo-I",
@@ -1727,7 +1727,7 @@
     },
     {
       "name": "TelegramX",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TelegramX.png"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Telegrampng"
     },
     {
       "name": "Tencent",
@@ -1908,6 +1908,10 @@
     {
       "name": "X",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/X.png"
+    },
+    {
+      "name": "Grok",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Grok.png"
     },
     {
       "name": "X_Twitter-I",
