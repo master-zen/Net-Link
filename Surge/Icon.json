@@ -286,6 +286,10 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ChatGPT.png"
     },
     {
+      "name": "Claude",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Claude.png"
+    },
+    {
       "name": "Cisco-I",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cisco-I.png"
     },
@@ -1906,12 +1910,12 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Wikipedia.png"
     },
     {
-      "name": "X",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/X.png"
-    },
-    {
       "name": "Grok",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Grok.png"
+    },
+    {
+      "name": "X",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/X.png"
     },
     {
       "name": "X_Twitter-I",
