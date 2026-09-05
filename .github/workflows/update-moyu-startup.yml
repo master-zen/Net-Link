@@ -1,0 +1,81 @@
+name: Update Moyu StartUpAds
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # UTC 20:23 = 北京时间次日 04:23
+    - cron: "23 20 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-moyu-startup
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build Moyu StartUpAds Surge Module
+        env:
+          RUNTIME_BASE_URL: https://raw.githubusercontent.com/$\{\{ github.repository }}/main/Surge/Module
+          OUTPUT_FILE: ${{ github.workspace }}/Surge/Module/StartUpAds.sgmodule
+        run: |
+          python3 Surge/Module/.generator/build.py
+
+      - name: Safety Check
+        run: |
+          set -e
+
+          test -s Surge/Module/StartUpAds.sgmodule
+
+          if grep -E '(_|-)[[:space:]]*reject-(200|img|dict|array)' \
+            Surge/Module/StartUpAds.sgmodule
+          then
+            echo "ERROR: 非法 Surge reject-* 配置"
+            exit 1
+          fi
+
+          if grep -F 'max-size=-1' Surge/Module/StartUpAds.sgmodule
+          then
+            echo "ERROR: 检测到 max-size=-1"
+            exit 1
+          fi
+
+          if grep -F 'timeout=60' Surge/Module/StartUpAds.sgmodule
+          then
+            echo "ERROR: 检测到 timeout=60"
+            exit 1
+          fi
+
+          echo "Safety check OK"
+
+      - name: Commit Changes
+        run: |
+          if git diff --quiet
+          then
+            echo "No upstream changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            Surge/Module/StartUpAds.sgmodule \
+            Surge/Module/upstream/
+
+          git commit -m "chore: update Moyu StartUpAds"
+
+          git push

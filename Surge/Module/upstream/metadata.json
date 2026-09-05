@@ -1,0 +1,29 @@
+{
+  "source": "https://ddgksf2013.top/rewrite/StartUpAds.conf",
+  "sha256": "fb9c1530eac7e921c007f7d1e9113aef11b7319fa8613e3a2bdaf15f88690a72",
+  "fetched_at_utc": "2026-09-05T05:40:22.319028+00:00",
+  "active_rules": 504,
+  "url_rewrite": 16,
+  "map_local": 437,
+  "body_rewrite": 2,
+  "rules": 6,
+  "scripts": 43,
+  "mitm_hosts": 437,
+  "counts": {
+    "version": 1,
+    "reject-200": 426,
+    "script-response-body": 23,
+    "filter-host": 1,
+    "script-analyze-echo-response": 1,
+    "response-body": 15,
+    "reject": 16,
+    "echo-response": 1,
+    "reject-dict": 4,
+    "filter-host-suffix": 5,
+    "reject-img": 6,
+    "script-response-header": 3,
+    "jsonjq-response-body": 2,
+    "request-body": 1
+  },
+  "unsupported_rules": 0
+}
