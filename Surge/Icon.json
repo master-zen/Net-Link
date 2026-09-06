@@ -286,16 +286,16 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ChatGPT.png"
     },
     {
-      "name": "Claude",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Claude.png"
-    },
-    {
       "name": "Cisco-I",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cisco-I.png"
     },
     {
       "name": "Cisco",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cisco.png"
+    },
+    {
+      "name": "Claude",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Claude.png"
     },
     {
       "name": "Cloudflare-I",
@@ -499,7 +499,7 @@
     },
     {
       "name": "FOX",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/FOpng"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/FOX.png"
     },
     {
       "name": "FriDay-I",
@@ -616,6 +616,10 @@
     {
       "name": "GoogleVoice",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleVoice.png"
+    },
+    {
+      "name": "Grok",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Grok.png"
     },
     {
       "name": "HBO-I",
@@ -851,7 +855,7 @@
     },
     {
       "name": "MozillaFirefox",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MozillaFirefopng"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MozillaFirefox.png"
     },
     {
       "name": "myTVSUPER",
@@ -883,7 +887,7 @@
     },
     {
       "name": "Netflix",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Netflipng"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Netflix.png"
     },
     {
       "name": "NetflixLetter",
@@ -955,7 +959,7 @@
     },
     {
       "name": "Ox",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Opng"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ox.png"
     },
     {
       "name": "Panda",
@@ -1027,7 +1031,7 @@
     },
     {
       "name": "PostBox",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PostBopng"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PostBox.png"
     },
     {
       "name": "PrimeVideo-I",
@@ -1731,7 +1735,7 @@
     },
     {
       "name": "TelegramX",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Telegrampng"
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TelegramX.png"
     },
     {
       "name": "Tencent",
@@ -1908,10 +1912,6 @@
     {
       "name": "Wikipedia",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Wikipedia.png"
-    },
-    {
-      "name": "Grok",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Grok.png"
     },
     {
       "name": "X",
