@@ -29,7 +29,7 @@ jobs:
 
       - name: Build Moyu StartUpAds Surge Module
         env:
-          RUNTIME_BASE_URL: https://raw.githubusercontent.com/$\{\{ github.repository }}/main/Surge/Module
+          RUNTIME_BASE_URL: https://raw.githubusercontent.com/${{ github.repository }}/main/Surge/Module
           OUTPUT_FILE: ${{ github.workspace }}/Surge/Module/StartUpAds.sgmodule
         run: |
           python3 Surge/Module/.generator/build.py
