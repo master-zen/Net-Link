@@ -19,6 +19,7 @@ udp://107.189.11.58:6969/announce
 udp://107.189.3.200:6969/announce
 udp://107.189.4.235:1337/announce
 udp://107.189.7.165:6969/announce
+udp://108.165.191.38:1337/announce
 udp://108.53.194.223:6969/announce
 udp://108.61.166.249:6969/announce
 udp://109.121.134.121:1337/announce
@@ -63,8 +64,10 @@ udp://125.227.79.123:80/announce
 udp://128.199.70.66:5944/announce
 udp://130.61.158.165:6969/announce
 udp://132.226.6.145:6969/announce
+udp://132.243.161.144:6969/announce
 udp://132.243.174.78:6969/announce
 udp://135.125.106.92:6969/announce
+udp://135.125.198.235:1984/announce
 udp://135.125.202.143:6969/announce
 udp://135.125.236.64:6969/announce
 udp://135.181.197.114:1337/announce
@@ -83,6 +86,7 @@ udp://139.202.231.55:6969/announce
 udp://141.11.240.19:6969/announce
 udp://142.132.183.104:6969/announce
 udp://143.198.64.177:6969/announce
+udp://143.246.43.3:6969/announce
 udp://144.126.245.19:6969/announce
 udp://144.91.88.22:6969/announce
 udp://145.223.96.109:8000/announce
@@ -97,6 +101,8 @@ udp://149.202.88.193:80/announce
 udp://15.204.205.14:6969/announce
 udp://15.204.56.171:6969/announce
 udp://15.204.57.168:6969/announce
+udp://15.235.207.99:8081/announce
+udp://151.242.104.187:80/announce
 udp://151.242.30.86:42069/announce
 udp://151.243.109.110:6969/announce
 udp://151.243.109.163:6969/announce
@@ -104,19 +110,24 @@ udp://151.80.120.114:2710/announce
 udp://152.231.114.120:1337/announce
 udp://152.231.114.51:1337/announce
 udp://152.243.213.163:6969/announce
+udp://152.243.213.247:6969/announce
 udp://152.249.214.198:6969/announce
 udp://152.249.214.23:6969/announce
 udp://152.249.214.53:6969/announce
 udp://152.249.214.68:6969/announce
 udp://152.249.214.74:6969/announce
+udp://152.249.97.82:6969/announce
 udp://152.53.152.105:15480/announce
 udp://152.53.152.105:1984/announce
 udp://152.53.152.105:54123/announce
+udp://152.53.194.103:1984/announce
+udp://152.53.194.103:54123/announce
 udp://152.89.29.128:6969/announce
 udp://154.40.43.165:6969/announce
 udp://156.234.201.18:80/announce
 udp://157.131.124.190:6969/announce
 udp://158.101.161.60:3131/announce
+udp://159.146.99.45:6969/announce
 udp://159.195.43.181:6969/announce
 udp://159.195.43.181:80/announce
 udp://160.251.231.187:6969/announce
@@ -144,9 +155,11 @@ udp://176.79.98.66:6969/announce
 udp://176.99.7.59:6969/announce
 udp://177.112.215.129:6969/announce
 udp://177.112.215.131:6969/announce
+udp://177.112.215.160:6969/announce
 udp://177.112.215.4:6969/announce
 udp://177.112.215.99:6969/announce
 udp://177.139.44.145:6969/announce
+udp://177.139.44.203:6969/announce
 udp://177.139.46.160:6969/announce
 udp://177.139.47.105:6969/announce
 udp://177.139.47.18:6969/announce
@@ -157,6 +170,7 @@ udp://177.144.178.170:6969/announce
 udp://177.144.178.39:6969/announce
 udp://177.16.198.58:6969/announce
 udp://177.172.61.249:6969/announce
+udp://177.172.61.26:6969/announce
 udp://177.172.61.33:6969/announce
 udp://177.172.62.154:6969/announce
 udp://177.172.62.168:6969/announce
@@ -169,6 +183,7 @@ udp://177.172.66.210:6969/announce
 udp://177.172.66.223:6969/announce
 udp://177.172.66.2:6969/announce
 udp://177.172.67.13:6969/announce
+udp://177.172.67.233:6969/announce
 udp://177.172.67.247:6969/announce
 udp://177.172.67.94:6969/announce
 udp://177.173.31.33:6969/announce
@@ -178,8 +193,10 @@ udp://177.188.141.32:6969/announce
 udp://177.215.65.114:6969/announce
 udp://177.215.65.176:6969/announce
 udp://177.215.65.40:6969/announce
+udp://177.215.66.183:6969/announce
 udp://177.215.67.115:6969/announce
 udp://177.215.67.165:6969/announce
+udp://177.215.67.242:6969/announce
 udp://177.27.223.184:6969/announce
 udp://177.27.223.186:6969/announce
 udp://177.32.238.49:6969/announce
@@ -193,6 +210,7 @@ udp://179.118.129.138:6969/announce
 udp://179.118.129.194:6969/announce
 udp://179.118.132.77:6969/announce
 udp://179.146.54.147:6969/announce
+udp://179.146.54.238:6969/announce
 udp://179.175.247.60:6969/announce
 udp://179.175.247.70:6969/announce
 udp://179.43.155.30:6969/announce
@@ -204,6 +222,7 @@ udp://179.98.51.208:6969/announce
 udp://179.98.51.248:6969/announce
 udp://179.98.51.66:6969/announce
 udp://18.191.163.220:6969/announce
+udp://180.131.145.175:6969/announce
 udp://181.214.58.63:6969/announce
 udp://182.176.139.129:6969/announce
 udp://184.105.151.166:6969/announce
@@ -221,6 +240,7 @@ udp://185.171.202.111:6969/announce
 udp://185.181.60.155:80/announce
 udp://185.181.60.67:80/announce
 udp://185.189.13.108:6969/announce
+udp://185.189.13.39:6969/announce
 udp://185.216.179.62:25/announce
 udp://185.225.68.26:6969/announce
 udp://185.230.4.150:1337/announce
@@ -242,6 +262,7 @@ udp://187.10.24.160:6969/announce
 udp://187.11.72.168:6969/announce
 udp://187.11.72.188:6969/announce
 udp://187.11.72.236:6969/announce
+udp://187.11.73.135:6969/announce
 udp://187.11.73.178:6969/announce
 udp://187.11.73.20:6969/announce
 udp://187.11.73.213:6969/announce
@@ -257,6 +278,7 @@ udp://187.56.205.91:6969/announce
 udp://187.57.130.109:6969/announce
 udp://187.57.130.147:6969/announce
 udp://187.57.131.202:6969/announce
+udp://187.57.131.55:6969/announce
 udp://187.57.131.78:6969/announce
 udp://187.57.132.20:6969/announce
 udp://187.57.132.246:6969/announce
@@ -270,6 +292,7 @@ udp://189.18.126.49:6969/announce
 udp://189.18.127.125:6969/announce
 udp://189.18.127.21:6969/announce
 udp://189.18.127.57:6969/announce
+udp://189.18.162.102:6969/announce
 udp://189.18.162.106:6969/announce
 udp://189.18.162.12:6969/announce
 udp://189.18.162.54:6969/announce
@@ -283,6 +306,7 @@ udp://189.69.167.105:6969/announce
 udp://189.69.167.130:6969/announce
 udp://189.69.168.147:6969/announce
 udp://189.69.168.180:6969/announce
+udp://189.69.168.99:6969/announce
 udp://189.69.169.237:6969/announce
 udp://189.69.169.89:6969/announce
 udp://189.69.170.69:6969/announce
@@ -294,15 +318,18 @@ udp://189.79.12.24:6969/announce
 udp://189.79.12.59:6969/announce
 udp://189.79.12.91:6969/announce
 udp://189.79.13.111:6969/announce
+udp://189.79.13.198:6969/announce
 udp://190.146.242.81:6969/announce
 udp://191.101.229.236:1337/announce
 udp://191.23.121.129:6969/announce
 udp://191.23.62.111:6969/announce
+udp://191.23.62.139:6969/announce
 udp://191.23.62.147:6969/announce
 udp://191.23.71.103:6969/announce
 udp://191.23.71.131:6969/announce
 udp://191.23.71.193:6969/announce
 udp://191.23.71.22:6969/announce
+udp://191.23.94.128:6969/announce
 udp://191.23.94.237:6969/announce
 udp://191.254.171.209:6969/announce
 udp://191.254.171.95:6969/announce
@@ -315,7 +342,10 @@ udp://191.255.193.16:6969/announce
 udp://191.255.193.44:6969/announce
 udp://192.3.130.53:1337/announce
 udp://192.95.46.115:6969/announce
+udp://192.99.100.68:6969/announce
+udp://193.148.251.143:6969/announce
 udp://193.148.251.93:6969/announce
+udp://193.164.155.221:6969/announce
 udp://193.177.162.187:6969/announce
 udp://193.187.90.12:6969/announce
 udp://193.233.161.213:6969/announce
@@ -338,6 +368,7 @@ udp://2.57.214.218:6969/announce
 udp://2.tracker.eu.org:443/announce
 udp://200.111.152.53:1337/announce
 udp://200.111.152.54:1337/announce
+udp://200.111.84.93:1337/announce
 udp://200.148.11.147:6969/announce
 udp://200.148.11.156:6969/announce
 udp://200.148.11.61:6969/announce
@@ -345,6 +376,7 @@ udp://200.161.254.131:6969/announce
 udp://200.161.254.194:6969/announce
 udp://200.161.254.20:6969/announce
 udp://200.168.116.107:6969/announce
+udp://200.168.116.191:6969/announce
 udp://200.168.116.200:6969/announce
 udp://200.168.116.61:6969/announce
 udp://200.168.117.124:6969/announce
@@ -456,6 +488,7 @@ udp://220.200.35.72:6969/announce
 udp://220.200.35.97:2710/announce
 udp://220.200.35.97:6969/announce
 udp://220.250.51.200:6969/announce
+udp://221.153.216.56:8081/announce
 udp://222.216.138.237:6969/announce
 udp://222.216.139.217:6969/announce
 udp://222.216.139.248:6969/announce
@@ -475,6 +508,7 @@ udp://23.140.248.9:1337/announce
 udp://23.153.248.128:6969/announce
 udp://23.153.248.2:6969/announce
 udp://23.153.248.83:6969/announce
+udp://23.154.104.2:23333/announce
 udp://23.157.120.14:6969/announce
 udp://23.163.56.66:6969/announce
 udp://23.168.232.9:1337/announce
@@ -499,6 +533,7 @@ udp://27.155.141.232:6969/announce
 udp://27.155.141.50:2710/announce
 udp://27.155.141.50:6969/announce
 udp://31.38.161.123:6969/announce
+udp://31.56.179.159:6969/announce
 udp://34.66.57.33:1337/announce
 udp://34.66.57.33:80/announce
 udp://34.89.30.59:1337/announce
@@ -521,6 +556,7 @@ udp://37.19.5.155:2710/announce
 udp://37.235.176.37:2710/announce
 udp://37.27.4.53:6969/announce
 udp://37.59.48.81:6969/announce
+udp://37.60.249.217:6969/announce
 udp://38.175.99.50:6969/announce
 udp://4.tracker.devnak.win:6969/announce
 udp://41.79.68.156:6969/announce
@@ -556,6 +592,7 @@ udp://47.ip-51-68-199.eu:6969/announce
 udp://49.12.76.8:8080/announce
 udp://49.13.133.10:6969/announce
 udp://5.102.159.190:6969/announce
+udp://5.135.104.146:6969/announce
 udp://5.161.187.83:53/announce
 udp://5.181.156.41:6969/announce
 udp://5.181.188.172:1337/announce
@@ -578,11 +615,14 @@ udp://51.222.82.36:6969/announce
 udp://51.254.244.161:6969/announce
 udp://51.68.174.87:6969/announce
 udp://51.81.222.188:6969/announce
+udp://51.83.160.93:6969/announce
 udp://52.211.139.85:27022/announce
 udp://52.58.128.163:6969/announce
 udp://54.36.179.216:6969/announce
 udp://54.39.48.3:6969/announce
 udp://57.128.230.226:80/announce
+udp://57.129.129.129:6969/announce
+udp://57.129.129.187:6969/announce
 udp://6.pocketnet.app:6969/announce
 udp://6.tracker.devnak.win:6969/announce
 udp://60.172.236.18:6969/announce
@@ -605,6 +645,8 @@ udp://62.212.85.66:2710/announce
 udp://62.60.157.92:6969/announce
 udp://64.23.195.62:6969/announce
 udp://65.108.102.76:6969/announce
+udp://65.109.28.17:6969/announce
+udp://65.109.28.33:6969/announce
 udp://65.21.91.32:6969/announce
 udp://67.222.238.222:2010/announce
 udp://68.193.189.231:6969/announce
@@ -724,9 +766,12 @@ udp://86.57.161.157:6969/announce
 udp://87.106.210.134:6969/announce
 udp://88.216.2.71:6969/announce
 udp://88.80.22.67:2710/announce
+udp://88.80.22.75:2710/announce
 udp://88.80.28.7:6969/announce
 udp://88.99.2.212:6969/announce
 udp://89.110.76.229:6969/announce
+udp://89.117.57.95:1337/announce
+udp://89.127.235.120:6969/announce
 udp://89.234.156.205:451/announce
 udp://89.234.156.205:80/announce
 udp://89.36.216.8:6969/announce
@@ -751,6 +796,7 @@ udp://9.rarbg.to:2730/announce
 udp://9.rarbg.to:2740/announce
 udp://9.rarbg.to:2800/announce
 udp://9.rarbg.to:2910/announce
+udp://91.177.126.188:6969/announce
 udp://91.186.213.204:6969/announce
 udp://91.208.197.19:6969/announce
 udp://91.208.206.133:6969/announce
@@ -778,6 +824,8 @@ udp://94.72.140.51:6969/announce
 udp://95.179.232.193:6969/announce
 udp://95.211.168.204:2710/announce
 udp://95.216.74.39:6969/announce
+udp://95.217.80.20:6969/announce
+udp://95.217.80.22:6969/announce
 udp://95.31.11.224:6969/announce
 udp://96.126.98.54:6969/announce
 udp://960303.xyz:6969/announce
@@ -891,10 +939,12 @@ udp://dmitrynegoda.com:6969/announce
 udp://dns.xxtor.com:53/announce
 udp://download.nerocloud.me:6969/announce
 udp://dpiui.reedlan.com:6969/announce
+udp://ds32244.seedhost.eu:6969/announce
 udp://dyndns.xionxiii.ovh:6969/announce
 udp://ec2-18-191-163-220.us-east-2.compute.amazonaws.com:6969/announce
 udp://eccologic.net:6969/announce
 udp://eddie4.nl:6969/announce
+udp://edgev.duckdns.org:6969/announce
 udp://edu.uifr.ru:6969/announce
 udp://elementsbrowser.com:6969/announce
 udp://engplus.ru:6969/announce
@@ -1104,6 +1154,7 @@ udp://seedpeer.net:6969/announce
 udp://serpb.vpsburti.com:6969/announce
 udp://shadowshq.eddie4.nl:6969/announce
 udp://shadowshq.yi.org:6969/announce
+udp://shahidrazi.online:1984/announce
 udp://shizzle.hammetjus.nl:6969/announce
 udp://shogiroom.com:6969/announce
 udp://slicie.icon256.com:8000/announce
@@ -1157,7 +1208,9 @@ udp://torrent.fedoraproject.org:6969/announce
 udp://torrent.gresille.org:80/announce
 udp://torrent.hificode.in:6969/announce
 udp://torrent.i.ng:6969/announce
+udp://torrent.tracker.durukanbal.com:6969/announce
 udp://torrent.ubuntu.com:6969/announce
+udp://torrentclub.online:1984/announce
 udp://torrentclub.online:54123/announce
 udp://torrentclub.space:6969/announce
 udp://torrentclub.tech:6969/announce
@@ -1220,6 +1273,7 @@ udp://tracker.ccp.ovh:6969/announce
 udp://tracker.christianbro.pw:6969/announce
 udp://tracker.cloaka.xyz:1337/announce
 udp://tracker.cloudbase.store:1333/announce
+udp://tracker.cn.nyaa.net:6969/announce
 udp://tracker.coppersurfer.tk/announce
 udp://tracker.coppersurfer.tk:1337/announce
 udp://tracker.coppersurfer.tk:6969/announce
@@ -1231,6 +1285,7 @@ udp://tracker.cubonegro.xyz:6969/announce
 udp://tracker.cuntflaps.me:6969/announce
 udp://tracker.cutie.dating:80/announce
 udp://tracker.cyberia.is:6969/announce
+udp://tracker.cynma.tv:6969/announce
 udp://tracker.cypherpunks.ru:6969/announce
 udp://tracker.darkness.services:6969/announce
 udp://tracker.ddunlimited.net:6969/announce
@@ -1271,6 +1326,7 @@ udp://tracker.frozen-layer.net:6969/announce
 udp://tracker.gbitt.info:80/announce
 udp://tracker.gigantino.net:6969/announce
 udp://tracker.gmi.gd:6969/announce
+udp://tracker.govt.hu:6969/announce
 udp://tracker.grepler.com:6969/announce
 udp://tracker.halfchub.club:6969/announce
 udp://tracker.healthcareindia.store:1337/announce
@@ -1292,6 +1348,7 @@ udp://tracker.jonaslsa.com:6969/announce
 udp://tracker.jordan.im:6969/announce
 udp://tracker.joybomb.tw:6969/announce
 udp://tracker.justseed.it:1337/announce
+udp://tracker.k.vu:6969/announce
 udp://tracker.kali.org:6969/announce
 udp://tracker.kamigami.org:2710/announce
 udp://tracker.kicks-ass.net:80/announce
@@ -1323,9 +1380,11 @@ udp://tracker.mywaifu.best:6969/announce
 udp://tracker.nanoha.org:443/announce
 udp://tracker.nartlof.com.br:6969/announce
 udp://tracker.netmap.top:6969/announce
+udp://tracker.nexusstream.eu:6969/announce
 udp://tracker.nitrix.me:6969/announce
 udp://tracker.novaopcj.eu.org:6969/announce
 udp://tracker.nrx.me:6969/announce
+udp://tracker.nyaa.net:6969/announce
 udp://tracker.nyaa.uk:6969/announce
 udp://tracker.nyaa.vc:6969/announce
 udp://tracker.ocnix.net:6969/announce
@@ -1337,6 +1396,7 @@ udp://tracker.openbittorrent.com:80/announce
 udp://tracker.openbtba.com:6969/announce
 udp://tracker.opentorrent.top:6969/announce
 udp://tracker.opentrackr.com:1337/announce
+udp://tracker.opentrackr.com:6969/announce
 udp://tracker.opentrackr.org:1337/announce
 udp://tracker.orsvarn.com:6969/announce
 udp://tracker.pcfreetime.com:6969/announce
@@ -1383,6 +1443,7 @@ udp://tracker.teambelgium.net:6969/announce
 udp://tracker.texoviva.com:9898/announce
 udp://tracker.theoks.net:6969/announce
 udp://tracker.therarbg.com:6969/announce
+udp://tracker.therarbg.to:1337/announce
 udp://tracker.therarbg.to:6969/announce
 udp://tracker.tiny-vps.com:6969/announce
 udp://tracker.tnl.one:8000/announce
@@ -1456,8 +1517,10 @@ udp://u.peer-exchange.download:6969/announce
 udp://u4.trakx.crim.ist:1337/announce
 udp://u6.trakx.crim.ist:1337/announce
 udp://uabits.today:6990/announce
+udp://udp-tracker.adgk.net:6969/announce
 udp://udp-tracker.shittyurl.org:6969/announce
 udp://udp.trackarr.org:6969/announce
+udp://udp.tracker.linvk.com:6969/announce
 udp://udp.tracker.projectk.org:23333/announce
 udp://udp.yarr.pt:1337/announce
 udp://udp1.torrust-tracker-demo.com:6969/announce
@@ -1508,6 +1571,9 @@ udp://yahor.of.by:6969/announce
 udp://yann5.hexanyn.fr:6969/announce
 udp://yuki.bt.bontal.net:6969/announce
 udp://yuptracker-eu.gaijinent.com:27022/announce
+udp://yuptracker-sa.gaijinent.com:27022/announce
+udp://yuptracker-us.gaijinent.com:27022/announce
+udp://yuptracker.gaijinent.com:27022/announce
 udp://z.crazyhd.com:2710/announce
 udp://z.mercax.com:53/announce
 udp://z.paranoid.agency:6969/announce
@@ -1536,6 +1602,7 @@ http://107.150.14.110:6969/announce
 http://107.152.127.9:6969/announce
 http://107.152.45.140/announce
 http://107.189.10.20.sslip.io:7777/announce
+http://107.189.2.131:1337/announce
 http://107.189.31.134:6969/announce
 http://107.189.7.143:6969/announce
 http://109.121.134.121:1337/announce
@@ -1550,12 +1617,15 @@ http://113.13.6.197:6969/announce
 http://113.13.6.40:6969/announce
 http://113.13.7.124:6969/announce
 http://113.13.7.149:6969/announce
+http://113.13.7.186:6969/announce
+http://113.13.7.215:6969/announce
 http://113.13.7.90:6969/announce
 http://113.16.152.171:6969/announce
 http://113.16.152.94:6969/announce
 http://113.16.153.116:6969/announce
 http://113.16.153.192:6969/announce
 http://113.16.153.249:6969/announce
+http://113.16.153.28:6969/announce
 http://113.16.153.98:6969/announce
 http://113.16.154.16:6969/announce
 http://113.16.154.70:6969/announce
@@ -1572,6 +1642,7 @@ http://113.17.152.249:6969/announce
 http://113.17.152.30:6969/announce
 http://113.17.153.206:6969/announce
 http://113.17.153.227:6969/announce
+http://113.17.153.232:6969/announce
 http://113.17.153.71:6969/announce
 http://113.17.66.164:6969/announce
 http://113.17.66.235:6969/announce
@@ -1641,6 +1712,7 @@ http://123.245.62.67:6969/announce
 http://123.245.62.68:6969/announce
 http://123.245.62.69:6969/announce
 http://123.245.62.72:6969/announce
+http://123.245.62.74:6969/announce
 http://123.245.62.75:6969/announce
 http://123.245.62.7:6969/announce
 http://123.245.62.80:6969/announce
@@ -1657,9 +1729,12 @@ http://125.227.79.123:6969/announce
 http://128.199.70.66:5944/announce
 http://129.146.193.240:6699/announce
 http://13.115.115.32:6969/announce
+http://132.243.161.144:6969/announce
 http://1337.abcvg.info/announce
 http://1337.abcvg.info:443/announce
 http://1337.abcvg.info:80/announce
+http://135.125.198.235/announce
+http://135.125.198.235:2710/announce
 http://138.124.183.78:6969/announce
 http://138.199.241.244/announce
 http://139.202.228.28:6969/announce
@@ -1690,6 +1765,7 @@ http://152.231.114.120:1337/announce
 http://152.231.114.51:1337/announce
 http://152.231.114.55:1337/announce
 http://152.243.213.163:6969/announce
+http://152.243.213.247:6969/announce
 http://152.249.214.198:6969/announce
 http://152.249.214.23:6969/announce
 http://152.249.214.53:6969/announce
@@ -1697,6 +1773,8 @@ http://152.249.214.68:6969/announce
 http://152.249.214.74:6969/announce
 http://152.249.75.131:6969/announce
 http://152.249.97.159:6969/announce
+http://152.249.97.82:6969/announce
+http://152.53.194.103:2710/announce
 http://152.67.8.255:6969/announce
 http://154.29.145.56:17715/announce
 http://155.248.200.105/announce
@@ -1737,9 +1815,11 @@ http://173.254.204.71:1096/announce
 http://176.32.38.223:6961/announce
 http://177.112.215.129:6969/announce
 http://177.112.215.131:6969/announce
+http://177.112.215.160:6969/announce
 http://177.112.215.4:6969/announce
 http://177.112.215.99:6969/announce
 http://177.139.44.145:6969/announce
+http://177.139.44.203:6969/announce
 http://177.139.44.78:6969/announce
 http://177.139.46.160:6969/announce
 http://177.139.47.105:6969/announce
@@ -1752,6 +1832,7 @@ http://177.144.178.39:6969/announce
 http://177.16.198.58:6969/announce
 http://177.172.61.236:6969/announce
 http://177.172.61.249:6969/announce
+http://177.172.61.26:6969/announce
 http://177.172.61.33:6969/announce
 http://177.172.62.154:6969/announce
 http://177.172.62.168:6969/announce
@@ -1766,6 +1847,7 @@ http://177.172.66.210:6969/announce
 http://177.172.66.223:6969/announce
 http://177.172.66.2:6969/announce
 http://177.172.67.13:6969/announce
+http://177.172.67.233:6969/announce
 http://177.172.67.247:6969/announce
 http://177.172.67.94:6969/announce
 http://177.173.31.33:6969/announce
@@ -1776,9 +1858,11 @@ http://177.188.141.32:6969/announce
 http://177.215.65.114:6969/announce
 http://177.215.65.176:6969/announce
 http://177.215.65.40:6969/announce
+http://177.215.66.183:6969/announce
 http://177.215.67.115:6969/announce
 http://177.215.67.165:6969/announce
 http://177.215.67.185:6969/announce
+http://177.215.67.242:6969/announce
 http://177.27.223.184:6969/announce
 http://177.27.223.186:6969/announce
 http://177.68.44.127:6969/announce
@@ -1790,6 +1874,7 @@ http://179.118.129.194:6969/announce
 http://179.118.132.77:6969/announce
 http://179.118.133.224:6969/announce
 http://179.146.54.147:6969/announce
+http://179.146.54.238:6969/announce
 http://179.175.247.60:6969/announce
 http://179.175.247.70:6969/announce
 http://179.175.247.98:6969/announce
@@ -1805,11 +1890,13 @@ http://180.113.224.97:6969/announce
 http://180.113.227.211:6969/announce
 http://180.113.232.20:6969/announce
 http://180.114.103.80:6969/announce
+http://180.139.151.58:6969/announce
 http://180.97.219.76:8070/announce
 http://181.214.58.63:6969/announce
 http://182.176.139.129:6969/announce
 http://184.61.17.58:9000/announce
 http://185.121.24.141:6969/announce
+http://185.126.65.92:6969/announce
 http://185.130.47.2:6969/announce
 http://185.148.3.231/announce
 http://185.171.202.111:6969/announce
@@ -1835,6 +1922,7 @@ http://187.10.24.160:6969/announce
 http://187.11.72.168:6969/announce
 http://187.11.72.188:6969/announce
 http://187.11.72.236:6969/announce
+http://187.11.73.135:6969/announce
 http://187.11.73.178:6969/announce
 http://187.11.73.20:6969/announce
 http://187.11.73.213:6969/announce
@@ -1854,6 +1942,7 @@ http://187.56.205.91:6969/announce
 http://187.57.130.109:6969/announce
 http://187.57.130.147:6969/announce
 http://187.57.131.202:6969/announce
+http://187.57.131.55:6969/announce
 http://187.57.131.78:6969/announce
 http://187.57.132.20:6969/announce
 http://187.57.132.246:6969/announce
@@ -1870,6 +1959,7 @@ http://189.18.126.49:6969/announce
 http://189.18.127.125:6969/announce
 http://189.18.127.21:6969/announce
 http://189.18.127.57:6969/announce
+http://189.18.162.102:6969/announce
 http://189.18.162.106:6969/announce
 http://189.18.162.12:6969/announce
 http://189.18.162.54:6969/announce
@@ -1886,6 +1976,7 @@ http://189.69.167.105:6969/announce
 http://189.69.167.130:6969/announce
 http://189.69.168.147:6969/announce
 http://189.69.168.180:6969/announce
+http://189.69.168.99:6969/announce
 http://189.69.169.237:6969/announce
 http://189.69.169.89:6969/announce
 http://189.69.171.209:6969/announce
@@ -1898,13 +1989,16 @@ http://189.79.12.59:6969/announce
 http://189.79.12.91:6969/announce
 http://189.79.13.107:6969/announce
 http://189.79.13.111:6969/announce
+http://189.79.13.198:6969/announce
 http://191.23.121.129:6969/announce
 http://191.23.62.111:6969/announce
+http://191.23.62.139:6969/announce
 http://191.23.62.147:6969/announce
 http://191.23.71.103:6969/announce
 http://191.23.71.131:6969/announce
 http://191.23.71.193:6969/announce
 http://191.23.71.22:6969/announce
+http://191.23.94.128:6969/announce
 http://191.23.94.237:6969/announce
 http://191.254.171.209:6969/announce
 http://191.254.171.95:6969/announce
@@ -1931,6 +2025,7 @@ http://198.251.84.144/announce
 http://1c.premierzal.ru:6969/announce
 http://200.111.152.53:1337/announce
 http://200.111.152.54:1337/announce
+http://200.111.84.93:1337/announce
 http://200.148.11.147:6969/announce
 http://200.148.11.156:6969/announce
 http://200.148.11.61:6969/announce
@@ -1938,6 +2033,7 @@ http://200.161.254.131:6969/announce
 http://200.161.254.194:6969/announce
 http://200.161.254.20:6969/announce
 http://200.168.116.107:6969/announce
+http://200.168.116.191:6969/announce
 http://200.168.116.200:6969/announce
 http://200.168.116.61:6969/announce
 http://200.168.117.124:6969/announce
@@ -2026,6 +2122,7 @@ http://222.216.138.237:6969/announce
 http://222.216.139.165:6969/announce
 http://222.216.139.217:6969/announce
 http://222.216.139.248:6969/announce
+http://222.216.139.71:6969/announce
 http://222.216.139.72:6969/announce
 http://222.84.20.142:6969/announce
 http://222.84.20.42:6969/announce
@@ -2035,6 +2132,8 @@ http://222.84.22.60:6969/announce
 http://222.84.22.86:6969/announce
 http://222.84.23.109:6969/announce
 http://222.84.23.141:6969/announce
+http://222.84.23.36:6969/announce
+http://222.84.23.3:6969/announce
 http://27.197.187.78:6969/announce
 http://31.38.161.123:6969/announce
 http://34.170.169.34/announce
@@ -2091,6 +2190,7 @@ http://37.19.5.139:6969/announce
 http://37.19.5.155:6881/announce
 http://37.235.174.46:2710/announce
 http://37.27.188.67:6969/announce
+http://37.60.249.217:6969/announce
 http://38.145.197.79:6961/announce
 http://4.tracker.devnak.win:6969/announce
 http://43.139.20.56:6969/announce
@@ -2290,6 +2390,7 @@ http://93.185.165.29:6969/announce
 http://93.88.129.16/announce
 http://93.92.64.5/announce
 http://94.228.192.98/announce
+http://94.23.207.177:6969/announce
 http://94.72.140.51:6969/announce
 http://95.107.48.115/announce
 http://95.211.168.204:2710/announce
@@ -2309,7 +2410,6 @@ http://99.192.12.191:6969/announce
 http://a.leopard-raws.org:6969/announce
 http://aaa.army:8866/announce
 http://aboutbeautifulgallopinghorsesinthegreenpasture.online/announce
-http://aboutbeautifulgallopinghorsesinthegreenpasture.online:80/announce
 http://agusiq-torrents.pl:6969/announce
 http://all4nothin.net/announce
 http://alltorrents.net/bt/announce
@@ -2389,6 +2489,7 @@ http://bt2.edwardk.info:6969/announce
 http://bt4.t-ru.org/announce
 http://btfile.sdo.com:6961/announce
 http://btracker.top:11451/announce
+http://btrackrqkjp6kgelov5a3uxisis77ofxqt5nvy5hvvtoybjpmq4q.b32.i2p/announce
 http://bttracker.crunchbanglinux.org:6969/announce
 http://bttracker.debian.org:6969/announce
 http://btx.anifilm.tv/announce
@@ -2479,6 +2580,7 @@ http://joczo.duckdns.org:6969/announce
 http://jp.moeweb.pw:6969/announce
 http://jsb.by00/announce
 http://jvavav.com/announce
+http://jvavav.com:80/announce
 http://kamikazee.duckdns.org:7777/announce
 http://kinorun.com/announce
 http://kiryuu-test.mywaifu.best:6969/announce
@@ -2494,6 +2596,7 @@ http://mail.lakameraobscura.com:6969/announce
 http://mail.martin-gebhardt.com:8443/announce
 http://mail2.zelenaya.net/announce
 http://masters-tb.com/announce
+http://maxsrv.xyz:9000/announce
 http://mc.itscraftsoftware.my.id:8804/announce
 http://mediaclub.tv/announce
 http://mgtracker.org:2710/announce
@@ -2614,6 +2717,7 @@ http://sparkle.ghostchu-services.top:443/announce
 http://speedtest.iperson.xyz:6969/announce
 http://sugoi.pomf.se/announce
 http://sukebei.tracker.wf:8888/announce
+http://supertracker.cc.cd/announce
 http://t-backup.213891.xyz/announce
 http://t.213891.xyz:443/announce
 http://t.acg.rip:6699/announce
@@ -2673,9 +2777,7 @@ http://tr.bangumi.moe:6969/announce
 http://tr.cili001.com70/announce
 http://tr.cili001.com:8070/announce
 http://tr.highstar.shop/announce
-http://tr.highstar.shop:80/announce
 http://tr.kxmp.cf/announce
-http://tr.kxmp.cf:80/announce
 http://tr.nyacat.pw/announce
 http://tr.nyacat.pw:443/announce
 http://tr.nyacat.pw:80/announce
@@ -2714,6 +2816,7 @@ http://tracker.blazing.de:6969/announce
 http://tracker.breizh.pm:6969/announce
 http://tracker.bt-chat.com/announce
 http://tracker.bt-hash.com/announce
+http://tracker.bt-hash.com:80/announce
 http://tracker.bt4g.com:2095/announce
 http://tracker.btcake.com/announce
 http://tracker.btsync.gq:233/announce
@@ -2721,6 +2824,7 @@ http://tracker.btzero.net:8080/announce
 http://tracker.bz/announce
 http://tracker.bz:80/announce
 http://tracker.calculate.ru:6969/announce
+http://tracker.cbase.cc:6969/announce
 http://tracker.ccc.de/announce
 http://tracker.ccp.ovh:6969/announce
 http://tracker.chaoz.li:2710/announce
@@ -2729,6 +2833,7 @@ http://tracker.computel.fr/announce
 http://tracker.coppersurfer.site:2710/announce
 http://tracker.coppersurfer.tk:6969/announce
 http://tracker.corpscorp.online/announce
+http://tracker.corpscorp.online:80/announce
 http://tracker.cubicview.site/announce
 http://tracker.cubonegro.org/announce
 http://tracker.cutie.dating/announce
@@ -2778,7 +2883,6 @@ http://tracker.ilibr.org/announce
 http://tracker.imgdump.lol:6969/announce
 http://tracker.internetwarriors.net:1337/announce
 http://tracker.ipv6tracker.org/announce
-http://tracker.ipv6tracker.org:80/announce
 http://tracker.ipv6tracker.ru/announce
 http://tracker.iro.moe/announce
 http://tracker.ismaarino.com:8880/announce
@@ -2821,6 +2925,7 @@ http://tracker.mrhei.tech:666/announce
 http://tracker.mywaifu.best:6969/announce
 http://tracker.nartlof.com.br:6969/announce
 http://tracker.netmap.top:6969/announce
+http://tracker.nexusstream.eu:6969/announce
 http://tracker.noobsubs.net/announce
 http://tracker.noobsubs.net:80/announce
 http://tracker.novalayer.org:6969/announce
@@ -2833,6 +2938,7 @@ http://tracker.nyacat.pw:7000/announce
 http://tracker.nyap2p.com:8080/announce
 http://tracker.openbittorrent.com/announce
 http://tracker.openbittorrrent.com/announce
+http://tracker.opentorrent.top:6969/announce
 http://tracker.opentrackr.org:1337/announce
 http://tracker.openzim.org/announce
 http://tracker.pcfreetime.com:6969/announce
@@ -2867,6 +2973,7 @@ http://tracker.tasvideos.org:6969/announce
 http://tracker.tfile.co/announce
 http://tracker.tfile.me/announce
 http://tracker.theempire.bz:3110/announce
+http://tracker.therarbg.to:6969/announce
 http://tracker.tiny-vps.com:6969/announce
 http://tracker.torrent.to:2710/announce
 http://tracker.torrentbay.to:6969/announce
@@ -2906,6 +3013,7 @@ http://tracker.zhuqiy.com/announce
 http://tracker.zhuqiy.com:443/announce
 http://tracker.zhuqiy.com:80/announce
 http://tracker.zhuqiy.dgj055.icu/announce
+http://tracker.zhuqiy.dgj055.icu:80/announce
 http://tracker.zhuqiy.eu.org:36107/announce
 http://tracker.zhuqiy.top/announce
 http://tracker01.loveapp.com:6789/announce
@@ -2931,6 +3039,7 @@ http://tracker3.dler.org:2710/announce
 http://tracker3.itzmx.com:6961/announce
 http://tracker3.itzmx.com:8080/announce
 http://tracker3.torrentino.com/announce
+http://tracker4.finalgear.com/announce
 http://tracker4.itzmx.com:2710/announce
 http://tracker4.itzmx.com:6961/announce
 http://tracker4.torrentino.com/announce
@@ -3000,6 +3109,7 @@ http://www.yqzuji.com/announce
 http://www.zone-torrent.net/announce
 http://xbtrutor.com:2710/announce
 http://xtremewrestlingtorrents.net/announce
+http://ydlkccp.dscloud.me:6969/announce
 http://yggtracker.i2p.rocks/announce
 http://yolo.liberbear.com/announce
 https://00.alarmasqueretaro.com/announce
@@ -3008,7 +3118,6 @@ https://00.xxtor.com/announce
 https://004430.xyz/announce
 https://004430.xyz:443/announce
 https://021912.xyz/announce
-https://021912.xyz:443/announce
 https://0d.kebhana.mx/announce
 https://1.tracker.eu.org/announce
 https://104.28.1.30:8080/announce
@@ -3065,13 +3174,13 @@ https://alpha.torrenttracker.nl/announce
 https://api.ipv4online.uk/announce
 https://atrack.pow7.com/announce
 https://banananetwork.qzz.io/announce
-https://banananetwork.qzz.io:443/announce
 https://bdremux.club/announce
 https://bittorrent.gongt.net/announce
 https://bittorrent.service.gongt.me:59443/announce
 https://bittracker.nekosunevr.co.uk/announce
 https://bot.ponomar-sibir.ru/announce
 https://bruisedfumblingmotion.sddsdsdsddsdss.repl.co/announce
+https://bt-tracker.wasmer.app/announce
 https://bt.080609.xyz/announce
 https://bt.beatrice-raws.org/announce
 https://bt.bontal.net/announce
@@ -3095,7 +3204,9 @@ https://colibri.parrot.run/announce
 https://danielcloud.ddns.net/announce
 https://dev.tracker.cf-identity-wallet.metadata.dev.cf-deployments.org/announce
 https://docker-tracker-production.up.railway.app/announce
+https://docs.github.com/en/site-policy/github-terms/github-terms-of-service).udp:/open.stealth.si:80/announce
 https://edge-team.cc/announce
+https://edgev.duckdns.org/announce
 https://evening-badlands-6215.herokuapp.com/announce
 https://explodie.org:6969/announce
 https://fbiagent.cyou/announce
@@ -3105,6 +3216,8 @@ https://gwp2-v19.rinet.ru/announce
 https://gwp2-v19.rinet.ru:80/announce
 https://hcbt.pp.ua/announce
 https://hdpt.xyz/announce
+https://ht.therarbg.to/announce
+https://ht.therarbg.to:443/announce
 https://http1.torrust-tracker-demo.com/announce
 https://inferno.demonoid.is/announce
 https://ipv4.rer.lol:2710/announce
@@ -3134,11 +3247,11 @@ https://opentracker.co/announce
 https://opentracker.i2p.rocks/announce
 https://opentracker.xyz/announce
 https://orgtgju.org/announce
-https://orgtgju.org:443/announce
 https://ourbits.club/announce
 https://p2p.azu.red/announce
 https://p4p.arenabg.ch:1337/announce
 https://p4p.arenabg.com:1337/announce
+https://php-bobcat.wasmer.app/announce
 https://pow7.com:80/announce
 https://prestige.minimafia.nl/announce
 https://private.minimafia.nl/announce
@@ -3153,10 +3266,10 @@ https://retracker2.x2k.ru/announce
 https://secure.pow7.com/announce
 https://seeders-paradise.org/announce
 https://shahidrazi.online/announce
-https://shahidrazi.online:443/announce
 https://socket.onvo.me/announce
 https://sparkle.ghostchu-services.top/announce
 https://sparkle.ghostchu-services.top/tracker/announce
+https://staticfile-bobcat.wasmer.app/announce
 https://t.213891.xyz/announce
 https://t.213891.xyz:443/announce
 https://t.audiences.me/announce
@@ -3186,7 +3299,6 @@ https://torrent.ubuntu.com/announce
 https://torrentonline.cc/announce
 https://torrents.linuxmint.com/announce
 https://torrents.tmtime.dev/announce
-https://torrents.tmtime.dev:443/announce
 https://torrentsmd.com:8080/announce
 https://torrentsmd.eu:8080/announce
 https://torrentsmd.me:8080/announce
@@ -3203,6 +3315,7 @@ https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
 https://tr.burnabyhighstar.com/announce
+https://tr.burnabyhighstar.com:443/announce
 https://tr.doogh.club/announce
 https://tr.fuckbitcoin.xyz/announce
 https://tr.highstar.shop/announce
@@ -3217,7 +3330,6 @@ https://tr.ready4.icu:443/announce
 https://tr.steins-gate.moe:2096/announce
 https://tr.torland.ga/announce
 https://tr.zukizuki.org/announce
-https://tr.zukizuki.org:443/announce
 https://tr2.trkb.ru/announce
 https://track.solcloud.eu/announce
 https://track3r.site/announce
@@ -3229,18 +3341,17 @@ https://tracker.7471.top/announce
 https://tracker.7471.top:443/announce
 https://tracker.aburaya.live/announce
 https://tracker.acgnx.se/announce
+https://tracker.adgk.net/announce
 https://tracker.alaskantf.com/announce
 https://tracker.aletorrenty.pl:2710/announce
 https://tracker.amelia.fun/announce
 https://tracker.anibt.net/announce
-https://tracker.anibt.net:443/announce
 https://tracker.babico.name.tr/announce
 https://tracker.baka.ink/announce
 https://tracker.bangumi.zip/announce
 https://tracker.baravik.org:6970/announce
 https://tracker.belmult.online/announce
 https://tracker.bigbewbs.online/announce
-https://tracker.bigbewbs.online:443/announce
 https://tracker.bittor.pw:1337/announce
 https://tracker.bittorrent.am/announce
 https://tracker.bjut.jp/announce
@@ -3248,6 +3359,7 @@ https://tracker.bt-hash.com/announce
 https://tracker.bt4g.com/announce
 https://tracker.bt4g.com:443/announce
 https://tracker.bug38.com/announce
+https://tracker.bug38.com:443/announce
 https://tracker.bulao.ren/announce
 https://tracker.calculate.ru:6969/announce
 https://tracker.cangku.moe/announce
@@ -3283,7 +3395,6 @@ https://tracker.foreverpirates.co:443/announce
 https://tracker.fr.eu.org/announce
 https://tracker.gbitt.info/announce
 https://tracker.gcrenwp.top/announce
-https://tracker.gcrenwp.top:443/announce
 https://tracker.gcrreen.xyz/announce
 https://tracker.ghostchu-services.top/announce
 https://tracker.grepler.com:6969/announce
@@ -3304,6 +3415,7 @@ https://tracker.ipv6tracker.ru:80/announce
 https://tracker.iriseden.eu:443/announce
 https://tracker.iriseden.fr/announce
 https://tracker.iriseden.fr:443/announce
+https://tracker.isbigdick.cc.cd/announce
 https://tracker.itscraftsoftware.my.id/announce
 https://tracker.jdx3.org/announce
 https://tracker.jiesen.life:8443/announce
@@ -3321,10 +3433,10 @@ https://tracker.kuroy.me:443/announce
 https://tracker.kuroy.me:5944/announce
 https://tracker.leaves.red/announce
 https://tracker.leechshield.link/announce
-https://tracker.leechshield.link:443/announce
 https://tracker.lelux.fi/announce
 https://tracker.lelux.fi:443/announce
 https://tracker.lenition.de/announce
+https://tracker.lenition.de:443/announce
 https://tracker.lilithraws.cf/announce
 https://tracker.lilithraws.org/announce
 https://tracker.linvk.com/announce
@@ -3335,7 +3447,6 @@ https://tracker.m-team.cc/announce
 https://tracker.madtia.cc/announce
 https://tracker.manager.itislove.cz/announce
 https://tracker.manager.v6.navy/announce
-https://tracker.manager.v6.navy:443/announce
 https://tracker.maya.no.eu.org/announce
 https://tracker.mg64.net:6881/announce
 https://tracker.midnightprogrammer.net/announce
@@ -3356,6 +3467,8 @@ https://tracker.nitrix.me/announce
 https://tracker.nitrix.me:443/announce
 https://tracker.novy.vip/announce
 https://tracker.nyaa.tk/announce
+https://tracker.onetracker.net/announce
+https://tracker.onetracker.net:443/announce
 https://tracker.opendev.cloud/announce
 https://tracker.opentracker.se/announce
 https://tracker.opentrackr.org:1337/announce
@@ -3401,7 +3514,6 @@ https://tracker.vectahosting.eu:8443/announce
 https://tracker.wsaoa.eu.org/announce
 https://tracker.yarr.pt/announce
 https://tracker.yemekyedim.com/announce
-https://tracker.yemekyedim.com:443/announce
 https://tracker.yggleak.top/announce
 https://tracker.yoshi210.com:6969/announce
 https://tracker.zhuqiy.com/announce
