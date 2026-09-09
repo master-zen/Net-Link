@@ -23,6 +23,7 @@ DOMAIN,4.tracker.devnak.win
 DOMAIN,4.tracker.eu.org
 DOMAIN,47.ip-51-68-199.eu
 DOMAIN,4olv65sj4ifeak26wqiifr3q2vjv5d44x733ncqhtd7cmjwoinpa.b32.i2p
+DOMAIN,5.tracker.eu.org
 DOMAIN,504e163a.host.njalla.net
 DOMAIN,5rt.tace.ru
 DOMAIN,6.pocketnet.app
@@ -1832,6 +1833,7 @@ IP-CIDR,189.18.96.9/32,no-resolve
 IP-CIDR,189.18.97.116/32,no-resolve
 IP-CIDR,189.18.97.201/32,no-resolve
 IP-CIDR,189.18.97.57/32,no-resolve
+IP-CIDR,189.18.97.61/32,no-resolve
 IP-CIDR,189.69.167.105/32,no-resolve
 IP-CIDR,189.69.167.130/32,no-resolve
 IP-CIDR,189.69.168.147/32,no-resolve
