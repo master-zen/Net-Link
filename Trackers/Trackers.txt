@@ -2583,6 +2583,7 @@ http://joczo.duckdns.org:6969/announce
 http://jp.moeweb.pw:6969/announce
 http://jsb.by00/announce
 http://jvavav.com/announce
+http://jvavav.com:80/announce
 http://kamikazee.duckdns.org:7777/announce
 http://kinorun.com/announce
 http://kiryuu-test.mywaifu.best:6969/announce
@@ -2638,7 +2639,6 @@ http://open.touki.ru/announce
 http://open.tracker.cl:1337/announce
 http://open.tracker.ink:6969/announce
 http://open.trackerlist.xyz/announce
-http://open.trackerlist.xyz:80/announce
 http://open.va.wiki:900/announce
 http://openbittorrent.com/announce
 http://opentracker.91kf.top:16969/announce
@@ -2703,6 +2703,7 @@ http://s926723.ha016.t.mydomain.zone/announce
 http://saltwood.top:6969/announce
 http://secure.pow7.com/announce
 http://seeders-paradise.org/announce
+http://seeders-paradise.org:80/announce
 http://servandroidkino.ru/announce
 http://share.camoe.cn80/announce
 http://share.camoe.cn:8080/announce
@@ -2822,6 +2823,7 @@ http://tracker.btcake.com/announce
 http://tracker.btsync.gq:233/announce
 http://tracker.btzero.net:8080/announce
 http://tracker.bz/announce
+http://tracker.bz:80/announce
 http://tracker.calculate.ru:6969/announce
 http://tracker.cbase.cc:6969/announce
 http://tracker.ccc.de/announce
@@ -2832,6 +2834,7 @@ http://tracker.computel.fr/announce
 http://tracker.coppersurfer.site:2710/announce
 http://tracker.coppersurfer.tk:6969/announce
 http://tracker.corpscorp.online/announce
+http://tracker.corpscorp.online:80/announce
 http://tracker.cubicview.site/announce
 http://tracker.cubonegro.org/announce
 http://tracker.cutie.dating/announce
@@ -2839,6 +2842,7 @@ http://tracker.darkness.services:6969/announce
 http://tracker.ddunlimited.net:6969/announce
 http://tracker.devil-torrents.pl/announce
 http://tracker.dhitechnical.com:6969/announce
+http://tracker.digital-alpha-world.de:6969/announce
 http://tracker.dler.com:6969/announce
 http://tracker.dler.org:6969/announce
 http://tracker.dm258.cn:7070/announce
@@ -3003,6 +3007,7 @@ http://tracker.xfapi.top:9999/announce
 http://tracker.xfsub.com:6868/announce
 http://tracker.xiaoduola.xyz:6969/announce
 http://tracker.xn--djrq4gl4hvoi.top/announce
+http://tracker.xn--djrq4gl4hvoi.top:80/announce
 http://tracker.ygsub.com:6969/announce
 http://tracker.ykat.xyz:6969/announce
 http://tracker.yoshi210.com:6969/announce
@@ -3141,23 +3146,19 @@ https://188.165.253.109:1337/announce
 https://194.106.216.222/announce
 https://195.123.209.37:1337/announce
 https://2.tracker.eu.org/announce
-https://2.tracker.eu.org:443/announce
 https://210.244.71.25:6969/announce
 https://210.244.71.26:6969/announce
 https://213.159.215.198:6970/announce
 https://213.163.67.56:1337/announce
 https://3.tracker.eu.org/announce
-https://3.tracker.eu.org:443/announce
 https://337hhh.xyz/announce
 https://37.19.5.139:6969/announce
 https://37.19.5.155:6881/announce
 https://4.tracker.eu.org/announce
-https://4.tracker.eu.org:443/announce
 https://46.4.109.148:6969/announce
 https://5.79.249.77:6969/announce
 https://5.79.83.193:2710/announce
 https://5.tracker.eu.org/announce
-https://5.tracker.eu.org:443/announce
 https://51.254.244.161:6969/announce
 https://59.36.96.77:6969/announce
 https://74.82.52.209:6969/announce
@@ -3262,6 +3263,7 @@ https://prestige.minimafia.nl/announce
 https://private.minimafia.nl/announce
 https://pt.btschool.club/announce
 https://pybittrack.retiolus.net/announce
+https://pybittrack.retiolus.net:443/announce
 https://retracker.gorcomnet.ru/announce
 https://retracker.krs-ix.ru/announce
 https://retracker.krs-ix.ru:80/announce
@@ -3362,6 +3364,7 @@ https://tracker.bittorrent.am/announce
 https://tracker.bjut.jp/announce
 https://tracker.bt-hash.com/announce
 https://tracker.bt4g.com/announce
+https://tracker.bt4g.com:443/announce
 https://tracker.bug38.com/announce
 https://tracker.bug38.com:443/announce
 https://tracker.bulao.ren/announce
@@ -3521,7 +3524,6 @@ https://tracker.yemekyedim.com/announce
 https://tracker.yggleak.top/announce
 https://tracker.yoshi210.com:6969/announce
 https://tracker.zhuqiy.com/announce
-https://tracker.zhuqiy.com:443/announce
 https://tracker.zhuqiy.top/announce
 https://tracker.zhuque.in/announce
 https://tracker01.ilovelemonhd.me/announce
