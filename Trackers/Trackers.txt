@@ -2583,7 +2583,6 @@ http://joczo.duckdns.org:6969/announce
 http://jp.moeweb.pw:6969/announce
 http://jsb.by00/announce
 http://jvavav.com/announce
-http://jvavav.com:80/announce
 http://kamikazee.duckdns.org:7777/announce
 http://kinorun.com/announce
 http://kiryuu-test.mywaifu.best:6969/announce
@@ -2818,6 +2817,7 @@ http://tracker.blazing.de:6969/announce
 http://tracker.breizh.pm:6969/announce
 http://tracker.bt-chat.com/announce
 http://tracker.bt-hash.com/announce
+http://tracker.bt-hash.com:80/announce
 http://tracker.bt4g.com:2095/announce
 http://tracker.btcake.com/announce
 http://tracker.btsync.gq:233/announce
@@ -2834,7 +2834,6 @@ http://tracker.computel.fr/announce
 http://tracker.coppersurfer.site:2710/announce
 http://tracker.coppersurfer.tk:6969/announce
 http://tracker.corpscorp.online/announce
-http://tracker.corpscorp.online:80/announce
 http://tracker.cubicview.site/announce
 http://tracker.cubonegro.org/announce
 http://tracker.cutie.dating/announce
@@ -3263,7 +3262,6 @@ https://prestige.minimafia.nl/announce
 https://private.minimafia.nl/announce
 https://pt.btschool.club/announce
 https://pybittrack.retiolus.net/announce
-https://pybittrack.retiolus.net:443/announce
 https://retracker.gorcomnet.ru/announce
 https://retracker.krs-ix.ru/announce
 https://retracker.krs-ix.ru:80/announce
@@ -3524,6 +3522,7 @@ https://tracker.yemekyedim.com/announce
 https://tracker.yggleak.top/announce
 https://tracker.yoshi210.com:6969/announce
 https://tracker.zhuqiy.com/announce
+https://tracker.zhuqiy.com:443/announce
 https://tracker.zhuqiy.top/announce
 https://tracker.zhuque.in/announce
 https://tracker01.ilovelemonhd.me/announce
