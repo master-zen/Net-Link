@@ -465,6 +465,7 @@ DOMAIN,opentracker.cc
 DOMAIN,opentracker.co
 DOMAIN,opentracker.i2p.rocks
 DOMAIN,opentracker.io
+DOMAIN,opentracker.lain.moscow
 DOMAIN,opentracker.xyz
 DOMAIN,opentrackr.org
 DOMAIN,openwrt.lingyurouqing.xyz
@@ -1121,6 +1122,7 @@ DOMAIN,tracker.torrentbytes.net
 DOMAIN,tracker.torrentclaw.com
 DOMAIN,tracker.torrentino.com
 DOMAIN,tracker.torrentleech.org
+DOMAIN,tracker.torrents.observer
 DOMAIN,tracker.torrentsnows.com
 DOMAIN,tracker.torrentuje.me
 DOMAIN,tracker.torrenty.org
@@ -1708,6 +1710,7 @@ IP-CIDR,178.156.140.201/32,no-resolve
 IP-CIDR,178.170.48.154/32,no-resolve
 IP-CIDR,178.175.143.27/32,no-resolve
 IP-CIDR,178.215.224.155/32,no-resolve
+IP-CIDR,178.239.19.29/32,no-resolve
 IP-CIDR,178.33.73.26/32,no-resolve
 IP-CIDR,179.100.24.134/32,no-resolve
 IP-CIDR,179.118.129.138/32,no-resolve
@@ -1922,6 +1925,7 @@ IP-CIDR,200.168.116.191/32,no-resolve
 IP-CIDR,200.168.116.200/32,no-resolve
 IP-CIDR,200.168.116.61/32,no-resolve
 IP-CIDR,200.168.117.124/32,no-resolve
+IP-CIDR,200.168.117.238/32,no-resolve
 IP-CIDR,200.168.117.55/32,no-resolve
 IP-CIDR,200.170.109.125/32,no-resolve
 IP-CIDR,200.170.109.148/32,no-resolve
