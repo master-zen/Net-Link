@@ -1486,6 +1486,7 @@ udp://tracker.waaa.moe:6969/announce
 udp://tracker.wellknownclub.net:8100/announce
 udp://tracker.wepzone.net:6969/announce
 udp://tracker.wildkat.net:6969/announce
+udp://tracker.willy.pro:6969/announce
 udp://tracker.x6c.co:6969/announce
 udp://tracker.xiaoduola.xyz:6969/announce
 udp://tracker.xor.st:6969/announce
@@ -1597,7 +1598,6 @@ http://00.alarmasqueretaro.com:443/announce
 http://00.mercax.com:443/announce
 http://00.xxtor.com:443/announce
 http://004430.xyz/announce
-http://004430.xyz:80/announce
 http://0123456789nonexistent.com/announce
 http://0205.uptm.ch:6969/announce
 http://0d.kebhana.mx:443/announce
@@ -3230,7 +3230,6 @@ https://gwp2-v19.rinet.ru:80/announce
 https://hcbt.pp.ua/announce
 https://hdpt.xyz/announce
 https://ht.therarbg.to/announce
-https://ht.therarbg.to:443/announce
 https://http1.torrust-tracker-demo.com/announce
 https://inferno.demonoid.is/announce
 https://ipv4.rer.lol:2710/announce
@@ -3324,7 +3323,6 @@ https://tr.aag.moe/announce
 https://tr.abiir.top/announce
 https://tr.abiir.top:443/announce
 https://tr.abir.ga/announce
-https://tr.abir.ga:443/announce
 https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
@@ -3530,7 +3528,6 @@ https://tracker.yemekyedim.com/announce
 https://tracker.yggleak.top/announce
 https://tracker.yoshi210.com:6969/announce
 https://tracker.zhuqiy.com/announce
-https://tracker.zhuqiy.com:443/announce
 https://tracker.zhuqiy.top/announce
 https://tracker.zhuque.in/announce
 https://tracker01.ilovelemonhd.me/announce
