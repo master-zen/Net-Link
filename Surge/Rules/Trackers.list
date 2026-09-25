@@ -283,6 +283,7 @@ DOMAIN,frp.v2fy.com
 DOMAIN,frp.v2fy.com00
 DOMAIN,ftp.pet
 DOMAIN,fxtt.ru
+DOMAIN,git.ustc.edu.cn
 DOMAIN,globalwave.no-ip.org
 DOMAIN,glotorrents.pw
 DOMAIN,grifon.info
@@ -347,6 +348,7 @@ DOMAIN,kingof.torrentonline.cc
 DOMAIN,kinorun.com
 DOMAIN,kiryuu-test.mywaifu.best
 DOMAIN,kokodayo.site
+DOMAIN,kolankoalastree.newtrackon.co.nz
 DOMAIN,kolanopentracker.airdns.org
 DOMAIN,kristof.bartanet.cz
 DOMAIN,laestrygonian.ooguy.com
@@ -426,6 +428,7 @@ DOMAIN,nyaaplus.i2p
 DOMAIN,o-unkusrx.cloud.okteto.net
 DOMAIN,obey.torrentonline.cc
 DOMAIN,odd-hd.fr
+DOMAIN,ogp.me
 DOMAIN,oh.fuuuuuck.com
 DOMAIN,on.springsunday.net
 DOMAIN,onioniot.tk
@@ -499,7 +502,6 @@ DOMAIN,pt.btschool.club
 DOMAIN,pt.lax.mx
 DOMAIN,public-tracker.cf
 DOMAIN,public-tracker.ml
-DOMAIN,public-tracker.zooki.xyz
 DOMAIN,public.demonoid.ch
 DOMAIN,public.popcorn-tracker.org
 DOMAIN,public.publictracker.xyz
@@ -922,7 +924,6 @@ DOMAIN,tracker.iperson.xyz
 DOMAIN,tracker.ipfsscan.io
 DOMAIN,tracker.ipv6tracker.org
 DOMAIN,tracker.ipv6tracker.ru
-DOMAIN,tracker.iriseden.eu
 DOMAIN,tracker.iriseden.fr
 DOMAIN,tracker.iro.moe
 DOMAIN,tracker.isbigdick.cc.cd
@@ -1007,7 +1008,6 @@ DOMAIN,tracker.noobsubs.net
 DOMAIN,tracker.novalayer.org
 DOMAIN,tracker.novaopcj.eu.org
 DOMAIN,tracker.novy.vip
-DOMAIN,tracker.nrx.me
 DOMAIN,tracker.nucozer-tracker.ml
 DOMAIN,tracker.nyaa.net
 DOMAIN,tracker.nyaa.tk
@@ -1236,7 +1236,6 @@ DOMAIN,trackme.theom.nz
 DOMAIN,trackr.appolon.dev
 DOMAIN,trackthis.cyber.pz.it
 DOMAIN,trakx.herokuapp.com
-DOMAIN,trk.publictracker.xyz
 DOMAIN,trl-zhuqiy.dgj055.icu
 DOMAIN,trun.tom.ru
 DOMAIN,trunker.ghostchu-services.top
@@ -1281,7 +1280,6 @@ DOMAIN,vps-dd0a0715.vps.ovh.net
 DOMAIN,vps02.net.orel.ru
 DOMAIN,w.wwwww.wtf
 DOMAIN,wambo.club
-DOMAIN,wassermann.online
 DOMAIN,web.open-tracker.cf
 DOMAIN,wegkxfcivgx.chickenkiller.com
 DOMAIN,wegkxfcivgx.ydns.eu
@@ -1694,6 +1692,7 @@ IP-CIDR,177.188.141.137/32,no-resolve
 IP-CIDR,177.188.141.175/32,no-resolve
 IP-CIDR,177.188.141.28/32,no-resolve
 IP-CIDR,177.188.141.32/32,no-resolve
+IP-CIDR,177.188.141.75/32,no-resolve
 IP-CIDR,177.215.65.114/32,no-resolve
 IP-CIDR,177.215.65.176/32,no-resolve
 IP-CIDR,177.215.65.40/32,no-resolve
