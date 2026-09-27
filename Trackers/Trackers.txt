@@ -3263,7 +3263,6 @@ https://prestige.minimafia.nl/announce
 https://private.minimafia.nl/announce
 https://pt.btschool.club/announce
 https://pybittrack.retiolus.net/announce
-https://pybittrack.retiolus.net:443/announce
 https://retracker.gorcomnet.ru/announce
 https://retracker.krs-ix.ru/announce
 https://retracker.krs-ix.ru:80/announce
@@ -3317,7 +3316,6 @@ https://tr.aag.moe/announce
 https://tr.abiir.top/announce
 https://tr.abiir.top:443/announce
 https://tr.abir.ga/announce
-https://tr.abir.ga:443/announce
 https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
@@ -3436,7 +3434,6 @@ https://tracker.leaves.red/announce
 https://tracker.leechshield.link/announce
 https://tracker.lelux.fi/announce
 https://tracker.lenition.de/announce
-https://tracker.lenition.de:443/announce
 https://tracker.lilithraws.cf/announce
 https://tracker.lilithraws.org/announce
 https://tracker.linvk.com/announce
@@ -3450,6 +3447,7 @@ https://tracker.manager.v6.navy/announce
 https://tracker.maya.no.eu.org/announce
 https://tracker.mg64.net:6881/announce
 https://tracker.midnightprogrammer.net/announce
+https://tracker.midnightprogrammer.net:443/announce
 https://tracker.mlsub.net/announce
 https://tracker.moeblog.cn/announce
 https://tracker.moeking.me/announce
@@ -3466,7 +3464,6 @@ https://tracker.nitrix.me/announce
 https://tracker.novy.vip/announce
 https://tracker.nyaa.tk/announce
 https://tracker.onetracker.net/announce
-https://tracker.onetracker.net:443/announce
 https://tracker.opendev.cloud/announce
 https://tracker.opentracker.se/announce
 https://tracker.opentrackr.org:1337/announce
