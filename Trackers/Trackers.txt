@@ -86,6 +86,8 @@ udp://139.202.231.55:6969/announce
 udp://141.11.240.19:6969/announce
 udp://142.132.183.104:6969/announce
 udp://143.198.64.177:6969/announce
+udp://143.20.154.228:42069/announce
+udp://143.20.154.229:42069/announce
 udp://143.246.43.3:6969/announce
 udp://144.126.245.19:6969/announce
 udp://144.91.88.22:6969/announce
@@ -131,6 +133,7 @@ udp://159.146.99.45:6969/announce
 udp://159.195.43.181:6969/announce
 udp://159.195.43.181:80/announce
 udp://160.251.231.187:6969/announce
+udp://160.30.240.158:1337/announce
 udp://161.97.67.210:6969/announce
 udp://163.172.29.130:80/announce
 udp://163.5.63.253:6990/announce
@@ -3263,6 +3266,7 @@ https://prestige.minimafia.nl/announce
 https://private.minimafia.nl/announce
 https://pt.btschool.club/announce
 https://pybittrack.retiolus.net/announce
+https://pybittrack.retiolus.net:443/announce
 https://retracker.gorcomnet.ru/announce
 https://retracker.krs-ix.ru/announce
 https://retracker.krs-ix.ru:80/announce
