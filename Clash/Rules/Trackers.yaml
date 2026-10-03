@@ -1586,6 +1586,7 @@ payload:
   - 'IP-CIDR,152.231.114.55/32,no-resolve'
   - 'IP-CIDR,152.243.213.163/32,no-resolve'
   - 'IP-CIDR,152.243.213.247/32,no-resolve'
+  - 'IP-CIDR,152.249.214.196/32,no-resolve'
   - 'IP-CIDR,152.249.214.198/32,no-resolve'
   - 'IP-CIDR,152.249.214.23/32,no-resolve'
   - 'IP-CIDR,152.249.214.53/32,no-resolve'
