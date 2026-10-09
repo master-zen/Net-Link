@@ -887,6 +887,7 @@ udp://boysbitte.be:6969/announce
 udp://brightstar.freeddns.org:6969/announce
 udp://brokenhelix.loseyourip.com:6969/announce
 udp://bry-dell-htpc.freeddns.org:6969/announce
+udp://bt-tracker.de:6969/announce
 udp://bt-tracker.devnak.win:6969/announce
 udp://bt.aoeex.com:8000/announce
 udp://bt.bontal.net:443/announce
@@ -3234,6 +3235,7 @@ https://gwp2-v19.rinet.ru:80/announce
 https://hcbt.pp.ua/announce
 https://hdpt.xyz/announce
 https://ht.therarbg.to/announce
+https://ht.therarbg.to:443/announce
 https://http1.torrust-tracker-demo.com/announce
 https://inferno.demonoid.is/announce
 https://ipv4.rer.lol:2710/announce
