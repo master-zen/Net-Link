@@ -29,8 +29,15 @@ DIST_FILE = Path(
 MIN_BYTES = 10000
 MIN_RULES = 50
 
-EXCLUDED_MITM_HOSTS = {"security.wechat.com", "weixin110.qq.com", "wxa.wxs.qq.com", "ad.12306.cn"}
-EXCLUDED_REWRITE_HOSTS = {"ad.12306.cn", "testflight.apple.com", "mp.weixin.qq.com"}
+EXCLUDED_REWRITE_HOSTS = {
+    "ad.12306.cn", "testflight.apple.com", "mp.weixin.qq.com",
+    "spclient.wg.spotify.com", "mobilepaas.abchina.com.cn",
+    "ump.sz.creditcard.ecitic.com", "creditcardapp.bankcomm.com",
+    "creditcardapp.bankcomm.cn", "zjmbank.js96008.com",
+}
+EXCLUDED_MITM_HOSTS = EXCLUDED_REWRITE_HOSTS | {
+    "security.wechat.com", "weixin110.qq.com", "wxa.wxs.qq.com",
+}
 
 
 class BuildError(RuntimeError):
@@ -175,6 +182,7 @@ def main() -> int:
     counts: dict[str, int] = {}
     active_rules = 0
     script_index = 0
+    active_patterns: list[str] = []
 
 
     def bump(name: str) -> None:
@@ -334,6 +342,7 @@ def main() -> int:
             continue
 
         active_rules += 1
+        active_patterns.append(pattern)
 
 
         # --------------------------------------------------
@@ -786,6 +795,18 @@ def main() -> int:
             f"{original}\n"
         )
 
+
+    for active_pattern in active_patterns:
+        normalized = active_pattern.replace(r"\/", "/").replace(r"\.", ".").replace(r"\:", ":")
+        normalized = normalized.replace("https?://", "https://")
+        matched = re.match(r"^\\^?https?://([A-Za-z0-9.-]+):(\\d{2,5})/", normalized)
+        if not matched:
+            continue
+        host, port = matched.groups()
+        if port != "443" and host not in EXCLUDED_MITM_HOSTS:
+            entry = f"{host}:{port}"
+            if entry not in hosts:
+                hosts.append(entry)
 
     url_rewrite = list(dict.fromkeys(url_rewrite))
     map_local = list(dict.fromkeys(map_local))
