@@ -1,0 +1,54 @@
+name: Update Adblock4limbo Ads Only
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "Surge/Module/.generator/update-adblock4limbo.py"
+      - ".github/workflows/update-adblock4limbo.yml"
+  schedule:
+    - cron: "41 20 * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: net-link-adblock4limbo-update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate
+        run: python3 Surge/Module/.generator/update-adblock4limbo.py
+
+      - name: Verify JavaScript
+        run: |
+          node --check Surge/Module/runtime/Adblock4limbo.js
+          node --check Surge/Module/runtime/Adblock4limbo.user.js
+
+      - name: Publish
+        run: |
+          git add \
+            Surge/Module/Adblock4limbo.sgmodule \
+            Surge/Module/runtime/Adblock4limbo.js \
+            Surge/Module/runtime/Adblock4limbo.user.js
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "chore: update Adblock4limbo ads-only"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
