@@ -1931,6 +1931,7 @@ payload:
   - 'IP-CIDR,200.161.254.131/32,no-resolve'
   - 'IP-CIDR,200.161.254.194/32,no-resolve'
   - 'IP-CIDR,200.161.254.20/32,no-resolve'
+  - 'IP-CIDR,200.161.254.249/32,no-resolve'
   - 'IP-CIDR,200.168.116.107/32,no-resolve'
   - 'IP-CIDR,200.168.116.191/32,no-resolve'
   - 'IP-CIDR,200.168.116.200/32,no-resolve'

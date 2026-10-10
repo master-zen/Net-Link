@@ -382,6 +382,7 @@ udp://200.148.11.61:6969/announce
 udp://200.161.254.131:6969/announce
 udp://200.161.254.194:6969/announce
 udp://200.161.254.20:6969/announce
+udp://200.161.254.249:6969/announce
 udp://200.168.116.107:6969/announce
 udp://200.168.116.191:6969/announce
 udp://200.168.116.200:6969/announce
@@ -2059,6 +2060,7 @@ http://200.148.11.61:6969/announce
 http://200.161.254.131:6969/announce
 http://200.161.254.194:6969/announce
 http://200.161.254.20:6969/announce
+http://200.161.254.249:6969/announce
 http://200.168.116.107:6969/announce
 http://200.168.116.191:6969/announce
 http://200.168.116.200:6969/announce
@@ -3237,6 +3239,7 @@ https://gwp2-v19.rinet.ru:80/announce
 https://hcbt.pp.ua/announce
 https://hdpt.xyz/announce
 https://ht.therarbg.to/announce
+https://ht.therarbg.to:443/announce
 https://http1.torrust-tracker-demo.com/announce
 https://inferno.demonoid.is/announce
 https://ipv4.rer.lol:2710/announce
@@ -3276,7 +3279,6 @@ https://prestige.minimafia.nl/announce
 https://private.minimafia.nl/announce
 https://pt.btschool.club/announce
 https://pybittrack.retiolus.net/announce
-https://pybittrack.retiolus.net:443/announce
 https://retracker.gorcomnet.ru/announce
 https://retracker.krs-ix.ru/announce
 https://retracker.krs-ix.ru:80/announce
