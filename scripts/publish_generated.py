@@ -32,12 +32,9 @@ def main():
     if execute("git", "diff", "--cached", "--quiet", check=False) == 0:
         return
 
-    execute(
-        "git",
-        "-c", "user.name=github-actions[bot]",
-        "-c", "user.email=41898282+github-actions[bot]@users.noreply.github.com",
-        "commit", "-m", args.message,
-    )
+    execute("git", "config", "user.name", "github-actions[bot]")
+    execute("git", "config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com")
+    execute("git", "commit", "-m", args.message)
 
     for attempt in range(1, 9):
         execute("git", "fetch", "origin", "main")
