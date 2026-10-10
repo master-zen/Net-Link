@@ -21,6 +21,7 @@ import re
 import ssl
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -787,22 +788,24 @@ def merge_rules_from_sources(source_urls: list[str], default_bucket: str) -> tup
     warnings: list[str] = []
     total_stats = ParseStats()
 
-    for source in source_urls:
+    def load_source(source: str) -> tuple[list[str], ParseStats, str | None]:
         try:
-            text = fetch_text(source)
-            block_rules, allow_rules, stats = parse_rules_from_text(text, default_bucket)
-            total_stats.add(stats)
-
+            response = fetch_text(source)
+            blocked, allowed, stats = parse_rules_from_text(response, default_bucket)
             if stats.parsed == 0:
-                warnings.append(f"No safe rules parsed: {source}")
-                continue
+                return [], stats, f"No safe rules parsed: {source}"
+            rules = (allowed or blocked) if default_bucket == "allow" else blocked
+            return list(rules), stats, None
+        except Exception as exc:
+            return [], ParseStats(), f"Fetch failed: {source} -> {exc}"
 
-            if default_bucket == "allow":
-                all_rules.extend(allow_rules or block_rules)
+    with ThreadPoolExecutor(max_workers=min(6, max(1, len(source_urls)))) as pool:
+        for rules, stats, warning in pool.map(load_source, source_urls):
+            total_stats.add(stats)
+            if warning:
+                warnings.append(warning)
             else:
-                all_rules.extend(block_rules)
-        except Exception as exc:  # noqa: BLE001
-            warnings.append(f"Fetch failed: {source} -> {exc}")
+                all_rules.extend(rules)
 
     merged = sorted(set(all_rules), key=rule_type_sort_key)
     return merged, warnings, total_stats
