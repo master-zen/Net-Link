@@ -799,7 +799,7 @@ def main() -> int:
     for active_pattern in active_patterns:
         normalized = active_pattern.replace(r"\/", "/").replace(r"\.", ".").replace(r"\:", ":")
         normalized = normalized.replace("https?://", "https://")
-        matched = re.match(r"^\\^?https?://([A-Za-z0-9.-]+):(\\d{2,5})/", normalized)
+        matched = re.match(r"^\^?https?://([A-Za-z0-9.-]+):(\d{2,5})/", normalized)
         if not matched:
             continue
         host, port = matched.groups()
