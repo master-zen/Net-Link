@@ -180,9 +180,13 @@ class ParseStats:
             self.ignored_known_type.update(other.ignored_known_type)
 
 
-def fetch_text(url: str, timeout: int = 30, retries: int = 3, max_bytes: int = 20_000_000) -> str:
+def fetch_text(url: str, timeout: int = 30, retries: int = 2, max_bytes: int = 20_000_000) -> str:
     last_error: Exception | None = None
+    deadline = time.monotonic() + 105
     for attempt in range(1, retries + 1):
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            break
         try:
             request = Request(
                 url,
@@ -192,10 +196,12 @@ def fetch_text(url: str, timeout: int = 30, retries: int = 3, max_bytes: int = 2
                 },
             )
             context = ssl.create_default_context()
-            with urlopen(request, timeout=timeout, context=context) as response:
+            with urlopen(request, timeout=min(timeout, max(1, remaining)), context=context) as response:
                 chunks: list[bytes] = []
                 total = 0
                 while True:
+                    if time.monotonic() >= deadline:
+                        raise TimeoutError(f"source deadline exceeded: {url}")
                     chunk = response.read(65536)
                     if not chunk:
                         break
@@ -208,7 +214,7 @@ def fetch_text(url: str, timeout: int = 30, retries: int = 3, max_bytes: int = 2
                 return b"".join(chunks).decode(charset, errors="replace")
         except Exception as exc:  # noqa: BLE001
             last_error = exc
-            if attempt < retries:
+            if attempt < retries and time.monotonic() + 2 * attempt < deadline:
                 time.sleep(2 * attempt)
 
     raise RuntimeError(f"Failed to fetch {url}: {last_error}") from last_error
