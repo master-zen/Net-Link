@@ -101,6 +101,56 @@ def validate_profile(profile):
         if counts[surge] != counts[clash]:
             raise RuntimeError("Surge and Clash rule counts differ")
 
+    if profile == "moyu":
+        module = Path("Surge/Module/StartUpAds.sgmodule").read_text(encoding="utf-8")
+        metadata = json.loads(Path("Surge/Module/upstream/metadata.json").read_text(encoding="utf-8"))
+        sections = {}
+        section = ""
+        for raw_line in module.splitlines():
+            line = raw_line.strip()
+            if line.startswith("[") and line.endswith("]"):
+                section = line
+                sections.setdefault(section, [])
+            elif line and not line.startswith("#") and section:
+                sections[section].append(line)
+
+        for kind in ("[URL Rewrite]", "[Map Local]", "[Body Rewrite]", "[Rule]", "[Script]"):
+            entries = sections.get(kind, [])
+            if len(entries) != len(set(entries)):
+                raise RuntimeError(f"Duplicate Moyu entries in {kind}")
+
+        checks = {
+            "[URL Rewrite]": "url_rewrite",
+            "[Map Local]": "map_local",
+            "[Body Rewrite]": "body_rewrite",
+            "[Rule]": "rules",
+            "[Script]": "scripts",
+        }
+        for kind, key in checks.items():
+            if len(sections.get(kind, [])) != metadata[key]:
+                raise RuntimeError(f"Moyu output/metadata mismatch: {kind}")
+
+        mitm_rows = sections.get("[MITM]", [])
+        if len(mitm_rows) != 1 or not mitm_rows[0].startswith("hostname = %APPEND% "):
+            raise RuntimeError("Invalid Moyu MITM host list")
+        hosts = [part.strip() for part in mitm_rows[0].split("%APPEND%", 1)[1].split(",")]
+        if not hosts or len(hosts) != len(set(hosts)) or len(hosts) != metadata["mitm_hosts"]:
+            raise RuntimeError("Invalid or duplicated Moyu MITM hostnames")
+
+        forbidden_hosts = {
+            "security.wechat.com", "weixin110.qq.com", "wxa.wxs.qq.com",
+            "ad.12306.cn",
+        }
+        if forbidden_hosts.intersection(hosts):
+            raise RuntimeError("Moyu contains excluded MITM hosts")
+        if any("ad.12306.cn" in item for item in sections.get("[Rule]", [])):
+            raise RuntimeError("Moyu changed 12306 routing")
+        for name in ("testflight", "mp\\.weixin", "ad\\.12306"):
+            if name in module:
+                raise RuntimeError(f"Moyu sensitive rewrite still present: {name}")
+        if metadata["unsupported_rules"] != 0:
+            raise RuntimeError("Moyu has unsupported rules")
+
     if profile == "adblock":
         module = Path("Surge/Module/Adblock4limbo.sgmodule").read_text(encoding="utf-8")
         loader = Path("Surge/Module/runtime/Adblock4limbo.js").read_text(encoding="utf-8")
