@@ -874,6 +874,7 @@ udp://auratorrent.pl:8089/announce
 udp://axell24.ru:6969/announce
 udp://bananas.space:6969/announce
 udp://bandito.byterunner.io:6969/announce
+udp://banzaitracker.com:2710/announce
 udp://bclearning.top:6969/announce
 udp://bedro.cloud:6969/announce
 udp://ben.kerbertools.xyz:6969/announce
@@ -1407,6 +1408,7 @@ udp://tracker.nyaa.net:6969/announce
 udp://tracker.nyaa.uk:6969/announce
 udp://tracker.nyaa.vc:6969/announce
 udp://tracker.ocnix.net:6969/announce
+udp://tracker.okade.pro:1337/announce
 udp://tracker.ololosh.space:6969/announce
 udp://tracker.open-data.network:8888/announce
 udp://tracker.open-internet.nl:6969/announce
@@ -3235,7 +3237,6 @@ https://gwp2-v19.rinet.ru:80/announce
 https://hcbt.pp.ua/announce
 https://hdpt.xyz/announce
 https://ht.therarbg.to/announce
-https://ht.therarbg.to:443/announce
 https://http1.torrust-tracker-demo.com/announce
 https://inferno.demonoid.is/announce
 https://ipv4.rer.lol:2710/announce
@@ -3275,6 +3276,7 @@ https://prestige.minimafia.nl/announce
 https://private.minimafia.nl/announce
 https://pt.btschool.club/announce
 https://pybittrack.retiolus.net/announce
+https://pybittrack.retiolus.net:443/announce
 https://retracker.gorcomnet.ru/announce
 https://retracker.krs-ix.ru/announce
 https://retracker.krs-ix.ru:80/announce
@@ -3328,6 +3330,7 @@ https://tr.aag.moe/announce
 https://tr.abiir.top/announce
 https://tr.abiir.top:443/announce
 https://tr.abir.ga/announce
+https://tr.abir.ga:443/announce
 https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
@@ -3374,6 +3377,7 @@ https://tracker.bjut.jp/announce
 https://tracker.bt-hash.com/announce
 https://tracker.bt4g.com/announce
 https://tracker.bug38.com/announce
+https://tracker.bug38.com:443/announce
 https://tracker.bulao.ren/announce
 https://tracker.calculate.ru:6969/announce
 https://tracker.cangku.moe/announce
@@ -3523,7 +3527,6 @@ https://tracker.yemekyedim.com/announce
 https://tracker.yggleak.top/announce
 https://tracker.yoshi210.com:6969/announce
 https://tracker.zhuqiy.com/announce
-https://tracker.zhuqiy.com:443/announce
 https://tracker.zhuqiy.top/announce
 https://tracker.zhuque.in/announce
 https://tracker01.ilovelemonhd.me/announce
