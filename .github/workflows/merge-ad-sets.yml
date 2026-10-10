@@ -18,13 +18,13 @@ permissions:
   contents: write
 
 concurrency:
-  group: net-link-ad-sets-optimized-${{ github.ref }}
+  group: net-link-ad-sets-bounded-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
@@ -38,7 +38,7 @@ jobs:
           python-version: "3.12"
 
       - name: Build ad allow/block sets
-        run: python scripts/build_ad_sets.py
+        run: python -u scripts/build_ad_sets.py
 
       - name: Validate generated outputs
         run: python3 scripts/validate_generated.py ad
