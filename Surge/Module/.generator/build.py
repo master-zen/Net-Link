@@ -29,7 +29,7 @@ DIST_FILE = Path(
 MIN_BYTES = 10000
 MIN_RULES = 50
 
-EXCLUDED_MITM_HOSTS = {"security.wechat.com", "weixin110.qq.com", "wxa.wxs.qq.com"}
+EXCLUDED_MITM_HOSTS = {"security.wechat.com", "weixin110.qq.com", "wxa.wxs.qq.com", "ad.12306.cn"}
 EXCLUDED_REWRITE_HOSTS = {"ad.12306.cn", "testflight.apple.com", "mp.weixin.qq.com"}
 
 
@@ -480,7 +480,6 @@ def main() -> int:
             if (
                 not any(c.isspace() for c in find + replacement)
                 and "$" not in replacement
-                and not any(c in find + replacement for c in "\\r\\n")
             ):
                 body_rewrite.append(
                     f"{surge_direction} {pattern} {find} {replacement}"
