@@ -7,6 +7,7 @@ on:
       - main
     paths:
       - ".github/workflows/merge-ad-sets.yml"
+      - "scripts/build_ad_sets.py"
       - "scripts/publish_generated.py"
       - "scripts/validate_generated.py"
   schedule:
@@ -17,12 +18,13 @@ permissions:
   contents: write
 
 concurrency:
-  group: net-link-ad-sets-${{ github.ref }}
+  group: net-link-ad-sets-optimized-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
 
     steps:
       - name: Checkout repository
