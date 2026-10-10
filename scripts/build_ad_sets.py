@@ -22,6 +22,7 @@ import subprocess
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from bisect import bisect_right
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -914,8 +915,39 @@ def subtract_allow_rules(block_rules: list[str], allow_rules: list[str]) -> tupl
     if not allow_set:
         return list(block_rules), 0
 
-    allow_domain_rules = [rule for rule in allow_set if rule_domain(rule)]
-    allow_network_rules = [rule for rule in allow_set if rule_network(rule)]
+    allowed_domains: set[str] = set()
+    allowed_suffixes: set[str] = set()
+    allowed_descendants: set[str] = set()
+    allowed_networks: dict[int, list[ipaddress.IPv4Network | ipaddress.IPv6Network]] = {
+        4: [],
+        6: [],
+    }
+
+    for rule in allow_set:
+        parsed_domain = rule_domain(rule)
+        if parsed_domain is not None:
+            kind, domain = parsed_domain
+            if kind == "DOMAIN":
+                allowed_domains.add(domain)
+            else:
+                allowed_suffixes.add(domain)
+
+            labels = domain.split(".")
+            for index in range(len(labels)):
+                allowed_descendants.add(".".join(labels[index:]))
+            continue
+
+        network = rule_network(rule)
+        if network is not None:
+            allowed_networks[network.version].append(network)
+
+    network_ranges: dict[int, tuple[list[int], list[int]]] = {}
+    for version in (4, 6):
+        collapsed = list(ipaddress.collapse_addresses(allowed_networks[version]))
+        network_ranges[version] = (
+            [int(net.network_address) for net in collapsed],
+            [int(net.broadcast_address) for net in collapsed],
+        )
 
     filtered: list[str] = []
     removed = 0
@@ -925,13 +957,34 @@ def subtract_allow_rules(block_rules: list[str], allow_rules: list[str]) -> tupl
             removed += 1
             continue
 
-        if rule_domain(rule) and any(domains_overlap(rule, allow_rule) for allow_rule in allow_domain_rules):
-            removed += 1
+        parsed_domain = rule_domain(rule)
+        if parsed_domain is not None:
+            kind, domain = parsed_domain
+            if kind == "DOMAIN" and domain in allowed_domains:
+                removed += 1
+                continue
+            if kind == "DOMAIN-SUFFIX" and domain in allowed_descendants:
+                removed += 1
+                continue
+
+            labels = domain.split(".")
+            if any(
+                ".".join(labels[index:]) in allowed_suffixes
+                for index in range(len(labels))
+            ):
+                removed += 1
+                continue
+
+            filtered.append(rule)
             continue
 
-        if rule_network(rule) and any(networks_overlap(rule, allow_rule) for allow_rule in allow_network_rules):
-            removed += 1
-            continue
+        network = rule_network(rule)
+        if network is not None:
+            starts, ends = network_ranges[network.version]
+            match = bisect_right(starts, int(network.broadcast_address)) - 1
+            if match >= 0 and ends[match] >= int(network.network_address):
+                removed += 1
+                continue
 
         filtered.append(rule)
 
@@ -1056,7 +1109,17 @@ def main() -> int:
         print("[ERROR] no safe rules generated for AdblockSet.list", file=sys.stderr)
         return 1
 
+    print(
+        f"[FILTER] matching {len(block_rules)} blocked rules against {len(allow_rules)} allow rules",
+        flush=True,
+    )
+    filter_started = time.monotonic()
     filtered_block_rules, removed_by_allow = subtract_allow_rules(block_rules, allow_rules)
+    print(
+        f"[FILTER] completed in {time.monotonic() - filter_started:.2f}s; "
+        f"removed={removed_by_allow}, kept={len(filtered_block_rules)}",
+        flush=True,
+    )
     if not filtered_block_rules:
         print("[ERROR] AdblockSet.list became empty after allow subtraction", file=sys.stderr)
         return 1
