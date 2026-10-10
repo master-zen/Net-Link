@@ -29,6 +29,9 @@ DIST_FILE = Path(
 MIN_BYTES = 10000
 MIN_RULES = 50
 
+EXCLUDED_MITM_HOSTS = {"security.wechat.com", "weixin110.qq.com", "wxa.wxs.qq.com"}
+EXCLUDED_REWRITE_HOSTS = {"ad.12306.cn", "testflight.apple.com", "mp.weixin.qq.com"}
+
 
 class BuildError(RuntimeError):
     pass
@@ -219,6 +222,10 @@ def main() -> int:
                         f"第 {line_no} 行 hostname 非法：{host}"
                     )
 
+                if host in EXCLUDED_MITM_HOSTS:
+                    bump("excluded-mitm-host")
+                    continue
+
                 if host not in hosts:
                     hosts.append(host)
 
@@ -267,6 +274,10 @@ def main() -> int:
                     f"第 {line_no} 行域名分流策略无法安全转换："
                     f"{original}"
                 )
+
+            if value == "ad.12306.cn" and policy == "direct":
+                bump("excluded-routing")
+                continue
 
             if not value:
                 raise BuildError(
@@ -317,6 +328,10 @@ def main() -> int:
             bump("version")
             continue
 
+        normalized_pattern = pattern.replace(r"\.", ".").replace(r"\/", "/")
+        if any(host in normalized_pattern for host in EXCLUDED_REWRITE_HOSTS):
+            bump("excluded-sensitive-rewrite")
+            continue
 
         active_rules += 1
 
@@ -440,82 +455,54 @@ def main() -> int:
             continue
 
 
-        # --------------------------------------------------
-        # response-body
-        #
-        # 使用一个非常小的本仓库 JS。
-        # 只对真正需要修改 body 的规则启用 requires-body。
-        # --------------------------------------------------
+        handled_body = False
+        for qx_action, surge_direction in (
+            ("response-body", "http-response"),
+            ("request-body", "http-request"),
+        ):
+            prefix = qx_action + " "
+            if not action.startswith(prefix):
+                continue
 
-        if action.startswith("response-body "):
-            rest = action[len("response-body "):]
-
-            separator = " response-body "
-
+            rest = action[len(prefix):]
+            separator = " " + qx_action + " "
             if separator not in rest:
                 raise BuildError(
-                    f"第 {line_no} 行 response-body 无法解析："
-                    f"{original}"
+                    f"第 {line_no} 行 {qx_action} 无法解析：{original}"
                 )
 
             find, replacement = rest.split(separator, 1)
-
-            script_index += 1
-
-            argument = make_body_argument(
-                find,
-                replacement,
-            )
-
-            scripts.append(
-                f"Moyu_{script_index:04d} = "
-                f"type=http-response,"
-                f"pattern={script_pattern(pattern)},"
-                f"script-path={body_rewrite_script},"
-                f"requires-body=true,"
-                f"argument={argument}"
-            )
-
-            bump("response-body")
-            continue
-
-
-        # --------------------------------------------------
-        # request-body
-        # --------------------------------------------------
-
-        if action.startswith("request-body "):
-            rest = action[len("request-body "):]
-
-            separator = " request-body "
-
-            if separator not in rest:
+            if not find or not replacement:
                 raise BuildError(
-                    f"第 {line_no} 行 request-body 无法解析："
-                    f"{original}"
+                    f"第 {line_no} 行 {qx_action} 正则或替换内容为空"
                 )
 
-            find, replacement = rest.split(separator, 1)
+            if (
+                not any(c.isspace() for c in find + replacement)
+                and "$" not in replacement
+                and not any(c in find + replacement for c in "\\r\\n")
+            ):
+                body_rewrite.append(
+                    f"{surge_direction} {pattern} {find} {replacement}"
+                )
+                bump(qx_action + "-native")
+            else:
+                script_index += 1
+                argument = make_body_argument(find, replacement)
+                scripts.append(
+                    f"Moyu_{script_index:04d} = "
+                    f"type={surge_direction},"
+                    f"pattern={script_pattern(pattern)},"
+                    f"script-path={body_rewrite_script},"
+                    f"requires-body=true,"
+                    f"argument={argument}"
+                )
+                bump(qx_action + "-script")
+            handled_body = True
+            break
 
-            script_index += 1
-
-            argument = make_body_argument(
-                find,
-                replacement,
-            )
-
-            scripts.append(
-                f"Moyu_{script_index:04d} = "
-                f"type=http-request,"
-                f"pattern={script_pattern(pattern)},"
-                f"script-path={body_rewrite_script},"
-                f"requires-body=true,"
-                f"argument={argument}"
-            )
-
-            bump("request-body")
+        if handled_body:
             continue
-
 
         # --------------------------------------------------
         # echo-response
@@ -800,6 +787,11 @@ def main() -> int:
             f"{original}\n"
         )
 
+
+    url_rewrite = list(dict.fromkeys(url_rewrite))
+    map_local = list(dict.fromkeys(map_local))
+    body_rewrite = list(dict.fromkeys(body_rewrite))
+    surge_rules = list(dict.fromkeys(surge_rules))
 
     if active_rules < MIN_RULES:
         raise BuildError(
