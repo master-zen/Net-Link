@@ -170,7 +170,7 @@ def validate_profile(profile):
                     pattern = fields[1] if name == "[Body Rewrite]" else fields[0]
                 normalized = pattern.replace(r"\/", "/").replace(r"\.", ".").replace(r"\:", ":")
                 normalized = normalized.replace("https?://", "https://")
-                matched = re.match(r"^\\^?https?://([A-Za-z0-9.-]+):(\\d{2,5})/", normalized)
+                matched = re.match(r"^\^?https?://([A-Za-z0-9.-]+):(\d{2,5})/", normalized)
                 if matched:
                     host, port = matched.groups()
                     if port != "443" and f"{host}:{port}" not in hosts:
