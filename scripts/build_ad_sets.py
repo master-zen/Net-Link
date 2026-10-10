@@ -18,10 +18,10 @@ from __future__ import annotations
 import argparse
 import ipaddress
 import re
-import ssl
+import subprocess
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
@@ -181,43 +181,48 @@ class ParseStats:
 
 
 def fetch_text(url: str, timeout: int = 30, retries: int = 2, max_bytes: int = 20_000_000) -> str:
-    last_error: Exception | None = None
-    deadline = time.monotonic() + 105
-    for attempt in range(1, retries + 1):
-        remaining = deadline - time.monotonic()
-        if remaining <= 0:
-            break
-        try:
-            request = Request(
-                url,
-                headers={
-                    "User-Agent": "Mozilla/5.0 (Net-Link ad sets builder)",
-                    "Accept": "text/plain,text/html,*/*",
-                },
-            )
-            context = ssl.create_default_context()
-            with urlopen(request, timeout=min(timeout, max(1, remaining)), context=context) as response:
-                chunks: list[bytes] = []
-                total = 0
-                while True:
-                    if time.monotonic() >= deadline:
-                        raise TimeoutError(f"source deadline exceeded: {url}")
-                    chunk = response.read(65536)
-                    if not chunk:
-                        break
-                    total += len(chunk)
-                    if total > max_bytes:
-                        raise RuntimeError(f"payload too large: {total} bytes")
-                    chunks.append(chunk)
+    if not url.startswith("https://"):
+        raise ValueError(f"Only HTTPS sources are supported: {url}")
 
-                charset = response.headers.get_content_charset() or "utf-8"
-                return b"".join(chunks).decode(charset, errors="replace")
-        except Exception as exc:  # noqa: BLE001
-            last_error = exc
-            if attempt < retries and time.monotonic() + 2 * attempt < deadline:
-                time.sleep(2 * attempt)
+    command = [
+        "curl",
+        "--fail",
+        "--location",
+        "--silent",
+        "--show-error",
+        "--compressed",
+        "--connect-timeout", "10",
+        "--max-time", str(timeout),
+        "--max-filesize", str(max_bytes),
+        "--retry", str(max(0, retries - 1)),
+        "--retry-delay", "1",
+        "--retry-max-time", str(timeout * retries + 4),
+        "--proto", "=https",
+        "--proto-redir", "=https",
+        "--user-agent", "Mozilla/5.0 (Net-Link ad sets builder)",
+        "--header", "Accept: text/plain,text/html,*/*",
+        "--",
+        url,
+    ]
+    try:
+        result = subprocess.run(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            timeout=timeout * retries + 12,
+            check=False,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise TimeoutError(f"Source download deadline exceeded: {url}") from exc
 
-    raise RuntimeError(f"Failed to fetch {url}: {last_error}") from last_error
+    if result.returncode:
+        detail = result.stderr.decode("utf-8", errors="replace").strip()[-300:]
+        raise RuntimeError(f"curl returned {result.returncode}: {detail}")
+
+    if len(result.stdout) > max_bytes:
+        raise RuntimeError(f"Source exceeded maximum size: {url}")
+
+    return result.stdout.decode("utf-8-sig", errors="replace")
 
 
 def ensure_parent_dirs() -> None:
@@ -794,24 +799,35 @@ def merge_rules_from_sources(source_urls: list[str], default_bucket: str) -> tup
     warnings: list[str] = []
     total_stats = ParseStats()
 
-    def load_source(source: str) -> tuple[list[str], ParseStats, str | None]:
+    def load_source(source: str) -> tuple[str, list[str], ParseStats, str | None, float]:
+        started = time.monotonic()
         try:
             response = fetch_text(source)
             blocked, allowed, stats = parse_rules_from_text(response, default_bucket)
             if stats.parsed == 0:
-                return [], stats, f"No safe rules parsed: {source}"
+                return source, [], stats, f"No safe rules parsed: {source}", time.monotonic() - started
             rules = (allowed or blocked) if default_bucket == "allow" else blocked
-            return list(rules), stats, None
+            return source, list(rules), stats, None, time.monotonic() - started
         except Exception as exc:
-            return [], ParseStats(), f"Fetch failed: {source} -> {exc}"
+            return source, [], ParseStats(), f"Fetch failed: {source} -> {exc}", time.monotonic() - started
 
-    with ThreadPoolExecutor(max_workers=min(6, max(1, len(source_urls)))) as pool:
-        for rules, stats, warning in pool.map(load_source, source_urls):
+    workers = min(8, max(1, len(source_urls)))
+    print(f"[FETCH] {default_bucket}: {len(source_urls)} sources; workers={workers}", flush=True)
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        futures = {pool.submit(load_source, source): source for source in source_urls}
+        for index, future in enumerate(as_completed(futures), 1):
+            source, rules, stats, warning, elapsed = future.result()
             total_stats.add(stats)
             if warning:
                 warnings.append(warning)
+                print(f"[SOURCE] {default_bucket} {index}/{len(source_urls)} FAILED {elapsed:.1f}s {warning}", flush=True)
             else:
                 all_rules.extend(rules)
+                print(
+                    f"[SOURCE] {default_bucket} {index}/{len(source_urls)} OK {elapsed:.1f}s "
+                    f"rules={len(rules)} {source}",
+                    flush=True,
+                )
 
     merged = sorted(set(all_rules), key=rule_type_sort_key)
     return merged, warnings, total_stats
