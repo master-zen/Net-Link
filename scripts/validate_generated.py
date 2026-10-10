@@ -139,7 +139,10 @@ def validate_profile(profile):
 
         forbidden_hosts = {
             "security.wechat.com", "weixin110.qq.com", "wxa.wxs.qq.com",
-            "ad.12306.cn",
+            "ad.12306.cn", "spclient.wg.spotify.com",
+            "mobilepaas.abchina.com.cn", "ump.sz.creditcard.ecitic.com",
+            "creditcardapp.bankcomm.com", "creditcardapp.bankcomm.cn",
+            "zjmbank.js96008.com",
         }
         if forbidden_hosts.intersection(hosts):
             raise RuntimeError("Moyu contains excluded MITM hosts")
@@ -148,6 +151,31 @@ def validate_profile(profile):
         for name in ("testflight", "mp\\.weixin", "ad\\.12306"):
             if name in module:
                 raise RuntimeError(f"Moyu sensitive rewrite still present: {name}")
+        if any(name in module for name in (
+            "spclient.wg.spotify.com", "mobilepaas", "creditcardapp",
+            "zjmbank", "ump\\.sz\\.creditcard",
+        )):
+            raise RuntimeError("Moyu has unrelated sensitive rewrites")
+
+        import re
+        for name in ("[URL Rewrite]", "[Map Local]", "[Body Rewrite]", "[Script]"):
+            for line in sections.get(name, []):
+                if name == "[Script]":
+                    found = re.search(r'pattern=(?:"([^"]+)"|([^,]+)),script-path=', line)
+                    if not found:
+                        raise RuntimeError("Invalid Moyu Script pattern")
+                    pattern = found.group(1) or found.group(2)
+                else:
+                    fields = line.split()
+                    pattern = fields[1] if name == "[Body Rewrite]" else fields[0]
+                normalized = pattern.replace(r"\/", "/").replace(r"\.", ".").replace(r"\:", ":")
+                normalized = normalized.replace("https?://", "https://")
+                matched = re.match(r"^\\^?https?://([A-Za-z0-9.-]+):(\\d{2,5})/", normalized)
+                if matched:
+                    host, port = matched.groups()
+                    if port != "443" and f"{host}:{port}" not in hosts:
+                        raise RuntimeError(f"Moyu missing port-specific MITM: {host}:{port}")
+
         if metadata["unsupported_rules"] != 0:
             raise RuntimeError("Moyu has unsupported rules")
 
