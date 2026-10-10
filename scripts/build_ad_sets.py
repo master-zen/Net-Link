@@ -1020,6 +1020,10 @@ def main() -> int:
         for warning in allow_warnings:
             print(f"[WARN] {warning}", file=sys.stderr)
 
+    if len(block_warnings) > len(block_sources) // 2 or len(allow_warnings) > len(allow_sources) // 2:
+        print("[ERROR] insufficient healthy ad rule sources", file=sys.stderr)
+        return 1
+
     print_stats("block", block_stats)
     print_stats("allow", allow_stats)
 

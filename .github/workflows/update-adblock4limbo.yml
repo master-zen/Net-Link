@@ -3,9 +3,13 @@ name: Update Adblock4limbo Ads Only
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
     paths:
-      - "Surge/Module/.generator/update-adblock4limbo.py"
       - ".github/workflows/update-adblock4limbo.yml"
+      - "Surge/Module/.generator/update-adblock4limbo.py"
+      - "scripts/publish_generated.py"
+      - "scripts/validate_generated.py"
   schedule:
     - cron: "41 20 * * *"
 
@@ -13,7 +17,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: net-link-adblock4limbo-update
+  group: net-link-adblock4limbo-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -22,10 +26,12 @@ jobs:
     timeout-minutes: 15
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
 
@@ -37,18 +43,12 @@ jobs:
           node --check Surge/Module/runtime/Adblock4limbo.js
           node --check Surge/Module/runtime/Adblock4limbo.user.js
 
+      - name: Validate generated outputs
+        run: python3 scripts/validate_generated.py adblock
+
       - name: Publish
         run: |
-          git add \
+          python3 scripts/publish_generated.py "chore: update Adblock4limbo ads-only" \
             Surge/Module/Adblock4limbo.sgmodule \
             Surge/Module/runtime/Adblock4limbo.js \
             Surge/Module/runtime/Adblock4limbo.user.js
-          if git diff --cached --quiet; then
-            exit 0
-          fi
-          git -c user.name="github-actions[bot]" \
-              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-              commit -m "chore: update Adblock4limbo ads-only"
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main

@@ -185,6 +185,10 @@ def main() -> int:
         except Exception as exc:  # noqa: BLE001
             print(f"[WARN] fetch failed: {src} -> {exc}", file=sys.stderr)
 
+    if ok_sources < max(2, (len(source_urls) + 2) // 3):
+        print("[ERROR] insufficient healthy tracker sources", file=sys.stderr)
+        return 1
+
     if ok_sources == 0:
         print("[ERROR] all sources failed", file=sys.stderr)
         return 1

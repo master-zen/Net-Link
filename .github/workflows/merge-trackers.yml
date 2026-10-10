@@ -2,6 +2,13 @@ name: Merge Trackers Rules
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/merge-trackers.yml"
+      - "scripts/publish_generated.py"
+      - "scripts/validate_generated.py"
   schedule:
     # 04:40 Asia/Shanghai (UTC+8) every day
     - cron: "40 20 * * *"
@@ -10,7 +17,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: net-link-rules-publish-${{ github.ref }}
+  group: net-link-trackers-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -20,6 +27,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -29,20 +38,12 @@ jobs:
       - name: Build trackers outputs
         run: python scripts/build_trackers.py
 
-      - name: Commit and push if changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Validate generated outputs
+        run: python3 scripts/validate_generated.py trackers
 
-          git add \
+      - name: Publish
+        run: |
+          python3 scripts/publish_generated.py "chore: update trackers rules" \
             Clash/Rules/Trackers.yaml \
             Surge/Rules/Trackers.list \
             Trackers/Trackers.txt
-
-          if git diff --cached --quiet; then
-            echo "No changes."
-            exit 0
-          fi
-
-          git commit -m "chore: update trackers rules"
-          git push

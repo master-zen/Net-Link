@@ -2,6 +2,13 @@ name: Build Surge Icon JSON
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/merge-surge-icons.yml"
+      - "scripts/publish_generated.py"
+      - "scripts/validate_generated.py"
   schedule:
     # 05:10 Asia/Shanghai (UTC+8), every 2 days
     - cron: "10 21 */2 * *"
@@ -10,7 +17,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: net-link-rules-publish-${{ github.ref }}
+  group: net-link-surge-icons-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -20,6 +27,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -29,17 +38,10 @@ jobs:
       - name: Build Surge Icon.json
         run: python scripts/build_icon_json.py
 
-      - name: Commit and push if changed
+      - name: Validate generated outputs
+        run: python3 scripts/validate_generated.py icons
+
+      - name: Publish
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add Surge/Icon.json
-
-          if git diff --cached --quiet; then
-            echo "No changes."
-            exit 0
-          fi
-
-          git commit -m "chore: update surge icon index"
-          git push
+          python3 scripts/publish_generated.py "chore: update surge icon index" \
+            Surge/Icon.json
