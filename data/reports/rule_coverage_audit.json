@@ -1,0 +1,935 @@
+{
+  "scope": "entire published rule files, not a sample",
+  "files": {
+    "ChinaDomain.list": 133824,
+    "AdblockSet.list": 292746
+  },
+  "unique_rules": {
+    "china": 133824,
+    "ad": 292746
+  },
+  "duplicates": {
+    "china": 0,
+    "ad": 0
+  },
+  "rule_types": {
+    "china": {
+      "DOMAIN": 340,
+      "DOMAIN-SUFFIX": 111915,
+      "DOMAIN-KEYWORD": 14,
+      "IP-CIDR": 14817,
+      "IP-CIDR6": 5729,
+      "IP-ASN": 1009,
+      "GEOIP": 0
+    },
+    "ad": {
+      "DOMAIN": 42702,
+      "DOMAIN-SUFFIX": 249486,
+      "DOMAIN-KEYWORD": 0,
+      "IP-CIDR": 554,
+      "IP-CIDR6": 4,
+      "IP-ASN": 0,
+      "GEOIP": 0
+    }
+  },
+  "invalid_rows": {
+    "china": 0,
+    "ad": 0,
+    "china_examples": [],
+    "ad_examples": []
+  },
+  "partitions": {
+    "China_Domain.list": {
+      "count": 112255,
+      "unique_count": 112255,
+      "wrong_type_count": 0,
+      "not_in_combined_count": 0,
+      "wrong_type_examples": [],
+      "not_in_combined_examples": []
+    },
+    "China_IPv4.list": {
+      "count": 14812,
+      "unique_count": 14812,
+      "wrong_type_count": 0,
+      "not_in_combined_count": 0,
+      "wrong_type_examples": [],
+      "not_in_combined_examples": []
+    },
+    "China_IPv6.list": {
+      "count": 5700,
+      "unique_count": 5700,
+      "wrong_type_count": 0,
+      "not_in_combined_count": 0,
+      "wrong_type_examples": [],
+      "not_in_combined_examples": []
+    },
+    "China_ASN.list": {
+      "count": 1009,
+      "unique_count": 1009,
+      "wrong_type_count": 0,
+      "not_in_combined_count": 0,
+      "wrong_type_examples": [],
+      "not_in_combined_examples": []
+    },
+    "China_GEOIP.list": {
+      "count": 0,
+      "unique_count": 0,
+      "wrong_type_count": 0,
+      "not_in_combined_count": 0,
+      "wrong_type_examples": [],
+      "not_in_combined_examples": []
+    },
+    "China_Keyword.list": {
+      "count": 14,
+      "unique_count": 14,
+      "wrong_type_count": 0,
+      "not_in_combined_count": 0,
+      "wrong_type_examples": [],
+      "not_in_combined_examples": []
+    }
+  },
+  "missing_non_ip_partition_count": 0,
+  "missing_non_ip_partition_examples": [],
+  "cidr": {
+    "IP-CIDR": {
+      "rule_count": 14817,
+      "collapsed_prefix_count": 8281,
+      "redundant_prefix_count": 6536,
+      "unique_address_count": "363424048",
+      "non_public_count": 5,
+      "non_public_examples": [
+        "0.0.0.0/32",
+        "10.255.128.136/32",
+        "172.16.1.254/32",
+        "192.168.10.1/32",
+        "192.168.119.253/32"
+      ],
+      "ipv4_mapped_count": 0,
+      "ipv4_mapped_examples": [],
+      "invalid_count": 0,
+      "invalid_examples": []
+    },
+    "IP-CIDR6": {
+      "rule_count": 5729,
+      "collapsed_prefix_count": 4281,
+      "redundant_prefix_count": 1448,
+      "unique_address_count": "5441756258699842567381813945171997",
+      "non_public_count": 3,
+      "non_public_examples": [
+        "::ffff:198.18.5.138/128",
+        "::ffff:198.18.6.81/128",
+        "::ffff:198.18.6.83/128"
+      ],
+      "ipv4_mapped_count": 29,
+      "ipv4_mapped_examples": [
+        "::ffff:113.248.172.245/128",
+        "::ffff:114.235.96.186/128",
+        "::ffff:115.236.128.112/128",
+        "::ffff:115.236.128.120/128",
+        "::ffff:115.236.128.24/128",
+        "::ffff:115.236.128.80/128",
+        "::ffff:117.64.75.196/128",
+        "::ffff:117.68.200.210/128",
+        "::ffff:117.87.144.24/128",
+        "::ffff:121.56.126.255/128",
+        "::ffff:124.73.198.81/128",
+        "::ffff:124.73.200.142/128",
+        "::ffff:175.6.84.30/128",
+        "::ffff:175.6.84.96/128",
+        "::ffff:183.161.144.133/128",
+        "::ffff:183.161.144.230/128",
+        "::ffff:183.161.149.105/128",
+        "::ffff:198.18.5.138/128",
+        "::ffff:198.18.6.81/128",
+        "::ffff:198.18.6.83/128",
+        "::ffff:223.240.191.238/128",
+        "::ffff:27.157.209.46/128",
+        "::ffff:58.217.232.117/128",
+        "::ffff:58.217.232.68/128",
+        "::ffff:58.217.232.79/128",
+        "::ffff:58.58.0.90/128",
+        "::ffff:60.171.183.161/128",
+        "::ffff:60.171.183.186/128",
+        "::ffff:60.171.183.98/128"
+      ],
+      "invalid_count": 0,
+      "invalid_examples": []
+    }
+  },
+  "critical_domain_tests": {
+    "google.com": {
+      "china_matches": [],
+      "ad_matches": []
+    },
+    "github.com": {
+      "china_matches": [],
+      "ad_matches": []
+    },
+    "openai.com": {
+      "china_matches": [],
+      "ad_matches": []
+    },
+    "youtube.com": {
+      "china_matches": [],
+      "ad_matches": []
+    },
+    "stripe.com": {
+      "china_matches": [
+        "DOMAIN-KEYWORD,stripe"
+      ],
+      "ad_matches": []
+    },
+    "dashboard.stripe.com": {
+      "china_matches": [
+        "DOMAIN-KEYWORD,stripe"
+      ],
+      "ad_matches": []
+    },
+    "microsoft.com": {
+      "china_matches": [
+        "DOMAIN-KEYWORD,microsoft"
+      ],
+      "ad_matches": []
+    },
+    "login.microsoftonline.com": {
+      "china_matches": [
+        "DOMAIN-SUFFIX,microsoftonline.com",
+        "DOMAIN-KEYWORD,microsoft"
+      ],
+      "ad_matches": []
+    },
+    "apple.com": {
+      "china_matches": [],
+      "ad_matches": []
+    },
+    "icloud.com": {
+      "china_matches": [],
+      "ad_matches": []
+    },
+    "paypal.com": {
+      "china_matches": [],
+      "ad_matches": []
+    },
+    "cloudflare.com": {
+      "china_matches": [],
+      "ad_matches": []
+    },
+    "cloudfront.net": {
+      "china_matches": [],
+      "ad_matches": []
+    },
+    "amazonaws.com": {
+      "china_matches": [],
+      "ad_matches": []
+    },
+    "baidu.com": {
+      "china_matches": [
+        "DOMAIN-SUFFIX,baidu.com",
+        "DOMAIN-KEYWORD,baidu"
+      ],
+      "ad_matches": []
+    },
+    "qq.com": {
+      "china_matches": [
+        "DOMAIN-SUFFIX,qq.com"
+      ],
+      "ad_matches": []
+    },
+    "wechat.com": {
+      "china_matches": [
+        "DOMAIN-SUFFIX,wechat.com"
+      ],
+      "ad_matches": []
+    },
+    "taobao.com": {
+      "china_matches": [
+        "DOMAIN-SUFFIX,taobao.com",
+        "DOMAIN-KEYWORD,taobao"
+      ],
+      "ad_matches": []
+    },
+    "jd.com": {
+      "china_matches": [
+        "DOMAIN-SUFFIX,jd.com"
+      ],
+      "ad_matches": []
+    },
+    "bilibili.com": {
+      "china_matches": [
+        "DOMAIN-SUFFIX,bilibili.com",
+        "DOMAIN-KEYWORD,bilibili"
+      ],
+      "ad_matches": []
+    },
+    "alipay.com": {
+      "china_matches": [
+        "DOMAIN-SUFFIX,alipay.com",
+        "DOMAIN-KEYWORD,alipay"
+      ],
+      "ad_matches": []
+    }
+  },
+  "china_keywords": [
+    ".tmall.com",
+    "alicdn",
+    "alipay",
+    "aliyun",
+    "baidu",
+    "beplay",
+    "bilibili",
+    "hnagroup",
+    "microsoft",
+    "officecdn",
+    "qiyi",
+    "stripe",
+    "taobao",
+    "weibo"
+  ],
+  "keyword_critical_matches": {
+    ".tmall.com": [],
+    "alicdn": [],
+    "alipay": [
+      "alipay.com"
+    ],
+    "aliyun": [],
+    "baidu": [
+      "baidu.com"
+    ],
+    "beplay": [],
+    "bilibili": [
+      "bilibili.com"
+    ],
+    "hnagroup": [],
+    "microsoft": [
+      "microsoft.com",
+      "login.microsoftonline.com"
+    ],
+    "officecdn": [],
+    "qiyi": [],
+    "stripe": [
+      "stripe.com",
+      "dashboard.stripe.com"
+    ],
+    "taobao": [
+      "taobao.com"
+    ],
+    "weibo": []
+  },
+  "ad_china_domain_overlap_count": 10242,
+  "ad_china_domain_overlap_examples": [
+    {
+      "ad_rule": "DOMAIN,25e87c0802f91cf8cgg.6uzxtlv.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,360.hiido.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,hiido.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,3gimg.qq.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,qq.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,587.dopa.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,dopa.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,a.cnzz.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cnzz.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,a.i.adsame.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,adsame.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,a.stat.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,aboard.apilocate.amap.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,amap.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,abroad-ad.kingsoft-office-service.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,kingsoft-office-service.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,abroad.api.comm.intl.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,abroad.apilocate.amap.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,amap.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,abtest.goforandroid.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,goforandroid.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,abtest.mistat.india.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,abtest.mistat.intl.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,abtest.mistat.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ac.mmstat.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,mmstat.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,accscdn.m.taobao.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,taobao.com",
+        "DOMAIN-KEYWORD,taobao"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,acfun-log-sdk.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,acheel.dmp.ad.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,acs.m.taobao.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,taobao.com",
+        "DOMAIN-KEYWORD,taobao"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,activity.umeng.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,umeng.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad-analysis.pconline.com.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad-cdn.qingting.fm",
+      "china_matches": [
+        "DOMAIN-SUFFIX,qingting.fm"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad-sdk.altamob.xiaoying.co",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaoying.co"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad-stat.ksosoft.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksosoft.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.21cn.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,21cn.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.360in.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,360in.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.51wnl-cq.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,51wnl-cq.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.altamob.xiaoying.co",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaoying.co"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.api.moji.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,moji.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.bn.netease.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,netease.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.foxitreader.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.hpplay.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.intl.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.k.21cn.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,21cn.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.mobile.youku.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,youku.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.monitor.getui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,getui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.qingting.fm",
+      "china_matches": [
+        "DOMAIN-SUFFIX,qingting.fm"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.tencentmusic.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,tencentmusic.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.toutiao.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,toutiao.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.ximalaya.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ximalaya.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.yixin.im",
+      "china_matches": [
+        "DOMAIN-SUFFIX,yixin.im"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad2.mobring.co",
+      "china_matches": [
+        "DOMAIN-SUFFIX,mobring.co"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adash.m.taobao.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,taobao.com",
+        "DOMAIN-KEYWORD,taobao"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adash.man.aliyuncs.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,aliyuncs.com",
+        "DOMAIN-KEYWORD,aliyun"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adashbc.ut.taobao.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,taobao.com",
+        "DOMAIN-KEYWORD,taobao"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adashxgc.ut.taobao.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,taobao.com",
+        "DOMAIN-KEYWORD,taobao"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adbehavior.wsa.ximalaya.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ximalaya.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adbehavior.ximalaya.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ximalaya.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adbs.ximalaya.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ximalaya.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adc.hpplay.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adcdn.hpplay.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adeng.hpplay.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adextra.51wnl-cq.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,51wnl-cq.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adfile.wifi8.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,wifi8.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adimg.uve.weibo.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,weibo.com",
+        "DOMAIN-KEYWORD,weibo"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adimg.vue.weibo.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,weibo.com",
+        "DOMAIN-KEYWORD,weibo"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adlanding.admarketplace.net.akadns.net",
+      "china_matches": [
+        "DOMAIN-SUFFIX,akadns.net"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adlaunch.moji.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,moji.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adlaunch.qingting.fm",
+      "china_matches": [
+        "DOMAIN-SUFFIX,qingting.fm"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adlockscreen.goforandroid.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,goforandroid.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adlog.vivo.com.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adm-product.superads.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adm.10jqka.com.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adm.cnzz.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cnzz.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adm0.autoimg.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adm1.autoimg.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adm2.autoimg.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adm3.autoimg.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,admarket.21cn.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,21cn.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,admaster.adsame.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,adsame.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,admaster.union.ucweb.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ucweb.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,admin-ssp.ad.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,admonitor.thepaper.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,admusicpic.music.126.net",
+      "china_matches": [
+        "DOMAIN-SUFFIX,music.126.net",
+        "DOMAIN-SUFFIX,126.net"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adn.insight.ucweb.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ucweb.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adnew.wifi8.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,wifi8.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adpai.thepaper.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adplace.adsame.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,adsame.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adplace.i.adsame.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,adsame.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adplacetw.adsame.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,adsame.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adplus.umeng.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,umeng.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adproxy.autohome.com.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adpush.goforandroid.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,goforandroid.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adpushsdk.goforandroid.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,goforandroid.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adreq.vivo.com.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ads-img-qc.xhscdn.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xhscdn.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ads-marketing-vivofs.vivo.com.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ads-video-al.xhscdn.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xhscdn.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ads-video-qc.xhscdn.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xhscdn.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ads.aplus.pptv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,pptv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ads.aplusapi.pptv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,pptv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ads.mobring.co",
+      "china_matches": [
+        "DOMAIN-SUFFIX,mobring.co"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ads.mojicdn.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,mojicdn.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ads.service.kugou.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,kugou.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adsaide.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adsame.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,adsame.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adsamer.adsame.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,adsame.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adsamert.adsame.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,adsame.com"
+      ]
+    }
+  ],
+  "limitations": [
+    "Geographic coverage percentage requires an independently sourced dated IP/domain reference.",
+    "Domain and IP rule matches do not prove actual Surge traffic routing; rule ordering matters.",
+    "Overlap examples are capped for report size; all input rows were examined."
+  ]
+}
