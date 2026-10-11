@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import collections
+import csv
 import ipaddress
 import json
 from pathlib import Path
@@ -124,9 +125,15 @@ def main():
         for domain in sorted(ad[kind]):
             if domain_matches(domain, china):
                 overlap_count += 1
-                if len(ad_china_overlaps) < 100:
-                    ad_china_overlaps.append({"ad_rule": kind + "," + domain,
-                                              "china_matches": domain_matches(domain, china)[:8]})
+                ad_china_overlaps.append({"ad_rule": kind + "," + domain,
+                                          "china_matches": domain_matches(domain, china)})
+    overlap_path = REPORT.with_name("rule_coverage_overlaps.csv")
+    overlap_path.parent.mkdir(parents=True, exist_ok=True)
+    with overlap_path.open("w", encoding="utf-8", newline="") as fp:
+        writer = csv.writer(fp)
+        writer.writerow(("ad_rule", "china_matching_rules"))
+        for item in ad_china_overlaps:
+            writer.writerow((item["ad_rule"], ";".join(item["china_matches"])))
     report = {
         "scope": "entire published rule files, not a sample",
         "files": {"ChinaDomain.list": len(china_rows), "AdblockSet.list": len(ad_rows)},
@@ -145,11 +152,12 @@ def main():
         "china_keywords": sorted(china["DOMAIN-KEYWORD"]),
         "keyword_critical_matches": keyword_risks,
         "ad_china_domain_overlap_count": overlap_count,
-        "ad_china_domain_overlap_examples": ad_china_overlaps,
+        "ad_china_domain_overlap_csv": str(overlap_path.relative_to(ROOT)),
+        "ad_china_domain_overlap_examples": ad_china_overlaps[:100],
         "limitations": [
             "Geographic coverage percentage requires an independently sourced dated IP/domain reference.",
             "Domain and IP rule matches do not prove actual Surge traffic routing; rule ordering matters.",
-            "Overlap examples are capped for report size; all input rows were examined.",
+            "The JSON shows 100 examples; the companion CSV contains every matching ad rule.",
         ],
     }
     REPORT.parent.mkdir(parents=True, exist_ok=True)
@@ -157,6 +165,7 @@ def main():
     print("AUDIT complete: China", len(china_rows), "Adblock", len(ad_rows),
           "cross-set overlaps", overlap_count)
     print("Report:", REPORT.relative_to(ROOT))
+    print("Full overlap CSV:", overlap_path.relative_to(ROOT))
 
 if __name__ == "__main__":
     main()
