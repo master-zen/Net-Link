@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import ipaddress
 import subprocess
 from pathlib import Path
 
@@ -100,6 +101,34 @@ def validate_profile(profile):
         clash = next(n for n in counts if n.startswith("Clash/Rules/"))
         if counts[surge] != counts[clash]:
             raise RuntimeError("Surge and Clash rule counts differ")
+
+    if profile == "china":
+        combined = set(Path("Surge/Rules/ChinaDomain.list").read_text(encoding="utf-8").splitlines())
+        partitions = {
+            "China_Domain.list": {"DOMAIN", "DOMAIN-SUFFIX"},
+            "China_IPv4.list": {"IP-CIDR"},
+            "China_IPv6.list": {"IP-CIDR6"},
+            "China_ASN.list": {"IP-ASN"},
+            "China_GEOIP.list": {"GEOIP"},
+            "China_Keyword.list": {"DOMAIN-KEYWORD"},
+        }
+        for filename, types in partitions.items():
+            path = Path("Surge/Rules") / filename
+            rows = [r for r in path.read_text(encoding="utf-8").splitlines() if r.strip()]
+            if len(rows) != len(set(rows)):
+                raise RuntimeError(f"Duplicate China subset rules: {path}")
+            for row in rows:
+                kind, sep, value = row.partition(",")
+                if not sep or kind not in types or row not in combined:
+                    raise RuntimeError(f"Invalid China subset entry: {path}: {row}")
+                if kind in {"IP-CIDR", "IP-CIDR6"}:
+                    net = ipaddress.ip_network(value, strict=False)
+                    if (not net.network_address.is_global
+                            or not net.broadcast_address.is_global
+                            or (net.version == 6
+                                and net.network_address.ipv4_mapped is not None)):
+                        raise RuntimeError(f"Non-public China IP subset entry: {path}: {row}")
+            print(f"{path}: {len(rows)} validated")
 
     if profile == "moyu":
         module = Path("Surge/Module/StartUpAds.sgmodule").read_text(encoding="utf-8")
