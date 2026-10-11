@@ -575,6 +575,36 @@ def main() -> int:
         print("[ERROR] no rules generated", file=sys.stderr)
         return 1
 
+    # Preserve legacy combined output for existing subscribers. Publish typed,
+    # opt-in subsets without changing routing semantics in existing profiles.
+    typed_outputs = {
+        "domain": ROOT / "Surge/Rules/China_Domain.list",
+        "ipv4": ROOT / "Surge/Rules/China_IPv4.list",
+        "ipv6": ROOT / "Surge/Rules/China_IPv6.list",
+        "asn": ROOT / "Surge/Rules/China_ASN.list",
+        "geoip": ROOT / "Surge/Rules/China_GEOIP.list",
+        "keyword": ROOT / "Surge/Rules/China_Keyword.list",
+    }
+    type_to_bucket = {
+        "DOMAIN": "domain", "DOMAIN-SUFFIX": "domain",
+        "IP-CIDR": "ipv4", "IP-CIDR6": "ipv6",
+        "IP-ASN": "asn", "GEOIP": "geoip",
+        "DOMAIN-KEYWORD": "keyword",
+    }
+    subsets: dict[str, list[str]] = {key: [] for key in typed_outputs}
+    for rule in merged_rules:
+        rule_type = rule.partition(",")[0]
+        subsets[type_to_bucket[rule_type]].append(rule)
+    for bucket, output in typed_outputs.items():
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(
+            "".join(rule + "\n" for rule in subsets[bucket]),
+            encoding="utf-8",
+        )
+        print(f"[DONE] {output.relative_to(ROOT)}: {len(subsets[bucket])} lines")
+    if sum(map(len, subsets.values())) != len(merged_rules):
+        raise RuntimeError("China rule split count mismatch")
+
     OUTPUT_SURGE_FILE.write_text("\n".join(merged_rules) + "\n", encoding="utf-8")
     write_clash_ruleset(OUTPUT_CLASH_FILE, merged_rules)
 
