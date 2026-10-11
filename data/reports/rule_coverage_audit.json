@@ -1,12 +1,12 @@
 {
   "scope": "entire published rule files, not a sample",
   "files": {
-    "ChinaDomain.list": 133824,
-    "AdblockSet.list": 292746
+    "ChinaDomain.list": 133828,
+    "AdblockSet.list": 293055
   },
   "unique_rules": {
-    "china": 133824,
-    "ad": 292746
+    "china": 133828,
+    "ad": 293055
   },
   "duplicates": {
     "china": 0,
@@ -17,14 +17,14 @@
       "DOMAIN": 340,
       "DOMAIN-SUFFIX": 111915,
       "DOMAIN-KEYWORD": 14,
-      "IP-CIDR": 14817,
-      "IP-CIDR6": 5729,
+      "IP-CIDR": 14820,
+      "IP-CIDR6": 5730,
       "IP-ASN": 1009,
       "GEOIP": 0
     },
     "ad": {
       "DOMAIN": 42702,
-      "DOMAIN-SUFFIX": 249486,
+      "DOMAIN-SUFFIX": 249795,
       "DOMAIN-KEYWORD": 0,
       "IP-CIDR": 554,
       "IP-CIDR6": 4,
@@ -48,16 +48,16 @@
       "not_in_combined_examples": []
     },
     "China_IPv4.list": {
-      "count": 14812,
-      "unique_count": 14812,
+      "count": 14815,
+      "unique_count": 14815,
       "wrong_type_count": 0,
       "not_in_combined_count": 0,
       "wrong_type_examples": [],
       "not_in_combined_examples": []
     },
     "China_IPv6.list": {
-      "count": 5700,
-      "unique_count": 5700,
+      "count": 5701,
+      "unique_count": 5701,
       "wrong_type_count": 0,
       "not_in_combined_count": 0,
       "wrong_type_examples": [],
@@ -92,10 +92,10 @@
   "missing_non_ip_partition_examples": [],
   "cidr": {
     "IP-CIDR": {
-      "rule_count": 14817,
-      "collapsed_prefix_count": 8281,
-      "redundant_prefix_count": 6536,
-      "unique_address_count": "363424048",
+      "rule_count": 14820,
+      "collapsed_prefix_count": 8283,
+      "redundant_prefix_count": 6537,
+      "unique_address_count": "363428400",
       "non_public_count": 5,
       "non_public_examples": [
         "0.0.0.0/32",
@@ -110,10 +110,10 @@
       "invalid_examples": []
     },
     "IP-CIDR6": {
-      "rule_count": 5729,
-      "collapsed_prefix_count": 4281,
-      "redundant_prefix_count": 1448,
-      "unique_address_count": "5441756258699842567381813945171997",
+      "rule_count": 5730,
+      "collapsed_prefix_count": 4309,
+      "redundant_prefix_count": 1421,
+      "unique_address_count": "5441835491698041663433850478395421",
       "non_public_count": 3,
       "non_public_examples": [
         "::ffff:198.18.5.138/128",
