@@ -10,6 +10,7 @@ on:
       - "scripts/publish_generated.py"
       - "scripts/validate_generated.py"
       - "scripts/build_china_domain.py"
+      - "scripts/audit_rule_coverage.py"
   schedule:
     # 04:20 Asia/Shanghai (UTC+8) every day
     - cron: "20 20 * * *"
@@ -42,6 +43,9 @@ jobs:
       - name: Validate generated outputs
         run: python3 scripts/validate_generated.py china
 
+      - name: Full China and Adblock rule audit
+        run: python3 scripts/audit_rule_coverage.py
+
       - name: Publish
         run: |
           python3 scripts/publish_generated.py "chore: update china domain rules" \
@@ -52,4 +56,5 @@ jobs:
             Surge/Rules/China_IPv6.list \
             Surge/Rules/China_ASN.list \
             Surge/Rules/China_GEOIP.list \
-            Surge/Rules/China_Keyword.list
+            Surge/Rules/China_Keyword.list \
+            data/reports/rule_coverage_audit.json
