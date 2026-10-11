@@ -316,6 +316,47 @@
     "weibo": []
   },
   "ad_china_domain_overlap_count": 10242,
+  "overlap_category_counts_nonexclusive": {
+    "domain_suffix": 6002,
+    "exact_domain": 18,
+    "keyword": 679,
+    "single_label_suffix": 4163
+  },
+  "overlap_single_label_suffix_counts": {
+    "cn": 4127,
+    "ms": 15,
+    "wang": 19,
+    "xn--fiqs8s": 1,
+    "xn--io0a7i": 1
+  },
+  "overlap_keyword_counts": {
+    "alicdn": 25,
+    "alipay": 11,
+    "aliyun": 61,
+    "baidu": 329,
+    "bilibili": 2,
+    "microsoft": 68,
+    "qiyi": 55,
+    "stripe": 22,
+    "taobao": 84,
+    "weibo": 26
+  },
+  "keyword_review_recommendations": {
+    ".tmall.com": "manual_review",
+    "alicdn": "manual_review",
+    "alipay": "manual_review",
+    "aliyun": "manual_review",
+    "baidu": "manual_review",
+    "beplay": "manual_review",
+    "bilibili": "manual_review",
+    "hnagroup": "manual_review",
+    "microsoft": "manual_review_high_priority",
+    "officecdn": "manual_review",
+    "qiyi": "manual_review",
+    "stripe": "manual_review_high_priority",
+    "taobao": "manual_review",
+    "weibo": "manual_review"
+  },
   "ad_china_domain_overlap_csv": "data/reports/rule_coverage_overlaps.csv",
   "ad_china_domain_overlap_examples": [
     {
