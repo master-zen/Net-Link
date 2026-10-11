@@ -9,6 +9,7 @@ on:
       - ".github/workflows/merge-china-domain.yml"
       - "scripts/publish_generated.py"
       - "scripts/validate_generated.py"
+      - "scripts/build_china_domain.py"
   schedule:
     # 04:20 Asia/Shanghai (UTC+8) every day
     - cron: "20 20 * * *"
@@ -45,4 +46,10 @@ jobs:
         run: |
           python3 scripts/publish_generated.py "chore: update china domain rules" \
             Surge/Rules/ChinaDomain.list \
-            Clash/Rules/ChinaDomain.yaml
+            Clash/Rules/ChinaDomain.yaml \
+            Surge/Rules/China_Domain.list \
+            Surge/Rules/China_IPv4.list \
+            Surge/Rules/China_IPv6.list \
+            Surge/Rules/China_ASN.list \
+            Surge/Rules/China_GEOIP.list \
+            Surge/Rules/China_Keyword.list
