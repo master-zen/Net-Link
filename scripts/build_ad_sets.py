@@ -807,7 +807,7 @@ def merge_rules_from_sources(source_urls: list[str], default_bucket: str) -> tup
             blocked, allowed, stats = parse_rules_from_text(response, default_bucket)
             if stats.parsed == 0:
                 return source, [], stats, f"No safe rules parsed: {source}", time.monotonic() - started
-            rules = (allowed or blocked) if default_bucket == "allow" else blocked
+            rules = (allowed | blocked) if default_bucket == "allow" else blocked
             return source, list(rules), stats, None, time.monotonic() - started
         except Exception as exc:
             return source, [], ParseStats(), f"Fetch failed: {source} -> {exc}", time.monotonic() - started
