@@ -316,6 +316,7 @@
     "weibo": []
   },
   "ad_china_domain_overlap_count": 10242,
+  "ad_china_domain_overlap_csv": "data/reports/rule_coverage_overlaps.csv",
   "ad_china_domain_overlap_examples": [
     {
       "ad_rule": "DOMAIN,25e87c0802f91cf8cgg.6uzxtlv.cn",
@@ -930,6 +931,6 @@
   "limitations": [
     "Geographic coverage percentage requires an independently sourced dated IP/domain reference.",
     "Domain and IP rule matches do not prove actual Surge traffic routing; rule ordering matters.",
-    "Overlap examples are capped for report size; all input rows were examined."
+    "The JSON shows 100 examples; the companion CSV contains every matching ad rule."
   ]
 }
