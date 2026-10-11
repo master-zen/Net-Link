@@ -134,6 +134,35 @@ def main():
         writer.writerow(("ad_rule", "china_matching_rules"))
         for item in ad_china_overlaps:
             writer.writerow((item["ad_rule"], ";".join(item["china_matches"])))
+    # Classify every overlap by the matching China rule's semantics.
+    # These are review categories, NOT verified false positives.
+    overlap_categories = collections.Counter()
+    broad_suffix_counts = collections.Counter()
+    keyword_overlap_counts = collections.Counter()
+    for item in ad_china_overlaps:
+        matches = item["china_matches"]
+        categories = set()
+        for match in matches:
+            kind, _, value = match.partition(",")
+            if kind == "DOMAIN-KEYWORD":
+                categories.add("keyword")
+                keyword_overlap_counts[value] += 1
+            elif kind == "DOMAIN-SUFFIX" and "." not in value:
+                categories.add("single_label_suffix")
+                broad_suffix_counts[value] += 1
+            elif kind == "DOMAIN-SUFFIX":
+                categories.add("domain_suffix")
+            else:
+                categories.add("exact_domain")
+        for category in categories:
+            overlap_categories[category] += 1
+    risky_keywords = {"microsoft", "stripe"}
+    # This is an opt-in proposal, never applied to legacy routing.
+    keyword_recommendations = {
+        keyword: ("manual_review_high_priority" if keyword in risky_keywords
+                  else "manual_review")
+        for keyword in sorted(china["DOMAIN-KEYWORD"])
+    }
     report = {
         "scope": "entire published rule files, not a sample",
         "files": {"ChinaDomain.list": len(china_rows), "AdblockSet.list": len(ad_rows)},
@@ -152,6 +181,10 @@ def main():
         "china_keywords": sorted(china["DOMAIN-KEYWORD"]),
         "keyword_critical_matches": keyword_risks,
         "ad_china_domain_overlap_count": overlap_count,
+        "overlap_category_counts_nonexclusive": dict(sorted(overlap_categories.items())),
+        "overlap_single_label_suffix_counts": dict(sorted(broad_suffix_counts.items())),
+        "overlap_keyword_counts": dict(sorted(keyword_overlap_counts.items())),
+        "keyword_review_recommendations": keyword_recommendations,
         "ad_china_domain_overlap_csv": str(overlap_path.relative_to(ROOT)),
         "ad_china_domain_overlap_examples": ad_china_overlaps[:100],
         "limitations": [
