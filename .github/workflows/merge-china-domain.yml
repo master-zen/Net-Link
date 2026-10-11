@@ -57,4 +57,5 @@ jobs:
             Surge/Rules/China_ASN.list \
             Surge/Rules/China_GEOIP.list \
             Surge/Rules/China_Keyword.list \
-            data/reports/rule_coverage_audit.json
+            data/reports/rule_coverage_audit.json \
+            data/reports/rule_coverage_overlaps.csv
