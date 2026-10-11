@@ -592,9 +592,22 @@ def main() -> int:
         "DOMAIN-KEYWORD": "keyword",
     }
     subsets: dict[str, list[str]] = {key: [] for key in typed_outputs}
+    excluded_non_public = 0
     for rule in merged_rules:
-        rule_type = rule.partition(",")[0]
-        subsets[type_to_bucket[rule_type]].append(rule)
+        rule_type, _, value = rule.partition(",")
+        bucket = type_to_bucket[rule_type]
+        if bucket in {"ipv4", "ipv6"}:
+            network = ipaddress.ip_network(value, strict=False)
+            # Only publish global unicast ranges in the opt-in public-IP sets.
+            # Keep legacy ChinaDomain.list unchanged for compatibility.
+            if (not network.network_address.is_global
+                    or not network.broadcast_address.is_global
+                    or (network.version == 6
+                        and network.network_address.ipv4_mapped is not None)):
+                excluded_non_public += 1
+                continue
+        subsets[bucket].append(rule)
+    print(f"[AUDIT] excluded non-public/mapped IP rules from typed sets: {excluded_non_public}")
     for bucket, output in typed_outputs.items():
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(
@@ -602,7 +615,7 @@ def main() -> int:
             encoding="utf-8",
         )
         print(f"[DONE] {output.relative_to(ROOT)}: {len(subsets[bucket])} lines")
-    if sum(map(len, subsets.values())) != len(merged_rules):
+    if sum(map(len, subsets.values())) + excluded_non_public != len(merged_rules):
         raise RuntimeError("China rule split count mismatch")
 
     OUTPUT_SURGE_FILE.write_text("\n".join(merged_rules) + "\n", encoding="utf-8")
