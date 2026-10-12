@@ -22,7 +22,11 @@ from urllib.parse import urlparse
 ROOT = Path(__file__).resolve().parents[1]
 
 PROFILES = {
-    "china": {"china": "data/sources/ChinaDomainList_URLs.txt"},
+    "china": {
+        "china": "data/sources/ChinaDomainList_URLs.txt",
+        "foreign_domain": "data/sources/ChinaForeignDomain_URLs.txt",
+        "foreign_ip": "data/sources/ChinaForeignIP_URLs.txt",
+    },
     "ad": {
         "block": "data/sources/AdBlockList_URLs.txt",
         "allow": "data/sources/AdAllowList_URLs.txt",
