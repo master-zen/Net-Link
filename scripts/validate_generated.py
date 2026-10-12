@@ -7,6 +7,8 @@ import ipaddress
 import subprocess
 from pathlib import Path
 
+from fetch_rule_sources import load_manifest
+
 
 PROFILES = {
     "ad": [
@@ -104,6 +106,12 @@ def validate_profile(profile):
             raise RuntimeError("Surge and Clash rule counts differ")
 
     if profile == "china":
+        # Independent fetch step must have succeeded in THIS run, and every
+        # primary + geographic reference snapshot must still match its hash.
+        downloads = load_manifest("china")
+        risk = json.loads(Path("data/reports/china_risk_audit.json").read_text(encoding="utf-8"))
+        if risk.get("download_run") != downloads.get("github_run_id"):
+            raise RuntimeError("China risk audit is not from the current fresh download")
         # All upstream source payloads must exist and match their recorded SHA-256.
         source_manifest = json.loads(Path("data/reports/china_source_integrity.json").read_text(encoding="utf-8"))
         sources = source_manifest["sources"]
@@ -142,6 +150,19 @@ def validate_profile(profile):
             raise RuntimeError("China output record count differs from source manifest")
         if len(rows) != len(set(rows)):
             raise RuntimeError("Duplicate unified China rules")
+        excluded_roots = {
+            x.strip().lower()
+            for x in Path("data/allowlists/ChinaForeignDomains.list").read_text(encoding="utf-8").splitlines()
+            if x.strip() and not x.lstrip().startswith("#")
+        }
+        for row in rows:
+            kind, _, domain = row.partition(",")
+            if kind not in ("DOMAIN", "DOMAIN-SUFFIX"):
+                continue
+            if any(domain == root or domain.endswith("." + root)
+                   or (kind == "DOMAIN-SUFFIX" and root.endswith("." + domain))
+                   for root in excluded_roots):
+                raise RuntimeError(f"China includes a protected non-CN service: {row}")
         allowed = {"DOMAIN", "DOMAIN-SUFFIX", "IP-CIDR", "IP-CIDR6"}
         families = set()
         for row in rows:
@@ -161,6 +182,27 @@ def validate_profile(profile):
         if families != {4, 6}:
             raise RuntimeError("Missing IPv4 or IPv6 in unified China rules")
         print(f"Unified China rules validated: {len(rows)}")
+
+    if profile == "ad":
+        downloaded = load_manifest("ad")
+        report = json.loads(Path("data/reports/ad_build_audit.json").read_text(encoding="utf-8"))
+        if (report.get("download_run") != downloaded.get("github_run_id")
+                or report.get("input_sources") != len(downloaded["sources"])):
+            raise RuntimeError("Adblock build was not based on this run freshly downloaded sources")
+        for name in ("Surge/Rules/AdblockSet.list", "Clash/Rules/AdblockSet.yaml"):
+            if report.get("output_sha256", {}).get(name) != hashlib.sha256(Path(name).read_bytes()).hexdigest():
+                raise RuntimeError(f"Adblock output checksum does not match this run: {name}")
+        rules = Path("Surge/Rules/AdblockSet.list").read_text(encoding="utf-8").splitlines()
+        if len(rules) != len(set(rules)) or len(rules) != report.get("final_rules"):
+            raise RuntimeError("Adblock final file contains duplicates or differs from build report")
+        from build_ad_sets import parse_rules_from_text, subtract_allow_rules
+        protected, allowed, _ = parse_rules_from_text(
+            Path("data/allowlists/AdblockCriticalAllow.list").read_text(encoding="utf-8"), "allow"
+        )
+        remaining, removed = subtract_allow_rules(rules, sorted(protected | allowed))
+        if removed or len(remaining) != len(rules):
+            raise RuntimeError(f"Adblock blocks critical service endpoints: {removed} conflicting rules")
+        print(f"Adblock fresh source and protection audit verified: {len(rules)} rules")
 
     if profile == "moyu":
         module = Path("Surge/Module/StartUpAds.sgmodule").read_text(encoding="utf-8")
