@@ -523,9 +523,12 @@ def normalize_rule_line(raw_line: str, default_bucket: str, stats: ParseStats | 
         return None
 
     if line.startswith("||") or line.startswith("|"):
+        # ||domain^ is Adblock's explicit BLOCK syntax. Its presence inside an
+        # 'allow' URL must not turn it into an exception. Only @@||domain^
+        # signifies an explicit Adblock allow rule.
         normalized = parse_adblock_domain(line, stats=stats)
         if normalized:
-            return (normalized, bucket)
+            return (normalized, "allow" if raw_line.lstrip().startswith("@@") else "block")
         return None
 
     # Surge-like rule with explicit type.
@@ -534,6 +537,11 @@ def normalize_rule_line(raw_line: str, default_bucket: str, stats: ParseStats | 
         if len(parts) >= 2:
             head = parts[0].upper()
             value = parts[1]
+            if any(token.upper() in {"REJECT", "REJECT-DROP", "REJECT-NO-DROP", "REJECT-TINYGIF"}
+                   for token in parts[2:]):
+                bucket = "block"
+            elif any(token.upper() == "DIRECT" for token in parts[2:]):
+                bucket = "allow"
 
             if head in KNOWN_RULE_TYPES and head not in SAFE_OUTPUT_RULE_TYPES:
                 if stats and stats.ignored_known_type is not None:
@@ -570,14 +578,14 @@ def normalize_rule_line(raw_line: str, default_bucket: str, stats: ParseStats | 
     if hosts_match:
         domain = normalize_domain(hosts_match.group(1))
         if domain:
-            return (f"DOMAIN,{domain}", bucket)
+            return (f"DOMAIN,{domain}", "block")
         return None
 
     dnsmasq_match = re.match(r"^address=/([^/]+)/", line, flags=re.IGNORECASE)
     if dnsmasq_match:
         domain = normalize_domain(dnsmasq_match.group(1))
         if domain:
-            return (f"DOMAIN-SUFFIX,{domain}", bucket)
+            return (f"DOMAIN-SUFFIX,{domain}", "block")
         return None
 
     ip_norm = normalize_ip_or_network(line)
