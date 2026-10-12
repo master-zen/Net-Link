@@ -618,6 +618,17 @@ def main() -> int:
     if sum(map(len, subsets.values())) + excluded_non_public != len(merged_rules):
         raise RuntimeError("China rule split count mismatch")
 
+    # Conservative, opt-in routing subset: no broad TLD suffixes,
+    # keywords, ASN, GEOIP, or IP rules. Existing outputs remain unchanged.
+    safe_domain = [
+        rule for rule in subsets["domain"]
+        if not (rule.startswith("DOMAIN-SUFFIX,")
+                and "." not in rule.partition(",")[2])
+    ]
+    safe_path = ROOT / "Surge/Rules/China_Domain_Conservative.list"
+    safe_path.write_text("".join(rule + "\\n" for rule in safe_domain), encoding="utf-8")
+    print(f"[DONE] {safe_path.relative_to(ROOT)}: {len(safe_domain)} conservative domain rules")
+
     OUTPUT_SURGE_FILE.write_text("\n".join(merged_rules) + "\n", encoding="utf-8")
     write_clash_ruleset(OUTPUT_CLASH_FILE, merged_rules)
 
