@@ -3,7 +3,9 @@
 
 from __future__ import annotations
 
+import hashlib
 import ipaddress
+import json
 import re
 import ssl
 import sys
@@ -17,6 +19,8 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[1]
 
 SOURCE_URLS_FILE = ROOT / "data/sources/ChinaDomainList_URLs.txt"
+SOURCE_CACHE_DIR = ROOT / "data/cache/china"
+SOURCE_REPORT_FILE = ROOT / "data/reports/china_source_integrity.json"
 
 # 保持原输出路径，避免你现有订阅地址失效。
 # 注意：现在这个文件已经不是“纯域名合集”，而是混合规则合集。
@@ -54,7 +58,7 @@ def fetch_text(
     timeout: int = 30,
     retries: int = 3,
     max_bytes: int = 300_000_000,
-) -> str:
+) -> tuple[str, bytes]:
     last_error: Exception | None = None
 
     for attempt in range(1, retries + 1):
@@ -85,7 +89,8 @@ def fetch_text(
                     chunks.append(chunk)
 
                 charset = resp.headers.get_content_charset() or "utf-8"
-                return b"".join(chunks).decode(charset, errors="replace")
+                payload = b"".join(chunks)
+                return payload.decode(charset, errors="replace"), payload
 
         except Exception as exc:  # noqa: BLE001
             last_error = exc
@@ -533,12 +538,20 @@ def main() -> int:
 
     print(f"[INFO] source urls: {len(source_urls)}")
 
+    SOURCE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    SOURCE_REPORT_FILE.parent.mkdir(parents=True, exist_ok=True)
     all_rules: list[str] = []
+    source_reports: list[dict[str, object]] = []
     ok_sources = 0
 
-    for source in source_urls:
+    for index, source in enumerate(source_urls, 1):
         try:
-            text = fetch_text(source)
+            text, original_bytes = fetch_text(source)
+            # Preserve each upstream response before parsing or filtering.
+            url_digest = hashlib.sha256(source.encode("utf-8")).hexdigest()[:16]
+            filename = re.sub(r"[^A-Za-z0-9._-]", "_", Path(urlparse(source).path).name)[:80] or "source.txt"
+            cache_file = SOURCE_CACHE_DIR / f"{index:02d}_{url_digest}_{filename}"
+            cache_file.write_bytes(original_bytes)
             before = len(all_rules)
 
             for raw_line in text.splitlines():
@@ -548,21 +561,37 @@ def main() -> int:
 
             parsed = len(all_rules) - before
 
+            source_reports.append({
+                "url": source,
+                "status": "ok" if parsed > 0 else "empty",
+                "raw_path": cache_file.relative_to(ROOT).as_posix(),
+                "size_bytes": len(original_bytes),
+                "sha256": hashlib.sha256(original_bytes).hexdigest(),
+                "parsed_rule_count": parsed,
+            })
             if parsed > 0:
                 ok_sources += 1
-                print(f"[INFO] parsed {parsed:>8} rules: {source}")
+                print(f"[INFO] downloaded {len(original_bytes)} bytes; parsed {parsed:>8} rules: {source}")
             else:
                 print(f"[WARN] parsed zero accepted rules: {source}", file=sys.stderr)
 
         except Exception as exc:  # noqa: BLE001
+            source_reports.append({"url": source, "status": "failed", "error": str(exc)[:300]})
             print(f"[WARN] fetch failed: {source} -> {exc}", file=sys.stderr)
 
-    if ok_sources < max(2, (len(source_urls) + 2) // 3):
-        print("[ERROR] insufficient healthy China domain sources", file=sys.stderr)
-        return 1
-
-    if ok_sources == 0:
-        print("[ERROR] all sources failed or parsed zero accepted rules", file=sys.stderr)
+    SOURCE_REPORT_FILE.write_text(
+        json.dumps({
+            "source_count": len(source_urls),
+            "successful_sources": ok_sources,
+            "sources": source_reports,
+        }, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    print(f"[INFO] source integrity report: {SOURCE_REPORT_FILE.relative_to(ROOT)}")
+    # An incomplete upstream refresh must never replace the last published
+    # complete output. Keep the previous delivery and fail the workflow.
+    if ok_sources != len(source_urls):
+        print(f"[ERROR] incomplete upstream download: {ok_sources}/{len(source_urls)} healthy", file=sys.stderr)
         return 1
 
     raw_count = len(all_rules)
