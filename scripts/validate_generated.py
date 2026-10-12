@@ -138,7 +138,7 @@ def validate_profile(profile):
         for name in required:
             if published.get(name) != hashlib.sha256(Path(name).read_bytes()).hexdigest():
                 raise RuntimeError(f"China output SHA-256 mismatch: {name}")
-        tracked_snapshots = {Path(x["raw_path"]) for x in sources}
+        tracked_snapshots = {Path(x["path"]) for x in downloads["sources"]}
         actual_snapshots = set(Path("data/china/upstream").glob("*"))
         if actual_snapshots != tracked_snapshots:
             raise RuntimeError("Stale or missing China raw upstream snapshots")
