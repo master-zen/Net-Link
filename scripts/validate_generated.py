@@ -104,6 +104,15 @@ def validate_profile(profile):
         clash = next(n for n in counts if n.startswith("Clash/Rules/"))
         if counts[surge] != counts[clash]:
             raise RuntimeError("Surge and Clash rule counts differ")
+        # Counts are insufficient: validate line-for-line equivalence.
+        surge_rows = Path(surge).read_text(encoding="utf-8").splitlines()
+        clash_rows = Path(clash).read_text(encoding="utf-8").splitlines()
+        clash_payload = [
+            line[5:-1].replace("''", "'") for line in clash_rows[1:]
+            if line.startswith("  - '") and line.endswith("'")
+        ]
+        if len(clash_payload) != len(surge_rows) or clash_payload != surge_rows:
+            raise RuntimeError(f"Surge and Clash rule CONTENT differs: {surge} / {clash}")
 
     if profile == "china":
         # Independent fetch step must have succeeded in THIS run, and every
@@ -181,7 +190,35 @@ def validate_profile(profile):
                 families.add(expected)
         if families != {4, 6}:
             raise RuntimeError("Missing IPv4 or IPv6 in unified China rules")
-        print(f"Unified China rules validated: {len(rows)}")
+        suffixes = {row.partition(",")[2] for row in rows if row.startswith("DOMAIN-SUFFIX,")}
+        for rule in rows:
+            kind, _, domain = rule.partition(",")
+            if kind not in {"DOMAIN", "DOMAIN-SUFFIX"}:
+                continue
+            labels = domain.split(".")
+            if (kind == "DOMAIN" and domain in suffixes
+                    or any(".".join(labels[i:]) in suffixes for i in range(1, len(labels) - 1))):
+                raise RuntimeError(f"Redundant nested China domain entry: {rule}")
+
+        disallowed_ip = [
+            ipaddress.ip_network(line.strip(), strict=False)
+            for line in Path("data/allowlists/ChinaForeignIPs.list").read_text(encoding="utf-8").splitlines()
+            if line.strip() and not line.lstrip().startswith("#")
+        ]
+        for item in downloads["sources"]:
+            if item["bucket"] == "foreign_ip" and "telegramcidr" in item["url"]:
+                for line in Path(item["path"]).read_text(encoding="utf-8").splitlines():
+                    if line.startswith(("IP-CIDR,", "IP-CIDR6,")):
+                        disallowed_ip.append(ipaddress.ip_network(line.partition(",")[2].strip(), strict=False))
+        for row in rows:
+            kind, _, token = row.partition(",")
+            if kind not in {"IP-CIDR", "IP-CIDR6"}:
+                continue
+            network = ipaddress.ip_network(token, strict=False)
+            if any(network.version == exclusion.version and network.overlaps(exclusion)
+                   for exclusion in disallowed_ip):
+                raise RuntimeError(f"China contains a documented foreign/global service IP: {row}")
+        print(f"Unified China domain/IP risks and hierarchy verified: {len(rows)}")
 
     if profile == "ad":
         downloaded = load_manifest("ad")
