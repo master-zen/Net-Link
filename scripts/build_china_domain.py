@@ -626,7 +626,7 @@ def main() -> int:
                 and "." not in rule.partition(",")[2])
     ]
     safe_path = ROOT / "Surge/Rules/China_Domain_Conservative.list"
-    safe_path.write_text("".join(rule + "\\n" for rule in safe_domain), encoding="utf-8")
+    safe_path.write_text("".join(rule + "\n" for rule in safe_domain), encoding="utf-8")
     print(f"[DONE] {safe_path.relative_to(ROOT)}: {len(safe_domain)} conservative domain rules")
 
     OUTPUT_SURGE_FILE.write_text("\n".join(merged_rules) + "\n", encoding="utf-8")
