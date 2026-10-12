@@ -1,15 +1,15 @@
 {
-  "download_run": "38285118487",
-  "fetched_at_utc": "2026-10-12T17:34:47Z",
+  "download_run": "38285255865",
+  "fetched_at_utc": "2026-10-12T17:36:01Z",
   "input_sources": 29,
   "input_total_bytes": 36688527,
   "block_source_rules": 302553,
-  "allow_and_exception_rules": 8528,
+  "allow_and_exception_rules": 8526,
   "independent_exception_rules": 191,
-  "removed_by_allow_rules": 9529,
-  "final_rules": 261562,
+  "removed_by_allow_rules": 9528,
+  "final_rules": 261563,
   "output_sha256": {
-    "Surge/Rules/AdblockSet.list": "3e72b574699dbf96e102041231ba0d27f1b9ef5e812cafecb1624b96f76504f2",
-    "Clash/Rules/AdblockSet.yaml": "8f9619ee5bc915a505f9b0da056ed294baa318bec85819ef05678b36f78f711b"
+    "Surge/Rules/AdblockSet.list": "1acb34df6c02d3c98c7f7297d2d3fc7d2eadba930b73582a9684935c6d3d273b",
+    "Clash/Rules/AdblockSet.yaml": "bf8e67a369ab6bc9d6bfe94008f84ed3daeef17cefec7ce39028f7944b9b811b"
   }
 }
