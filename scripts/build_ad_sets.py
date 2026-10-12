@@ -48,6 +48,7 @@ OUTPUT_CLASH = ROOT / "Clash/Rules/AdblockSet.yaml"
 AD_REPORT = ROOT / "data/reports/ad_build_audit.json"
 CRITICAL_ALLOWLIST = ROOT / "data/allowlists/AdblockCriticalAllow.list"
 OFFLINE_DOWNLOADS: dict[str, dict] | None = None
+SOURCE_ACCEPT_COUNTS: dict[str, dict[str, int]] = {"block": {}, "allow": {}}
 
 WEB_DISCOVERY_SEEDS = [
     "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/README.md",
@@ -847,6 +848,7 @@ def merge_rules_from_sources(source_urls: list[str], default_bucket: str) -> tup
                 print(f"[SOURCE] {default_bucket} {index}/{len(source_urls)} FAILED {elapsed:.1f}s {warning}", flush=True)
             else:
                 all_rules.extend(rules)
+                SOURCE_ACCEPT_COUNTS[default_bucket][source] = len(rules)
                 print(
                     f"[SOURCE] {default_bucket} {index}/{len(source_urls)} OK {elapsed:.1f}s "
                     f"rules={len(rules)} {source}",
@@ -1198,7 +1200,25 @@ def main() -> int:
         print("[ERROR] AdblockSet.list became empty after allow subtraction", file=sys.stderr)
         return 1
 
+    # Compare EVERY source against its most recently PUBLISHED validated result,
+    # not against an arbitrary cached response from the current runner.
+    if args.offline and AD_REPORT.is_file():
+        try:
+            prior_counts = json.loads(AD_REPORT.read_text(encoding="utf-8")).get("source_accept_counts", {})
+        except (ValueError, OSError):
+            prior_counts = {}
+        for bucket in ("block", "allow"):
+            for url, count in SOURCE_ACCEPT_COUNTS[bucket].items():
+                previous = prior_counts.get(bucket, {}).get(url)
+                if previous is not None and previous >= 20 and count < previous * 0.55:
+                    raise RuntimeError(
+                        f"Unsafe upstream shrinkage {bucket}: {url} {previous} -> {count}; "
+                        "preserving the previously published AdblockSet"
+                    )
+
+    before_semantic_dedup = len(filtered_block_rules)
     filtered_block_rules = remove_semantically_redundant_domains(filtered_block_rules)
+    semantic_dedup_count = before_semantic_dedup - len(filtered_block_rules)
     write_ruleset(OUTPUT_BLOCK, filtered_block_rules)
     write_clash_ruleset(OUTPUT_CLASH, filtered_block_rules)
     if args.offline:
@@ -1212,6 +1232,8 @@ def main() -> int:
             "allow_and_exception_rules": len(allow_rules),
             "independent_exception_rules": len(exception_rules),
             "removed_by_allow_rules": removed_by_allow,
+            "domain_hierarchy_rules_removed": semantic_dedup_count,
+            "source_accept_counts": SOURCE_ACCEPT_COUNTS,
             "final_rules": len(filtered_block_rules),
             "output_sha256": {
                 "Surge/Rules/AdblockSet.list": hashlib.sha256(OUTPUT_BLOCK.read_bytes()).hexdigest(),
