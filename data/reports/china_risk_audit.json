@@ -1,6 +1,6 @@
 {
-  "download_run": "38285472600",
-  "download_manifest_sha256": "d7600c4b89a76732e93821633cbfc0b43b610447302a153824245bf4ce48c677",
+  "download_run": "38285691617",
+  "download_manifest_sha256": "36937dfdf7280aa6c2b9d71eef0f89c6b939fad49bfba1b3dc80d593ce165126",
   "foreign_reference_counts": {
     "v2fly_literal_domains": 38,
     "proxy_reference_rules": 27233,
@@ -151,7 +151,9 @@
     "DOMAIN-SUFFIX,genshinimpact.com",
     "DOMAIN-SUFFIX,gvt2-cn.com"
   ],
-  "foreign_ip_exclusion_count": 64709,
+  "foreign_ip_reference_network_count": 64709,
+  "excluded_foreign_registered_ipv4_address_count": "16624644",
+  "excluded_foreign_registered_ipv6_address_count": "2090138545069460042253900709888",
   "limitations": [
     "A proxy routing category is not proof of physical domain geography.",
     "IP ownership/registration and actual network location can differ.",
