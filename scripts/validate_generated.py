@@ -115,16 +115,31 @@ def validate_profile(profile):
             if entry["status"] != "ok" or entry["parsed_rule_count"] <= 0:
                 raise RuntimeError(f"Unhealthy China source: {entry['url']}")
             raw_path = Path(entry["raw_path"])
-            if not raw_path.as_posix().startswith("data/cache/china/"):
+            if not raw_path.as_posix().startswith("data/china/upstream/"):
                 raise RuntimeError(f"Unexpected China source path: {raw_path}")
             payload = raw_path.read_bytes()
             if (len(payload) != entry["size_bytes"]
                     or hashlib.sha256(payload).hexdigest() != entry["sha256"]):
                 raise RuntimeError(f"China source download SHA-256 mismatch: {entry['url']}")
+        # Verify that persisted upstream inputs and both published outputs
+        # correspond to this exact build; a passing count alone is insufficient.
+        published = source_manifest.get("published_files", {})
+        required = ("Surge/Rules/ChinaDomain.list", "Clash/Rules/ChinaDomain.yaml")
+        if not source_manifest.get("completed_at_utc"):
+            raise RuntimeError("China provenance is missing its build timestamp")
+        for name in required:
+            if published.get(name) != hashlib.sha256(Path(name).read_bytes()).hexdigest():
+                raise RuntimeError(f"China output SHA-256 mismatch: {name}")
+        tracked_snapshots = {Path(x["raw_path"]) for x in sources}
+        actual_snapshots = set(Path("data/china/upstream").glob("*"))
+        if actual_snapshots != tracked_snapshots:
+            raise RuntimeError("Stale or missing China raw upstream snapshots")
         print(f"China upstream downloads verified: {len(sources)}")
 
         rows = [row for row in Path("Surge/Rules/ChinaDomain.list").read_text(
             encoding="utf-8").splitlines() if row.strip()]
+        if len(rows) != source_manifest.get("published_rule_count"):
+            raise RuntimeError("China output record count differs from source manifest")
         if len(rows) != len(set(rows)):
             raise RuntimeError("Duplicate unified China rules")
         allowed = {"DOMAIN", "DOMAIN-SUFFIX", "IP-CIDR", "IP-CIDR6"}
