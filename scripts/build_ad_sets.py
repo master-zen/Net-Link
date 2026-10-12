@@ -16,6 +16,8 @@ Design goal:
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import ipaddress
 import re
 import subprocess
@@ -30,6 +32,8 @@ from typing import Iterable
 from urllib.parse import urlparse, urlunparse
 from urllib.request import Request, urlopen
 
+from fetch_rule_sources import load_manifest
+
 ROOT = Path(__file__).resolve().parents[1]
 
 BLOCK_SOURCES_FILE = ROOT / "data/sources/AdBlockList_URLs.txt"
@@ -41,6 +45,9 @@ ALLOW_CANDIDATES_FILE = ROOT / "data/sources/AdAllowList_Candidates.txt"
 
 OUTPUT_BLOCK = ROOT / "Surge/Rules/AdblockSet.list"
 OUTPUT_CLASH = ROOT / "Clash/Rules/AdblockSet.yaml"
+AD_REPORT = ROOT / "data/reports/ad_build_audit.json"
+CRITICAL_ALLOWLIST = ROOT / "data/allowlists/AdblockCriticalAllow.list"
+OFFLINE_DOWNLOADS: dict[str, dict] | None = None
 
 WEB_DISCOVERY_SEEDS = [
     "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/README.md",
@@ -182,6 +189,12 @@ class ParseStats:
 
 
 def fetch_text(url: str, timeout: int = 30, retries: int = 2, max_bytes: int = 20_000_000) -> str:
+    if OFFLINE_DOWNLOADS is not None:
+        item = OFFLINE_DOWNLOADS.get(url)
+        if item is None:
+            raise RuntimeError(f"URL is not present in the current run downloaded manifest: {url}")
+        # SHA-256 of all manifest files is verified once at the beginning.
+        return (ROOT / item["path"]).read_bytes().decode("utf-8-sig", errors="replace")
     if not url.startswith("https://"):
         raise ValueError(f"Only HTTPS sources are supported: {url}")
 
@@ -807,7 +820,9 @@ def merge_rules_from_sources(source_urls: list[str], default_bucket: str) -> tup
             blocked, allowed, stats = parse_rules_from_text(response, default_bucket)
             if stats.parsed == 0:
                 return source, [], stats, f"No safe rules parsed: {source}", time.monotonic() - started
-            rules = (allowed | blocked) if default_bucket == "allow" else blocked
+            # CRITICAL: explicitly blocked entries in allowlist sources are
+            # not exceptions. Only allow-marked/normal allowlist entries qualify.
+            rules = allowed if default_bucket == "allow" else blocked
             return source, list(rules), stats, None, time.monotonic() - started
         except Exception as exc:
             return source, [], ParseStats(), f"Fetch failed: {source} -> {exc}", time.monotonic() - started
@@ -991,6 +1006,25 @@ def subtract_allow_rules(block_rules: list[str], allow_rules: list[str]) -> tupl
     return filtered, removed
 
 
+def remove_semantically_redundant_domains(rules: list[str]) -> list[str]:
+    """Drop exact domains and nested suffixes already covered by a parent suffix."""
+    suffixes = {rule.partition(",")[2] for rule in rules if rule.startswith("DOMAIN-SUFFIX,")}
+    final = []
+    for rule in rules:
+        kind, _, domain = rule.partition(",")
+        if kind not in {"DOMAIN", "DOMAIN-SUFFIX"}:
+            final.append(rule)
+            continue
+        labels = domain.split(".")
+        # DOMAIN at same suffix is redundant too; suffix at same is kept.
+        if kind == "DOMAIN" and domain in suffixes:
+            continue
+        if any(".".join(labels[i:]) in suffixes for i in range(1, len(labels) - 1)):
+            continue
+        final.append(rule)
+    return final
+
+
 def write_ruleset(path: Path, rules: list[str]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     content = "\n".join(rules).strip()
@@ -1043,12 +1077,20 @@ def parse_args() -> argparse.Namespace:
         default=180,
         help="Maximum number of discovered candidate URLs to validate per run when --discovery is enabled.",
     )
+    parser.add_argument("--offline", action="store_true", help="Generate solely from this GitHub run freshly downloaded data snapshots")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     ensure_parent_dirs()
+    global OFFLINE_DOWNLOADS
+    if args.offline:
+        if args.discovery:
+            raise RuntimeError("Offline production build cannot run source discovery")
+        manifest = load_manifest("ad")
+        OFFLINE_DOWNLOADS = {item["url"]: item for item in manifest["sources"]}
+        print(f"[INPUT] ad build uses ONLY {len(OFFLINE_DOWNLOADS)} fresh downloaded inputs", flush=True)
 
     block_sources = read_source_urls(BLOCK_SOURCES_FILE)
     allow_sources = read_source_urls(ALLOW_SOURCES_FILE)
@@ -1090,6 +1132,30 @@ def main() -> int:
 
     block_rules, block_warnings, block_stats = merge_rules_from_sources(block_sources, default_bucket="block")
     allow_rules, allow_warnings, allow_stats = merge_rules_from_sources(allow_sources, default_bucket="allow")
+    # DNS breakage exceptions are an independent evidence set (AdGuard issues).
+    # Parse it as BLOCK input so only explicit @@ exceptions enter allow rules.
+    exception_urls = read_source_urls(ROOT / "data/sources/AdExceptionList_URLs.txt")
+    exception_rules: set[str] = set()
+    for source in exception_urls:
+        text = fetch_text(source)
+        _, explicit_allows, _ = parse_rules_from_text(text, "block")
+        if not explicit_allows:
+            raise RuntimeError(f"AdGuard exception source contains no explicit @@ rules: {source}")
+        exception_rules.update(explicit_allows)
+    if args.offline:
+        # Preserve @@ exceptions that appear within a normally blocked source,
+        # rather than throwing them away or turning them into block entries.
+        for source in block_sources:
+            text = fetch_text(source)
+            _, embedded_allows, _ = parse_rules_from_text(text, "block")
+            exception_rules.update(embedded_allows)
+    if CRITICAL_ALLOWLIST.is_file():
+        local_rules, local_allows, _ = parse_rules_from_text(
+            CRITICAL_ALLOWLIST.read_text(encoding="utf-8"), "allow")
+        allow_rules = sorted(set(allow_rules) | set(local_allows) | set(local_rules) | exception_rules)
+    else:
+        allow_rules = sorted(set(allow_rules) | exception_rules)
+    print(f"[SAFETY] independent exception rules={len(exception_rules)}; total allow={len(allow_rules)}", flush=True)
 
     if block_warnings:
         for warning in block_warnings:
@@ -1124,8 +1190,28 @@ def main() -> int:
         print("[ERROR] AdblockSet.list became empty after allow subtraction", file=sys.stderr)
         return 1
 
+    filtered_block_rules = remove_semantically_redundant_domains(filtered_block_rules)
     write_ruleset(OUTPUT_BLOCK, filtered_block_rules)
     write_clash_ruleset(OUTPUT_CLASH, filtered_block_rules)
+    if args.offline:
+        inputs = load_manifest("ad")
+        report = {
+            "download_run": inputs["github_run_id"],
+            "fetched_at_utc": inputs["fetched_at_utc"],
+            "input_sources": len(inputs["sources"]),
+            "input_total_bytes": inputs["source_bytes_total"],
+            "block_source_rules": len(block_rules),
+            "allow_and_exception_rules": len(allow_rules),
+            "independent_exception_rules": len(exception_rules),
+            "removed_by_allow_rules": removed_by_allow,
+            "final_rules": len(filtered_block_rules),
+            "output_sha256": {
+                "Surge/Rules/AdblockSet.list": hashlib.sha256(OUTPUT_BLOCK.read_bytes()).hexdigest(),
+                "Clash/Rules/AdblockSet.yaml": hashlib.sha256(OUTPUT_CLASH.read_bytes()).hexdigest(),
+            }
+        }
+        AD_REPORT.parent.mkdir(parents=True, exist_ok=True)
+        AD_REPORT.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     print(f"[DONE] {OUTPUT_BLOCK.relative_to(ROOT)}: {len(filtered_block_rules)} lines")
     print(f"[DONE] {OUTPUT_CLASH.relative_to(ROOT)}: {len(filtered_block_rules)} lines")
