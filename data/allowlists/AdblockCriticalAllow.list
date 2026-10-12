@@ -1,0 +1,16 @@
+# Critical functional endpoints reported by users to break under DNS-level blocking.
+# Conservative exact-host allow rules: do not blanket-allow entire CDN/ad networks.
+# This list complements live AdGuard DNS issue-backed exceptions and Hagezi allowlists.
+# Add a domain only with breakage evidence; never put trackers here for convenience.
+DOMAIN,accounts.google.com
+DOMAIN,login.microsoftonline.com
+DOMAIN,login.live.com
+DOMAIN,appleid.apple.com
+DOMAIN,api.stripe.com
+DOMAIN,checkout.stripe.com
+DOMAIN,www.paypal.com
+DOMAIN,api.paypal.com
+DOMAIN,github.com
+DOMAIN,api.github.com
+DOMAIN,cloudflare.com
+DOMAIN,icloud.com
