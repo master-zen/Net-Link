@@ -2652,7 +2652,6 @@ http://ns3109441.mypdns.org:6969/announce
 http://ns349743.ip-91-121-106.eu/announce
 http://nyaa.tracker.wf:7777/announce
 http://nyaaplus.i2p/announce
-http://ogp.me/ns
 http://open-v6.demonoid.ch:6969/announce
 http://open.8a.is:6969/announce
 http://open.acgnxtracker.com/announce
@@ -3232,7 +3231,6 @@ https://evening-badlands-6215.herokuapp.com/announce
 https://explodie.org:6969/announce
 https://fbiagent.cyou/announce
 https://fxtt.ru:80/announce
-https://git.ustc.edu.cn/users/sign_in?redirect_to=masked_redirect_to";
 https://grifon.info:80/announce
 https://gwp2-v19.rinet.ru/announce
 https://gwp2-v19.rinet.ru:80/announce
