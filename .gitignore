@@ -3,8 +3,7 @@ __pycache__/
 *.py[cod]
 
 # Local build caches and staging
-# Downloaded China source snapshots are kept in data/ during builds and uploaded as CI artifacts.
-data/cache/china/
+# China upstream inputs are tracked under data/china/upstream/ for auditability.
 build/discovered_allowlist_urls.txt
 build/discovered_module_urls.txt
 build/discovered_rule_urls.txt
