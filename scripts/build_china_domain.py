@@ -652,6 +652,24 @@ def domain_hits_exclusion(domain: str, kind: str, exact: set[str], suffixes: set
     return any(".".join(labels[i:]) in suffixes for i in range(len(labels)))
 
 
+def eliminate_domain_hierarchy_redundancy(rules: list[str]) -> tuple[list[str], int]:
+    """A suffix covers exact entries beneath it and nested suffixes."""
+    suffixes = {r.partition(",")[2] for r in rules if r.startswith("DOMAIN-SUFFIX,")}
+    final = []
+    removed = 0
+    for rule in rules:
+        kind, _, domain = rule.partition(",")
+        labels = domain.split(".")
+        if (kind == "DOMAIN" and domain in suffixes) or (
+            kind in {"DOMAIN", "DOMAIN-SUFFIX"}
+            and any(".".join(labels[i:]) in suffixes for i in range(1, len(labels) - 1))
+        ):
+            removed += 1
+            continue
+        final.append(rule)
+    return final, removed
+
+
 def remove_foreign_ip_overlap(networks: list[ipaddress._BaseNetwork], excluded: list[ipaddress._BaseNetwork]):
     """Subtract independently documented non-CN allocated or service CIDRs.
 
@@ -817,6 +835,8 @@ def main() -> int:
             foreign_excluded_rules.append(rule)
             continue
         domain_rules.append(rule)
+    domain_rules, domain_hierarchy_removed = eliminate_domain_hierarchy_redundancy(domain_rules)
+    print(f"[AUDIT] China redundant exact/subdomain rules removed: {domain_hierarchy_removed}")
     if len(foreign_excluded_rules) > max(1000, len(domain_rules) // 10):
         raise RuntimeError("Excessive foreign-domain exclusion: review upstream changes")
     ip_rules = []
@@ -858,6 +878,7 @@ def main() -> int:
             "foreign_reference_counts": risk_ref_stats,
             "protected_foreign_domain_roots": len(exclusion_suffixes),
             "foreign_domain_rules_excluded": len(foreign_excluded_rules),
+            "domain_hierarchy_redundant_rules_removed": domain_hierarchy_removed,
             "foreign_domain_exclusion_examples": foreign_excluded_rules[:80],
             "proxy_reference_exact_candidate_count": len(proxy_conflicts),
             "proxy_reference_candidate_examples": proxy_conflicts[:80],
