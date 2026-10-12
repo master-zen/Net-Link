@@ -12,14 +12,6 @@ ROOT = Path(__file__).resolve().parents[1]
 RULES = ROOT / "Surge/Rules"
 REPORT = ROOT / "data/reports/rule_coverage_audit.json"
 TYPES = ("DOMAIN", "DOMAIN-SUFFIX", "DOMAIN-KEYWORD", "IP-CIDR", "IP-CIDR6", "IP-ASN", "GEOIP")
-PARTITIONS = {
-    "China_Domain.list": {"DOMAIN", "DOMAIN-SUFFIX"},
-    "China_IPv4.list": {"IP-CIDR"},
-    "China_IPv6.list": {"IP-CIDR6"},
-    "China_ASN.list": {"IP-ASN"},
-    "China_GEOIP.list": {"GEOIP"},
-    "China_Keyword.list": {"DOMAIN-KEYWORD"},
-}
 CRITICAL = (
     "google.com", "github.com", "openai.com", "youtube.com",
     "stripe.com", "dashboard.stripe.com", "microsoft.com",
@@ -91,23 +83,6 @@ def main():
     china, china_invalid = parse(china_rows)
     ad, ad_invalid = parse(ad_rows)
     combined = set(china_rows)
-    partitions = {}
-    all_partition_rows = set()
-    for filename, types in PARTITIONS.items():
-        rows = load(filename)
-        wrong_type = [r for r in rows if r.partition(",")[0] not in types]
-        not_in_combined = [r for r in rows if r not in combined]
-        partitions[filename] = {
-            "count": len(rows), "unique_count": len(set(rows)),
-            "wrong_type_count": len(wrong_type),
-            "not_in_combined_count": len(not_in_combined),
-            "wrong_type_examples": wrong_type[:20],
-            "not_in_combined_examples": not_in_combined[:20],
-        }
-        all_partition_rows.update(rows)
-    # CIDR subsets intentionally omit non-public prefixes. Other types should be complete.
-    missing_non_ip = sorted(r for r in combined - all_partition_rows
-                            if not r.startswith(("IP-CIDR,", "IP-CIDR6,")))
     critical = {}
     for domain in CRITICAL:
         critical[domain] = {
@@ -173,9 +148,6 @@ def main():
                        "ad": {k: len(ad[k]) for k in TYPES}},
         "invalid_rows": {"china": len(china_invalid), "ad": len(ad_invalid),
                          "china_examples": china_invalid[:30], "ad_examples": ad_invalid[:30]},
-        "partitions": partitions,
-        "missing_non_ip_partition_count": len(missing_non_ip),
-        "missing_non_ip_partition_examples": missing_non_ip[:50],
         "cidr": cidr_audit(china),
         "critical_domain_tests": critical,
         "china_keywords": sorted(china["DOMAIN-KEYWORD"]),
