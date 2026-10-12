@@ -575,80 +575,39 @@ def main() -> int:
         print("[ERROR] no rules generated", file=sys.stderr)
         return 1
 
-    # Preserve legacy combined output for existing subscribers. Publish typed,
-    # opt-in subsets without changing routing semantics in existing profiles.
-    typed_outputs = {
-        "domain": ROOT / "Surge/Rules/China_Domain.list",
-        "ipv4": ROOT / "Surge/Rules/China_IPv4.list",
-        "ipv6": ROOT / "Surge/Rules/China_IPv6.list",
-        "asn": ROOT / "Surge/Rules/China_ASN.list",
-        "geoip": ROOT / "Surge/Rules/China_GEOIP.list",
-        "keyword": ROOT / "Surge/Rules/China_Keyword.list",
-    }
-    type_to_bucket = {
-        "DOMAIN": "domain", "DOMAIN-SUFFIX": "domain",
-        "IP-CIDR": "ipv4", "IP-CIDR6": "ipv6",
-        "IP-ASN": "asn", "GEOIP": "geoip",
-        "DOMAIN-KEYWORD": "keyword",
-    }
-    subsets: dict[str, list[str]] = {key: [] for key in typed_outputs}
-    excluded_non_public = 0
-    for rule in merged_rules:
-        rule_type, _, value = rule.partition(",")
-        bucket = type_to_bucket[rule_type]
-        if bucket in {"ipv4", "ipv6"}:
-            network = ipaddress.ip_network(value, strict=False)
-            # Only publish global unicast ranges in the opt-in public-IP sets.
-            # Keep legacy ChinaDomain.list unchanged for compatibility.
-            if (not network.network_address.is_global
-                    or not network.broadcast_address.is_global
-                    or (network.version == 6
-                        and network.network_address.ipv4_mapped is not None)):
-                excluded_non_public += 1
-                continue
-        subsets[bucket].append(rule)
-    print(f"[AUDIT] excluded non-public/mapped IP rules from typed sets: {excluded_non_public}")
-    for bucket, output in typed_outputs.items():
-        output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(
-            "".join(rule + "\n" for rule in subsets[bucket]),
-            encoding="utf-8",
-        )
-        print(f"[DONE] {output.relative_to(ROOT)}: {len(subsets[bucket])} lines")
-    if sum(map(len, subsets.values())) + excluded_non_public != len(merged_rules):
-        raise RuntimeError("China rule split count mismatch")
-
-    # Conservative, opt-in routing subset: no broad TLD suffixes,
-    # keywords, ASN, GEOIP, or IP rules. Existing outputs remain unchanged.
-    safe_domain = [
-        rule for rule in subsets["domain"]
-        if not (rule.startswith("DOMAIN-SUFFIX,")
-                and "." not in rule.partition(",")[2])
+    # Publish one Surge ruleset. Keep intermediate source handling internal.
+    # Conservative domain rules exclude broad TLD suffixes and all keywords.
+    # ASN/GEOIP require independent verification before use for DIRECT.
+    domain_rules = [
+        rule for rule in merged_rules
+        if rule.startswith("DOMAIN,")
+        or (rule.startswith("DOMAIN-SUFFIX,")
+            and "." in rule.partition(",")[2])
     ]
-    safe_path = ROOT / "Surge/Rules/China_Domain_Conservative.list"
-    safe_path.write_text("".join(rule + "\n" for rule in safe_domain), encoding="utf-8")
-    print(f"[DONE] {safe_path.relative_to(ROOT)}: {len(safe_domain)} conservative domain rules")
-
-    # Opt-in, coverage-equivalent canonical IP subsets; no geography claims.
-    # These are derived only from already filtered public IP subsets.
-    for bucket, name, prefix in (
-        ("ipv4", "China_IPv4_Collapsed.list", "IP-CIDR"),
-        ("ipv6", "China_IPv6_Collapsed.list", "IP-CIDR6"),
-    ):
-        networks = [
-            ipaddress.ip_network(rule.partition(",")[2], strict=False)
-            for rule in subsets[bucket]
-        ]
-        collapsed = sorted(
-            ipaddress.collapse_addresses(networks),
-            key=lambda network: (int(network.network_address), network.prefixlen),
-        )
-        output = ROOT / "Surge/Rules" / name
-        output.write_text(
-            "".join(f"{prefix},{network.compressed}\n" for network in collapsed),
-            encoding="utf-8",
-        )
-        print(f"[DONE] {output.relative_to(ROOT)}: {len(collapsed)} coverage-equivalent prefixes")
+    ip_rules = []
+    for family, kind in ((4, "IP-CIDR"), (6, "IP-CIDR6")):
+        nets = []
+        for rule in merged_rules:
+            rule_kind, _, value = rule.partition(",")
+            if rule_kind != kind:
+                continue
+            net = ipaddress.ip_network(value, strict=False)
+            if net.version != family:
+                continue
+            if (not net.network_address.is_global
+                    or not net.broadcast_address.is_global
+                    or (family == 6 and net.network_address.ipv4_mapped is not None)):
+                continue
+            nets.append(net)
+        for net in ipaddress.collapse_addresses(nets):
+            ip_rules.append(f"{kind},{net.compressed}")
+    final_rules = sorted(set(domain_rules + ip_rules), key=rule_sort_key)
+    if not final_rules or not any(r.startswith("IP-CIDR,") for r in final_rules) or not any(
+            r.startswith("IP-CIDR6,") for r in final_rules):
+        raise RuntimeError("Incomplete unified China ruleset")
+    print(f"[AUDIT] accepted domains={len(domain_rules)} IP rules={len(ip_rules)}")
+    print(f"[AUDIT] excluded/merged rules={len(merged_rules) - len(final_rules)}")
+    merged_rules = final_rules
 
     OUTPUT_SURGE_FILE.write_text("\n".join(merged_rules) + "\n", encoding="utf-8")
     write_clash_ruleset(OUTPUT_CLASH_FILE, merged_rules)
