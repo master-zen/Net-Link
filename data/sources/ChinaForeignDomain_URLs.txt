@@ -1,0 +1,3 @@
+# Independent non-mainland routing references; not China source inputs.
+https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/proxy.txt
+https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/geolocation-!cn
