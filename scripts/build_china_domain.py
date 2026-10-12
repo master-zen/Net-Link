@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import ipaddress
 import json
@@ -16,6 +17,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse, urlunparse
 from urllib.request import Request, urlopen
+
+from fetch_rule_sources import load_manifest
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -529,6 +532,9 @@ def print_type_stats(rules: list[str]) -> None:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--offline", action="store_true", help="Build ONLY from fresh, verified data/ snapshots, with zero network access")
+    args = parser.parse_args()
     OUTPUT_SURGE_FILE.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_CLASH_FILE.parent.mkdir(parents=True, exist_ok=True)
 
@@ -539,6 +545,13 @@ def main() -> int:
         return 1
 
     print(f"[INFO] source urls: {len(source_urls)}")
+    downloaded = {}
+    if args.offline:
+        manifest = load_manifest("china")
+        downloaded = {item["url"]: item for item in manifest["sources"] if item["bucket"] == "china"}
+        if set(downloaded) != set(source_urls):
+            raise RuntimeError("Current China source configuration differs from this run fresh downloaded snapshots")
+        print(f"[INPUT] verified offline China inputs: {len(downloaded)} sources")
 
     SOURCE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     SOURCE_REPORT_FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -554,12 +567,17 @@ def main() -> int:
 
     for index, source in enumerate(source_urls, 1):
         try:
-            text, original_bytes = fetch_text(source)
-            # Preserve each upstream response before parsing or filtering.
-            url_digest = hashlib.sha256(source.encode("utf-8")).hexdigest()[:16]
-            filename = re.sub(r"[^A-Za-z0-9._-]", "_", Path(urlparse(source).path).name)[:80] or "source.txt"
-            cache_file = SOURCE_CACHE_DIR / f"{index:02d}_{url_digest}_{filename}"
-            cache_file.write_bytes(original_bytes)
+            if args.offline:
+                snapshot = downloaded[source]
+                cache_file = ROOT / snapshot["path"]
+                original_bytes = cache_file.read_bytes()
+                text = original_bytes.decode("utf-8-sig", errors="replace")
+            else:
+                text, original_bytes = fetch_text(source)
+                url_digest = hashlib.sha256(source.encode("utf-8")).hexdigest()[:16]
+                filename = re.sub(r"[^A-Za-z0-9._-]", "_", Path(urlparse(source).path).name)[:80] or "source.txt"
+                cache_file = SOURCE_CACHE_DIR / f"{index:02d}_{url_digest}_{filename}"
+                cache_file.write_bytes(original_bytes)
             before = len(all_rules)
 
             for raw_line in text.splitlines():
