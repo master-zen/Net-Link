@@ -6,11 +6,13 @@ from __future__ import annotations
 import hashlib
 import ipaddress
 import json
+import os
 import re
 import ssl
 import sys
 import time
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse, urlunparse
 from urllib.request import Request, urlopen
@@ -19,7 +21,7 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parents[1]
 
 SOURCE_URLS_FILE = ROOT / "data/sources/ChinaDomainList_URLs.txt"
-SOURCE_CACHE_DIR = ROOT / "data/cache/china"
+SOURCE_CACHE_DIR = ROOT / "data/china/upstream"
 SOURCE_REPORT_FILE = ROOT / "data/reports/china_source_integrity.json"
 
 # 保持原输出路径，避免你现有订阅地址失效。
@@ -57,7 +59,7 @@ def fetch_text(
     url: str,
     timeout: int = 30,
     retries: int = 3,
-    max_bytes: int = 300_000_000,
+    max_bytes: int = 30_000_000,
 ) -> tuple[str, bytes]:
     last_error: Exception | None = None
 
@@ -540,6 +542,12 @@ def main() -> int:
 
     SOURCE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     SOURCE_REPORT_FILE.parent.mkdir(parents=True, exist_ok=True)
+    started_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    run_id = os.getenv("GITHUB_RUN_ID")
+    run_url = (
+        f"https://github.com/{os.getenv('GITHUB_REPOSITORY', 'master-zen/Net-Link')}/actions/runs/{run_id}"
+        if run_id else None
+    )
     all_rules: list[str] = []
     source_reports: list[dict[str, object]] = []
     ok_sources = 0
@@ -564,6 +572,7 @@ def main() -> int:
             source_reports.append({
                 "url": source,
                 "status": "ok" if parsed > 0 else "empty",
+                "downloaded_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
                 "raw_path": cache_file.relative_to(ROOT).as_posix(),
                 "size_bytes": len(original_bytes),
                 "sha256": hashlib.sha256(original_bytes).hexdigest(),
@@ -581,6 +590,8 @@ def main() -> int:
 
     SOURCE_REPORT_FILE.write_text(
         json.dumps({
+            "started_at_utc": started_at,
+            "actions_run_url": run_url,
             "source_count": len(source_urls),
             "successful_sources": ok_sources,
             "sources": source_reports,
@@ -640,6 +651,29 @@ def main() -> int:
 
     OUTPUT_SURGE_FILE.write_text("\n".join(merged_rules) + "\n", encoding="utf-8")
     write_clash_ruleset(OUTPUT_CLASH_FILE, merged_rules)
+
+    # Keep only the current 12 source snapshots; remove any orphaned files if
+    # the configured sources change. This directory is tracked by Git.
+    current_snapshots = {ROOT / str(entry["raw_path"]) for entry in source_reports}
+    for old_snapshot in SOURCE_CACHE_DIR.iterdir():
+        if old_snapshot.is_file() and old_snapshot not in current_snapshots:
+            old_snapshot.unlink()
+
+    manifest = json.loads(SOURCE_REPORT_FILE.read_text(encoding="utf-8"))
+    manifest.update({
+        "completed_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+        "downloaded_bytes_total": sum(int(entry["size_bytes"]) for entry in source_reports),
+        "normalized_raw_rule_count": raw_count,
+        "published_rule_count": len(merged_rules),
+        "published_files": {
+            "Surge/Rules/ChinaDomain.list": hashlib.sha256(OUTPUT_SURGE_FILE.read_bytes()).hexdigest(),
+            "Clash/Rules/ChinaDomain.yaml": hashlib.sha256(OUTPUT_CLASH_FILE.read_bytes()).hexdigest(),
+        },
+    })
+    SOURCE_REPORT_FILE.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     print(f"[DONE] raw accepted rules: {raw_count}")
     print(f"[DONE] duplicate rules removed: {raw_count - len(merged_rules)}")
