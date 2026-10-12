@@ -103,67 +103,29 @@ def validate_profile(profile):
             raise RuntimeError("Surge and Clash rule counts differ")
 
     if profile == "china":
-        conservative_path = Path("Surge/Rules/China_Domain_Conservative.list")
-        conservative = [r for r in conservative_path.read_text(encoding="utf-8").splitlines() if r]
-        domain_rows = [r for r in Path("Surge/Rules/China_Domain.list").read_text(encoding="utf-8").splitlines() if r]
-        expected = [r for r in domain_rows
-                    if not (r.startswith("DOMAIN-SUFFIX,") and "." not in r.partition(",")[2])]
-        if conservative != expected or not conservative:
-            raise RuntimeError("Conservative China domain subset mismatch")
-        print(f"{conservative_path}: {len(conservative)} verified")
-
-        # Prove address-set equality for both canonical opt-in CIDR files.
-        for family, original, canonical, prefix in (
-            (4, "China_IPv4.list", "China_IPv4_Collapsed.list", "IP-CIDR"),
-            (6, "China_IPv6.list", "China_IPv6_Collapsed.list", "IP-CIDR6"),
-        ):
-            def read_nets(filename):
-                rows = [row for row in (Path("Surge/Rules") / filename).read_text(
-                    encoding="utf-8").splitlines() if row]
-                if len(rows) != len(set(rows)):
-                    raise RuntimeError(f"Duplicate CIDR in {filename}")
-                networks = []
-                for row in rows:
-                    kind, sep, value = row.partition(",")
-                    if not sep or kind != prefix:
-                        raise RuntimeError(f"Unexpected rule in {filename}: {row}")
-                    net = ipaddress.ip_network(value, strict=False)
-                    if net.version != family or not net.is_global:
-                        raise RuntimeError(f"Invalid address in {filename}: {row}")
-                    networks.append(net)
-                return list(ipaddress.collapse_addresses(networks)), rows
-            original_nets, _ = read_nets(original)
-            canonical_nets, canonical_rows = read_nets(canonical)
-            if original_nets != canonical_nets or len(canonical_rows) != len(canonical_nets):
-                raise RuntimeError(f"CIDR coverage mismatch: {canonical}")
-            print(f"{canonical}: {len(canonical_rows)} prefixes; exact coverage verified")
-
-        combined = set(Path("Surge/Rules/ChinaDomain.list").read_text(encoding="utf-8").splitlines())
-        partitions = {
-            "China_Domain.list": {"DOMAIN", "DOMAIN-SUFFIX"},
-            "China_IPv4.list": {"IP-CIDR"},
-            "China_IPv6.list": {"IP-CIDR6"},
-            "China_ASN.list": {"IP-ASN"},
-            "China_GEOIP.list": {"GEOIP"},
-            "China_Keyword.list": {"DOMAIN-KEYWORD"},
-        }
-        for filename, types in partitions.items():
-            path = Path("Surge/Rules") / filename
-            rows = [r for r in path.read_text(encoding="utf-8").splitlines() if r.strip()]
-            if len(rows) != len(set(rows)):
-                raise RuntimeError(f"Duplicate China subset rules: {path}")
-            for row in rows:
-                kind, sep, value = row.partition(",")
-                if not sep or kind not in types or row not in combined:
-                    raise RuntimeError(f"Invalid China subset entry: {path}: {row}")
-                if kind in {"IP-CIDR", "IP-CIDR6"}:
-                    net = ipaddress.ip_network(value, strict=False)
-                    if (not net.network_address.is_global
-                            or not net.broadcast_address.is_global
-                            or (net.version == 6
-                                and net.network_address.ipv4_mapped is not None)):
-                        raise RuntimeError(f"Non-public China IP subset entry: {path}: {row}")
-            print(f"{path}: {len(rows)} validated")
+        rows = [row for row in Path("Surge/Rules/ChinaDomain.list").read_text(
+            encoding="utf-8").splitlines() if row.strip()]
+        if len(rows) != len(set(rows)):
+            raise RuntimeError("Duplicate unified China rules")
+        allowed = {"DOMAIN", "DOMAIN-SUFFIX", "IP-CIDR", "IP-CIDR6"}
+        families = set()
+        for row in rows:
+            kind, sep, value = row.partition(",")
+            if not sep or kind not in allowed or not value:
+                raise RuntimeError(f"Unsafe unified China rule: {row}")
+            if kind == "DOMAIN-SUFFIX" and "." not in value:
+                raise RuntimeError(f"Broad TLD suffix: {row}")
+            if kind in {"IP-CIDR", "IP-CIDR6"}:
+                net = ipaddress.ip_network(value, strict=False)
+                expected = 4 if kind == "IP-CIDR" else 6
+                if (net.version != expected or not net.network_address.is_global
+                        or not net.broadcast_address.is_global
+                        or (expected == 6 and net.network_address.ipv4_mapped is not None)):
+                    raise RuntimeError(f"Unsafe unified China IP: {row}")
+                families.add(expected)
+        if families != {4, 6}:
+            raise RuntimeError("Missing IPv4 or IPv6 in unified China rules")
+        print(f"Unified China rules validated: {len(rows)}")
 
     if profile == "moyu":
         module = Path("Surge/Module/StartUpAds.sgmodule").read_text(encoding="utf-8")
