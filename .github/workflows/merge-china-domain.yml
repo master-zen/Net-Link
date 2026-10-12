@@ -54,7 +54,9 @@ jobs:
             Surge/Rules/China_Domain.list \
             Surge/Rules/China_Domain_Conservative.list \
             Surge/Rules/China_IPv4.list \
+            Surge/Rules/China_IPv4_Collapsed.list \
             Surge/Rules/China_IPv6.list \
+            Surge/Rules/China_IPv6_Collapsed.list \
             Surge/Rules/China_ASN.list \
             Surge/Rules/China_GEOIP.list \
             Surge/Rules/China_Keyword.list \
