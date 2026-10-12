@@ -112,6 +112,32 @@ def validate_profile(profile):
             raise RuntimeError("Conservative China domain subset mismatch")
         print(f"{conservative_path}: {len(conservative)} verified")
 
+        # Prove address-set equality for both canonical opt-in CIDR files.
+        for family, original, canonical, prefix in (
+            (4, "China_IPv4.list", "China_IPv4_Collapsed.list", "IP-CIDR"),
+            (6, "China_IPv6.list", "China_IPv6_Collapsed.list", "IP-CIDR6"),
+        ):
+            def read_nets(filename):
+                rows = [row for row in (Path("Surge/Rules") / filename).read_text(
+                    encoding="utf-8").splitlines() if row]
+                if len(rows) != len(set(rows)):
+                    raise RuntimeError(f"Duplicate CIDR in {filename}")
+                networks = []
+                for row in rows:
+                    kind, sep, value = row.partition(",")
+                    if not sep or kind != prefix:
+                        raise RuntimeError(f"Unexpected rule in {filename}: {row}")
+                    net = ipaddress.ip_network(value, strict=False)
+                    if net.version != family or not net.is_global:
+                        raise RuntimeError(f"Invalid address in {filename}: {row}")
+                    networks.append(net)
+                return list(ipaddress.collapse_addresses(networks)), rows
+            original_nets, _ = read_nets(original)
+            canonical_nets, canonical_rows = read_nets(canonical)
+            if original_nets != canonical_nets or len(canonical_rows) != len(canonical_nets):
+                raise RuntimeError(f"CIDR coverage mismatch: {canonical}")
+            print(f"{canonical}: {len(canonical_rows)} prefixes; exact coverage verified")
+
         combined = set(Path("Surge/Rules/ChinaDomain.list").read_text(encoding="utf-8").splitlines())
         partitions = {
             "China_Domain.list": {"DOMAIN", "DOMAIN-SUFFIX"},
