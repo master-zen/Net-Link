@@ -1,12 +1,12 @@
 {
   "scope": "entire published rule files, not a sample",
   "files": {
-    "ChinaDomain.list": 124762,
-    "AdblockSet.list": 293055
+    "ChinaDomain.list": 124711,
+    "AdblockSet.list": 261562
   },
   "unique_rules": {
-    "china": 124762,
-    "ad": 293055
+    "china": 124711,
+    "ad": 261562
   },
   "duplicates": {
     "china": 0,
@@ -14,8 +14,8 @@
   },
   "rule_types": {
     "china": {
-      "DOMAIN": 340,
-      "DOMAIN-SUFFIX": 111864,
+      "DOMAIN": 336,
+      "DOMAIN-SUFFIX": 111817,
       "DOMAIN-KEYWORD": 0,
       "IP-CIDR": 8278,
       "IP-CIDR6": 4280,
@@ -23,8 +23,8 @@
       "GEOIP": 0
     },
     "ad": {
-      "DOMAIN": 42702,
-      "DOMAIN-SUFFIX": 249795,
+      "DOMAIN": 17831,
+      "DOMAIN-SUFFIX": 243173,
       "DOMAIN-KEYWORD": 0,
       "IP-CIDR": 554,
       "IP-CIDR6": 4,
@@ -94,9 +94,7 @@
       "ad_matches": []
     },
     "login.microsoftonline.com": {
-      "china_matches": [
-        "DOMAIN-SUFFIX,microsoftonline.com"
-      ],
+      "china_matches": [],
       "ad_matches": []
     },
     "apple.com": {
@@ -168,10 +166,10 @@
   },
   "china_keywords": [],
   "keyword_critical_matches": {},
-  "ad_china_domain_overlap_count": 6018,
+  "ad_china_domain_overlap_count": 4699,
   "overlap_category_counts_nonexclusive": {
-    "domain_suffix": 6002,
-    "exact_domain": 18
+    "domain_suffix": 4690,
+    "exact_domain": 10
   },
   "overlap_single_label_suffix_counts": {},
   "overlap_keyword_counts": {},
@@ -179,51 +177,15 @@
   "ad_china_domain_overlap_csv": "data/reports/rule_coverage_overlaps.csv",
   "ad_china_domain_overlap_examples": [
     {
-      "ad_rule": "DOMAIN,360.hiido.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,hiido.com"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,3gimg.qq.com",
       "china_matches": [
         "DOMAIN-SUFFIX,qq.com"
       ]
     },
     {
-      "ad_rule": "DOMAIN,587.dopa.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,dopa.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,a.cnzz.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,cnzz.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,a.i.adsame.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,adsame.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,a.stat.xiaomi.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,xiaomi.com"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,aboard.apilocate.amap.com",
       "china_matches": [
         "DOMAIN-SUFFIX,amap.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,abroad-ad.kingsoft-office-service.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,kingsoft-office-service.com"
       ]
     },
     {
@@ -257,51 +219,15 @@
       ]
     },
     {
-      "ad_rule": "DOMAIN,abtest.mistat.xiaomi.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,xiaomi.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ac.mmstat.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,mmstat.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,accscdn.m.taobao.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,taobao.com"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,acfun-log-sdk.ksapisrv.com",
       "china_matches": [
         "DOMAIN-SUFFIX,ksapisrv.com"
       ]
     },
     {
-      "ad_rule": "DOMAIN,acheel.dmp.ad.xiaomi.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,xiaomi.com"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,acs.m.taobao.com",
       "china_matches": [
         "DOMAIN-SUFFIX,taobao.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,activity.umeng.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,umeng.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad-cdn.qingting.fm",
-      "china_matches": [
-        "DOMAIN-SUFFIX,qingting.fm"
       ]
     },
     {
@@ -323,39 +249,9 @@
       ]
     },
     {
-      "ad_rule": "DOMAIN,ad.360in.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,360in.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad.51wnl-cq.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,51wnl-cq.com"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,ad.altamob.xiaoying.co",
       "china_matches": [
         "DOMAIN-SUFFIX,xiaoying.co"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad.api.moji.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,moji.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad.bn.netease.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,netease.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad.intl.xiaomi.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,xiaomi.com"
       ]
     },
     {
@@ -365,97 +261,13 @@
       ]
     },
     {
-      "ad_rule": "DOMAIN,ad.mobile.youku.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,youku.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad.monitor.getui.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,getui.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad.qingting.fm",
-      "china_matches": [
-        "DOMAIN-SUFFIX,qingting.fm"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad.tencentmusic.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,tencentmusic.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad.toutiao.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,toutiao.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad.xiaomi.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,xiaomi.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad.ximalaya.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,ximalaya.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ad.yixin.im",
-      "china_matches": [
-        "DOMAIN-SUFFIX,yixin.im"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,ad2.mobring.co",
       "china_matches": [
         "DOMAIN-SUFFIX,mobring.co"
       ]
     },
     {
-      "ad_rule": "DOMAIN,adash.m.taobao.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,taobao.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adash.man.aliyuncs.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,aliyuncs.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adashbc.ut.taobao.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,taobao.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adashxgc.ut.taobao.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,taobao.com"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,adbehavior.wsa.ximalaya.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,ximalaya.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adbehavior.ximalaya.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,ximalaya.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adbs.ximalaya.com",
       "china_matches": [
         "DOMAIN-SUFFIX,ximalaya.com"
       ]
@@ -473,12 +285,6 @@
       ]
     },
     {
-      "ad_rule": "DOMAIN,adimg.uve.weibo.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,weibo.com"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,adimg.vue.weibo.com",
       "china_matches": [
         "DOMAIN-SUFFIX,weibo.com"
@@ -491,39 +297,9 @@
       ]
     },
     {
-      "ad_rule": "DOMAIN,adlaunch.moji.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,moji.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adlaunch.qingting.fm",
-      "china_matches": [
-        "DOMAIN-SUFFIX,qingting.fm"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,adlockscreen.goforandroid.com",
       "china_matches": [
         "DOMAIN-SUFFIX,goforandroid.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adm.cnzz.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,cnzz.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,admarket.21cn.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,21cn.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,admaster.adsame.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,adsame.com"
       ]
     },
     {
@@ -533,88 +309,9 @@
       ]
     },
     {
-      "ad_rule": "DOMAIN,admin-ssp.ad.xiaomi.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,xiaomi.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,admusicpic.music.126.net",
-      "china_matches": [
-        "DOMAIN-SUFFIX,music.126.net",
-        "DOMAIN-SUFFIX,126.net"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adn.insight.ucweb.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,ucweb.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adnew.wifi8.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,wifi8.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adplace.adsame.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,adsame.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adplace.i.adsame.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,adsame.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adplacetw.adsame.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,adsame.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adplus.umeng.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,umeng.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adpush.goforandroid.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,goforandroid.com"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,adpushsdk.goforandroid.com",
       "china_matches": [
         "DOMAIN-SUFFIX,goforandroid.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ads-img-qc.xhscdn.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,xhscdn.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ads-video-al.xhscdn.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,xhscdn.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ads-video-qc.xhscdn.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,xhscdn.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,ads.aplus.pptv.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,pptv.com"
       ]
     },
     {
@@ -636,60 +333,6 @@
       ]
     },
     {
-      "ad_rule": "DOMAIN,ads.service.kugou.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,kugou.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adsame.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,adsame.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adsamer.adsame.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,adsame.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adsamert.adsame.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,adsame.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adse.wsa.ximalaya.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,ximalaya.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adse.ximalaya.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,ximalaya.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adsebs.ximalaya.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,ximalaya.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adserviceretry.kugou.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,kugou.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adsfile.bssdlbig.kugou.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,kugou.com"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,adsfilebssdlbig.tx.kugou.com",
       "china_matches": [
         "DOMAIN-SUFFIX,kugou.com"
@@ -702,69 +345,9 @@
       ]
     },
     {
-      "ad_rule": "DOMAIN,adsfs-in.oppomobile.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,oppomobile.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adsfs.oppomobile.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,oppomobile.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adshows.21cn.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,21cn.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adsmind.apdcdn.tc.qq.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,qq.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adsmind.gdtimg.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,gdtimg.com"
-      ]
-    },
-    {
       "ad_rule": "DOMAIN,adsmind.tc.qq.com",
       "china_matches": [
         "DOMAIN-SUFFIX,qq.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adsmind.ugdtimg.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,ugdtimg.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adsp.xunlei.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,xunlei.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adstats.tencentmusic.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,tencentmusic.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adstore-index-1252524079.file.myqcloud.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,myqcloud.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,adstyle.adsame.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,adsame.com"
       ]
     },
     {
@@ -777,6 +360,420 @@
       "ad_rule": "DOMAIN,adv-ads.variflight.com",
       "china_matches": [
         "DOMAIN-SUFFIX,variflight.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adviap.goforandroid.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,goforandroid.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adx-api.hupu.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,hupu.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adx.op.cp18.ott.cibntv.net",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cibntv.net"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adx.yiche.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,yiche.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,agoodm.m.taobao.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,taobao.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,aligtr005.mmstat.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,mmstat.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,aligtr028.mmstat.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,mmstat.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,aligtr043.mmstat.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,mmstat.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,aligtr050.mmstat.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,mmstat.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,aligtr058.mmstat.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,mmstat.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,aligtr075.mmstat.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,mmstat.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,analytics.ff.avast.sec.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,analytics.oppomobile.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,oppomobile.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,analytics.snappea.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,snappea.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api-analytics-in.huami.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,huami.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api-analytics-sg.huami.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,huami.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.accelerator.intl.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.apk.v-mate.mobi",
+      "china_matches": [
+        "DOMAIN-SUFFIX,v-mate.mobi"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.bbs.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.bignox.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,bignox.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.browser.intl.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.browser.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.chat.xiaomi.net",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.net"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.collect.data.intl.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.comm.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.competition.intl.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.d.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.data.360safe.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,360safe.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.data.meitu.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,meitu.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.device.xiaomi.net",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.net"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.gallery.intl.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.hybrid.intl.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.input.intl.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.jr.mi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,mi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.launcher.intl.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.mistat.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.sec.intl.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.sms.intl.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api3.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apidns-js.kwd.inkuai.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,inkuai.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apigz1.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apihb6.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apihn1.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apiinit.amap.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,amap.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apikqcc1.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apikqcc2.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apikqisa.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apinew.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apiquic.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apis1.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apis2.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apissl.ksapisrv.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksapisrv.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apkq-cm.ksmobile.net",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksmobile.net"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,apollo.kingsoft.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,kingsoft.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,app-ad.variflight.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,variflight.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,app-analytics-in.huami.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,huami.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,app-analytics-sg.huami.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,huami.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,app.chat.global.xiaomi.net",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.net"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,app.chat.xiaomi.net",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.net"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,app.miui.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,app.wpsmail.net",
+      "china_matches": [
+        "DOMAIN-SUFFIX,wpsmail.net"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,appcloud.ksmobile.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksmobile.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,appinfocdn.ksmobile.net",
+      "china_matches": [
+        "DOMAIN-SUFFIX,ksmobile.net"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,applog.camera360.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,camera360.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,appres.camera360.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,camera360.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,assistant.pandora.xiaomi.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,xiaomi.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,astat.bugly.qcloud.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,qcloud.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,aweme.snssdk.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,snssdk.com"
       ]
     }
   ],
