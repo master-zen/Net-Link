@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import ipaddress
 import subprocess
@@ -103,6 +104,25 @@ def validate_profile(profile):
             raise RuntimeError("Surge and Clash rule counts differ")
 
     if profile == "china":
+        # All upstream source payloads must exist and match their recorded SHA-256.
+        source_manifest = json.loads(Path("data/reports/china_source_integrity.json").read_text(encoding="utf-8"))
+        sources = source_manifest["sources"]
+        if (not sources or len(sources) != source_manifest["source_count"]
+                or source_manifest["successful_sources"] != len(sources)
+                or len({item["url"] for item in sources}) != len(sources)):
+            raise RuntimeError("Incomplete or duplicated China upstream source downloads")
+        for entry in sources:
+            if entry["status"] != "ok" or entry["parsed_rule_count"] <= 0:
+                raise RuntimeError(f"Unhealthy China source: {entry['url']}")
+            raw_path = Path(entry["raw_path"])
+            if not raw_path.as_posix().startswith("data/cache/china/"):
+                raise RuntimeError(f"Unexpected China source path: {raw_path}")
+            payload = raw_path.read_bytes()
+            if (len(payload) != entry["size_bytes"]
+                    or hashlib.sha256(payload).hexdigest() != entry["sha256"]):
+                raise RuntimeError(f"China source download SHA-256 mismatch: {entry['url']}")
+        print(f"China upstream downloads verified: {len(sources)}")
+
         rows = [row for row in Path("Surge/Rules/ChinaDomain.list").read_text(
             encoding="utf-8").splitlines() if row.strip()]
         if len(rows) != len(set(rows)):
