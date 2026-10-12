@@ -1,0 +1,22 @@
+! Homepage: https://multiup.io
+! Title: Adblock MultiUp 3rd Party List
+! Expires: 1 day
+
+@@multiup.io^*
+@@multiup.org^*
+@@multiup.eu^*
+@@filesupload.org^*
+@@multinews.me^*
+@@weefy.me^*
+multiup.io#@#+js(remove-attr, class, [class="hidden"], stay)
+multiup.io#@#+js(remove-attr, action, [action*="multinews"], stay)
+multiup.io#@#+js(remove-attr, type, [type="hidden"], stay)
+multiup.io#@#+js(no-setInterval-if, .submit)
+multiup.io#@#+js(abort-current-script, decodeURI, decodeURIComponent)
+multiup.io#@#.mfp-ready
+multiup.io#@#div.text-center:has(a[class="btn btn-success"][href^="abp:subscribe"])
+multiup.*#@#[class^="mfp-"]
+multiup.*#@#+js(acis, decodeURI, decodeURIComponent)
+multiup.*#@#+js(nostif, window.location, 4000)
+@@||ipinfo.io^$3p,domain=multiup.io|multiup.org|multiup.eu
+@@mamanatempsplein.com^*

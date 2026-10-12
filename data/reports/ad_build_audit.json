@@ -1,0 +1,15 @@
+{
+  "download_run": "38284294031",
+  "fetched_at_utc": "2026-10-12T17:27:25Z",
+  "input_sources": 29,
+  "input_total_bytes": 36688527,
+  "block_source_rules": 302553,
+  "allow_and_exception_rules": 8528,
+  "independent_exception_rules": 191,
+  "removed_by_allow_rules": 9529,
+  "final_rules": 261562,
+  "output_sha256": {
+    "Surge/Rules/AdblockSet.list": "3e72b574699dbf96e102041231ba0d27f1b9ef5e812cafecb1624b96f76504f2",
+    "Clash/Rules/AdblockSet.yaml": "8f9619ee5bc915a505f9b0da056ed294baa318bec85819ef05678b36f78f711b"
+  }
+}

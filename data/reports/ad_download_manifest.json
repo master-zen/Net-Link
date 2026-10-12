@@ -1,0 +1,215 @@
+{
+  "profile": "ad",
+  "fetched_at_utc": "2026-10-12T17:27:25Z",
+  "epoch_seconds": 1791826046.4074216,
+  "github_run_id": "38284294031",
+  "github_run_attempt": "1",
+  "source_count": 29,
+  "downloaded_count": 29,
+  "source_bytes_total": 36688527,
+  "sources": [
+    {
+      "bucket": "allow",
+      "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
+      "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
+      "size_bytes": 18156905,
+      "sha256": "eb6d76affa50692f3f638bab32d44115ebbdd20b26f535f1ef2f83ce9659c0f5"
+    },
+    {
+      "bucket": "allow",
+      "url": "https://letyshops.com/adblock.txt",
+      "path": "data/ad/upstream/allow/1a40d2f33a8b266cefb6_adblock.txt",
+      "size_bytes": 48077,
+      "sha256": "dab1dc01495e2e87ad7d9d3c473d5190fa036a49cd2acca7179ad114a477ec2c"
+    },
+    {
+      "bucket": "allow",
+      "url": "https://multiup.io/list_adblock.txt",
+      "path": "data/ad/upstream/allow/6f719a5e4ef84795d66f_list_adblock.txt",
+      "size_bytes": 806,
+      "sha256": "0da36dc998e3950925b4d9f9b10719f00d2c436ef54653af7ac9eab044174aa2"
+    },
+    {
+      "bucket": "allow",
+      "url": "https://multiup.org/list_adblock.txt",
+      "path": "data/ad/upstream/allow/fe938158db61bdd12fb8_list_adblock.txt",
+      "size_bytes": 806,
+      "sha256": "0da36dc998e3950925b4d9f9b10719f00d2c436ef54653af7ac9eab044174aa2"
+    },
+    {
+      "bucket": "allow",
+      "url": "https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/optional-list.txt",
+      "path": "data/ad/upstream/allow/0cdfb7962d4f4cb77052_optional-list.txt",
+      "size_bytes": 4706,
+      "sha256": "2b351469e2e03e49f9224b21a84c2b2a44b21d5457da43f7d7008a6d7da0588f"
+    },
+    {
+      "bucket": "allow",
+      "url": "https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/referral-sites.txt",
+      "path": "data/ad/upstream/allow/d078bcb6eb1a6d500016_referral-sites.txt",
+      "size_bytes": 1232,
+      "sha256": "142d231f24df94290a38e756d1d8b41643cf00ea58d5bc1519139ec8986c3ffb"
+    },
+    {
+      "bucket": "allow",
+      "url": "https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/whitelist.txt",
+      "path": "data/ad/upstream/allow/3ebf8b97406c0312db2a_whitelist.txt",
+      "size_bytes": 3678,
+      "sha256": "0231b454e6103a67766af96a6332245b4109db0af903c280cd8448cb23147f19"
+    },
+    {
+      "bucket": "allow",
+      "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/AdGuardSDNSFilter/Direct/Direct.list",
+      "path": "data/ad/upstream/allow/5e41c90f1d889ef2dd2a_Direct.list",
+      "size_bytes": 4200,
+      "sha256": "4dd83b81db007f331600d13157826d13e65c83d3d10abca2cbf64aee2a048479"
+    },
+    {
+      "bucket": "allow",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-allow.txt",
+      "path": "data/ad/upstream/allow/a4aa36fb257b3e8883b4_spam-tlds-adblock-allow.txt",
+      "size_bytes": 18615,
+      "sha256": "88b25badbdeac0c59fed4db294b152d12bc10d15cac37926cf6b50c6fc0cdae7"
+    },
+    {
+      "bucket": "allow",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt",
+      "path": "data/ad/upstream/allow/69481aca991270b96a83_whitelist-referral-native.txt",
+      "size_bytes": 41052,
+      "sha256": "9f7d785fd8130ef0c258999b2d3e5f887f35da0736327b1dcea4d3a275c24340"
+    },
+    {
+      "bucket": "allow",
+      "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/spam-tlds-allow-onlydomains.txt",
+      "path": "data/ad/upstream/allow/f816741b831135a02f6b_spam-tlds-allow-onlydomains.txt",
+      "size_bytes": 13450,
+      "sha256": "7a3c739e30977b9d3cd0383be5d7f6092dda95f34389cd34418f76ee29b8a239"
+    },
+    {
+      "bucket": "allow",
+      "url": "https://slickdeals.net/attachment/extension/allowlist.txt",
+      "path": "data/ad/upstream/allow/f5b7dc111b5c61c11cad_allowlist.txt",
+      "size_bytes": 2410,
+      "sha256": "186f74f04f6a322773b492d365f90565182b5236097e6f5e7d76ff1aa652e55b"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list",
+      "path": "data/ad/upstream/block/abee8c0e55138e09c878_BanAD.list",
+      "size_bytes": 15550,
+      "sha256": "27a5f6d018d428409d8da5d9f390a46298d505ae4941bb8172f052055abe7262"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list",
+      "path": "data/ad/upstream/block/28594a4ab30a116f3a7a_BanProgramAD.list",
+      "size_bytes": 32638,
+      "sha256": "35cefd7a4c01d2efa9b4c7928e21caa348f78a3f60b46d7d850f1e3334a5a766"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/reject.txt",
+      "path": "data/ad/upstream/block/5ddf2462fc173642d9c2_reject.txt",
+      "size_bytes": 6650669,
+      "sha256": "52589435213e0769dd7f5aea1e3f79a9f791d452df2ce6f8d894dee8548d4c96"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/anudeepND/blacklist/master/CoinMiner.txt",
+      "path": "data/ad/upstream/block/61cc59058609f0ad5a0f_CoinMiner.txt",
+      "size_bytes": 147523,
+      "sha256": "809b37362a7d82f55fe611148d3dc02c498637519a518c63b4fbef38fde775b8"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt",
+      "path": "data/ad/upstream/block/e413d034d669b085c70d_adservers.txt",
+      "size_bytes": 1354227,
+      "sha256": "4cbe4ca57d726b9964f5b782cc7c211243cd7f7fa4b5947af3a2b3ec3560477e"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/AdGuardSDNSFilter/AdGuardSDNSFilter_All.list",
+      "path": "data/ad/upstream/block/059f18f90ed88fc7b9d2_AdGuardSDNSFilter_All.list",
+      "size_bytes": 3706815,
+      "sha256": "cea9ff9a696c204920f695fa2a0807ba27d7eb178405522be3ee199f164e38f6"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Advertising/Advertising.list",
+      "path": "data/ad/upstream/block/0eee5e2450ce192a77e7_Advertising.list",
+      "size_bytes": 26927,
+      "sha256": "675f8cad16212d0f82820a0c9ca781bea43efb567fc845aa11c833af7aad9993"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/EasyPrivacy/EasyPrivacy_All.list",
+      "path": "data/ad/upstream/block/1a39103e7d59d4ec0b6b_EasyPrivacy_All.list",
+      "size_bytes": 1447384,
+      "sha256": "37b3d6427a1c770f9d0f5c99fbc7860665259375ce8479769305da9431fc1b84"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Hijacking/Hijacking_Resolve.list",
+      "path": "data/ad/upstream/block/92c9882d99e81821d49e_Hijacking_Resolve.list",
+      "size_bytes": 6272,
+      "sha256": "7cb15b2cae2056bc90c7c4a2fbc90550dca510557656005438bf4dede01927d3"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Privacy/Privacy_All.list",
+      "path": "data/ad/upstream/block/6dcd9bf5a7706c188e72_Privacy_All.list",
+      "size_bytes": 1445065,
+      "sha256": "351b5893efaec15521a3edff0be886a955affe013ddd670971fe95131540d96a"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/hosts.txt",
+      "path": "data/ad/upstream/block/35b3f66ba9a355853d08_hosts.txt",
+      "size_bytes": 8150,
+      "sha256": "41c0e875b48dc65282c9aee579ae315eb557f115be654d6a9e4fccac7db9a2d1"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/limbopro/Adblock4limbo/refs/heads/main/Surge/rule/Peter_Lowe_adservers_surge.list",
+      "path": "data/ad/upstream/block/45ba1b9c2126dd948c5e_Peter_Lowe_adservers_surge.list",
+      "size_bytes": 109088,
+      "sha256": "74fd7ad9abe98bd4e001949d2e55b1f5ee79e7ae90116730ec74b0da470df974"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/limbopro/Adblock4limbo/refs/heads/main/rule/Surge/Adblock4limbo_surge.list",
+      "path": "data/ad/upstream/block/2b48d5744c632fe75924_Adblock4limbo_surge.list",
+      "size_bytes": 23954,
+      "sha256": "a7ba6bdac7ef0e3e663b06e2a9874d6dc2c6f097d8f1901683478bc1e731258d"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/limbopro/Adblock4limbo/refs/heads/main/rule/Surge/BanAD_surge.list",
+      "path": "data/ad/upstream/block/6d5e33e9e25ff2ae7ac8_BanAD_surge.list",
+      "size_bytes": 15609,
+      "sha256": "a79c0d6ec463506e3875e85dd9e19cc1934443b1a48607c4ff4b8e364c0788ba"
+    },
+    {
+      "bucket": "block",
+      "url": "https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/refs/heads/master/anti-ad-surge.txt",
+      "path": "data/ad/upstream/block/d62d22a6db503fdd2364_anti-ad-surge.txt",
+      "size_bytes": 3370386,
+      "sha256": "c2b1215a562aecf2eef19c755b78d77c720dfdb5a752126fba66c72119151fb6"
+    },
+    {
+      "bucket": "block",
+      "url": "https://ruleset.skk.moe/List/non_ip/reject.conf",
+      "path": "data/ad/upstream/block/bbe371db26a21fcbe2ae_reject.conf",
+      "size_bytes": 13524,
+      "sha256": "0620fd54346f03eb1a17cb18aeff45423cb801845aaa7a0eb7486277a1bff91a"
+    },
+    {
+      "bucket": "exception",
+      "url": "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt",
+      "path": "data/ad/upstream/exception/03c43586aa99a3b221b7_exceptions.txt",
+      "size_bytes": 18809,
+      "sha256": "6a3ef9be37a4680a2f262b2936c93d9557524b29e0cc05a085fabf40f7088c41"
+    }
+  ]
+}
