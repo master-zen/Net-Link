@@ -1,0 +1,3 @@
+# Independently maintained, issue-backed AdGuard DNS false-positive exceptions.
+# Consume ONLY @@ exception rules; never treat blocking rows as allow entries.
+https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt
