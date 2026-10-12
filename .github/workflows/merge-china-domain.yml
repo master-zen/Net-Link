@@ -67,3 +67,29 @@ jobs:
             data/reports/china_source_integrity.json \
             data/reports/rule_coverage_audit.json \
             data/reports/rule_coverage_overlaps.csv
+
+      - name: Verify that raw inputs reached the main branch
+        run: |
+          git fetch origin main
+          python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          manifest = json.loads(Path("data/reports/china_source_integrity.json").read_text(encoding="utf-8"))
+          sources = manifest["sources"]
+          expected = {entry["raw_path"] for entry in sources}
+          remote_paths = set(subprocess.check_output(
+              ["git", "ls-tree", "-r", "--name-only", "origin/main", "--", "data/china/upstream/"],
+              text=True,
+          ).splitlines())
+          if remote_paths != expected:
+              raise SystemExit(f"Published raw sources mismatch: remote={len(remote_paths)} expected={len(expected)}")
+
+          for path in sorted(expected):
+              local_sha = subprocess.check_output(["git", "hash-object", path], text=True).strip()
+              remote_sha = subprocess.check_output(["git", "rev-parse", "origin/main:" + path], text=True).strip()
+              if local_sha != remote_sha:
+                  raise SystemExit(f"Published source bytes differ: {path}")
+          print(f"Confirmed {len(expected)} upstream source files are committed to origin/main")
+          PY
