@@ -52,6 +52,7 @@ jobs:
             Surge/Rules/ChinaDomain.list \
             Clash/Rules/ChinaDomain.yaml \
             Surge/Rules/China_Domain.list \
+            Surge/Rules/China_Domain_Conservative.list \
             Surge/Rules/China_IPv4.list \
             Surge/Rules/China_IPv6.list \
             Surge/Rules/China_ASN.list \
