@@ -11,6 +11,7 @@ on:
       - "scripts/publish_generated.py"
       - "scripts/validate_generated.py"
       - "scripts/fetch_rule_sources.py"
+      - "tests/test_rule_pipeline.py"
       - "data/sources/AdBlockList_URLs.txt"
       - "data/sources/AdAllowList_URLs.txt"
       - "data/sources/AdExceptionList_URLs.txt"
@@ -41,6 +42,9 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+
+      - name: Run China and Adblock safety regressions
+        run: python3 -m unittest discover -s tests -p "test_rule_pipeline.py" -v
 
       - name: Fresh-download all ad block, allow and breakage exception sources
         run: python -u scripts/fetch_rule_sources.py ad
