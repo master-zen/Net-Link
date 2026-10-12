@@ -1,8 +1,8 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-12T17:28:00Z",
-  "epoch_seconds": 1791826081.7190957,
-  "github_run_id": "38284358830",
+  "fetched_at_utc": "2026-10-12T17:28:32Z",
+  "epoch_seconds": 1791826114.9750478,
+  "github_run_id": "38284415008",
   "github_run_attempt": "1",
   "source_count": 29,
   "downloaded_count": 29,
@@ -13,7 +13,7 @@
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18156905,
-      "sha256": "eb6d76affa50692f3f638bab32d44115ebbdd20b26f535f1ef2f83ce9659c0f5"
+      "sha256": "52d1368caec4cc4fb7a7f877b7671206cc44c0d54d28be6aff3b77e3fb6e52af"
     },
     {
       "bucket": "allow",
