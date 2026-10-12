@@ -1,0 +1,11 @@
+# Well-known foreign/global-service address blocks. Not a complete geolocation database.
+# Disallow DIRECT routing due to accidental overlap with China IP unions.
+8.8.8.0/24
+8.8.4.0/24
+9.9.9.0/24
+1.1.1.0/24
+1.0.0.0/24
+208.67.220.0/22
+2001:4860::/32
+2606:4700::/32
+2620:fe::/48
