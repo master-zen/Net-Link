@@ -1,0 +1,24 @@
+# High-confidence foreign service roots; removing a China parent suffix
+# prevents accidental DIRECT routing to these global service endpoints.
+google.com
+youtube.com
+github.com
+githubusercontent.com
+openai.com
+chatgpt.com
+stripe.com
+paypal.com
+microsoftonline.com
+microsoft.com
+cloudflare.com
+cloudfront.net
+amazonaws.com
+telegram.org
+telegram.me
+whatsapp.com
+instagram.com
+facebook.com
+netflix.com
+reddit.com
+x.com
+twitter.com
