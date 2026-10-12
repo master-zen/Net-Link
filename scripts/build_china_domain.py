@@ -824,14 +824,17 @@ def main() -> int:
             ]
         }
         risk_path = ROOT / "data/reports/china_risk_audit.json"
-        risk_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\\n".replace("\\\\n", "\\n"), encoding="utf-8")
+        risk_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\\n", encoding="utf-8")
 
     OUTPUT_SURGE_FILE.write_text("\n".join(merged_rules) + "\n", encoding="utf-8")
     write_clash_ruleset(OUTPUT_CLASH_FILE, merged_rules)
 
     # Keep only the current 12 source snapshots; remove any orphaned files if
     # the configured sources change. This directory is tracked by Git.
-    current_snapshots = {ROOT / str(entry["raw_path"]) for entry in source_reports}
+    current_snapshots = (
+        {ROOT / item["path"] for item in manifest["sources"]}
+        if args.offline else {ROOT / str(entry["raw_path"]) for entry in source_reports}
+    )
     for old_snapshot in SOURCE_CACHE_DIR.iterdir():
         if old_snapshot.is_file() and old_snapshot not in current_snapshots:
             old_snapshot.unlink()
@@ -853,7 +856,8 @@ def main() -> int:
     )
 
     print(f"[DONE] raw accepted rules: {raw_count}")
-    print(f"[DONE] duplicate rules removed: {raw_count - len(merged_rules)}")
+    print(f"[DONE] exact normalized duplicates removed: {raw_count - len(set(all_rules))}")
+    print(f"[DONE] filters/CIDR reductions: {len(set(all_rules)) - len(merged_rules)}")
     print(f"[DONE] {OUTPUT_SURGE_FILE.relative_to(ROOT)}: {len(merged_rules)} lines")
     print(f"[DONE] {OUTPUT_CLASH_FILE.relative_to(ROOT)}: {len(merged_rules)} lines")
 
