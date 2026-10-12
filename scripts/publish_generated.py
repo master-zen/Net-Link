@@ -31,18 +31,32 @@ def read_remote_json(path):
 
 
 def guard_against_old_build(paths):
+    # A China build should not be cancelled merely because the Adblock
+    # workflow changed while it ran (and vice versa).
+    guarded = ["scripts/fetch_rule_sources.py", "scripts/validate_generated.py",
+               "scripts/publish_generated.py"]
+    if "data/reports/china_download_manifest.json" in paths:
+        guarded += [
+            ".github/workflows/merge-china-domain.yml",
+            "scripts/build_china_domain.py", "scripts/audit_rule_coverage.py",
+            "data/sources/ChinaDomainList_URLs.txt",
+            "data/sources/ChinaForeignDomain_URLs.txt",
+            "data/sources/ChinaForeignIP_URLs.txt",
+            "data/allowlists/ChinaForeignDomains.list",
+            "data/allowlists/ChinaForeignIPs.list",
+        ]
+    elif "data/reports/ad_download_manifest.json" in paths:
+        guarded += [
+            ".github/workflows/merge-ad-sets.yml",
+            "scripts/build_ad_sets.py",
+            "data/sources/AdBlockList_URLs.txt",
+            "data/sources/AdAllowList_URLs.txt",
+            "data/sources/AdExceptionList_URLs.txt",
+            "data/allowlists/AdblockCriticalAllow.list",
+        ]
     changed = execute(
         "git", "diff", "--name-only", os.environ.get("GITHUB_SHA", "HEAD"),
-        "origin/main", "--",
-        ".github/workflows/merge-china-domain.yml",
-        ".github/workflows/merge-ad-sets.yml",
-        "scripts/build_china_domain.py",
-        "scripts/build_ad_sets.py",
-        "scripts/fetch_rule_sources.py",
-        "scripts/validate_generated.py",
-        "scripts/publish_generated.py",
-        "scripts/audit_rule_coverage.py",
-        "data/sources/", "data/allowlists/",
+        "origin/main", "--", *guarded,
         check=False, capture=True,
     )
     if changed:
