@@ -11,6 +11,7 @@ on:
       - "scripts/validate_generated.py"
       - "scripts/build_china_domain.py"
       - "scripts/audit_rule_coverage.py"
+      - "data/sources/ChinaDomainList_URLs.txt"
   schedule:
     # 04:20 Asia/Shanghai (UTC+8) every day
     - cron: "20 20 * * *"
@@ -40,13 +41,13 @@ jobs:
       - name: Build ChinaDomain list
         run: python scripts/build_china_domain.py
 
-      - name: Save downloaded upstream snapshots
+      - name: Archive raw upstream snapshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: china-upstream-snapshots
           path: |
-            data/cache/china/
+            data/china/upstream/
             data/reports/china_source_integrity.json
           retention-days: 7
           if-no-files-found: warn
@@ -62,6 +63,7 @@ jobs:
           python3 scripts/publish_generated.py "chore: update china domain rules" \
             Surge/Rules/ChinaDomain.list \
             Clash/Rules/ChinaDomain.yaml \
+            data/china/upstream/ \
             data/reports/china_source_integrity.json \
             data/reports/rule_coverage_audit.json \
             data/reports/rule_coverage_overlaps.csv
