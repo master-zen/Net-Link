@@ -12,6 +12,11 @@ on:
       - "scripts/build_china_domain.py"
       - "scripts/audit_rule_coverage.py"
       - "data/sources/ChinaDomainList_URLs.txt"
+      - "data/sources/ChinaForeignDomain_URLs.txt"
+      - "data/sources/ChinaForeignIP_URLs.txt"
+      - "data/allowlists/ChinaForeignDomains.list"
+      - "data/allowlists/ChinaForeignIPs.list"
+      - "scripts/fetch_rule_sources.py"
   schedule:
     # 04:20 Asia/Shanghai (UTC+8) every day
     - cron: "20 20 * * *"
@@ -38,8 +43,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Build ChinaDomain list
-        run: python scripts/build_china_domain.py
+      - name: Download all China and foreign-validation inputs (fresh)
+        run: python -u scripts/fetch_rule_sources.py china
+
+      - name: Build ChinaDomain list ONLY from this run snapshots
+        run: python -u scripts/build_china_domain.py --offline
 
       - name: Archive raw upstream snapshots
         if: always()
@@ -49,6 +57,8 @@ jobs:
           path: |
             data/china/upstream/
             data/reports/china_source_integrity.json
+            data/reports/china_download_manifest.json
+            data/reports/china_risk_audit.json
           retention-days: 7
           if-no-files-found: warn
 
@@ -64,7 +74,9 @@ jobs:
             Surge/Rules/ChinaDomain.list \
             Clash/Rules/ChinaDomain.yaml \
             data/china/upstream/ \
+            data/reports/china_download_manifest.json \
             data/reports/china_source_integrity.json \
+            data/reports/china_risk_audit.json \
             data/reports/rule_coverage_audit.json \
             data/reports/rule_coverage_overlaps.csv
 
@@ -76,9 +88,9 @@ jobs:
           import subprocess
           from pathlib import Path
 
-          manifest = json.loads(Path("data/reports/china_source_integrity.json").read_text(encoding="utf-8"))
+          manifest = json.loads(Path("data/reports/china_download_manifest.json").read_text(encoding="utf-8"))
           sources = manifest["sources"]
-          expected = {entry["raw_path"] for entry in sources}
+          expected = {entry["path"] for entry in sources}
           remote_paths = set(subprocess.check_output(
               ["git", "ls-tree", "-r", "--name-only", "origin/main", "--", "data/china/upstream/"],
               text=True,
@@ -91,5 +103,15 @@ jobs:
               remote_sha = subprocess.check_output(["git", "rev-parse", "origin/main:" + path], text=True).strip()
               if local_sha != remote_sha:
                   raise SystemExit(f"Published source bytes differ: {path}")
-          print(f"Confirmed {len(expected)} upstream source files are committed to origin/main")
+          for name in (
+              "Surge/Rules/ChinaDomain.list", "Clash/Rules/ChinaDomain.yaml",
+              "data/reports/china_source_integrity.json",
+              "data/reports/china_download_manifest.json",
+              "data/reports/china_risk_audit.json",
+          ):
+              local_sha = subprocess.check_output(["git", "hash-object", name], text=True).strip()
+              remote_sha = subprocess.check_output(["git", "rev-parse", "origin/main:" + name], text=True).strip()
+              if local_sha != remote_sha:
+                  raise SystemExit(f"Published China result differs from freshly generated file: {name}")
+          print(f"Confirmed {len(expected)} fresh inputs and published China output files on origin/main")
           PY
