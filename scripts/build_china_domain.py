@@ -531,6 +531,114 @@ def print_type_stats(rules: list[str]) -> None:
         print(f"[STATS] {rule_type}: {counts.get(rule_type, 0)}")
 
 
+def load_foreign_references(download_manifest: dict) -> tuple[set[str], set[str], list[ipaddress._BaseNetwork], dict[str, object]]:
+    """Risk evidence, not a claim of exhaustive geographic classification.
+
+    Hard exclusions: curated known-foreign services plus explicit literal
+    domains in V2Fly geolocation-!cn. Loyalsoldier proxy list is reviewed as
+    possible routing disagreement, not treated as geographic proof.
+    """
+    excluded_exact: set[str] = set()
+    excluded_suffixes: set[str] = set()
+    proxy_domain_refs: set[str] = set()
+    foreign_nets: list[ipaddress._BaseNetwork] = []
+    for raw in (ROOT / "data/allowlists/ChinaForeignDomains.list").read_text(encoding="utf-8").splitlines():
+        token = raw.strip().lower()
+        if token and not token.startswith("#"):
+            domain = normalize_domain_token(token)
+            if domain is None:
+                raise RuntimeError(f"Invalid foreign domain safeguard: {raw}")
+            excluded_suffixes.add(domain)
+    for raw in (ROOT / "data/allowlists/ChinaForeignIPs.list").read_text(encoding="utf-8").splitlines():
+        token = raw.strip()
+        if token and not token.startswith("#"):
+            foreign_nets.append(ipaddress.ip_network(token, strict=False))
+    refs = {"v2fly_literal_domains": 0, "proxy_reference_rules": 0, "foreign_ip_reference_count": 0}
+    for entry in download_manifest["sources"]:
+        bucket = entry["bucket"]
+        if bucket not in {"foreign_domain", "foreign_ip"}:
+            continue
+        text = (ROOT / entry["path"]).read_bytes().decode("utf-8-sig", errors="replace")
+        url = entry["url"]
+        if bucket == "foreign_ip":
+            count = 0
+            for raw in text.splitlines():
+                normalized = normalize_line(raw)
+                if normalized and normalized.startswith(("IP-CIDR,", "IP-CIDR6,")):
+                    foreign_nets.append(ipaddress.ip_network(normalized.partition(",")[2], strict=False))
+                    count += 1
+            if not count:
+                raise RuntimeError(f"Empty independent foreign IP reference: {url}")
+            refs["foreign_ip_reference_count"] += count
+            continue
+        if "domain-list-community" in url:
+            count = 0
+            for raw in text.splitlines():
+                token = raw.strip().split(" #", 1)[0].split(" @", 1)[0].strip()
+                if not token or token.startswith(("#", "include:", "regexp:", "keyword:")):
+                    continue
+                full = token.startswith("full:")
+                if token.startswith(("full:", "domain:")):
+                    token = token.split(":", 1)[1]
+                domain = normalize_domain_token(token)
+                if domain is None:
+                    continue
+                (excluded_exact if full else excluded_suffixes).add(domain)
+                count += 1
+            if count == 0:
+                raise RuntimeError(f"Empty V2Fly foreign domain evidence: {url}")
+            refs["v2fly_literal_domains"] += count
+        else:
+            count = 0
+            for raw in text.splitlines():
+                norm = normalize_line(raw)
+                if norm and norm.startswith(("DOMAIN,", "DOMAIN-SUFFIX,")):
+                    proxy_domain_refs.add(norm.partition(",")[2])
+                    count += 1
+            if count == 0:
+                raise RuntimeError(f"Empty foreign routing reference: {url}")
+            refs["proxy_reference_rules"] += count
+    return excluded_exact, excluded_suffixes, foreign_nets, {**refs, "proxy_roots": proxy_domain_refs}
+
+
+def domain_hits_exclusion(domain: str, kind: str, exact: set[str], suffixes: set[str]) -> bool:
+    labels = domain.split(".")
+    # A parent China DOMAIN-SUFFIX would inadvertently cover a foreign subdomain.
+    # Avoid excluding a parent based on every unrelated proxy-candidate child:
+    # the strict negative set is explicitly curated or V2Fly literal.
+    if kind == "DOMAIN-SUFFIX" and any(
+        protected == domain or protected.endswith("." + domain)
+        for protected in exact
+    ):
+        return True
+    if kind == "DOMAIN-SUFFIX" and any(
+        protected == domain or protected.endswith("." + domain)
+        for protected in suffixes
+    ):
+        return True
+    if domain in exact:
+        return True
+    return any(".".join(labels[i:]) in suffixes for i in range(len(labels)))
+
+
+def remove_foreign_ip_overlap(networks: list[ipaddress._BaseNetwork], excluded: list[ipaddress._BaseNetwork]):
+    """Subtract only explicitly documented foreign/global service address ranges."""
+    output = list(ipaddress.collapse_addresses(networks))
+    for deny in ipaddress.collapse_addresses(excluded):
+        next_output = []
+        for net in output:
+            if net.version != deny.version or not net.overlaps(deny):
+                next_output.append(net)
+            elif net.subnet_of(deny):
+                continue
+            elif deny.subnet_of(net):
+                next_output.extend(net.address_exclude(deny))
+            else:
+                raise RuntimeError(f"Unexpected partial CIDR overlap: {net}, {deny}")
+        output = next_output
+    return list(ipaddress.collapse_addresses(output))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--offline", action="store_true", help="Build ONLY from fresh, verified data/ snapshots, with zero network access")
@@ -633,15 +741,38 @@ def main() -> int:
         print("[ERROR] no rules generated", file=sys.stderr)
         return 1
 
+    # Risk references are freshly downloaded in the same workflow run,
+    # never reused from an earlier build's tracked data snapshots.
+    exclusion_exact: set[str] = set()
+    exclusion_suffixes: set[str] = set()
+    excluded_ip_nets: list[ipaddress._BaseNetwork] = []
+    proxy_candidates: set[str] = set()
+    risk_ref_stats = {}
+    if args.offline:
+        exclusion_exact, exclusion_suffixes, excluded_ip_nets, risk_ref_stats = load_foreign_references(manifest)
+        proxy_candidates = risk_ref_stats.pop("proxy_roots")
+    else:
+        for line in (ROOT / "data/allowlists/ChinaForeignDomains.list").read_text(encoding="utf-8").splitlines():
+            if line.strip() and not line.startswith("#"):
+                exclusion_suffixes.add(line.strip())
+        for line in (ROOT / "data/allowlists/ChinaForeignIPs.list").read_text(encoding="utf-8").splitlines():
+            if line.strip() and not line.startswith("#"):
+                excluded_ip_nets.append(ipaddress.ip_network(line.strip(), strict=False))
+    foreign_excluded_rules: list[str] = []
     # Publish one Surge ruleset. Keep intermediate source handling internal.
     # Conservative domain rules exclude broad TLD suffixes and all keywords.
     # ASN/GEOIP require independent verification before use for DIRECT.
-    domain_rules = [
-        rule for rule in merged_rules
-        if rule.startswith("DOMAIN,")
-        or (rule.startswith("DOMAIN-SUFFIX,")
-            and "." in rule.partition(",")[2])
-    ]
+    domain_rules = []
+    for rule in merged_rules:
+        kind, _, value = rule.partition(",")
+        if not (kind == "DOMAIN" or (kind == "DOMAIN-SUFFIX" and "." in value)):
+            continue
+        if domain_hits_exclusion(value, kind, exclusion_exact, exclusion_suffixes):
+            foreign_excluded_rules.append(rule)
+            continue
+        domain_rules.append(rule)
+    if len(foreign_excluded_rules) > max(1000, len(domain_rules) // 10):
+        raise RuntimeError("Excessive foreign-domain exclusion: review upstream changes")
     ip_rules = []
     for family, kind in ((4, "IP-CIDR"), (6, "IP-CIDR6")):
         nets = []
@@ -657,7 +788,7 @@ def main() -> int:
                     or (family == 6 and net.network_address.ipv4_mapped is not None)):
                 continue
             nets.append(net)
-        for net in ipaddress.collapse_addresses(nets):
+        for net in remove_foreign_ip_overlap(nets, [x for x in excluded_ip_nets if x.version == family]):
             ip_rules.append(f"{kind},{net.compressed}")
     final_rules = sorted(set(domain_rules + ip_rules), key=rule_sort_key)
     if not final_rules or not any(r.startswith("IP-CIDR,") for r in final_rules) or not any(
@@ -666,6 +797,34 @@ def main() -> int:
     print(f"[AUDIT] accepted domains={len(domain_rules)} IP rules={len(ip_rules)}")
     print(f"[AUDIT] excluded/merged rules={len(merged_rules) - len(final_rules)}")
     merged_rules = final_rules
+    if args.offline:
+        # Proxy categorisation is useful cross-check evidence, not conclusive
+        # proof of foreign geography; report possible conflicts separately.
+        proxy_conflicts = sorted(
+            rule for rule in domain_rules
+            if rule.partition(",")[2] in proxy_candidates
+        )
+        report = {
+            "download_run": manifest["github_run_id"],
+            "download_manifest_sha256": hashlib.sha256(
+                (ROOT / "data/reports/china_download_manifest.json").read_bytes()
+            ).hexdigest(),
+            "foreign_reference_counts": risk_ref_stats,
+            "protected_foreign_domain_roots": len(exclusion_suffixes),
+            "foreign_domain_rules_excluded": len(foreign_excluded_rules),
+            "foreign_domain_exclusion_examples": foreign_excluded_rules[:80],
+            "proxy_reference_exact_candidate_count": len(proxy_conflicts),
+            "proxy_reference_candidate_examples": proxy_conflicts[:80],
+            "foreign_ip_exclusion_count": len(excluded_ip_nets),
+            "limitations": [
+                "A proxy routing category is not proof of physical domain geography.",
+                "IP ownership/registration and actual network location can differ.",
+                "The foreign-domain reference parser does not recursively expand V2Fly include: categories.",
+                "No finite list can guarantee exhaustive exclusion of every foreign site or address."
+            ]
+        }
+        risk_path = ROOT / "data/reports/china_risk_audit.json"
+        risk_path.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\\n".replace("\\\\n", "\\n"), encoding="utf-8")
 
     OUTPUT_SURGE_FILE.write_text("\n".join(merged_rules) + "\n", encoding="utf-8")
     write_clash_ruleset(OUTPUT_CLASH_FILE, merged_rules)
