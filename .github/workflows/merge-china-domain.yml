@@ -17,6 +17,7 @@ on:
       - "data/allowlists/ChinaForeignDomains.list"
       - "data/allowlists/ChinaForeignIPs.list"
       - "scripts/fetch_rule_sources.py"
+      - "tests/test_rule_pipeline.py"
   schedule:
     # 04:20 Asia/Shanghai (UTC+8) every day
     - cron: "20 20 * * *"
@@ -42,6 +43,9 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+
+      - name: Run China and Adblock safety regressions
+        run: python3 -m unittest discover -s tests -p "test_rule_pipeline.py" -v
 
       - name: Download all China and foreign-validation inputs (fresh)
         run: python -u scripts/fetch_rule_sources.py china
