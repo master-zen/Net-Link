@@ -629,6 +629,27 @@ def main() -> int:
     safe_path.write_text("".join(rule + "\n" for rule in safe_domain), encoding="utf-8")
     print(f"[DONE] {safe_path.relative_to(ROOT)}: {len(safe_domain)} conservative domain rules")
 
+    # Opt-in, coverage-equivalent canonical IP subsets; no geography claims.
+    # These are derived only from already filtered public IP subsets.
+    for bucket, name, prefix in (
+        ("ipv4", "China_IPv4_Collapsed.list", "IP-CIDR"),
+        ("ipv6", "China_IPv6_Collapsed.list", "IP-CIDR6"),
+    ):
+        networks = [
+            ipaddress.ip_network(rule.partition(",")[2], strict=False)
+            for rule in subsets[bucket]
+        ]
+        collapsed = sorted(
+            ipaddress.collapse_addresses(networks),
+            key=lambda network: (int(network.network_address), network.prefixlen),
+        )
+        output = ROOT / "Surge/Rules" / name
+        output.write_text(
+            "".join(f"{prefix},{network.compressed}\n" for network in collapsed),
+            encoding="utf-8",
+        )
+        print(f"[DONE] {output.relative_to(ROOT)}: {len(collapsed)} coverage-equivalent prefixes")
+
     OUTPUT_SURGE_FILE.write_text("\n".join(merged_rules) + "\n", encoding="utf-8")
     write_clash_ruleset(OUTPUT_CLASH_FILE, merged_rules)
 
