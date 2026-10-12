@@ -840,6 +840,7 @@ def main() -> int:
     if len(foreign_excluded_rules) > max(1000, len(domain_rules) // 10):
         raise RuntimeError("Excessive foreign-domain exclusion: review upstream changes")
     ip_rules = []
+    excluded_ip_address_counts = {"ipv4": 0, "ipv6": 0}
     for family, kind in ((4, "IP-CIDR"), (6, "IP-CIDR6")):
         nets = []
         for rule in merged_rules:
@@ -854,7 +855,13 @@ def main() -> int:
                     or (family == 6 and net.network_address.ipv4_mapped is not None)):
                 continue
             nets.append(net)
-        for net in remove_foreign_ip_overlap(nets, [x for x in excluded_ip_nets if x.version == family]):
+        original_collapsed = list(ipaddress.collapse_addresses(nets))
+        after_exclusions = remove_foreign_ip_overlap(nets, [x for x in excluded_ip_nets if x.version == family])
+        excluded_ip_address_counts["ipv4" if family == 4 else "ipv6"] = (
+            sum(n.num_addresses for n in original_collapsed)
+            - sum(n.num_addresses for n in after_exclusions)
+        )
+        for net in after_exclusions:
             ip_rules.append(f"{kind},{net.compressed}")
     final_rules = sorted(set(domain_rules + ip_rules), key=rule_sort_key)
     if not final_rules or not any(r.startswith("IP-CIDR,") for r in final_rules) or not any(
@@ -882,7 +889,9 @@ def main() -> int:
             "foreign_domain_exclusion_examples": foreign_excluded_rules[:80],
             "proxy_reference_exact_candidate_count": len(proxy_conflicts),
             "proxy_reference_candidate_examples": proxy_conflicts[:80],
-            "foreign_ip_exclusion_count": len(excluded_ip_nets),
+            "foreign_ip_reference_network_count": len(excluded_ip_nets),
+            "excluded_foreign_registered_ipv4_address_count": str(excluded_ip_address_counts["ipv4"]),
+            "excluded_foreign_registered_ipv6_address_count": str(excluded_ip_address_counts["ipv6"]),
             "limitations": [
                 "A proxy routing category is not proof of physical domain geography.",
                 "IP ownership/registration and actual network location can differ.",
