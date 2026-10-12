@@ -10,6 +10,11 @@ on:
       - "scripts/build_ad_sets.py"
       - "scripts/publish_generated.py"
       - "scripts/validate_generated.py"
+      - "scripts/fetch_rule_sources.py"
+      - "data/sources/AdBlockList_URLs.txt"
+      - "data/sources/AdAllowList_URLs.txt"
+      - "data/sources/AdExceptionList_URLs.txt"
+      - "data/allowlists/AdblockCriticalAllow.list"
   schedule:
     # 04:00 Asia/Shanghai (UTC+8) every day
     - cron: "0 20 * * *"
@@ -37,8 +42,23 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Build ad allow/block sets
-        run: python -u scripts/build_ad_sets.py
+      - name: Fresh-download all ad block, allow and breakage exception sources
+        run: python -u scripts/fetch_rule_sources.py ad
+
+      - name: Build AdblockSet ONLY from this run snapshots
+        run: python -u scripts/build_ad_sets.py --offline
+
+      - name: Archive upstream inputs and evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ad-upstream-snapshots
+          path: |
+            data/ad/upstream/
+            data/reports/ad_download_manifest.json
+            data/reports/ad_build_audit.json
+          retention-days: 7
+          if-no-files-found: warn
 
       - name: Validate generated outputs
         run: python3 scripts/validate_generated.py ad
@@ -49,4 +69,34 @@ jobs:
             data/sources/AdAllowList_URLs.txt \
             data/sources/AdBlockList_URLs.txt \
             Clash/Rules/AdblockSet.yaml \
-            Surge/Rules/AdblockSet.list
+            Surge/Rules/AdblockSet.list \
+            data/ad/upstream/ \
+            data/reports/ad_download_manifest.json \
+            data/reports/ad_build_audit.json
+
+      - name: Verify Adblock fresh input snapshots and output reached remote main
+        run: |
+          git fetch origin main
+          python3 - <<'PY'
+          import subprocess
+          import json
+          from pathlib import Path
+
+          records = json.loads(Path("data/reports/ad_download_manifest.json").read_text(encoding="utf-8"))["sources"]
+          expected = {item["path"] for item in records}
+          actual = set(subprocess.check_output(
+              ["git", "ls-tree", "-r", "--name-only", "origin/main", "--", "data/ad/upstream/"],
+              text=True
+          ).splitlines())
+          if expected != actual:
+              raise SystemExit(f"Missing ad source snapshots: expected={len(expected)} actual={len(actual)}")
+          for path in sorted(expected | {
+              "Surge/Rules/AdblockSet.list", "Clash/Rules/AdblockSet.yaml",
+              "data/reports/ad_download_manifest.json", "data/reports/ad_build_audit.json",
+          }):
+              local_sha = subprocess.check_output(["git", "hash-object", path], text=True).strip()
+              remote_sha = subprocess.check_output(["git", "rev-parse", "origin/main:" + path], text=True).strip()
+              if local_sha != remote_sha:
+                  raise SystemExit(f"Adblock remote file differs from this run: {path}")
+          print(f"Verified {len(expected)} newly downloaded ad sources and final output on origin/main")
+          PY
