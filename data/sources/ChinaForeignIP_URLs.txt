@@ -1,2 +1,4 @@
 # Independently maintained non-China service IP ranges (high-confidence protected routes).
 https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/telegramcidr.txt
+# APNIC allocation-country evidence; country of registration is not physical location.
+https://ftp.apnic.net/stats/apnic/delegated-apnic-latest
