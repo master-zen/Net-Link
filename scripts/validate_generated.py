@@ -103,6 +103,15 @@ def validate_profile(profile):
             raise RuntimeError("Surge and Clash rule counts differ")
 
     if profile == "china":
+        conservative_path = Path("Surge/Rules/China_Domain_Conservative.list")
+        conservative = [r for r in conservative_path.read_text(encoding="utf-8").splitlines() if r]
+        domain_rows = [r for r in Path("Surge/Rules/China_Domain.list").read_text(encoding="utf-8").splitlines() if r]
+        expected = [r for r in domain_rows
+                    if not (r.startswith("DOMAIN-SUFFIX,") and "." not in r.partition(",")[2])]
+        if conservative != expected or not conservative:
+            raise RuntimeError("Conservative China domain subset mismatch")
+        print(f"{conservative_path}: {len(conservative)} verified")
+
         combined = set(Path("Surge/Rules/ChinaDomain.list").read_text(encoding="utf-8").splitlines())
         partitions = {
             "China_Domain.list": {"DOMAIN", "DOMAIN-SUFFIX"},
