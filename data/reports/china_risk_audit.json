@@ -1,6 +1,6 @@
 {
-  "download_run": "38284853506",
-  "download_manifest_sha256": "f16228918a41808f54bdd5fca7e19ac7563ca3b13ddb76304f0c1fe1b7174f93",
+  "download_run": "38285118573",
+  "download_manifest_sha256": "4b8efd4eb26a30ee5982e05193d3761d0235109b1f9a68ddc84d512e77c6c7c5",
   "foreign_reference_counts": {
     "v2fly_literal_domains": 38,
     "proxy_reference_rules": 27233,
@@ -12,6 +12,7 @@
   },
   "protected_foreign_domain_roots": 60,
   "foreign_domain_rules_excluded": 53,
+  "domain_hierarchy_redundant_rules_removed": 133,
   "foreign_domain_exclusion_examples": [
     "DOMAIN,developer.microsoft.com",
     "DOMAIN,download.microsoft.com",
