@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+from bisect import bisect_right
 import ipaddress
 import json
 import os
@@ -553,7 +554,12 @@ def load_foreign_references(download_manifest: dict) -> tuple[set[str], set[str]
         token = raw.strip()
         if token and not token.startswith("#"):
             foreign_nets.append(ipaddress.ip_network(token, strict=False))
-    refs = {"v2fly_literal_domains": 0, "proxy_reference_rules": 0, "foreign_ip_reference_count": 0}
+    refs = {
+        "v2fly_literal_domains": 0, "proxy_reference_rules": 0,
+        "foreign_ip_reference_count": 0, "rir_non_cn_ipv4_prefixes": 0,
+        "rir_non_cn_ipv6_prefixes": 0, "rir_cn_ipv4_prefixes": 0,
+        "rir_cn_ipv6_prefixes": 0,
+    }
     for entry in download_manifest["sources"]:
         bucket = entry["bucket"]
         if bucket not in {"foreign_domain", "foreign_ip"}:
@@ -562,14 +568,39 @@ def load_foreign_references(download_manifest: dict) -> tuple[set[str], set[str]
         url = entry["url"]
         if bucket == "foreign_ip":
             count = 0
-            for raw in text.splitlines():
-                normalized = normalize_line(raw)
-                if normalized and normalized.startswith(("IP-CIDR,", "IP-CIDR6,")):
-                    foreign_nets.append(ipaddress.ip_network(normalized.partition(",")[2], strict=False))
+            if "delegated-apnic" in url:
+                for raw in text.splitlines():
+                    row = raw.strip().split("|")
+                    if len(row) < 7 or row[0].lower() != "apnic":
+                        continue
+                    _, country, family, address, size, _, status = row[:7]
+                    if family not in {"ipv4", "ipv6"} or status not in {"allocated", "assigned"}:
+                        continue
+                    try:
+                        if family == "ipv4":
+                            start = ipaddress.IPv4Address(address)
+                            end = ipaddress.IPv4Address(int(start) + int(size) - 1)
+                            nets = list(ipaddress.summarize_address_range(start, end))
+                        else:
+                            nets = [ipaddress.ip_network(f"{address}/{size}", strict=False)]
+                    except (ValueError, OverflowError):
+                        continue
+                    family_tag = "ipv4" if family == "ipv4" else "ipv6"
+                    if country == "CN":
+                        refs[f"rir_cn_{family_tag}_prefixes"] += len(nets)
+                    elif len(country) == 2 and country.isalpha() and country.isupper():
+                        refs[f"rir_non_cn_{family_tag}_prefixes"] += len(nets)
+                        foreign_nets.extend(nets)
                     count += 1
+            else:
+                for raw in text.splitlines():
+                    normalized = normalize_line(raw)
+                    if normalized and normalized.startswith(("IP-CIDR,", "IP-CIDR6,")):
+                        foreign_nets.append(ipaddress.ip_network(normalized.partition(",")[2], strict=False))
+                        count += 1
+                refs["foreign_ip_reference_count"] += count
             if not count:
                 raise RuntimeError(f"Empty independent foreign IP reference: {url}")
-            refs["foreign_ip_reference_count"] += count
             continue
         if "domain-list-community" in url:
             count = 0
@@ -622,20 +653,35 @@ def domain_hits_exclusion(domain: str, kind: str, exact: set[str], suffixes: set
 
 
 def remove_foreign_ip_overlap(networks: list[ipaddress._BaseNetwork], excluded: list[ipaddress._BaseNetwork]):
-    """Subtract only explicitly documented foreign/global service address ranges."""
-    output = list(ipaddress.collapse_addresses(networks))
-    for deny in ipaddress.collapse_addresses(excluded):
-        next_output = []
-        for net in output:
-            if net.version != deny.version or not net.overlaps(deny):
-                next_output.append(net)
-            elif net.subnet_of(deny):
+    """Subtract independently documented non-CN allocated or service CIDRs.
+
+    The RIR registration country is a conservative routing safety signal,
+    not a claim to know every IP's physical location.
+    """
+    negatives = list(ipaddress.collapse_addresses(excluded))
+    starts = [int(x.network_address) for x in negatives]
+    output = []
+    for net in ipaddress.collapse_addresses(networks):
+        start, end = int(net.network_address), int(net.broadcast_address)
+        idx = max(0, bisect_right(starts, start) - 1)
+        fragments = [net]
+        while idx < len(negatives) and starts[idx] <= end:
+            deny = negatives[idx]
+            idx += 1
+            if deny.version != net.version or not fragments:
                 continue
-            elif deny.subnet_of(net):
-                next_output.extend(net.address_exclude(deny))
-            else:
-                raise RuntimeError(f"Unexpected partial CIDR overlap: {net}, {deny}")
-        output = next_output
+            updated = []
+            for chunk in fragments:
+                if not chunk.overlaps(deny):
+                    updated.append(chunk)
+                elif chunk.subnet_of(deny):
+                    continue
+                elif deny.subnet_of(chunk):
+                    updated.extend(chunk.address_exclude(deny))
+                else:
+                    raise RuntimeError(f"Unexpected partial CIDR overlap: {chunk}, {deny}")
+            fragments = updated
+        output.extend(fragments)
     return list(ipaddress.collapse_addresses(output))
 
 
