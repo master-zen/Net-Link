@@ -1,12 +1,12 @@
 {
   "scope": "entire published rule files, not a sample",
   "files": {
-    "ChinaDomain.list": 123959,
-    "AdblockSet.list": 235310
+    "ChinaDomain.list": 123795,
+    "AdblockSet.list": 235366
   },
   "unique_rules": {
-    "china": 123959,
-    "ad": 235310
+    "china": 123795,
+    "ad": 235366
   },
   "duplicates": {
     "china": 0,
@@ -15,7 +15,7 @@
   "rule_types": {
     "china": {
       "DOMAIN": 264,
-      "DOMAIN-SUFFIX": 111839,
+      "DOMAIN-SUFFIX": 111675,
       "DOMAIN-KEYWORD": 0,
       "IP-CIDR": 7712,
       "IP-CIDR6": 4144,
@@ -24,7 +24,7 @@
     },
     "ad": {
       "DOMAIN": 18386,
-      "DOMAIN-SUFFIX": 216365,
+      "DOMAIN-SUFFIX": 216421,
       "DOMAIN-KEYWORD": 0,
       "IP-CIDR": 555,
       "IP-CIDR6": 4,
@@ -166,12 +166,15 @@
   },
   "china_keywords": [],
   "keyword_critical_matches": {},
-  "ad_china_domain_overlap_count": 4723,
+  "ad_china_domain_overlap_count": 8261,
   "overlap_category_counts_nonexclusive": {
-    "domain_suffix": 4713,
-    "exact_domain": 10
+    "domain_suffix": 4660,
+    "exact_domain": 10,
+    "single_label_suffix": 3591
   },
-  "overlap_single_label_suffix_counts": {},
+  "overlap_single_label_suffix_counts": {
+    "cn": 3591
+  },
   "overlap_keyword_counts": {},
   "keyword_review_recommendations": {},
   "ad_china_domain_overlap_csv": "data/reports/rule_coverage_overlaps.csv",
@@ -231,6 +234,12 @@
       ]
     },
     {
+      "ad_rule": "DOMAIN,ad-analysis.pconline.com.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
       "ad_rule": "DOMAIN,ad-sdk.altamob.xiaoying.co",
       "china_matches": [
         "DOMAIN-SUFFIX,xiaoying.co"
@@ -252,6 +261,12 @@
       "ad_rule": "DOMAIN,ad.altamob.xiaoying.co",
       "china_matches": [
         "DOMAIN-SUFFIX,xiaoying.co"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,ad.foxitreader.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
       ]
     },
     {
@@ -309,6 +324,12 @@
       ]
     },
     {
+      "ad_rule": "DOMAIN,admonitor.thepaper.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
       "ad_rule": "DOMAIN,adpushsdk.goforandroid.com",
       "china_matches": [
         "DOMAIN-SUFFIX,goforandroid.com"
@@ -333,9 +354,21 @@
       ]
     },
     {
+      "ad_rule": "DOMAIN,adsaide.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
       "ad_rule": "DOMAIN,adservice.aliexpress.com",
       "china_matches": [
         "DOMAIN-SUFFIX,aliexpress.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adservice.google.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
       ]
     },
     {
@@ -354,6 +387,12 @@
       "ad_rule": "DOMAIN,adsmind.tc.qq.com",
       "china_matches": [
         "DOMAIN-SUFFIX,qq.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adsoss.gzfingertip.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
       ]
     },
     {
@@ -435,6 +474,12 @@
       ]
     },
     {
+      "ad_rule": "DOMAIN,alimabi.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
+      ]
+    },
+    {
       "ad_rule": "DOMAIN,analytics.ff.avast.sec.miui.com",
       "china_matches": [
         "DOMAIN-SUFFIX,miui.com"
@@ -468,6 +513,12 @@
       "ad_rule": "DOMAIN,api.accelerator.intl.miui.com",
       "china_matches": [
         "DOMAIN-SUFFIX,miui.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,api.adsdk.adsaide.cn",
+      "china_matches": [
+        "DOMAIN-SUFFIX,cn"
       ]
     },
     {
@@ -726,54 +777,6 @@
       "ad_rule": "DOMAIN,app.chat.xiaomi.net",
       "china_matches": [
         "DOMAIN-SUFFIX,xiaomi.net"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,app.miui.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,miui.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,app.wpsmail.net",
-      "china_matches": [
-        "DOMAIN-SUFFIX,wpsmail.net"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,appcloud.ksmobile.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,ksmobile.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,appinfocdn.ksmobile.net",
-      "china_matches": [
-        "DOMAIN-SUFFIX,ksmobile.net"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,applog.camera360.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,camera360.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,appres.camera360.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,camera360.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,assistant.pandora.xiaomi.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,xiaomi.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,astat.bugly.qcloud.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,qcloud.com"
       ]
     }
   ],
