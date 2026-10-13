@@ -111,6 +111,37 @@ class RulePipelineRegressionTests(unittest.TestCase):
         self.assertFalse(china.domain_hits_exclusion(
             "baidu.com", "DOMAIN-SUFFIX", set(), {"microsoftonline.com"}))
 
+    def test_cn_country_code_restored_even_under_foreign_parent(self):
+        self.assertTrue(china.is_china_localized_domain("cn"))
+        self.assertTrue(china.is_china_localized_domain("example.cn"))
+        self.assertTrue(china.is_china_localized_domain("www.example.com.cn"))
+        self.assertTrue(china.is_china_localized_domain("cn.microsoft.com"))
+        self.assertFalse(china.is_china_localized_domain("google.com"))
+        self.assertFalse(china.is_china_localized_domain("example-cn.com"))
+        self.assertFalse(china.domain_hits_exclusion(
+            "cn", "DOMAIN-SUFFIX", set(), {"google.cn", "google.com"}))
+        self.assertFalse(china.domain_hits_exclusion(
+            "www.example.com.cn", "DOMAIN", set(), {"example.com.cn"}))
+        self.assertFalse(china.domain_hits_exclusion(
+            "cn.microsoft.com", "DOMAIN-SUFFIX", set(), {"microsoft.com"}))
+        self.assertTrue(china.domain_hits_exclusion(
+            "cn.microsoft.com", "DOMAIN-SUFFIX", {"cn.microsoft.com"}, {"microsoft.com"}))
+
+    def test_cn_country_suffix_deduplicates_subdomains_but_preserves_non_cn(self):
+        rules, removed = china.eliminate_domain_hierarchy_redundancy([
+            "DOMAIN-SUFFIX,cn",
+            "DOMAIN-SUFFIX,com.cn",
+            "DOMAIN-SUFFIX,example.com.cn",
+            "DOMAIN,www.example.cn",
+            "DOMAIN-SUFFIX,cn.vendor.com",
+            "DOMAIN-SUFFIX,example.org",
+        ])
+        self.assertEqual(removed, 3)
+        self.assertEqual(
+            rules, ["DOMAIN-SUFFIX,cn", "DOMAIN-SUFFIX,cn.vendor.com",
+                    "DOMAIN-SUFFIX,example.org"]
+        )
+
     def test_china_ip_subtract_maintains_exact_coverage(self):
         kept = china.remove_foreign_ip_overlap(
             [ipaddress.ip_network("8.8.8.0/23")],
@@ -133,6 +164,7 @@ class RulePipelineRegressionTests(unittest.TestCase):
             "DOMAIN-SUFFIX,baidu.com",
             "DOMAIN-SUFFIX,ping0.cc",
             "DOMAIN-SUFFIX,googleapis.cn",
+            "DOMAIN-SUFFIX,cn.google.com",
             "IP-CIDR,8.128.0.0/15",
             "IP-CIDR,87.83.109.0/24",
             "PROCESS-NAME,Weixin.exe",
@@ -142,13 +174,14 @@ class RulePipelineRegressionTests(unittest.TestCase):
         accepted, report = china.mainland_verified_supplement(candidate, trusted, cn_alloc)
         self.assertEqual(
             accepted,
-            sorted(["DOMAIN-SUFFIX,baidu.com", "IP-CIDR,8.128.0.0/16"],
+            sorted(["DOMAIN-SUFFIX,baidu.com", "DOMAIN-SUFFIX,googleapis.cn",
+                    "DOMAIN-SUFFIX,cn.google.com", "IP-CIDR,8.128.0.0/16"],
                    key=china.rule_sort_key),
         )
-        self.assertEqual(report["corroborated_domain_candidates"], 1)
+        self.assertEqual(report["corroborated_domain_candidates"], 3)
         self.assertEqual(report["cn_registry_verified_ip_candidates"], 1)
         self.assertEqual(report["non_cn_or_unverified_ip_rejections"], 1)
-        self.assertEqual(report["unverified_domain_rejections"], 2)
+        self.assertEqual(report["unverified_domain_rejections"], 1)
         self.assertNotIn("DOMAIN-SUFFIX,ping0.cc", accepted)
         self.assertNotIn("IP-CIDR,87.83.109.0/24", accepted)
 
