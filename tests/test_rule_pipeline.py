@@ -22,6 +22,49 @@ class RulePipelineRegressionTests(unittest.TestCase):
         self.assertNotIn("DOMAIN-SUFFIX,malvertising.example", allow)
         self.assertIn("DOMAIN-SUFFIX,legitimate.example", allow)
 
+    def test_official_adguard_dns_host_rules_only(self):
+        blocked, allowed, stats = ad.parse_rules_from_text(
+            "||advertiser.example^\n"
+            "||ads.example^$third-party\n"
+            "||metrics.example^$domain=publisher.example\n"
+            "||analytics.example^$important\n"
+            "||safe.example^|\n"
+            "||no-boundary.example\n"
+            "||ad*.example^\n"
+            "||images.example/banner.png\n"
+            "@@||login.example^\n"
+            "@@||billing.example^$document\n",
+            "block",
+        )
+        self.assertIn("DOMAIN-SUFFIX,advertiser.example", blocked)
+        self.assertIn("DOMAIN-SUFFIX,login.example", allowed)
+        self.assertEqual(len(blocked), 1)
+        self.assertEqual(len(allowed), 1)
+        self.assertGreaterEqual(stats.ignored_scoped_adblock, 6)
+
+    def test_preserves_www_hostnames_instead_of_widening_block(self):
+        blocked, allowed, _ = ad.parse_rules_from_text(
+            "DOMAIN,www.video.example,REJECT\n"
+            "||www.ads.example^\n",
+            "block",
+        )
+        self.assertIn("DOMAIN,www.video.example", blocked)
+        self.assertIn("DOMAIN-SUFFIX,www.ads.example", blocked)
+        self.assertNotIn("DOMAIN,video.example", blocked)
+        self.assertNotIn("DOMAIN-SUFFIX,ads.example", blocked)
+        self.assertFalse(allowed)
+
+    def test_adguard_official_unsupported_options_do_not_expand(self):
+        for value in (
+            "||service.example^$denyallow=auth.example",
+            "||service.example^$dnsrewrite=0.0.0.0",
+            "||service.example^$client=mobile",
+            "||service.example^$~third-party",
+            "@@||service.example^$domain=example.com",
+        ):
+            with self.subTest(rule=value):
+                self.assertIsNone(ad.normalize_rule_line(value, "block"))
+
     def test_explicit_reject_or_hosts_cannot_be_allow(self):
         blocks, allows, _ = ad.parse_rules_from_text(
             "DOMAIN,ads.example,REJECT\n0.0.0.0 spyware.example\n"
