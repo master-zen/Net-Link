@@ -40,6 +40,7 @@ def guard_against_old_build(paths):
             ".github/workflows/merge-china-domain.yml",
             "scripts/build_china_domain.py", "scripts/audit_rule_coverage.py",
             "data/sources/ChinaDomainList_URLs.txt",
+            "data/sources/ChinaSupplement_URLs.txt",
             "data/sources/ChinaForeignDomain_URLs.txt",
             "data/sources/ChinaForeignIP_URLs.txt",
             "data/allowlists/ChinaForeignDomains.list",
