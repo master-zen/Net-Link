@@ -1,12 +1,12 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-13T02:04:12Z",
-  "epoch_seconds": 1791857054.5294359,
-  "github_run_id": "38335109952",
+  "fetched_at_utc": "2026-10-13T02:07:59Z",
+  "epoch_seconds": 1791857281.0061276,
+  "github_run_id": "38335400983",
   "github_run_attempt": "1",
-  "source_count": 29,
-  "downloaded_count": 29,
-  "source_bytes_total": 37534437,
+  "source_count": 25,
+  "downloaded_count": 25,
+  "source_bytes_total": 37480548,
   "sources": [
     {
       "bucket": "allow",
@@ -14,27 +14,6 @@
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18156905,
       "sha256": "3aec3908b012ac3fc7073c904cd580aebb0962121df2d58bcdb34706ec55f6e8"
-    },
-    {
-      "bucket": "allow",
-      "url": "https://letyshops.com/adblock.txt",
-      "path": "data/ad/upstream/allow/1a40d2f33a8b266cefb6_adblock.txt",
-      "size_bytes": 48077,
-      "sha256": "dab1dc01495e2e87ad7d9d3c473d5190fa036a49cd2acca7179ad114a477ec2c"
-    },
-    {
-      "bucket": "allow",
-      "url": "https://multiup.io/list_adblock.txt",
-      "path": "data/ad/upstream/allow/6f719a5e4ef84795d66f_list_adblock.txt",
-      "size_bytes": 806,
-      "sha256": "0da36dc998e3950925b4d9f9b10719f00d2c436ef54653af7ac9eab044174aa2"
-    },
-    {
-      "bucket": "allow",
-      "url": "https://multiup.org/list_adblock.txt",
-      "path": "data/ad/upstream/allow/fe938158db61bdd12fb8_list_adblock.txt",
-      "size_bytes": 806,
-      "sha256": "0da36dc998e3950925b4d9f9b10719f00d2c436ef54653af7ac9eab044174aa2"
     },
     {
       "bucket": "allow",
@@ -56,13 +35,6 @@
       "path": "data/ad/upstream/allow/3ebf8b97406c0312db2a_whitelist.txt",
       "size_bytes": 3678,
       "sha256": "0231b454e6103a67766af96a6332245b4109db0af903c280cd8448cb23147f19"
-    },
-    {
-      "bucket": "allow",
-      "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/AdGuardSDNSFilter/Direct/Direct.list",
-      "path": "data/ad/upstream/allow/5e41c90f1d889ef2dd2a_Direct.list",
-      "size_bytes": 4200,
-      "sha256": "4dd83b81db007f331600d13157826d13e65c83d3d10abca2cbf64aee2a048479"
     },
     {
       "bucket": "allow",
