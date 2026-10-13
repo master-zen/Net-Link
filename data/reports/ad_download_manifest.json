@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-13T01:49:13Z",
-  "epoch_seconds": 1791856155.8849404,
-  "github_run_id": "38333925392",
+  "fetched_at_utc": "2026-10-13T02:04:12Z",
+  "epoch_seconds": 1791857054.5294359,
+  "github_run_id": "38335109952",
   "github_run_attempt": "1",
   "source_count": 29,
   "downloaded_count": 29,
-  "source_bytes_total": 36764820,
+  "source_bytes_total": 37534437,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18156905,
-      "sha256": "bb6b220c0cc4f7eb8bdd6284d43ce38643ec99c7b90f1b24fd04153bc335090a"
+      "sha256": "3aec3908b012ac3fc7073c904cd580aebb0962121df2d58bcdb34706ec55f6e8"
     },
     {
       "bucket": "allow",
@@ -94,6 +94,13 @@
     },
     {
       "bucket": "block",
+      "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
+      "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
+      "size_bytes": 4476432,
+      "sha256": "774ab81689ea0cd6ec5318bb14b0d8128ec4c2b7db6ec3a785e0e2dd323b7816"
+    },
+    {
+      "bucket": "block",
       "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list",
       "path": "data/ad/upstream/block/abee8c0e55138e09c878_BanAD.list",
       "size_bytes": 15550,
@@ -126,13 +133,6 @@
       "path": "data/ad/upstream/block/e413d034d669b085c70d_adservers.txt",
       "size_bytes": 1354227,
       "sha256": "4cbe4ca57d726b9964f5b782cc7c211243cd7f7fa4b5947af3a2b3ec3560477e"
-    },
-    {
-      "bucket": "block",
-      "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/AdGuardSDNSFilter/AdGuardSDNSFilter_All.list",
-      "path": "data/ad/upstream/block/059f18f90ed88fc7b9d2_AdGuardSDNSFilter_All.list",
-      "size_bytes": 3706815,
-      "sha256": "cea9ff9a696c204920f695fa2a0807ba27d7eb178405522be3ee199f164e38f6"
     },
     {
       "bucket": "block",
