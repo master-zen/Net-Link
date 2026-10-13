@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
-! Checksum: YuaRwy8asW5GKc95Fmbi3A
-! Version: 202610131534
+! Checksum: vG2Ii6JfQxmPybX+32sO4g
+! Version: 202610132322
 ! Title: Allow nonintrusive advertising
 ! Expires: 1 days
 ! Homepage: https://acceptableads.com/
@@ -12048,6 +12048,7 @@ yahoo.com,news.yahoo.com,us.yahoo.com,espanol.yahoo.com,sports.yahoo.com,de.yaho
 yahoo.com,news.yahoo.com,us.yahoo.com,espanol.yahoo.com,sports.yahoo.com,de.yahoo.com,de.nachrichten.yahoo.com,de.style.yahoo.com#@#li.min-h-\[8\.125rem\]
 ! end of temporary filters
 yahoo.com#@#[style*="300px;"]
+mail.yahoo.com#@##right-rail-container > div:has(> div > div > iframe[id^="Z3B0LWlmcmFtZS"])
 !:partner_token=Microsoft
 !:partner_id=c7cdd2fa8a3d0b2a
 ! Bing.com ads
