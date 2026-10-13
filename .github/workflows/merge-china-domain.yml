@@ -13,6 +13,7 @@ on:
       - "scripts/build_china_domain.py"
       - "scripts/audit_rule_coverage.py"
       - "data/sources/ChinaDomainList_URLs.txt"
+      - "data/sources/ChinaSupplement_URLs.txt"
       - "data/sources/ChinaForeignDomain_URLs.txt"
       - "data/sources/ChinaForeignIP_URLs.txt"
       - "data/allowlists/ChinaForeignDomains.list"
@@ -64,6 +65,7 @@ jobs:
             data/reports/china_source_integrity.json
             data/reports/china_download_manifest.json
             data/reports/china_risk_audit.json
+            data/reports/china_supplement_audit.json
           retention-days: 7
           if-no-files-found: warn
 
@@ -82,6 +84,7 @@ jobs:
             data/reports/china_download_manifest.json \
             data/reports/china_source_integrity.json \
             data/reports/china_risk_audit.json \
+            data/reports/china_supplement_audit.json \
             data/reports/rule_coverage_audit.json \
             data/reports/rule_coverage_overlaps.csv
 
@@ -113,6 +116,7 @@ jobs:
               "data/reports/china_source_integrity.json",
               "data/reports/china_download_manifest.json",
               "data/reports/china_risk_audit.json",
+              "data/reports/china_supplement_audit.json",
           ):
               local_sha = subprocess.check_output(["git", "hash-object", name], text=True).strip()
               remote_sha = subprocess.check_output(["git", "rev-parse", "origin/main:" + name], text=True).strip()
@@ -135,6 +139,7 @@ jobs:
           m = json.loads((root / "data/reports/china_download_manifest.json").read_text(encoding="utf-8"))
           integrity = json.loads((root / "data/reports/china_source_integrity.json").read_text(encoding="utf-8"))
           risk = json.loads((root / "data/reports/china_risk_audit.json").read_text(encoding="utf-8"))
+          supplemental = json.loads((root / "data/reports/china_supplement_audit.json").read_text(encoding="utf-8"))
           source_file = root / "Surge/Rules/ChinaDomain.list"
           current_blob = subprocess.check_output(["git", "hash-object", str(source_file)], text=True).strip()
           previous_blob = subprocess.check_output(
@@ -153,6 +158,8 @@ jobs:
               f"- Published Surge output SHA-256: `{hashlib.sha256(source_file.read_bytes()).hexdigest()}`",
               f"- Actual rules payload changed vs checkout: **{'YES' if updated else 'NO (unchanged source-normalized content)'}**",
               f"- Excluded documented foreign domain rules: **{risk['foreign_domain_rules_excluded']}**",
+              f"- Additional CN source files audited: **{len(supplemental['sources'])}**",
+              f"- CN-verified candidate supplement rules: **{supplemental['accepted_unique_rule_count']}**",
               "",
               "Unchanged rules intentionally retain their previous Git modification time. The fresh download manifest and this run remain new and independently verifiable.",
               "",
