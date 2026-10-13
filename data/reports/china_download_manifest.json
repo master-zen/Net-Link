@@ -1,12 +1,12 @@
 {
   "profile": "china",
-  "fetched_at_utc": "2026-10-13T02:28:35Z",
-  "epoch_seconds": 1791858519.6832016,
-  "github_run_id": "38337032012",
+  "fetched_at_utc": "2026-10-13T11:02:28Z",
+  "epoch_seconds": 1791889352.454627,
+  "github_run_id": "38387447665",
   "github_run_attempt": "1",
-  "source_count": 16,
-  "downloaded_count": 16,
-  "source_bytes_total": 16097433,
+  "source_count": 20,
+  "downloaded_count": 20,
+  "source_bytes_total": 16225725,
   "sources": [
     {
       "bucket": "china",
@@ -91,6 +91,34 @@
       "path": "data/china/upstream/fdd77efc37c1e173373b_ChinaNoMedia_All.list",
       "size_bytes": 98038,
       "sha256": "4220d9c08c1f58e1fa8795e50b5e6420c1bd1a035cd9322d9bb9f2359133c05c"
+    },
+    {
+      "bucket": "china_supplement",
+      "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list",
+      "path": "data/china/upstream/a42987c0fe4d8887653e_ChinaCompanyIp.list",
+      "size_bytes": 7257,
+      "sha256": "cbc63e3daee0c0467558394ce0cfdd342f28e6c0f903bc4b35b6a5f06279d160"
+    },
+    {
+      "bucket": "china_supplement",
+      "url": "https://raw.githubusercontent.com/nexitallyy/ProxyRules/main/Extra_CN_3.list",
+      "path": "data/china/upstream/0bdbfa8a259458e0ad08_Extra_CN_3.list",
+      "size_bytes": 3292,
+      "sha256": "911369e9b9d56435bde5394e345da48806f5ec2c61aab19707d7f7fa02ac46c2"
+    },
+    {
+      "bucket": "china_supplement",
+      "url": "https://www.naiixi.com/Extra_CN.list",
+      "path": "data/china/upstream/8078d815b79896cfd3e4_Extra_CN.list",
+      "size_bytes": 14140,
+      "sha256": "3a0e65456d400d824ee20450047826c77deae85ebbd96416c253c5abc901b5c7"
+    },
+    {
+      "bucket": "china_supplement",
+      "url": "https://www.naiixi.com/Extra_CN_2.list",
+      "path": "data/china/upstream/bf96b2339a390a527f87_Extra_CN_2.list",
+      "size_bytes": 103603,
+      "sha256": "801a5bedf3f96f4e8b0274e32dc49c314e101a23d0febabc7050e97d38aba114"
     },
     {
       "bucket": "foreign_domain",
