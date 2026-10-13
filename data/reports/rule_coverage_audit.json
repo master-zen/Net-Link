@@ -2,11 +2,11 @@
   "scope": "entire published rule files, not a sample",
   "files": {
     "ChinaDomain.list": 123874,
-    "AdblockSet.list": 231153
+    "AdblockSet.list": 235148
   },
   "unique_rules": {
     "china": 123874,
-    "ad": 231153
+    "ad": 235148
   },
   "duplicates": {
     "china": 0,
@@ -23,8 +23,8 @@
       "GEOIP": 0
     },
     "ad": {
-      "DOMAIN": 17878,
-      "DOMAIN-SUFFIX": 212716,
+      "DOMAIN": 18386,
+      "DOMAIN-SUFFIX": 216203,
       "DOMAIN-KEYWORD": 0,
       "IP-CIDR": 555,
       "IP-CIDR6": 4,
@@ -166,10 +166,10 @@
   },
   "china_keywords": [],
   "keyword_critical_matches": {},
-  "ad_china_domain_overlap_count": 4656,
+  "ad_china_domain_overlap_count": 4707,
   "overlap_category_counts_nonexclusive": {
-    "domain_suffix": 4647,
-    "exact_domain": 9
+    "domain_suffix": 4697,
+    "exact_domain": 10
   },
   "overlap_single_label_suffix_counts": {},
   "overlap_keyword_counts": {},
@@ -330,6 +330,12 @@
       "ad_rule": "DOMAIN,ads.mojicdn.com",
       "china_matches": [
         "DOMAIN-SUFFIX,mojicdn.com"
+      ]
+    },
+    {
+      "ad_rule": "DOMAIN,adservice.aliexpress.com",
+      "china_matches": [
+        "DOMAIN-SUFFIX,aliexpress.com"
       ]
     },
     {
@@ -768,12 +774,6 @@
       "ad_rule": "DOMAIN,astat.bugly.qcloud.com",
       "china_matches": [
         "DOMAIN-SUFFIX,qcloud.com"
-      ]
-    },
-    {
-      "ad_rule": "DOMAIN,aweme.snssdk.com",
-      "china_matches": [
-        "DOMAIN-SUFFIX,snssdk.com"
       ]
     }
   ],
