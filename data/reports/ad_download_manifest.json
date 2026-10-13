@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-12T17:38:47Z",
-  "epoch_seconds": 1791826728.5567214,
-  "github_run_id": "38285557185",
+  "fetched_at_utc": "2026-10-13T01:49:13Z",
+  "epoch_seconds": 1791856155.8849404,
+  "github_run_id": "38333925392",
   "github_run_attempt": "1",
   "source_count": 29,
   "downloaded_count": 29,
-  "source_bytes_total": 36688527,
+  "source_bytes_total": 36764820,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18156905,
-      "sha256": "52d1368caec4cc4fb7a7f877b7671206cc44c0d54d28be6aff3b77e3fb6e52af"
+      "sha256": "bb6b220c0cc4f7eb8bdd6284d43ce38643ec99c7b90f1b24fd04153bc335090a"
     },
     {
       "bucket": "allow",
@@ -110,8 +110,8 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/reject.txt",
       "path": "data/ad/upstream/block/5ddf2462fc173642d9c2_reject.txt",
-      "size_bytes": 6650669,
-      "sha256": "52589435213e0769dd7f5aea1e3f79a9f791d452df2ce6f8d894dee8548d4c96"
+      "size_bytes": 6726962,
+      "sha256": "282f1fa0a6013536ce06fb698c237311485faf06212e116ee4d5cc392a858786"
     },
     {
       "bucket": "block",
