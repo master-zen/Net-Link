@@ -111,6 +111,14 @@ class RulePipelineRegressionTests(unittest.TestCase):
         self.assertFalse(china.domain_hits_exclusion(
             "baidu.com", "DOMAIN-SUFFIX", set(), {"microsoftonline.com"}))
 
+    def test_cn_suffix_survives_final_output_filter(self):
+        self.assertTrue(china.include_china_domain_output_rule("DOMAIN-SUFFIX,cn"))
+        self.assertTrue(china.include_china_domain_output_rule("DOMAIN-SUFFIX,com.cn"))
+        self.assertTrue(china.include_china_domain_output_rule("DOMAIN-SUFFIX,cn.microsoft.com"))
+        self.assertFalse(china.include_china_domain_output_rule("DOMAIN-SUFFIX,com"))
+        self.assertFalse(china.include_china_domain_output_rule("DOMAIN-SUFFIX,net"))
+        self.assertFalse(china.include_china_domain_output_rule("DOMAIN-KEYWORD,cn"))
+
     def test_cn_country_code_restored_even_under_foreign_parent(self):
         self.assertTrue(china.is_china_localized_domain("cn"))
         self.assertTrue(china.is_china_localized_domain("example.cn"))
