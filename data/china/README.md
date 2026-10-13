@@ -27,9 +27,17 @@ published subscriptions are retained.
 China cloud-company IP ownership does not imply mainland hosting, and a
 proxy-provider `DIRECT` label does not prove country of operation.
 
-- Supplement **domains** are admitted only if a trusted primary China rule
-  already covers them. Unverified foreign services / arbitrary DIRECT
-  exceptions are held out.
+- A mandatory `DOMAIN-SUFFIX,cn` rule covers all `.cn` domains,
+  including `.com.cn`. More-specific `.cn` rules are removed when
+  redundant, without reducing country-code suffix coverage.
+- Supplement **domains** normally need corroboration by an existing China
+  source. Explicitly sourced `.cn` domains and `cn.example.com`
+  China-region hostnames are admitted as localized candidates, with the
+  documented explicit foreign-domain exceptions still checked. A `cn.`
+  prefix alone is not proof of physical server location: no blanket
+  `cn.*` wildcard is synthesized.
+- Unverified non-localized foreign services and arbitrary DIRECT
+  exceptions remain excluded.
 - Supplement **IPv4/IPv6** ranges are restricted to intersections with
   independently downloaded, country=`CN` APNIC allocation records.
   Non-CN allocations and foreign-service exclusions are then subtracted.
