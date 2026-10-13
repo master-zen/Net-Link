@@ -2,11 +2,11 @@
   "scope": "entire published rule files, not a sample",
   "files": {
     "ChinaDomain.list": 123874,
-    "AdblockSet.list": 261563
+    "AdblockSet.list": 231153
   },
   "unique_rules": {
     "china": 123874,
-    "ad": 261563
+    "ad": 231153
   },
   "duplicates": {
     "china": 0,
@@ -23,10 +23,10 @@
       "GEOIP": 0
     },
     "ad": {
-      "DOMAIN": 17832,
-      "DOMAIN-SUFFIX": 243173,
+      "DOMAIN": 17878,
+      "DOMAIN-SUFFIX": 212716,
       "DOMAIN-KEYWORD": 0,
-      "IP-CIDR": 554,
+      "IP-CIDR": 555,
       "IP-CIDR6": 4,
       "IP-ASN": 0,
       "GEOIP": 0
@@ -166,9 +166,9 @@
   },
   "china_keywords": [],
   "keyword_critical_matches": {},
-  "ad_china_domain_overlap_count": 4699,
+  "ad_china_domain_overlap_count": 4656,
   "overlap_category_counts_nonexclusive": {
-    "domain_suffix": 4690,
+    "domain_suffix": 4647,
     "exact_domain": 9
   },
   "overlap_single_label_suffix_counts": {},
