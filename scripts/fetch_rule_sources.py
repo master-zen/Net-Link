@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PROFILES = {
     "china": {
         "china": "data/sources/ChinaDomainList_URLs.txt",
+        "china_supplement": "data/sources/ChinaSupplement_URLs.txt",
         "foreign_domain": "data/sources/ChinaForeignDomain_URLs.txt",
         "foreign_ip": "data/sources/ChinaForeignIP_URLs.txt",
     },
