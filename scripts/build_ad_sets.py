@@ -47,6 +47,8 @@ OUTPUT_BLOCK = ROOT / "Surge/Rules/AdblockSet.list"
 OUTPUT_CLASH = ROOT / "Clash/Rules/AdblockSet.yaml"
 AD_REPORT = ROOT / "data/reports/ad_build_audit.json"
 CRITICAL_ALLOWLIST = ROOT / "data/allowlists/AdblockCriticalAllow.list"
+OFFICIAL_ADGUARD_DNS_URL = "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt"
+PARSER_SAFETY_VERSION = "strict-unconditional-dns-v2"
 OFFLINE_DOWNLOADS: dict[str, dict] | None = None
 SOURCE_ACCEPT_COUNTS: dict[str, dict[str, int]] = {"block": {}, "allow": {}}
 
@@ -828,6 +830,13 @@ def merge_rules_from_sources(source_urls: list[str], default_bucket: str) -> tup
             # CRITICAL: explicitly blocked entries in allowlist sources are
             # not exceptions. Only allow-marked/normal allowlist entries qualify.
             rules = allowed if default_bucket == "allow" else blocked
+            if source == OFFICIAL_ADGUARD_DNS_URL:
+                if "Title: AdGuard DNS filter" not in response[:4096]:
+                    return source, [], stats, "Unexpected official AdGuard DNS filter header", time.monotonic() - started
+                if len(rules) < 50_000:
+                    return source, [], stats, (
+                        f"Official AdGuard DNS filter unexpectedly small after safe conversion: {len(rules)}"
+                    ), time.monotonic() - started
             return source, list(rules), stats, None, time.monotonic() - started
         except Exception as exc:
             return source, [], ParseStats(), f"Fetch failed: {source} -> {exc}", time.monotonic() - started
@@ -1171,6 +1180,13 @@ def main() -> int:
         for warning in allow_warnings:
             print(f"[WARN] {warning}", file=sys.stderr)
 
+    # On production fresh-input builds, every configured upstream must parse
+    # successfully. Never call a partial input merge a complete refresh.
+    if args.offline and (block_warnings or allow_warnings):
+        raise RuntimeError(
+            f"Configured ad sources returned no safe rules: block={len(block_warnings)} "
+            f"allow={len(allow_warnings)}. Review/retire the source instead of publishing partial data."
+        )
     if len(block_warnings) > len(block_sources) // 2 or len(allow_warnings) > len(allow_sources) // 2:
         print("[ERROR] insufficient healthy ad rule sources", file=sys.stderr)
         return 1
@@ -1204,6 +1220,13 @@ def main() -> int:
             prior_counts = json.loads(AD_REPORT.read_text(encoding="utf-8")).get("source_accept_counts", {})
         except (ValueError, OSError):
             prior_counts = {}
+        prior_data = json.loads(AD_REPORT.read_text(encoding="utf-8"))
+        # A parsing safety-policy upgrade deliberately discards unsafe scoped
+        # ABP rules. Only compare per-source counts against reports produced
+        # under the SAME rules of interpretation, not the legacy parser.
+        if prior_data.get("parser_safety_version") != PARSER_SAFETY_VERSION:
+            print("[SAFETY] parser policy changed; establish new baseline after strict full-source validation")
+            prior_counts = {}
         for bucket in ("block", "allow"):
             for url, count in SOURCE_ACCEPT_COUNTS[bucket].items():
                 previous = prior_counts.get(bucket, {}).get(url)
@@ -1222,6 +1245,16 @@ def main() -> int:
         inputs = load_manifest("ad")
         report = {
             "download_run": inputs["github_run_id"],
+            "parser_safety_version": PARSER_SAFETY_VERSION,
+            "official_dns_source": OFFICIAL_ADGUARD_DNS_URL,
+            "official_dns_rule_count": SOURCE_ACCEPT_COUNTS["block"].get(OFFICIAL_ADGUARD_DNS_URL, 0),
+            "official_dns_source_sha256": next(
+                item["sha256"] for item in inputs["sources"] if item["url"] == OFFICIAL_ADGUARD_DNS_URL
+            ),
+            "scope_restricted_rules_skipped": {
+                "block": block_stats.ignored_scoped_adblock,
+                "allow": allow_stats.ignored_scoped_adblock,
+            },
             "fetched_at_utc": inputs["fetched_at_utc"],
             "input_sources": len(inputs["sources"]),
             "input_total_bytes": inputs["source_bytes_total"],
