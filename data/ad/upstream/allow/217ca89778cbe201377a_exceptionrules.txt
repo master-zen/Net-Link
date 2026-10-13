@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
-! Checksum: nwRGCJCR7UfP85c09Zdk3A
-! Version: 202610131052
+! Checksum: YuaRwy8asW5GKc95Fmbi3A
+! Version: 202610131534
 ! Title: Allow nonintrusive advertising
 ! Expires: 1 days
 ! Homepage: https://acceptableads.com/
@@ -3316,6 +3316,7 @@ tvguide.com,gamespot.com,metacritic.com#@#.fandom-ad-placeholder
 diep.io#@##diep-io_300x250
 diep.io#@#.aa-unit
 psychcentral.com#@#aside:has([data-empty])
+||services.fandom.com/aa-signal$addheader=request:x-acceptable-ads:1
 ! hidden for compliance
 imore.com##div.inline-text
 nevermundane.com,uniqueinterests.com,travelapples.com,marspeta.com,geekyup.com,readyer.com,oldermillennials.com,simpleblitz.com##div[class^="entry-content"] .ad_placeholder
