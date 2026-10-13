@@ -634,6 +634,15 @@ def load_foreign_references(download_manifest: dict) -> tuple[set[str], set[str]
     return excluded_exact, excluded_suffixes, foreign_nets, cn_allocations, {**refs, "proxy_roots": proxy_domain_refs}
 
 
+def include_china_domain_output_rule(rule: str) -> bool:
+    """Allow exact domains, normal qualified suffixes, and ONLY the .cn TLD."""
+    kind, sep, value = rule.partition(",")
+    return bool(sep) and (
+        kind == "DOMAIN"
+        or (kind == "DOMAIN-SUFFIX" and ("." in value or value == "cn"))
+    )
+
+
 def is_china_localized_domain(domain: str) -> bool:
     """Country-code domain or explicit China-region hostname marker.
 
@@ -1019,7 +1028,7 @@ def main() -> int:
         kind, _, value = rule.partition(",")
         # A .cn country-code suffix is deliberate; other single-label
         # suffixes remain excluded for safety.
-        if not (kind == "DOMAIN" or (kind == "DOMAIN-SUFFIX" and ("." in value or value == "cn"))):
+        if not include_china_domain_output_rule(rule):
             continue
         if domain_hits_exclusion(value, kind, exclusion_exact, exclusion_suffixes):
             foreign_excluded_rules.append(rule)
