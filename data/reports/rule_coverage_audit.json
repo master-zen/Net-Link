@@ -1,12 +1,12 @@
 {
   "scope": "entire published rule files, not a sample",
   "files": {
-    "ChinaDomain.list": 123795,
-    "AdblockSet.list": 235366
+    "ChinaDomain.list": 123025,
+    "AdblockSet.list": 235493
   },
   "unique_rules": {
-    "china": 123795,
-    "ad": 235366
+    "china": 123025,
+    "ad": 235493
   },
   "duplicates": {
     "china": 0,
@@ -14,17 +14,17 @@
   },
   "rule_types": {
     "china": {
-      "DOMAIN": 264,
-      "DOMAIN-SUFFIX": 111675,
+      "DOMAIN": 265,
+      "DOMAIN-SUFFIX": 110901,
       "DOMAIN-KEYWORD": 0,
-      "IP-CIDR": 7712,
-      "IP-CIDR6": 4144,
+      "IP-CIDR": 7714,
+      "IP-CIDR6": 4145,
       "IP-ASN": 0,
       "GEOIP": 0
     },
     "ad": {
       "DOMAIN": 18386,
-      "DOMAIN-SUFFIX": 216421,
+      "DOMAIN-SUFFIX": 216548,
       "DOMAIN-KEYWORD": 0,
       "IP-CIDR": 555,
       "IP-CIDR6": 4,
@@ -40,10 +40,10 @@
   },
   "cidr": {
     "IP-CIDR": {
-      "rule_count": 7712,
-      "collapsed_prefix_count": 7712,
+      "rule_count": 7714,
+      "collapsed_prefix_count": 7714,
       "redundant_prefix_count": 0,
-      "unique_address_count": "346803751",
+      "unique_address_count": "346804775",
       "non_public_count": 0,
       "non_public_examples": [],
       "ipv4_mapped_count": 0,
@@ -52,10 +52,10 @@
       "invalid_examples": []
     },
     "IP-CIDR6": {
-      "rule_count": 4144,
-      "collapsed_prefix_count": 4144,
+      "rule_count": 4145,
+      "collapsed_prefix_count": 4145,
       "redundant_prefix_count": 0,
-      "unique_address_count": "5439745353152972203391596577685504",
+      "unique_address_count": "5439824581315486467729190121635840",
       "non_public_count": 0,
       "non_public_examples": [],
       "ipv4_mapped_count": 0,
@@ -166,14 +166,14 @@
   },
   "china_keywords": [],
   "keyword_critical_matches": {},
-  "ad_china_domain_overlap_count": 8261,
+  "ad_china_domain_overlap_count": 8248,
   "overlap_category_counts_nonexclusive": {
-    "domain_suffix": 4660,
+    "domain_suffix": 4649,
     "exact_domain": 10,
-    "single_label_suffix": 3591
+    "single_label_suffix": 3589
   },
   "overlap_single_label_suffix_counts": {
-    "cn": 3591
+    "cn": 3589
   },
   "overlap_keyword_counts": {},
   "keyword_review_recommendations": {},

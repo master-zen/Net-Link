@@ -1,6 +1,6 @@
 {
-  "download_run": "38425049375",
-  "download_manifest_sha256": "0fdbf1d697536d76a195a40cd84334732c7b4313168090a22bbb72fedcd93cfb",
+  "download_run": "38486148956",
+  "download_manifest_sha256": "2598b8a0328165576ed477e9cbb40600bd8f1532f837c9c2593b3a54480f016f",
   "foreign_reference_counts": {
     "v2fly_literal_domains": 38,
     "proxy_reference_rules": 27233,
@@ -73,7 +73,7 @@
     "DOMAIN-SUFFIX,windowsupdate.microsoft.com",
     "DOMAIN-SUFFIX,xiaomiflash.com"
   ],
-  "proxy_reference_exact_candidate_count": 192,
+  "proxy_reference_exact_candidate_count": 191,
   "proxy_reference_candidate_examples": [
     "DOMAIN,2mdn-cn.net",
     "DOMAIN,admob-cn.com",
@@ -98,7 +98,6 @@
     "DOMAIN,www.pxcc.com",
     "DOMAIN-SUFFIX,265.com",
     "DOMAIN-SUFFIX,91cy.app",
-    "DOMAIN-SUFFIX,91short.com",
     "DOMAIN-SUFFIX,99thz.com",
     "DOMAIN-SUFFIX,aa77kk.com",
     "DOMAIN-SUFFIX,aaplimg.com",
@@ -154,11 +153,12 @@
     "DOMAIN-SUFFIX,footseen.com",
     "DOMAIN-SUFFIX,gandi.net",
     "DOMAIN-SUFFIX,genshinimpact.com",
-    "DOMAIN-SUFFIX,gvt2-cn.com"
+    "DOMAIN-SUFFIX,gvt2-cn.com",
+    "DOMAIN-SUFFIX,honkaiimpact3.com"
   ],
   "foreign_ip_reference_network_count": 64721,
   "excluded_foreign_registered_ipv4_address_count": "16624644",
-  "excluded_foreign_registered_ipv6_address_count": "2090138545069460042253900709888",
+  "excluded_foreign_registered_ipv6_address_count": "2090157887882573876320696008704",
   "limitations": [
     "A proxy routing category is not proof of physical domain geography.",
     "IP ownership/registration and actual network location can differ.",

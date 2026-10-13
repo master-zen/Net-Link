@@ -1,12 +1,12 @@
 {
   "profile": "china",
-  "fetched_at_utc": "2026-10-13T15:47:53Z",
-  "epoch_seconds": 1791906477.6771574,
-  "github_run_id": "38425049375",
+  "fetched_at_utc": "2026-10-13T23:45:36Z",
+  "epoch_seconds": 1791935140.0518942,
+  "github_run_id": "38486148956",
   "github_run_attempt": "1",
   "source_count": 20,
   "downloaded_count": 20,
-  "source_bytes_total": 16226493,
+  "source_bytes_total": 16162564,
   "sources": [
     {
       "bucket": "china",
@@ -40,8 +40,8 @@
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaIPs/ChinaIPs.list",
       "path": "data/china/upstream/611a7ab4fd2be015965d_ChinaIPs.list",
-      "size_bytes": 691595,
-      "sha256": "b78ac5d81c5b748294050fa3879b7bebd521538ec6f9dbf9e08a309046a3c3e7"
+      "size_bytes": 691489,
+      "sha256": "73a34c40dd52f4627c845af729d70647a990ae4e90f81bd44d9f9a6072443daa"
     },
     {
       "bucket": "china",
@@ -54,22 +54,22 @@
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMax/ChinaMax_All.list",
       "path": "data/china/upstream/8b33885f83ef1d32f28a_ChinaMax_All.list",
-      "size_bytes": 3301788,
-      "sha256": "d38bc709a9f6733389dafec333cacabe9fe5548c714f313f59d03a5d08f08b60"
+      "size_bytes": 3280567,
+      "sha256": "d69cac90e00871c128f6c6f5290ba3b18c48c6e8e7cd364db2583c6e4281f034"
     },
     {
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMaxNoIP/ChinaMaxNoIP_All.list",
       "path": "data/china/upstream/78cd1c5a0fe67707824f_ChinaMaxNoIP_All.list",
-      "size_bytes": 2976808,
-      "sha256": "7335c3467bae9d1cbe5455ddb513d0e06e034c1ea699f45f04e03ce988dc4934"
+      "size_bytes": 2955427,
+      "sha256": "74f9adb7179ba5c3b06dc73e5b1662bdf40f9a4279057b921d1515a086bb8e9b"
     },
     {
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMaxNoMedia/ChinaMaxNoMedia_All.list",
       "path": "data/china/upstream/7407128681a608e615ec_ChinaMaxNoMedia_All.list",
-      "size_bytes": 3289288,
-      "sha256": "e1ee497ecdcc33acd37dd7c6098cba011c81d60752db5c0e68b8cb3d9378fa1a"
+      "size_bytes": 3268067,
+      "sha256": "fb9d89ac2677878125879f47a6a2fa3c32d0156cbce3d275e8b95c8a4583a4db"
     },
     {
       "bucket": "china",
