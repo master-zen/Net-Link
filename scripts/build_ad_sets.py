@@ -455,12 +455,15 @@ def parse_adblock_domain(candidate: str, stats: ParseStats | None = None) -> str
         token = token[2:]
 
     if token.startswith("||"):
-        matched = re.fullmatch(r"\|\|([a-z0-9][a-z0-9.-]*)\^", token)
+        # ^| adds an end anchor: this is an EXACT hostname match, not a
+        # blanket suffix. Official AdGuard DNS exception lists use this form.
+        matched = re.fullmatch(r"\|\|([a-z0-9][a-z0-9.-]*)\^(\|)?", token)
         if not matched:
             if stats:
                 stats.ignored_scoped_adblock += 1
             return None
         host = matched.group(1)
+        exact_hostname = bool(matched.group(2))
     elif token.startswith("|"):
         # Only host-only absolute URLs can be translated without changing
         # path/request semantics. Other leading | anchors are not DNS rules.
@@ -488,7 +491,7 @@ def parse_adblock_domain(candidate: str, stats: ParseStats | None = None) -> str
 
     domain = normalize_domain(host)
     if domain:
-        return f"DOMAIN-SUFFIX,{domain}"
+        return f"{'DOMAIN' if token.startswith('||') and exact_hostname else 'DOMAIN-SUFFIX'},{domain}"
     ip_norm = normalize_ip_or_network(host)
     if ip_norm:
         return f"{ip_norm[0]},{ip_norm[1]}"
