@@ -184,6 +184,7 @@ def validate_profile(profile):
             raise RuntimeError("China output record count differs from source manifest")
         if len(rows) != len(set(rows)):
             raise RuntimeError("Duplicate unified China rules")
+        from build_china_domain import domain_hits_exclusion
         excluded_roots = {
             x.strip().lower()
             for x in Path("data/allowlists/ChinaForeignDomains.list").read_text(encoding="utf-8").splitlines()
@@ -193,9 +194,9 @@ def validate_profile(profile):
             kind, _, domain = row.partition(",")
             if kind not in ("DOMAIN", "DOMAIN-SUFFIX"):
                 continue
-            if any(domain == root or domain.endswith("." + root)
-                   or (kind == "DOMAIN-SUFFIX" and root.endswith("." + domain))
-                   for root in excluded_roots):
+            # Country-code .cn and explicitly sourced cn.* regional names
+            # are not silently discarded by broad foreign-parent exclusions.
+            if domain_hits_exclusion(domain, kind, set(), excluded_roots):
                 raise RuntimeError(f"China includes a protected non-CN service: {row}")
         allowed = {"DOMAIN", "DOMAIN-SUFFIX", "IP-CIDR", "IP-CIDR6"}
         families = set()
@@ -203,8 +204,8 @@ def validate_profile(profile):
             kind, sep, value = row.partition(",")
             if not sep or kind not in allowed or not value:
                 raise RuntimeError(f"Unsafe unified China rule: {row}")
-            if kind == "DOMAIN-SUFFIX" and "." not in value:
-                raise RuntimeError(f"Broad TLD suffix: {row}")
+            if kind == "DOMAIN-SUFFIX" and "." not in value and value != "cn":
+                raise RuntimeError(f"Unapproved broad TLD suffix: {row}")
             if kind in {"IP-CIDR", "IP-CIDR6"}:
                 net = ipaddress.ip_network(value, strict=False)
                 expected = 4 if kind == "IP-CIDR" else 6
@@ -215,6 +216,8 @@ def validate_profile(profile):
                 families.add(expected)
         if families != {4, 6}:
             raise RuntimeError("Missing IPv4 or IPv6 in unified China rules")
+        if rows.count("DOMAIN-SUFFIX,cn") != 1:
+            raise RuntimeError("Missing mandatory .cn country-code suffix coverage")
         suffixes = {row.partition(",")[2] for row in rows if row.startswith("DOMAIN-SUFFIX,")}
         for rule in rows:
             kind, _, domain = rule.partition(",")
@@ -222,7 +225,7 @@ def validate_profile(profile):
                 continue
             labels = domain.split(".")
             if (kind == "DOMAIN" and domain in suffixes
-                    or any(".".join(labels[i:]) in suffixes for i in range(1, len(labels) - 1))):
+                    or any(".".join(labels[i:]) in suffixes for i in range(1, len(labels)))):
                 raise RuntimeError(f"Redundant nested China domain entry: {rule}")
 
         disallowed_ip = [
