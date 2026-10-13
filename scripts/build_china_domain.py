@@ -543,6 +543,7 @@ def load_foreign_references(download_manifest: dict) -> tuple[set[str], set[str]
     excluded_suffixes: set[str] = set()
     proxy_domain_refs: set[str] = set()
     foreign_nets: list[ipaddress._BaseNetwork] = []
+    cn_allocations: list[ipaddress._BaseNetwork] = []
     for raw in (ROOT / "data/allowlists/ChinaForeignDomains.list").read_text(encoding="utf-8").splitlines():
         token = raw.strip().lower()
         if token and not token.startswith("#"):
@@ -588,6 +589,7 @@ def load_foreign_references(download_manifest: dict) -> tuple[set[str], set[str]
                     family_tag = "ipv4" if family == "ipv4" else "ipv6"
                     if country == "CN":
                         refs[f"rir_cn_{family_tag}_prefixes"] += len(nets)
+                        cn_allocations.extend(nets)
                     elif len(country) == 2 and country.isalpha() and country.isupper():
                         refs[f"rir_non_cn_{family_tag}_prefixes"] += len(nets)
                         foreign_nets.extend(nets)
@@ -629,7 +631,7 @@ def load_foreign_references(download_manifest: dict) -> tuple[set[str], set[str]
             if count == 0:
                 raise RuntimeError(f"Empty foreign routing reference: {url}")
             refs["proxy_reference_rules"] += count
-    return excluded_exact, excluded_suffixes, foreign_nets, {**refs, "proxy_roots": proxy_domain_refs}
+    return excluded_exact, excluded_suffixes, foreign_nets, cn_allocations, {**refs, "proxy_roots": proxy_domain_refs}
 
 
 def domain_hits_exclusion(domain: str, kind: str, exact: set[str], suffixes: set[str]) -> bool:
@@ -810,10 +812,11 @@ def main() -> int:
     exclusion_exact: set[str] = set()
     exclusion_suffixes: set[str] = set()
     excluded_ip_nets: list[ipaddress._BaseNetwork] = []
+    cn_allocated_nets: list[ipaddress._BaseNetwork] = []
     proxy_candidates: set[str] = set()
     risk_ref_stats = {}
     if args.offline:
-        exclusion_exact, exclusion_suffixes, excluded_ip_nets, risk_ref_stats = load_foreign_references(manifest)
+        exclusion_exact, exclusion_suffixes, excluded_ip_nets, cn_allocated_nets, risk_ref_stats = load_foreign_references(manifest)
         proxy_candidates = risk_ref_stats.pop("proxy_roots")
     else:
         for line in (ROOT / "data/allowlists/ChinaForeignDomains.list").read_text(encoding="utf-8").splitlines():
