@@ -1,4 +1,5 @@
 name: Merge China Domain Rules
+run-name: "ChinaDomain fresh build #${{ github.run_number }} (${{ github.event_name }})"
 
 on:
   workflow_dispatch:
@@ -118,4 +119,46 @@ jobs:
               if local_sha != remote_sha:
                   raise SystemExit(f"Published China result differs from freshly generated file: {name}")
           print(f"Confirmed {len(expected)} fresh inputs and published China output files on origin/main")
+          PY
+
+      - name: Summarize fresh China rebuild with verifiable output hashes
+        if: success()
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          import subprocess
+          from pathlib import Path
+
+          root = Path(".")
+          m = json.loads((root / "data/reports/china_download_manifest.json").read_text(encoding="utf-8"))
+          integrity = json.loads((root / "data/reports/china_source_integrity.json").read_text(encoding="utf-8"))
+          risk = json.loads((root / "data/reports/china_risk_audit.json").read_text(encoding="utf-8"))
+          source_file = root / "Surge/Rules/ChinaDomain.list"
+          current_blob = subprocess.check_output(["git", "hash-object", str(source_file)], text=True).strip()
+          previous_blob = subprocess.check_output(
+              ["git", "rev-parse", os.environ["GITHUB_SHA"] + ":Surge/Rules/ChinaDomain.list"],
+              text=True,
+          ).strip()
+          updated = current_blob != previous_blob
+          run_url = os.environ["GITHUB_SERVER_URL"] + "/" + os.environ["GITHUB_REPOSITORY"] + "/actions/runs/" + os.environ["GITHUB_RUN_ID"]
+          summary = "\n".join([
+              "# ChinaDomain — complete fresh-source build",
+              "",
+              f"- [GitHub Actions run]({run_url}) · attempt `{os.environ.get('GITHUB_RUN_ATTEMPT', '1')}`",
+              f"- Source fetch time (UTC): **{m['fetched_at_utc']}**",
+              f"- Downloaded sources: **{m['downloaded_count']}/{m['source_count']}**",
+              f"- Verified final rules: **{integrity['published_rule_count']:,}**",
+              f"- Published Surge output SHA-256: `{hashlib.sha256(source_file.read_bytes()).hexdigest()}`",
+              f"- Actual rules payload changed vs checkout: **{'YES' if updated else 'NO (unchanged source-normalized content)'}**",
+              f"- Excluded documented foreign domain rules: **{risk['foreign_domain_rules_excluded']}**",
+              "",
+              "Unchanged rules intentionally retain their previous Git modification time. The fresh download manifest and this run remain new and independently verifiable.",
+              "",
+              "[Downloaded source manifest](https://github.com/master-zen/Net-Link/blob/main/data/reports/china_download_manifest.json) · [Final ChinaDomain.list](https://github.com/master-zen/Net-Link/blob/main/Surge/Rules/ChinaDomain.list)",
+          ]) + "\n"
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as out:
+              out.write(summary)
+          print(summary)
           PY
