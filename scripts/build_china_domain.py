@@ -634,11 +634,42 @@ def load_foreign_references(download_manifest: dict) -> tuple[set[str], set[str]
     return excluded_exact, excluded_suffixes, foreign_nets, cn_allocations, {**refs, "proxy_roots": proxy_domain_refs}
 
 
+def is_china_localized_domain(domain: str) -> bool:
+    """Country-code domain or explicit China-region hostname marker.
+
+    A .cn name is a strong policy indication, not a guarantee of physical
+    hosting in mainland China. cn.example.com is *only* accepted when
+    explicitly present in an upstream China rule source; we never synthesize
+    an unsafe general 'cn.*' wildcard.
+    """
+    return domain == "cn" or domain.endswith(".cn") or domain.startswith("cn.")
+
+
 def domain_hits_exclusion(domain: str, kind: str, exact: set[str], suffixes: set[str]) -> bool:
     labels = domain.split(".")
-    # A parent China DOMAIN-SUFFIX would inadvertently cover a foreign subdomain.
-    # Avoid excluding a parent based on every unrelated proxy-candidate child:
-    # the strict negative set is explicitly curated or V2Fly literal.
+
+    # Restore the user's mainland-localized routing policy. Blanket
+    # international-provider exclusions must not erase their .cn services,
+    # including the deliberately published DOMAIN-SUFFIX,cn umbrella.
+    if domain == "cn" or domain.endswith(".cn"):
+        return False
+
+    # cn.vendor.com is NOT geographically equivalent to all vendor.com.
+    # Retain a China-region entry only if it is explicitly sourced. An
+    # independently documented exact denial still takes precedence; an
+    # inherited broad vendor.com exclusion no longer erases the CN service.
+    if domain.startswith("cn."):
+        if domain in exact or domain in suffixes:
+            return True
+        if any(
+            protected.startswith("cn.") and domain.endswith("." + protected)
+            for protected in suffixes
+        ):
+            return True
+        return False
+
+    # A parent China suffix should not implicitly send documented foreign
+    # subdomains DIRECT, unless the requested .cn catch-all is intentional.
     if kind == "DOMAIN-SUFFIX" and any(
         protected == domain or protected.endswith("." + domain)
         for protected in exact
@@ -664,7 +695,7 @@ def eliminate_domain_hierarchy_redundancy(rules: list[str]) -> tuple[list[str], 
         labels = domain.split(".")
         if (kind == "DOMAIN" and domain in suffixes) or (
             kind in {"DOMAIN", "DOMAIN-SUFFIX"}
-            and any(".".join(labels[i:]) in suffixes for i in range(1, len(labels) - 1))
+            and any(".".join(labels[i:]) in suffixes for i in range(1, len(labels)))
         ):
             removed += 1
             continue
@@ -743,7 +774,7 @@ def mainland_verified_supplement(
         kind, _, value = row.partition(",")
         if kind in {"DOMAIN", "DOMAIN-SUFFIX"}:
             labels = value.split(".")
-            corroborated = row in trusted or any(
+            corroborated = is_china_localized_domain(value) or row in trusted or any(
                 ".".join(labels[i:]) in trusted_suffixes
                 for i in range(len(labels))
             )
@@ -933,7 +964,9 @@ def main() -> int:
 
     # 核心：只去重复。
     # 归一化后的同一条规则只保留一次。
-    merged_rules = sorted(set(all_rules), key=rule_sort_key)
+    # A country-code suffix is intentional here. DOMAIN-SUFFIX,cn matches
+    # *.cn (including *.com.cn) without adding every subdomain separately.
+    merged_rules = sorted(set(all_rules) | {"DOMAIN-SUFFIX,cn"}, key=rule_sort_key)
 
     if not merged_rules:
         print("[ERROR] no rules generated", file=sys.stderr)
@@ -973,6 +1006,11 @@ def main() -> int:
             f"verified_candidates={len(newly_eligible)}"
         )
     foreign_excluded_rules: list[str] = []
+    sourced_localized_candidates = sum(
+        1 for rule in merged_rules
+        if rule.startswith(("DOMAIN,", "DOMAIN-SUFFIX,"))
+        and is_china_localized_domain(rule.partition(",")[2])
+    )
     # Publish one Surge ruleset. Keep intermediate source handling internal.
     # Conservative domain rules exclude broad TLD suffixes and all keywords.
     # ASN/GEOIP require independent verification before use for DIRECT.
@@ -1037,6 +1075,9 @@ def main() -> int:
             "supplement_risk_report": "data/reports/china_supplement_audit.json",
             "protected_foreign_domain_roots": len(exclusion_suffixes),
             "foreign_domain_rules_excluded": len(foreign_excluded_rules),
+            "country_code_cn_suffix_restored": "DOMAIN-SUFFIX,cn" in merged_rules,
+            "sourced_cn_localized_domain_candidates": sourced_localized_candidates,
+            "cn_domain_policy": "Route .cn/.com.cn via DOMAIN-SUFFIX,cn; retain explicitly sourced cn.* hosts unless exact foreign exclusion",
             "domain_hierarchy_redundant_rules_removed": domain_hierarchy_removed,
             "foreign_domain_exclusion_examples": foreign_excluded_rules[:80],
             "proxy_reference_exact_candidate_count": len(proxy_conflicts),
