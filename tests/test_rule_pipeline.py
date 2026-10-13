@@ -29,6 +29,7 @@ class RulePipelineRegressionTests(unittest.TestCase):
             "||metrics.example^$domain=publisher.example\n"
             "||analytics.example^$important\n"
             "||safe.example^|\n"
+            "@@||exception.example^|\n"
             "||no-boundary.example\n"
             "||ad*.example^\n"
             "||images.example/banner.png\n"
@@ -38,8 +39,10 @@ class RulePipelineRegressionTests(unittest.TestCase):
         )
         self.assertIn("DOMAIN-SUFFIX,advertiser.example", blocked)
         self.assertIn("DOMAIN-SUFFIX,login.example", allowed)
-        self.assertEqual(len(blocked), 1)
-        self.assertEqual(len(allowed), 1)
+        self.assertIn("DOMAIN,safe.example", blocked)
+        self.assertIn("DOMAIN,exception.example", allowed)
+        self.assertEqual(len(blocked), 2)
+        self.assertEqual(len(allowed), 2)
         self.assertGreaterEqual(stats.ignored_scoped_adblock, 6)
 
     def test_preserves_www_hostnames_instead_of_widening_block(self):
@@ -53,6 +56,12 @@ class RulePipelineRegressionTests(unittest.TestCase):
         self.assertNotIn("DOMAIN,video.example", blocked)
         self.assertNotIn("DOMAIN-SUFFIX,ads.example", blocked)
         self.assertFalse(allowed)
+
+    def test_adguard_exact_host_exception_preserves_scope(self):
+        result = ad.normalize_rule_line("@@||accounts.example^|", "block")
+        self.assertEqual(result, ("DOMAIN,accounts.example", "allow"))
+        result = ad.normalize_rule_line("@@||accounts.example^", "block")
+        self.assertEqual(result, ("DOMAIN-SUFFIX,accounts.example", "allow"))
 
     def test_adguard_official_unsupported_options_do_not_expand(self):
         for value in (
