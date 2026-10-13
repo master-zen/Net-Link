@@ -705,6 +705,130 @@ def remove_foreign_ip_overlap(networks: list[ipaddress._BaseNetwork], excluded: 
     return list(ipaddress.collapse_addresses(output))
 
 
+def mainland_verified_supplement(
+    rules: list[str],
+    trusted_rules: list[str],
+    cn_allocations: list[ipaddress._BaseNetwork],
+) -> tuple[list[str], dict[str, object]]:
+    """Only accept supplementary DIRECT entries with independent CN evidence.
+
+    A vendor's DIRECT intent is not geographic proof. New domains need an
+    existing trusted mainland rule that already covers them. New IPs must
+    intersect APNIC allocations specifically registered to CN, rather than
+    being accepted because they belong to an international Chinese company.
+    """
+    trusted = set(trusted_rules)
+    trusted_suffixes = {
+        row.partition(",")[2] for row in trusted
+        if row.startswith("DOMAIN-SUFFIX,")
+    }
+    allocations = {
+        family: list(ipaddress.collapse_addresses(
+            net for net in cn_allocations if net.version == family
+        ))
+        for family in (4, 6)
+    }
+    eligible: set[str] = set()
+    rejected: list[str] = []
+    categories = {
+        "parsed_candidate_count": len(rules),
+        "corroborated_domain_candidates": 0,
+        "cn_registry_verified_ip_candidates": 0,
+        "unverified_domain_rejections": 0,
+        "non_cn_or_unverified_ip_rejections": 0,
+        "unsupported_rule_rejections": 0,
+    }
+
+    for row in sorted(set(rules)):
+        kind, _, value = row.partition(",")
+        if kind in {"DOMAIN", "DOMAIN-SUFFIX"}:
+            labels = value.split(".")
+            corroborated = row in trusted or any(
+                ".".join(labels[i:]) in trusted_suffixes
+                for i in range(len(labels))
+            )
+            if corroborated:
+                categories["corroborated_domain_candidates"] += 1
+                eligible.add(row)
+            else:
+                categories["unverified_domain_rejections"] += 1
+                if len(rejected) < 80:
+                    rejected.append(row)
+        elif kind in {"IP-CIDR", "IP-CIDR6"}:
+            net = ipaddress.ip_network(value, strict=False)
+            if not net.is_global or not net.network_address.is_global or not net.broadcast_address.is_global:
+                categories["non_cn_or_unverified_ip_rejections"] += 1
+                if len(rejected) < 80:
+                    rejected.append(row)
+                continue
+            intersects: list[ipaddress._BaseNetwork] = []
+            for known in allocations[net.version]:
+                if net.overlaps(known):
+                    if net.subnet_of(known):
+                        intersects.append(net)
+                        break
+                    if known.subnet_of(net):
+                        intersects.append(known)
+            if intersects:
+                categories["cn_registry_verified_ip_candidates"] += 1
+                for approved in ipaddress.collapse_addresses(intersects):
+                    eligible.add(f"{kind},{approved.compressed}")
+            else:
+                categories["non_cn_or_unverified_ip_rejections"] += 1
+                if len(rejected) < 80:
+                    rejected.append(row)
+        else:
+            categories["unsupported_rule_rejections"] += 1
+            if len(rejected) < 80:
+                rejected.append(row)
+    return sorted(eligible, key=rule_sort_key), {
+        **categories, "accepted_unique_rule_count": len(eligible),
+        "rejected_examples": rejected,
+    }
+
+
+def process_supplement_snapshots(
+    manifest: dict,
+    trusted_rules: list[str],
+    cn_allocations: list[ipaddress._BaseNetwork],
+) -> tuple[list[str], dict[str, object]]:
+    accepted: set[str] = set()
+    per_source = []
+    for entry in manifest["sources"]:
+        if entry["bucket"] != "china_supplement":
+            continue
+        content = (ROOT / entry["path"]).read_bytes().decode("utf-8-sig", errors="replace")
+        lines = content.splitlines()
+        candidates = [rule for line in lines if (rule := normalize_line(line))]
+        if not candidates:
+            raise RuntimeError(f"China supplementary source returned no readable rule entries: {entry['url']}")
+        approved, stats = mainland_verified_supplement(candidates, trusted_rules, cn_allocations)
+        accepted.update(approved)
+        per_source.append({
+            "url": entry["url"], "snapshot_path": entry["path"],
+            "snapshot_sha256": entry["sha256"], "input_lines": len(lines),
+            **stats,
+        })
+    if not per_source:
+        raise RuntimeError("No China supplementary sources in fresh download manifest")
+    return sorted(accepted, key=rule_sort_key), {
+        "download_run": manifest["github_run_id"],
+        "sources": per_source,
+        "accepted_unique_rule_count": len(accepted),
+        "candidate_rules_requiring_independent_verification": True,
+        "quality_policy": (
+            "Only domains corroborated by trusted primary China rules and "
+            "public IP portions within dated APNIC CN-registered allocations "
+            "are eligible; standard foreign-service exclusions still apply."
+        ),
+        "limitations": [
+            "An APNIC CN registration is not proof of a Chinese physical hosting location.",
+            "DIRECT labels from a proxy-provider supplementary list are not country evidence.",
+            "Uncorroborated supplemental domains are held out, not silently added to the final list.",
+        ],
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--offline", action="store_true", help="Build ONLY from fresh, verified data/ snapshots, with zero network access")
@@ -713,6 +837,7 @@ def main() -> int:
     OUTPUT_CLASH_FILE.parent.mkdir(parents=True, exist_ok=True)
 
     source_urls = read_source_urls(SOURCE_URLS_FILE)
+    supplement_urls = read_source_urls(ROOT / "data/sources/ChinaSupplement_URLs.txt")
 
     if not source_urls:
         print(f"[ERROR] no source urls in {SOURCE_URLS_FILE}", file=sys.stderr)
@@ -725,6 +850,13 @@ def main() -> int:
         downloaded = {item["url"]: item for item in manifest["sources"] if item["bucket"] == "china"}
         if set(downloaded) != set(source_urls):
             raise RuntimeError("Current China source configuration differs from this run fresh downloaded snapshots")
+        present_supplements = {
+            item["url"] for item in manifest["sources"]
+            if item["bucket"] == "china_supplement"
+        }
+        if present_supplements != set(supplement_urls):
+            raise RuntimeError("Supplementary China source configuration disagrees with this run download manifest")
+
         print(f"[INPUT] verified offline China inputs: {len(downloaded)} sources")
 
     SOURCE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
@@ -825,6 +957,21 @@ def main() -> int:
         for line in (ROOT / "data/allowlists/ChinaForeignIPs.list").read_text(encoding="utf-8").splitlines():
             if line.strip() and not line.startswith("#"):
                 excluded_ip_nets.append(ipaddress.ip_network(line.strip(), strict=False))
+    supplement_stats = {}
+    if args.offline:
+        newly_eligible, supplement_stats = process_supplement_snapshots(
+            manifest, merged_rules, cn_allocated_nets
+        )
+        merged_rules = sorted(set(merged_rules).union(newly_eligible), key=rule_sort_key)
+        risk_report_path = ROOT / "data/reports/china_supplement_audit.json"
+        risk_report_path.write_text(
+            json.dumps(supplement_stats, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        print(
+            f"[SUPPLEMENT] sources={len(supplement_stats['sources'])} "
+            f"verified_candidates={len(newly_eligible)}"
+        )
     foreign_excluded_rules: list[str] = []
     # Publish one Surge ruleset. Keep intermediate source handling internal.
     # Conservative domain rules exclude broad TLD suffixes and all keywords.
@@ -886,6 +1033,8 @@ def main() -> int:
                 (ROOT / "data/reports/china_download_manifest.json").read_bytes()
             ).hexdigest(),
             "foreign_reference_counts": risk_ref_stats,
+            "supplement_unique_eligible_rules": supplement_stats.get("accepted_unique_rule_count", 0),
+            "supplement_risk_report": "data/reports/china_supplement_audit.json",
             "protected_foreign_domain_roots": len(exclusion_suffixes),
             "foreign_domain_rules_excluded": len(foreign_excluded_rules),
             "domain_hierarchy_redundant_rules_removed": domain_hierarchy_removed,
