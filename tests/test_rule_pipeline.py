@@ -128,6 +128,37 @@ class RulePipelineRegressionTests(unittest.TestCase):
         self.assertEqual(removed, 2)
         self.assertEqual(rules, ["DOMAIN-SUFFIX,example.org", "DOMAIN,standalone.org"])
 
+    def test_china_supplement_only_accepts_corrob_domains_and_cn_registered_ips(self):
+        candidate = [
+            "DOMAIN-SUFFIX,baidu.com",
+            "DOMAIN-SUFFIX,ping0.cc",
+            "DOMAIN-SUFFIX,googleapis.cn",
+            "IP-CIDR,8.128.0.0/15",
+            "IP-CIDR,87.83.109.0/24",
+            "PROCESS-NAME,Weixin.exe",
+        ]
+        trusted = ["DOMAIN-SUFFIX,baidu.com"]
+        cn_alloc = [ipaddress.ip_network("8.128.0.0/16")]
+        accepted, report = china.mainland_verified_supplement(candidate, trusted, cn_alloc)
+        self.assertEqual(
+            accepted,
+            sorted(["DOMAIN-SUFFIX,baidu.com", "IP-CIDR,8.128.0.0/16"],
+                   key=china.rule_sort_key),
+        )
+        self.assertEqual(report["corroborated_domain_candidates"], 1)
+        self.assertEqual(report["cn_registry_verified_ip_candidates"], 1)
+        self.assertEqual(report["non_cn_or_unverified_ip_rejections"], 1)
+        self.assertEqual(report["unverified_domain_rejections"], 2)
+        self.assertNotIn("DOMAIN-SUFFIX,ping0.cc", accepted)
+        self.assertNotIn("IP-CIDR,87.83.109.0/24", accepted)
+
+    def test_china_supplement_surged_clash_cidr_parse(self):
+        self.assertEqual(
+            china.normalize_line("IP-CIDR,47.52.0.0/16,no-resolve"),
+            "IP-CIDR,47.52.0.0/16",
+        )
+        self.assertIsNone(china.normalize_line("PROCESS-NAME,Weixin.exe"))
+
     def test_download_paths_per_source_are_deterministic(self):
         url = "https://raw.githubusercontent.com/example/rules/main/ads.txt"
         p = fetch.source_path("ad", "block", url)
