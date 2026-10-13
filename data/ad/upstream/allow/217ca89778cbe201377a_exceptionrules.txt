@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
-! Checksum: XtB9E/EAMBMEH5dkBl9vJw
-! Version: 202610130152
+! Checksum: nwRGCJCR7UfP85c09Zdk3A
+! Version: 202610131052
 ! Title: Allow nonintrusive advertising
 ! Expires: 1 days
 ! Homepage: https://acceptableads.com/
@@ -3313,6 +3313,9 @@ footmarseille.com#@#.advads_ad_widget-4
 @@||lib.wtg-ads.com/publisher/*/lib.min.js$script,domain=sportklub.hr|sportklub.rs|sportklub.si
 @@||raven-edge.aditude.io/raven/chess-main-*/library.js$script,domain=chess.com
 tvguide.com,gamespot.com,metacritic.com#@#.fandom-ad-placeholder
+diep.io#@##diep-io_300x250
+diep.io#@#.aa-unit
+psychcentral.com#@#aside:has([data-empty])
 ! hidden for compliance
 imore.com##div.inline-text
 nevermundane.com,uniqueinterests.com,travelapples.com,marspeta.com,geekyup.com,readyer.com,oldermillennials.com,simpleblitz.com##div[class^="entry-content"] .ad_placeholder
@@ -4826,7 +4829,7 @@ color-hex.com#@#.margin10
 thecalculatorsite.com#@#.rightColAd
 onlinesequencer.net,online-jigsaw-puzzles.com,homeschoolmath.net,gbatemp.net#@##ad_container
 scorebar.com,m3.se,pcforalla.se,macworld.se,motorious.com,ratemds.com,snowmobile.com,emojipedia.org,rotowire.com#@#.ad-footer
-remax.ca,topclassactions.com,remax.com,sharecare.com,brawltime.ninja,superdeluxeedition.com,itstillruns.com#@#.ad-section
+remax.ca,topclassactions.com,remax.com,sharecare.com,brawltime.ninja,superdeluxeedition.com,itstillruns.com,imleagues.com#@#.ad-section
 decanter.com,mby.com,thefield.co.uk,yachtingworld.com,yachtingmonthly.com,rugbyworld.com,pbo.co.uk,countrylife.co.uk,ybw.com,mbr.co.uk,marieclaire.co.uk,goodto.com,horseandhound.co.uk,idealhome.co.uk#@#.header-advert
 decanter.com,mby.com,countrylife.co.uk,marieclaire.co.uk,goodto.com,horseandhound.co.uk,idealhome.co.uk#@#.header-advert-wrapper
 stylecaster.com,rollingstone.com,variety.com#@#.c-gallery-vertical__advert
