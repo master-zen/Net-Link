@@ -174,6 +174,7 @@ class ParseStats:
     ignored_known_type: Counter[str] | None = None
     ignored_non_global_ip: int = 0
     ignored_path_level_adblock: int = 0
+    ignored_scoped_adblock: int = 0
     ignored_invalid: int = 0
 
     def __post_init__(self) -> None:
@@ -184,6 +185,7 @@ class ParseStats:
         self.parsed += other.parsed
         self.ignored_non_global_ip += other.ignored_non_global_ip
         self.ignored_path_level_adblock += other.ignored_path_level_adblock
+        self.ignored_scoped_adblock += other.ignored_scoped_adblock
         self.ignored_invalid += other.ignored_invalid
         if self.ignored_known_type is not None and other.ignored_known_type is not None:
             self.ignored_known_type.update(other.ignored_known_type)
@@ -380,8 +382,6 @@ def normalize_domain(host: str) -> str | None:
     token = host.strip().lower().strip(".")
     if token.startswith("*."):
         token = token[2:]
-    if token.startswith("www."):
-        token = token[4:]
     if not token:
         return None
     if DOMAIN_RE.match(token):
@@ -435,76 +435,69 @@ def parse_http_host_only_rule(token: str) -> str | None:
 
 
 def parse_adblock_domain(candidate: str, stats: ParseStats | None = None) -> str | None:
+    """Convert ONLY unconditional, DNS-wide Adblock host patterns.
+
+    ABP $options (domain=, third-party, document, important, denyallow,
+    dnsrewrite, etc.) narrow or otherwise change rule semantics. Dropping the
+    modifier then rejecting every request for the entire domain is unsafe.
+    Therefore no rule containing '$' is converted to a domain-wide Surge rule.
+    Likewise, require the '^' boundary on ||hostname^; no wildcards, paths,
+    fragments, terminal anchors or host-prefix patterns are accepted.
+    """
     token = candidate.strip().lower()
     if not token:
         return None
-
-    token = token.removeprefix("~")
-    token = token.removeprefix("@@")
-
-    # Drop ABP options. Keep only the left matcher, but still refuse path-level
-    # matchers below.
-    token = token.split("$", 1)[0].strip()
-
-    if "#@#" in token or "##" in token:
+    if "$" in token or token.startswith("~"):
+        if stats:
+            stats.ignored_scoped_adblock += 1
         return None
-
-    if token.startswith("||"):
+    if token.startswith("@@"):
         token = token[2:]
 
-        # Safe conversion only:
-        #   ||example.com^      -> DOMAIN-SUFFIX,example.com
-        # Refuse:
-        #   ||example.com/path  -> path-level browser rule
-        #   ||*/adserver        -> wildcard/path browser rule
-        if "/" in token or "*" in token:
+    if token.startswith("||"):
+        matched = re.fullmatch(r"\|\|([a-z0-9][a-z0-9.-]*)\^", token)
+        if not matched:
             if stats:
-                stats.ignored_path_level_adblock += 1
+                stats.ignored_scoped_adblock += 1
             return None
-
-        token = token.split("^", 1)[0].strip(".")
+        host = matched.group(1)
     elif token.startswith("|"):
-        token = token[1:]
-        if token.startswith("http://") or token.startswith("https://"):
-            normalized = parse_http_host_only_rule(token)
-            if not normalized and stats:
-                stats.ignored_path_level_adblock += 1
-            return normalized
-        if "/" in token or "*" in token:
+        # Only host-only absolute URLs can be translated without changing
+        # path/request semantics. Other leading | anchors are not DNS rules.
+        value = token[1:]
+        if not value.startswith(("https://", "http://")) or token.endswith("|"):
             if stats:
-                stats.ignored_path_level_adblock += 1
+                stats.ignored_scoped_adblock += 1
             return None
-        token = token.split("^", 1)[0].strip(".")
+        normalized = parse_http_host_only_rule(value)
+        if normalized is None and stats:
+            stats.ignored_path_level_adblock += 1
+        return normalized
+    elif token.startswith(("https://", "http://")):
+        normalized = parse_http_host_only_rule(token)
+        if normalized is None and stats:
+            stats.ignored_path_level_adblock += 1
+        return normalized
     else:
-        if token.startswith("http://") or token.startswith("https://"):
-            normalized = parse_http_host_only_rule(token)
-            if not normalized and stats:
-                stats.ignored_path_level_adblock += 1
-            return normalized
-        if "/" in token or "*" in token:
+        # A plain domain is safe; '*'/'^'/'|' means a non-DNS Adblock pattern.
+        if any(char in token for char in ("*", "/", "^", "|", "?", "#", "=")):
             if stats:
-                stats.ignored_path_level_adblock += 1
+                stats.ignored_scoped_adblock += 1
             return None
-        token = token.split("^", 1)[0].strip(".")
+        host = token
 
-    if not token:
-        return None
-
-    domain = normalize_domain(token)
+    domain = normalize_domain(host)
     if domain:
         return f"DOMAIN-SUFFIX,{domain}"
-
-    ip_norm = normalize_ip_or_network(token)
+    ip_norm = normalize_ip_or_network(host)
     if ip_norm:
         return f"{ip_norm[0]},{ip_norm[1]}"
-
     if stats:
         try:
-            ipaddress.ip_network(token, strict=False)
+            ipaddress.ip_network(host, strict=False)
             stats.ignored_non_global_ip += 1
         except ValueError:
             stats.ignored_invalid += 1
-
     return None
 
 
@@ -1056,6 +1049,7 @@ def print_stats(label: str, stats: ParseStats) -> None:
     print(
         f"[INFO] {label} parsed={stats.parsed}, "
         f"ignored_path_level_adblock={stats.ignored_path_level_adblock}, "
+        f"ignored_scoped_adblock={stats.ignored_scoped_adblock}, "
         f"ignored_non_global_ip={stats.ignored_non_global_ip}, "
         f"ignored_invalid={stats.ignored_invalid}"
     )
