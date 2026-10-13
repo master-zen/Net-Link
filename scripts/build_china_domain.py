@@ -1017,7 +1017,9 @@ def main() -> int:
     domain_rules = []
     for rule in merged_rules:
         kind, _, value = rule.partition(",")
-        if not (kind == "DOMAIN" or (kind == "DOMAIN-SUFFIX" and "." in value)):
+        # A .cn country-code suffix is deliberate; other single-label
+        # suffixes remain excluded for safety.
+        if not (kind == "DOMAIN" or (kind == "DOMAIN-SUFFIX" and ("." in value or value == "cn"))):
             continue
         if domain_hits_exclusion(value, kind, exclusion_exact, exclusion_suffixes):
             foreign_excluded_rules.append(rule)
