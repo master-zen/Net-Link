@@ -121,6 +121,31 @@ def validate_profile(profile):
         risk = json.loads(Path("data/reports/china_risk_audit.json").read_text(encoding="utf-8"))
         if risk.get("download_run") != downloads.get("github_run_id"):
             raise RuntimeError("China risk audit is not from the current fresh download")
+        # Supplementary CN/DIRECT sources must be independently audited before
+        # promotion into the sole final ChinaDomain.list. A DIRECT label alone
+        # is not admissible geographic evidence.
+        supplement = json.loads(
+            Path("data/reports/china_supplement_audit.json").read_text(encoding="utf-8")
+        )
+        expected_supplements = {
+            item["url"]: item for item in downloads["sources"]
+            if item["bucket"] == "china_supplement"
+        }
+        audited = supplement.get("sources", [])
+        if (not audited
+                or supplement.get("download_run") != downloads["github_run_id"]
+                or len(audited) != len(expected_supplements)
+                or {item["url"] for item in audited} != set(expected_supplements)):
+            raise RuntimeError("China supplementary audit is incomplete or belongs to an old build")
+        for source in audited:
+            downloaded_source = expected_supplements[source["url"]]
+            if (source["snapshot_sha256"] != downloaded_source["sha256"]
+                    or source["snapshot_path"] != downloaded_source["path"]
+                    or source["parsed_candidate_count"] <= 0):
+                raise RuntimeError(f"China supplementary source was not parsed correctly: {source['url']}")
+        if supplement.get("accepted_unique_rule_count", -1) < 0:
+            raise RuntimeError("Invalid China supplementary acceptance total")
+        print(f"Audited mainland-only promotion of {len(audited)} supplementary source files")
         # All upstream source payloads must exist and match their recorded SHA-256.
         source_manifest = json.loads(Path("data/reports/china_source_integrity.json").read_text(encoding="utf-8"))
         sources = source_manifest["sources"]
