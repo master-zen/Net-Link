@@ -2,11 +2,11 @@
   "scope": "entire published rule files, not a sample",
   "files": {
     "ChinaDomain.list": 123025,
-    "AdblockSet.list": 235493
+    "AdblockSet.list": 235848
   },
   "unique_rules": {
     "china": 123025,
-    "ad": 235493
+    "ad": 235848
   },
   "duplicates": {
     "china": 0,
@@ -23,8 +23,8 @@
       "GEOIP": 0
     },
     "ad": {
-      "DOMAIN": 18386,
-      "DOMAIN-SUFFIX": 216548,
+      "DOMAIN": 18387,
+      "DOMAIN-SUFFIX": 216902,
       "DOMAIN-KEYWORD": 0,
       "IP-CIDR": 555,
       "IP-CIDR6": 4,
