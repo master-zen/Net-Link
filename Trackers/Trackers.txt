@@ -307,6 +307,7 @@ udp://189.18.96.56:6969/announce
 udp://189.18.96.9:6969/announce
 udp://189.18.97.116:6969/announce
 udp://189.18.97.201:6969/announce
+udp://189.18.97.208:6969/announce
 udp://189.18.97.57:6969/announce
 udp://189.18.97.61:6969/announce
 udp://189.69.167.105:6969/announce
@@ -1998,6 +1999,7 @@ http://189.18.96.56:6969/announce
 http://189.18.96.9:6969/announce
 http://189.18.97.116:6969/announce
 http://189.18.97.201:6969/announce
+http://189.18.97.208:6969/announce
 http://189.18.97.57:6969/announce
 http://189.18.97.61:6969/announce
 http://189.69.167.105:6969/announce
@@ -3279,7 +3281,6 @@ https://prestige.minimafia.nl/announce
 https://private.minimafia.nl/announce
 https://pt.btschool.club/announce
 https://pybittrack.retiolus.net/announce
-https://pybittrack.retiolus.net:443/announce
 https://retracker.gorcomnet.ru/announce
 https://retracker.krs-ix.ru/announce
 https://retracker.krs-ix.ru:80/announce
