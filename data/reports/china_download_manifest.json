@@ -1,12 +1,12 @@
 {
   "profile": "china",
-  "fetched_at_utc": "2026-10-14T23:18:25Z",
-  "epoch_seconds": 1792019909.0778782,
-  "github_run_id": "38653224608",
+  "fetched_at_utc": "2026-10-15T23:06:27Z",
+  "epoch_seconds": 1792105590.7470055,
+  "github_run_id": "38821499189",
   "github_run_attempt": "1",
   "source_count": 20,
   "downloaded_count": 20,
-  "source_bytes_total": 16163293,
+  "source_bytes_total": 16148335,
   "sources": [
     {
       "bucket": "china",
@@ -19,8 +19,8 @@
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/cncidr.txt",
       "path": "data/china/upstream/b4419558de765e287270_cncidr.txt",
-      "size_bytes": 233480,
-      "sha256": "b6dd1fb115b7110c1eb4f33a4844d458f0e31b378d99ddebf56b3e34396c0f77"
+      "size_bytes": 242767,
+      "sha256": "67a7a93502bfaf35b0ac7a8b6dc3ad14c6825dc56e5b30eebf87060beb2232fa"
     },
     {
       "bucket": "china",
@@ -40,8 +40,8 @@
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaIPs/ChinaIPs.list",
       "path": "data/china/upstream/611a7ab4fd2be015965d_ChinaIPs.list",
-      "size_bytes": 691489,
-      "sha256": "73a34c40dd52f4627c845af729d70647a990ae4e90f81bd44d9f9a6072443daa"
+      "size_bytes": 690577,
+      "sha256": "ea613c48c5094c62db453a11e4b36e5c644862d8bfb7633f3f7f145622e6e9a3"
     },
     {
       "bucket": "china",
@@ -54,22 +54,22 @@
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMax/ChinaMax_All.list",
       "path": "data/china/upstream/8b33885f83ef1d32f28a_ChinaMax_All.list",
-      "size_bytes": 3280567,
-      "sha256": "d69cac90e00871c128f6c6f5290ba3b18c48c6e8e7cd364db2583c6e4281f034"
+      "size_bytes": 3272778,
+      "sha256": "b6c6aacc666dbd5f22138dcfbfac9ca3b255d6bdd9372a38544cde322cdf3422"
     },
     {
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMaxNoIP/ChinaMaxNoIP_All.list",
       "path": "data/china/upstream/78cd1c5a0fe67707824f_ChinaMaxNoIP_All.list",
-      "size_bytes": 2955427,
-      "sha256": "74f9adb7179ba5c3b06dc73e5b1662bdf40f9a4279057b921d1515a086bb8e9b"
+      "size_bytes": 2947687,
+      "sha256": "e7539f77cb0139adf3d3150db01e3fa22e7b8d05e8c1ece449862f0a939084ca"
     },
     {
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMaxNoMedia/ChinaMaxNoMedia_All.list",
       "path": "data/china/upstream/7407128681a608e615ec_ChinaMaxNoMedia_All.list",
-      "size_bytes": 3268067,
-      "sha256": "fb9d89ac2677878125879f47a6a2fa3c32d0156cbce3d275e8b95c8a4583a4db"
+      "size_bytes": 3260278,
+      "sha256": "5238517162189fad398d55456d0de564e2cde8b35715f17499ccc8b45ca80695"
     },
     {
       "bucket": "china",
@@ -124,8 +124,8 @@
       "bucket": "foreign_domain",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/proxy.txt",
       "path": "data/china/upstream/e124e5f2380423ef6c60_proxy.txt",
-      "size_bytes": 780273,
-      "sha256": "5289e263f4c283dd75893f659140b9308340a8ba623e474d4418f3acc56b00bb"
+      "size_bytes": 780424,
+      "sha256": "631dfb4135e6d0915da03ceeb5b42b9cb0e5244565c08a4c0c70a82a3440b5fa"
     },
     {
       "bucket": "foreign_domain",
@@ -138,8 +138,8 @@
       "bucket": "foreign_ip",
       "url": "https://ftp.apnic.net/stats/apnic/delegated-apnic-latest",
       "path": "data/china/upstream/a852bf49b576d1913b1b_delegated-apnic-latest",
-      "size_bytes": 4346452,
-      "sha256": "9bb0d8967d8dbd25c26ed1586a4074c0aecdb24267f74842780eaf6b39ad675a"
+      "size_bytes": 4346286,
+      "sha256": "930454ca81558e9bc9ac79d5ec9b242dc5974e7690ced04709f40abfd7b61b41"
     },
     {
       "bucket": "foreign_ip",

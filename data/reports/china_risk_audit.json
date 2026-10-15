@@ -1,14 +1,14 @@
 {
-  "download_run": "38653224608",
-  "download_manifest_sha256": "7a0c9ad7318a0a2babd06d63a36a12c74b345d4759aeb339086e88d7ad74a679",
+  "download_run": "38821499189",
+  "download_manifest_sha256": "e1c2249c61b1fa31e8b181e9d9c60dabba1be1aabbfa87abe3e4f16f792f9ebd",
   "foreign_reference_counts": {
     "v2fly_literal_domains": 38,
-    "proxy_reference_rules": 27233,
+    "proxy_reference_rules": 27238,
     "foreign_ip_reference_count": 12,
-    "rir_non_cn_ipv4_prefixes": 49497,
-    "rir_non_cn_ipv6_prefixes": 15215,
-    "rir_cn_ipv4_prefixes": 8794,
-    "rir_cn_ipv6_prefixes": 2045
+    "rir_non_cn_ipv4_prefixes": 49496,
+    "rir_non_cn_ipv6_prefixes": 15213,
+    "rir_cn_ipv4_prefixes": 8795,
+    "rir_cn_ipv6_prefixes": 2046
   },
   "supplement_unique_eligible_rules": 4058,
   "supplement_risk_report": "data/reports/china_supplement_audit.json",
@@ -156,9 +156,9 @@
     "DOMAIN-SUFFIX,gvt2-cn.com",
     "DOMAIN-SUFFIX,honkaiimpact3.com"
   ],
-  "foreign_ip_reference_network_count": 64733,
+  "foreign_ip_reference_network_count": 64730,
   "excluded_foreign_registered_ipv4_address_count": "16624644",
-  "excluded_foreign_registered_ipv6_address_count": "2090157887882573876320696008704",
+  "excluded_foreign_registered_ipv6_address_count": "2090162723585852334837394833408",
   "limitations": [
     "A proxy routing category is not proof of physical domain geography.",
     "IP ownership/registration and actual network location can differ.",
