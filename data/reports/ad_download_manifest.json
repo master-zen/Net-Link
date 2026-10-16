@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-15T22:53:33Z",
-  "epoch_seconds": 1792104815.4084897,
-  "github_run_id": "38820108595",
+  "fetched_at_utc": "2026-10-16T22:32:36Z",
+  "epoch_seconds": 1792189958.0762947,
+  "github_run_id": "38976342887",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 37606763,
+  "source_bytes_total": 37630829,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
-      "size_bytes": 18200031,
-      "sha256": "d9cc290d9c1fc26465a50bf1adf732b9679519f13271b246bbf41ebc53b97fbc"
+      "size_bytes": 18201670,
+      "sha256": "073b39a557ab29b9d4c7269dbcdd2a922e957eca05090dd4a1b8fc298ede3346"
     },
     {
       "bucket": "allow",
@@ -47,8 +47,8 @@
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt",
       "path": "data/ad/upstream/allow/69481aca991270b96a83_whitelist-referral-native.txt",
-      "size_bytes": 41314,
-      "sha256": "aabe30d5f0eee9c41e17524c428b7226e4e050f57cca65578f3108c86ff80d83"
+      "size_bytes": 41323,
+      "sha256": "1e91525144aae00956baff5efca05d09b793051b4719c3b0d8b6ee0f8005de14"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4500435,
-      "sha256": "c1cea1a18213966f63cab05110e66c0784b99397e1b2e67ae12e45382229d19c"
+      "size_bytes": 4508659,
+      "sha256": "a5258f7a3bbbbd7fda9bca4978e9ce30043d57ec1559b053bb7e422e8d629887"
     },
     {
       "bucket": "block",
@@ -166,8 +166,8 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/refs/heads/master/anti-ad-surge.txt",
       "path": "data/ad/upstream/block/d62d22a6db503fdd2364_anti-ad-surge.txt",
-      "size_bytes": 3394022,
-      "sha256": "28615cdd0e0c1e1b441cf1471f97ec68480ca4718087eaef066d0bd1c0fe5534"
+      "size_bytes": 3408216,
+      "sha256": "85b30ad8d45906f4499cdec448a42dcac0e543cfa9e39aef2f849655ba51bb47"
     },
     {
       "bucket": "block",
