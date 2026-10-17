@@ -1,12 +1,12 @@
 {
   "scope": "entire published rule files, not a sample",
   "files": {
-    "ChinaDomain.list": 122736,
-    "AdblockSet.list": 236451
+    "ChinaDomain.list": 122649,
+    "AdblockSet.list": 236784
   },
   "unique_rules": {
-    "china": 122736,
-    "ad": 236451
+    "china": 122649,
+    "ad": 236784
   },
   "duplicates": {
     "china": 0,
@@ -15,16 +15,16 @@
   "rule_types": {
     "china": {
       "DOMAIN": 265,
-      "DOMAIN-SUFFIX": 110614,
+      "DOMAIN-SUFFIX": 110527,
       "DOMAIN-KEYWORD": 0,
-      "IP-CIDR": 7712,
-      "IP-CIDR6": 4145,
+      "IP-CIDR": 7713,
+      "IP-CIDR6": 4144,
       "IP-ASN": 0,
       "GEOIP": 0
     },
     "ad": {
       "DOMAIN": 18386,
-      "DOMAIN-SUFFIX": 217506,
+      "DOMAIN-SUFFIX": 217839,
       "DOMAIN-KEYWORD": 0,
       "IP-CIDR": 555,
       "IP-CIDR6": 4,
@@ -40,10 +40,10 @@
   },
   "cidr": {
     "IP-CIDR": {
-      "rule_count": 7712,
-      "collapsed_prefix_count": 7712,
+      "rule_count": 7713,
+      "collapsed_prefix_count": 7713,
       "redundant_prefix_count": 0,
-      "unique_address_count": "346803495",
+      "unique_address_count": "346804263",
       "non_public_count": 0,
       "non_public_examples": [],
       "ipv4_mapped_count": 0,
@@ -52,10 +52,10 @@
       "invalid_examples": []
     },
     "IP-CIDR6": {
-      "rule_count": 4145,
-      "collapsed_prefix_count": 4145,
+      "rule_count": 4144,
+      "collapsed_prefix_count": 4144,
       "redundant_prefix_count": 0,
-      "unique_address_count": "5439824581315486467729190121635840",
+      "unique_address_count": "5439903807060149092837525316173824",
       "non_public_count": 0,
       "non_public_examples": [],
       "ipv4_mapped_count": 0,
@@ -166,9 +166,9 @@
   },
   "china_keywords": [],
   "keyword_critical_matches": {},
-  "ad_china_domain_overlap_count": 8139,
+  "ad_china_domain_overlap_count": 8138,
   "overlap_category_counts_nonexclusive": {
-    "domain_suffix": 4642,
+    "domain_suffix": 4641,
     "exact_domain": 10,
     "single_label_suffix": 3487
   },

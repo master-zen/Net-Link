@@ -7625,7 +7625,6 @@ ad_rule,china_matching_rules
 "DOMAIN-SUFFIX,vimg.dwstatic.com","DOMAIN-SUFFIX,dwstatic.com"
 "DOMAIN-SUFFIX,vip.catcs.cn","DOMAIN-SUFFIX,cn"
 "DOMAIN-SUFFIX,vip.ludu319.com","DOMAIN-SUFFIX,ludu319.com"
-"DOMAIN-SUFFIX,vip.panggugu.com","DOMAIN-SUFFIX,panggugu.com"
 "DOMAIN-SUFFIX,vipads.cn","DOMAIN-SUFFIX,cn"
 "DOMAIN-SUFFIX,vipauth.hpplay.cn","DOMAIN-SUFFIX,cn"
 "DOMAIN-SUFFIX,vipgslb.hpplay.cn","DOMAIN-SUFFIX,cn"
