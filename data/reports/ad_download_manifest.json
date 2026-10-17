@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-16T22:32:36Z",
-  "epoch_seconds": 1792189958.0762947,
-  "github_run_id": "38976342887",
+  "fetched_at_utc": "2026-10-17T21:58:04Z",
+  "epoch_seconds": 1792274285.9297087,
+  "github_run_id": "39073092618",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 37630829,
+  "source_bytes_total": 37650791,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18201670,
-      "sha256": "073b39a557ab29b9d4c7269dbcdd2a922e957eca05090dd4a1b8fc298ede3346"
+      "sha256": "f5c46c715764fdf301acf7c04ed30859e8452a96ccf6bde3a826b7fd16c18321"
     },
     {
       "bucket": "allow",
@@ -40,22 +40,22 @@
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-allow.txt",
       "path": "data/ad/upstream/allow/a4aa36fb257b3e8883b4_spam-tlds-adblock-allow.txt",
-      "size_bytes": 18739,
-      "sha256": "a87c07c05e57f3c5cf5dd48423e11926c6a82d7e1ecc4df647e9c48ee581b4b4"
+      "size_bytes": 18742,
+      "sha256": "8e52631d1eda1a64d3a41e8e87e5084b7fec70e90d2bc4b4f8db5cd72ca93d8b"
     },
     {
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt",
       "path": "data/ad/upstream/allow/69481aca991270b96a83_whitelist-referral-native.txt",
-      "size_bytes": 41323,
-      "sha256": "1e91525144aae00956baff5efca05d09b793051b4719c3b0d8b6ee0f8005de14"
+      "size_bytes": 41380,
+      "sha256": "eec64ae6bd730edabfb39a9926e5f60f1c89b4249629efa3148cdd68e088dfcb"
     },
     {
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/spam-tlds-allow-onlydomains.txt",
       "path": "data/ad/upstream/allow/f816741b831135a02f6b_spam-tlds-allow-onlydomains.txt",
-      "size_bytes": 13544,
-      "sha256": "5dc4a80e054e28daf1d2a85fdd387630433394a9fab8799dba49af5d0cf90633"
+      "size_bytes": 13547,
+      "sha256": "547c21dc6e350235195701be9ce1b3f44365afca36a639d254c2681bc90167ae"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4508659,
-      "sha256": "a5258f7a3bbbbd7fda9bca4978e9ce30043d57ec1559b053bb7e422e8d629887"
+      "size_bytes": 4515956,
+      "sha256": "eaedd192d673d0c6780ac1947942117642e842e707c2d1c99b82e3316da1cabe"
     },
     {
       "bucket": "block",
@@ -89,8 +89,8 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/reject.txt",
       "path": "data/ad/upstream/block/5ddf2462fc173642d9c2_reject.txt",
-      "size_bytes": 6761932,
-      "sha256": "3bfa30ab7127a3767effd57afa537e7b429592d9a0ea14b1fb2cd0e4b5dcef8a"
+      "size_bytes": 6774534,
+      "sha256": "f225c232e36df9d15d603713be0b3dc31d7beb27fb9e840520cc793b62376174"
     },
     {
       "bucket": "block",
@@ -111,7 +111,7 @@
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Advertising/Advertising.list",
       "path": "data/ad/upstream/block/0eee5e2450ce192a77e7_Advertising.list",
       "size_bytes": 26927,
-      "sha256": "2f4226e59c47a1222b61690bedbe5a9308cf2f3c5d707e873781f1cd1a9237bc"
+      "sha256": "bc11343f58d2aa0e0265d4b6e4dc2b6df7841db5739304d51ce201c9a87b0332"
     },
     {
       "bucket": "block",
