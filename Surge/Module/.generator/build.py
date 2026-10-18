@@ -34,6 +34,11 @@ EXCLUDED_REWRITE_HOSTS = {
     "spclient.wg.spotify.com", "mobilepaas.abchina.com.cn",
     "ump.sz.creditcard.ecitic.com", "creditcardapp.bankcomm.com",
     "creditcardapp.bankcomm.cn", "zjmbank.js96008.com",
+    "smsrebuild1.mail.10086.cn",
+    "fuwu.nhsa.gov.cn",
+    "client.app.coc.10086.cn",
+    "api.futunn.com",
+    "gab.122.gov.cn",
 }
 EXCLUDED_MITM_HOSTS = EXCLUDED_REWRITE_HOSTS | {
     "security.wechat.com", "weixin110.qq.com", "wxa.wxs.qq.com",
@@ -341,6 +346,17 @@ def main() -> int:
             bump("excluded-sensitive-rewrite")
             continue
 
+        if normalized_pattern.startswith((
+            "^https?://[a-zA-Z0-9_-]+(",
+            "^http://[a-zA-Z0-9_-]+(",
+        )):
+            bump("excluded-unscoped-rewrite")
+            continue
+
+        if "api.xiaoyi.com/v5/app/config" in normalized_pattern:
+            bump("excluded-core-config-rewrite")
+            continue
+
         active_rules += 1
         active_patterns.append(pattern)
 
@@ -489,6 +505,8 @@ def main() -> int:
             if (
                 not any(c.isspace() for c in find + replacement)
                 and "$" not in replacement
+                and find.count('"') % 2 == 0
+                and replacement.count('"') % 2 == 0
             ):
                 body_rewrite.append(
                     f"{surge_direction} {pattern} {find} {replacement}"

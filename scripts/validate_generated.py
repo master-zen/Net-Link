@@ -311,6 +311,11 @@ def validate_profile(profile):
             "mobilepaas.abchina.com.cn", "ump.sz.creditcard.ecitic.com",
             "creditcardapp.bankcomm.com", "creditcardapp.bankcomm.cn",
             "zjmbank.js96008.com",
+            "smsrebuild1.mail.10086.cn",
+            "fuwu.nhsa.gov.cn",
+            "client.app.coc.10086.cn",
+            "api.futunn.com",
+            "gab.122.gov.cn",
         }
         if forbidden_hosts.intersection(hosts):
             raise RuntimeError("Moyu contains excluded MITM hosts")
@@ -343,6 +348,25 @@ def validate_profile(profile):
                     host, port = matched.groups()
                     if port != "443" and f"{host}:{port}" not in hosts:
                         raise RuntimeError(f"Moyu missing port-specific MITM: {host}:{port}")
+
+        for item in sections.get("[Body Rewrite]", []):
+            if item.startswith(("http-response ", "http-request ")):
+                fields = item.split()
+                if len(fields) < 4 or len(fields) % 2:
+                    raise RuntimeError("Invalid Moyu native body rewrite fields")
+                for expression in fields[2:]:
+                    if expression.count('"') % 2:
+                        raise RuntimeError("Invalid Moyu native body rewrite quotation")
+
+        for section_name in ("[URL Rewrite]", "[Map Local]", "[Script]"):
+            for item in sections.get(section_name, []):
+                normalized = item.replace(r"\/", "/").replace(r"\.", ".")
+                if any(marker in normalized for marker in (
+                    "https?://[a-zA-Z0-9_-]+(",
+                    "http://[a-zA-Z0-9_-]+(",
+                    "api.xiaoyi.com/v5/app/config",
+                )):
+                    raise RuntimeError("Moyu contains unsafe universal or core config rewrite")
 
         if metadata["unsupported_rules"] != 0:
             raise RuntimeError("Moyu has unsupported rules")

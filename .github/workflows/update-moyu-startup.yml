@@ -9,6 +9,8 @@ on:
       - ".github/workflows/update-moyu-startup.yml"
       - "scripts/publish_generated.py"
       - "scripts/validate_generated.py"
+      - "Surge/Module/.generator/build.py"
+      - "Surge/Module/runtime/body-rewrite.js"
 
   schedule:
     # UTC 20:23 = 北京时间次日 04:23
