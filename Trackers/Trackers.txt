@@ -187,6 +187,7 @@ udp://177.172.66.210:6969/announce
 udp://177.172.66.223:6969/announce
 udp://177.172.66.2:6969/announce
 udp://177.172.67.13:6969/announce
+udp://177.172.67.177:6969/announce
 udp://177.172.67.233:6969/announce
 udp://177.172.67.247:6969/announce
 udp://177.172.67.94:6969/announce
@@ -1874,6 +1875,7 @@ http://177.172.66.210:6969/announce
 http://177.172.66.223:6969/announce
 http://177.172.66.2:6969/announce
 http://177.172.67.13:6969/announce
+http://177.172.67.177:6969/announce
 http://177.172.67.233:6969/announce
 http://177.172.67.247:6969/announce
 http://177.172.67.94:6969/announce
@@ -2803,6 +2805,7 @@ http://tr.bangumi.moe:6969/announce
 http://tr.cili001.com70/announce
 http://tr.cili001.com:8070/announce
 http://tr.highstar.shop/announce
+http://tr.highstar.shop:80/announce
 http://tr.kxmp.cf/announce
 http://tr.nyacat.pw/announce
 http://tr.nyacat.pw:443/announce
