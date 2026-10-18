@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-17T21:58:04Z",
-  "epoch_seconds": 1792274285.9297087,
-  "github_run_id": "39073092618",
+  "fetched_at_utc": "2026-10-18T18:00:20Z",
+  "epoch_seconds": 1792346421.2967923,
+  "github_run_id": "39152121233",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 37650791,
+  "source_bytes_total": 37669631,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18201670,
-      "sha256": "f5c46c715764fdf301acf7c04ed30859e8452a96ccf6bde3a826b7fd16c18321"
+      "sha256": "74d83d2e3d154e81156f66f507d2a302ceaff5ca66fc8a083761b3a242e0ccd9"
     },
     {
       "bucket": "allow",
@@ -47,8 +47,8 @@
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt",
       "path": "data/ad/upstream/allow/69481aca991270b96a83_whitelist-referral-native.txt",
-      "size_bytes": 41380,
-      "sha256": "eec64ae6bd730edabfb39a9926e5f60f1c89b4249629efa3148cdd68e088dfcb"
+      "size_bytes": 41416,
+      "sha256": "8ec4608acdb260e45e533672945d62138df6a0b650106b0aa6701e1133f911fb"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4515956,
-      "sha256": "eaedd192d673d0c6780ac1947942117642e842e707c2d1c99b82e3316da1cabe"
+      "size_bytes": 4522797,
+      "sha256": "d7ffee8334227ac610354c4d4189e3874978a6fb8025da9d0b714758ae81c8ab"
     },
     {
       "bucket": "block",
@@ -89,8 +89,8 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/reject.txt",
       "path": "data/ad/upstream/block/5ddf2462fc173642d9c2_reject.txt",
-      "size_bytes": 6774534,
-      "sha256": "f225c232e36df9d15d603713be0b3dc31d7beb27fb9e840520cc793b62376174"
+      "size_bytes": 6786497,
+      "sha256": "90d4a33151993a61aa1bff0e84653d9700d44bc38e7b06047beecb82777ad43e"
     },
     {
       "bucket": "block",
