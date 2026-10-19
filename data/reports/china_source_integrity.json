@@ -1,13 +1,13 @@
 {
-  "started_at_utc": "2026-10-18T22:28:37Z",
-  "actions_run_url": "https://github.com/master-zen/Net-Link/actions/runs/39172358122",
+  "started_at_utc": "2026-10-19T23:47:46Z",
+  "actions_run_url": "https://github.com/master-zen/Net-Link/actions/runs/39343731603",
   "source_count": 12,
   "successful_sources": 12,
   "sources": [
     {
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/China/China_All.list",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:37Z",
+      "downloaded_at_utc": "2026-10-19T23:47:46Z",
       "raw_path": "data/china/upstream/e1535c36ae348b31000d_China_All.list",
       "size_bytes": 100523,
       "sha256": "aee93e6383987a8afd6c9d0932203bb9c5ccf25f135b9dfeca676937780f8785",
@@ -16,7 +16,7 @@
     {
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaASN/ChinaASN_Resolve.list",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:37Z",
+      "downloaded_at_utc": "2026-10-19T23:47:46Z",
       "raw_path": "data/china/upstream/09b4acb3e3ac98bd1e7a_ChinaASN_Resolve.list",
       "size_bytes": 13881,
       "sha256": "807bfb69e31e6db51c39922f10111245da59f307a1cfde8481f243ca8072f539",
@@ -25,16 +25,16 @@
     {
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaIPs/ChinaIPs.list",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:37Z",
+      "downloaded_at_utc": "2026-10-19T23:47:46Z",
       "raw_path": "data/china/upstream/611a7ab4fd2be015965d_ChinaIPs.list",
-      "size_bytes": 704588,
-      "sha256": "0d0993ff6f0b37035ef4f43e941ca24d153c5bdb3a68036be7503c1b7d5b7d03",
-      "parsed_rule_count": 19609
+      "size_bytes": 704656,
+      "sha256": "31dd5d02e6e4e0e102f1b39fe0e209a741caff37170252cf8a5b5db72e953707",
+      "parsed_rule_count": 19611
     },
     {
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaIPsBGP/ChinaIPsBGP.list",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:37Z",
+      "downloaded_at_utc": "2026-10-19T23:47:46Z",
       "raw_path": "data/china/upstream/9f8eaad449f0d0f6138d_ChinaIPsBGP.list",
       "size_bytes": 135446,
       "sha256": "eb93e905ea6eabea92130ba43194ea9a7974ca1cb5d934d018a8523dea58c67c",
@@ -43,34 +43,34 @@
     {
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMax/ChinaMax_All.list",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:39Z",
+      "downloaded_at_utc": "2026-10-19T23:47:47Z",
       "raw_path": "data/china/upstream/8b33885f83ef1d32f28a_ChinaMax_All.list",
       "size_bytes": 3270385,
-      "sha256": "9965d42401f9c3fd13adef3e667cc97b8cde60f5567a1b05f61173350e59ba65",
+      "sha256": "6db4589680c13452a2239347d8faec3d4ac0cef4c0800f5d8c6f2ed8276dd995",
       "parsed_rule_count": 123317
     },
     {
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMaxNoIP/ChinaMaxNoIP_All.list",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:40Z",
+      "downloaded_at_utc": "2026-10-19T23:47:48Z",
       "raw_path": "data/china/upstream/78cd1c5a0fe67707824f_ChinaMaxNoIP_All.list",
       "size_bytes": 2945353,
-      "sha256": "a31fffa84ea53415da1c300462def00c4062498c4bb7dcba0a5ee26f980d1607",
+      "sha256": "ae7fd080ad4d8dfbbb0d87a2fa9c889eb9021a8fb437719ab59e030f0c9bc646",
       "parsed_rule_count": 110431
     },
     {
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMaxNoMedia/ChinaMaxNoMedia_All.list",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:42Z",
+      "downloaded_at_utc": "2026-10-19T23:47:48Z",
       "raw_path": "data/china/upstream/7407128681a608e615ec_ChinaMaxNoMedia_All.list",
       "size_bytes": 3257885,
-      "sha256": "c95a37c377c4fd2297385607f44ee86c0ee232f3b0401eee9b3d999d5de89b66",
+      "sha256": "167650529e57ebcbac01a6b2b2f2d348f97f2cc04c25d8162dba1294d9b299e6",
       "parsed_rule_count": 122879
     },
     {
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaMedia/ChinaMedia.list",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:42Z",
+      "downloaded_at_utc": "2026-10-19T23:47:48Z",
       "raw_path": "data/china/upstream/ba2be476d18780085ae4_ChinaMedia.list",
       "size_bytes": 14354,
       "sha256": "d82e7315457f8aa1c4649df09d560e54dbc19757dc4fc5d8d2df0bd78a373079",
@@ -79,7 +79,7 @@
     {
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaNews/ChinaNews.list",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:42Z",
+      "downloaded_at_utc": "2026-10-19T23:47:48Z",
       "raw_path": "data/china/upstream/1206edbc79d30dcbcf3c_ChinaNews.list",
       "size_bytes": 264,
       "sha256": "3c4c6f0ba31dbd4a194527339ac13b1a0839872dfc9dc7f3ae4add5a218a131b",
@@ -88,7 +88,7 @@
     {
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/ChinaNoMedia/ChinaNoMedia_All.list",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:42Z",
+      "downloaded_at_utc": "2026-10-19T23:47:48Z",
       "raw_path": "data/china/upstream/fdd77efc37c1e173373b_ChinaNoMedia_All.list",
       "size_bytes": 98038,
       "sha256": "4220d9c08c1f58e1fa8795e50b5e6420c1bd1a035cd9322d9bb9f2359133c05c",
@@ -97,7 +97,7 @@
     {
       "url": "https://raw.githubusercontent.com/Hackl0us/GeoIP2-CN/release/CN-ip-cidr.txt",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:42Z",
+      "downloaded_at_utc": "2026-10-19T23:47:49Z",
       "raw_path": "data/china/upstream/8e6d51d39f4dcfdf0aae_CN-ip-cidr.txt",
       "size_bytes": 110794,
       "sha256": "437ed806c04edafba37bfca9d48bc74f10c033cc344646e96ff567a982b01476",
@@ -106,16 +106,16 @@
     {
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/cncidr.txt",
       "status": "ok",
-      "downloaded_at_utc": "2026-10-18T22:28:42Z",
+      "downloaded_at_utc": "2026-10-19T23:47:49Z",
       "raw_path": "data/china/upstream/b4419558de765e287270_cncidr.txt",
-      "size_bytes": 242767,
-      "sha256": "67a7a93502bfaf35b0ac7a8b6dc3ad14c6825dc56e5b30eebf87060beb2232fa",
-      "parsed_rule_count": 10009
+      "size_bytes": 242933,
+      "sha256": "69fa3c77a83bc530e5df198ce9ec485e294a9b56297f1eb13dcbede3b7c21bc8",
+      "parsed_rule_count": 10015
     }
   ],
-  "completed_at_utc": "2026-10-18T22:28:50Z",
-  "downloaded_bytes_total": 10894278,
-  "normalized_raw_rule_count": 405982,
+  "completed_at_utc": "2026-10-19T23:47:52Z",
+  "downloaded_bytes_total": 10894512,
+  "normalized_raw_rule_count": 405990,
   "published_rule_count": 122649,
   "published_files": {
     "Surge/Rules/ChinaDomain.list": "84f6c457081a6bdefa92d2fd95800abea043e675db109312d013e7d964b9352e",
