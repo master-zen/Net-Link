@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
-! Checksum: +tDwGUBw0IrtlLevdDbO+Q
-! Version: 202610192311
+! Checksum: zKCmkBHfG5HxxYkZUn2k2A
+! Version: 202610202242
 ! Title: Allow nonintrusive advertising
 ! Expires: 1 days
 ! Homepage: https://acceptableads.com/
@@ -3321,6 +3321,9 @@ psychcentral.com#@#aside:has([data-empty])
 orange.fr#@#[class^="media-advert-"]
 @@||code3.adtlgc.com/js/*.js$domain=oradesibiu.ro
 oradesibiu.ro#@#.newspack_global_ad
+flatpanelshd.com#@#.horizontalRectangle
+flatpanelshd.com#@#.squareDiv
+flatpanelshd.com#@#.forsideboks2
 ! hidden for compliance
 imore.com##div.inline-text
 nevermundane.com,uniqueinterests.com,travelapples.com,marspeta.com,geekyup.com,readyer.com,oldermillennials.com,simpleblitz.com##div[class^="entry-content"] .ad_placeholder
@@ -4646,7 +4649,7 @@ gta5-mods.com#@##ad-side
 forsal.pl,infor.pl#@#.textAds
 thechive.com#@#.textad
 infor.pl#@##top-advert
-dictionary.com,irishpost.com#@#.lazy-ad
+dictionary.com,irishpost.com,flatpanelshd.com#@#.lazy-ad
 dictionary.com#@#.otd-ad-top
 dictionary.com#@#.wide-ad-new-layout
 irishpost.com#@#.add-block
@@ -10947,6 +10950,8 @@ nextdoor.com,nextdoor.co.uk,ca.nextdoor.com,au.nextdoor.com,es.nextdoor.com,fr.n
 @@||nextdoor.co.uk^$elemhide
 @@||nextdoor.de^$elemhide
 @@||nextdoor.nl^$elemhide
+@@/px.gif?ch=1&rn=$domain=nextdoor.com|nextdoor.co.uk|ca.nextdoor.com|au.nextdoor.com|es.nextdoor.com|fr.nextdoor.com|it.nextdoor.com|se.nextdoor.com|dk.nextdoor.com|nextdoor.de|nextdoor.nl
+/px.gif?ch=2&rn=$domain=nextdoor.com|nextdoor.co.uk|ca.nextdoor.com|au.nextdoor.com|es.nextdoor.com|fr.nextdoor.com|it.nextdoor.com|se.nextdoor.com|dk.nextdoor.com|nextdoor.de|nextdoor.nl
 ! *** exceptionrules:exceptionrules/exceptionrules-minimal.txt ***
 !:partner_token=AAX
 !:partner_id=743865c88b4a50d7

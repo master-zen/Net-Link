@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-19T23:18:35Z",
-  "epoch_seconds": 1792451916.872643,
-  "github_run_id": "39340717953",
+  "fetched_at_utc": "2026-10-20T22:55:30Z",
+  "epoch_seconds": 1792536931.9636598,
+  "github_run_id": "39511510808",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 37852113,
+  "source_bytes_total": 37921712,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
-      "size_bytes": 18201891,
-      "sha256": "d10938bf7e800bb8026dd85c75b8ea547f1f8e13978a9959be5283f263bbc72d"
+      "size_bytes": 18202389,
+      "sha256": "d678da7b0e1f4095895ac2516bc37cbb5e4d24f42ea22ddfc51b12d3ab254fcd"
     },
     {
       "bucket": "allow",
@@ -47,8 +47,8 @@
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt",
       "path": "data/ad/upstream/allow/69481aca991270b96a83_whitelist-referral-native.txt",
-      "size_bytes": 41433,
-      "sha256": "5e0160874bda504258d5775f413d6780848d46b005afdc6b6e849a1f812007a1"
+      "size_bytes": 41613,
+      "sha256": "f282802cfed315b60dba676a3a8c299ed25f1a3b183a2214974d1a958ff3b6fb"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4583564,
-      "sha256": "5fbb2628275dae17e24202fac50b4b5d414bfab18cd4f7ea0a5d202d2d5a9c26"
+      "size_bytes": 4623977,
+      "sha256": "d7405e0ac30b47cdc26b2c10d2d86a9134c02e830aed611ca4692b99c938fc8e"
     },
     {
       "bucket": "block",
@@ -89,8 +89,8 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/reject.txt",
       "path": "data/ad/upstream/block/5ddf2462fc173642d9c2_reject.txt",
-      "size_bytes": 6881774,
-      "sha256": "303a6e01a6af032392ed84e4ff0ead910b9aba7da3929a76b06457ae35cc2eab"
+      "size_bytes": 6910187,
+      "sha256": "0b6424d9ed2ca6b306f8708f0216e613aa5f02e5d3222f831f48e6934f663179"
     },
     {
       "bucket": "block",
@@ -180,8 +180,8 @@
       "bucket": "exception",
       "url": "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt",
       "path": "data/ad/upstream/exception/03c43586aa99a3b221b7_exceptions.txt",
-      "size_bytes": 18809,
-      "sha256": "6a3ef9be37a4680a2f262b2936c93d9557524b29e0cc05a085fabf40f7088c41"
+      "size_bytes": 18904,
+      "sha256": "1125d9f61b4f3f34e2846db4ce92a1d5fa2698526e4905b4a6cbd905720ebb3f"
     }
   ]
 }
