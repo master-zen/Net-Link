@@ -1,13 +1,13 @@
 {
-  "download_run": "39343731603",
-  "download_manifest_sha256": "d9081e30dc4dcb1132612e2b8840d1f29fb20539f583a35d6896479951789ea8",
+  "download_run": "39513587666",
+  "download_manifest_sha256": "2136668e2dcb05057c1b5e47ec87abd3a18fe0996cb611f2d5817055473a392e",
   "foreign_reference_counts": {
     "v2fly_literal_domains": 38,
-    "proxy_reference_rules": 27262,
+    "proxy_reference_rules": 27264,
     "foreign_ip_reference_count": 12,
-    "rir_non_cn_ipv4_prefixes": 49512,
-    "rir_non_cn_ipv6_prefixes": 15224,
-    "rir_cn_ipv4_prefixes": 8796,
+    "rir_non_cn_ipv4_prefixes": 49514,
+    "rir_non_cn_ipv6_prefixes": 15228,
+    "rir_cn_ipv4_prefixes": 8797,
     "rir_cn_ipv6_prefixes": 2046
   },
   "supplement_unique_eligible_rules": 4058,
@@ -155,7 +155,7 @@
     "DOMAIN-SUFFIX,honkaiimpact3.com",
     "DOMAIN-SUFFIX,honkaistarrail.com"
   ],
-  "foreign_ip_reference_network_count": 64757,
+  "foreign_ip_reference_network_count": 64763,
   "excluded_foreign_registered_ipv4_address_count": "16624388",
   "excluded_foreign_registered_ipv6_address_count": "2090167559289130793354093658112",
   "limitations": [
