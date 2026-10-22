@@ -73,7 +73,6 @@ https://b.appsimg.com/upload/momin/ _ reject
 https?://res\.xiaojukeji\.com\/resapi\/activity\/mget data-type=text data="" status-code=200
 https?:\/\/res\.xiaojukeji\.com\/resapi\/activity\/get(Ruled|Preload|PasMultiNotices) data-type=text data="" status-code=200
 ^https?:\/\/daoyu\.sdo\.com\/api\/userCommon\/getAppStartAd data-type=text data="" status-code=200
-^https?:\/\/ap\.(dongqiudi|dongdianqiu)\.com\/plat\/v4 data-type=file data="https://raw.githubusercontent.com/ddgksf2013/Scripts/master/dongqiudi.js" header="Content-Type:text/json" status-code=200
 ^https?:\/\/rtbapi\.douyucdn\.cn\/japi\/sign\/app\/getinfo data-type=text data="" status-code=200
 ^https:\/\/app\.dewu\.com\/api\/v1\/app\/advertisement\/ data-type=text data="" status-code=200
 ^https?:\/\/api\.gamer\.com\.tw\/mobile_app\/anime\/v\d\/anime_get_question\.php data-type=text data="{}" header="Content-Type:application/json;charset=utf-8" status-code=200
