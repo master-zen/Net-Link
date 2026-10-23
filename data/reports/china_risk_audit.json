@@ -1,12 +1,12 @@
 {
-  "download_run": "39871866455",
-  "download_manifest_sha256": "5337deefd0f73f4940f3229b90a5880a164291b23d360f9e452d744e986f1477",
+  "download_run": "40038433211",
+  "download_manifest_sha256": "cc8fe475d0600d329e749924132870304904065c5772b1939a480f51e1cf916c",
   "foreign_reference_counts": {
     "v2fly_literal_domains": 38,
-    "proxy_reference_rules": 27312,
+    "proxy_reference_rules": 27313,
     "foreign_ip_reference_count": 12,
-    "rir_non_cn_ipv4_prefixes": 49520,
-    "rir_non_cn_ipv6_prefixes": 15229,
+    "rir_non_cn_ipv4_prefixes": 49527,
+    "rir_non_cn_ipv6_prefixes": 15234,
     "rir_cn_ipv4_prefixes": 8797,
     "rir_cn_ipv6_prefixes": 2046
   },
@@ -155,8 +155,8 @@
     "DOMAIN-SUFFIX,honkaiimpact3.com",
     "DOMAIN-SUFFIX,honkaistarrail.com"
   ],
-  "foreign_ip_reference_network_count": 64770,
-  "excluded_foreign_registered_ipv4_address_count": "16624388",
+  "foreign_ip_reference_network_count": 64782,
+  "excluded_foreign_registered_ipv4_address_count": "16625156",
   "excluded_foreign_registered_ipv6_address_count": "2090167559289130793354093658112",
   "limitations": [
     "A proxy routing category is not proof of physical domain geography.",
