@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-22T22:57:52Z",
-  "epoch_seconds": 1792709873.7001789,
-  "github_run_id": "39868580881",
+  "fetched_at_utc": "2026-10-23T22:53:57Z",
+  "epoch_seconds": 1792796039.2449896,
+  "github_run_id": "40036464079",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 38059982,
+  "source_bytes_total": 38080018,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18244836,
-      "sha256": "a7b9f1bedfaa392b71ae0493d616c133fffabaeb0fa0c324d98de2ec09a262dc"
+      "sha256": "b111d45eea6300a32c73763099c2b679d0ed498bc3a04abf08c00b3e48e12ab8"
     },
     {
       "bucket": "allow",
@@ -47,8 +47,8 @@
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt",
       "path": "data/ad/upstream/allow/69481aca991270b96a83_whitelist-referral-native.txt",
-      "size_bytes": 41605,
-      "sha256": "b73e5a96365516b5e68f9e9bb6a88359ea9b6dd7db32988c13504b970172ffdc"
+      "size_bytes": 41640,
+      "sha256": "1a2650b5c828cd51f56be46630a3352436177b899a422db98ddd01978ceca99c"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4640183,
-      "sha256": "0b4d0150332c17a76602cd667a48b029ea829027865b8e2a0bb8a1e63ab2c6cf"
+      "size_bytes": 4648154,
+      "sha256": "6e858203ac33f25bf4c0e234aee6e6e5beb7f1dfd7bda4eece9420ac8071ce9c"
     },
     {
       "bucket": "block",
@@ -89,8 +89,8 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/reject.txt",
       "path": "data/ad/upstream/block/5ddf2462fc173642d9c2_reject.txt",
-      "size_bytes": 6964311,
-      "sha256": "612b3f70fc04a4062156fa2ddcd65a7dc12e34b3a5e9f8c7bcf490e0f2a2d0f3"
+      "size_bytes": 6976198,
+      "sha256": "90e19f7489a46d6a2e39880dc4b6cf421ddfc8e9b1b6747672408a8ea67252dc"
     },
     {
       "bucket": "block",
@@ -111,7 +111,7 @@
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Advertising/Advertising.list",
       "path": "data/ad/upstream/block/0eee5e2450ce192a77e7_Advertising.list",
       "size_bytes": 26927,
-      "sha256": "3f960c0a949828c198399478cbb1dc05eb1ec95bc7084d078edc8caffe942379"
+      "sha256": "43bc0a0ad143349a36330ea2befca73d12961305f92457f7435cf20dc56266c1"
     },
     {
       "bucket": "block",
@@ -173,8 +173,8 @@
       "bucket": "block",
       "url": "https://ruleset.skk.moe/List/non_ip/reject.conf",
       "path": "data/ad/upstream/block/bbe371db26a21fcbe2ae_reject.conf",
-      "size_bytes": 13524,
-      "sha256": "0620fd54346f03eb1a17cb18aeff45423cb801845aaa7a0eb7486277a1bff91a"
+      "size_bytes": 13667,
+      "sha256": "a20731d45036217728e6324ac46acc34cf1b0ab077b63424c24fc500aa7a7d12"
     },
     {
       "bucket": "exception",
