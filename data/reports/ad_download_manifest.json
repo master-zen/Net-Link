@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-23T22:53:57Z",
-  "epoch_seconds": 1792796039.2449896,
-  "github_run_id": "40036464079",
+  "fetched_at_utc": "2026-10-24T22:14:52Z",
+  "epoch_seconds": 1792880093.8810282,
+  "github_run_id": "40137696809",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 38080018,
+  "source_bytes_total": 38088758,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18244836,
-      "sha256": "b111d45eea6300a32c73763099c2b679d0ed498bc3a04abf08c00b3e48e12ab8"
+      "sha256": "129ae023cbf63c37ab1fbe4a680f1d4796a672b33f3d6894a44fbfb2011645d3"
     },
     {
       "bucket": "allow",
@@ -40,22 +40,22 @@
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-allow.txt",
       "path": "data/ad/upstream/allow/a4aa36fb257b3e8883b4_spam-tlds-adblock-allow.txt",
-      "size_bytes": 18776,
-      "sha256": "d38e95ffc5b1cba399a63a2b78143b902fb039029afa6f9b3e88419b4cc14d6c"
+      "size_bytes": 18792,
+      "sha256": "0c23026c2497bc786d4db0435b83e291a2b081286a44f5a0dfb012fb682ac651"
     },
     {
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt",
       "path": "data/ad/upstream/allow/69481aca991270b96a83_whitelist-referral-native.txt",
-      "size_bytes": 41640,
-      "sha256": "1a2650b5c828cd51f56be46630a3352436177b899a422db98ddd01978ceca99c"
+      "size_bytes": 41620,
+      "sha256": "39891db169724d3494a9b4aa11c2508b60f4b575b0acf1b127614f566f58d36e"
     },
     {
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/spam-tlds-allow-onlydomains.txt",
       "path": "data/ad/upstream/allow/f816741b831135a02f6b_spam-tlds-allow-onlydomains.txt",
-      "size_bytes": 13571,
-      "sha256": "46ef1c4c6feeee46e3e0832885f2ce1517154bbd8dccc84637b690a9e9589356"
+      "size_bytes": 13582,
+      "sha256": "84300bd6a9842b65416f8adea4ffd82f6fb9437734814f2657c0587a98c187ea"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4648154,
-      "sha256": "6e858203ac33f25bf4c0e234aee6e6e5beb7f1dfd7bda4eece9420ac8071ce9c"
+      "size_bytes": 4656430,
+      "sha256": "3d5bf609bc451f7d5fbce638dd2fcceab74313764fd59e662f0b8796b5ca0b9b"
     },
     {
       "bucket": "block",
@@ -145,15 +145,15 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/limbopro/Adblock4limbo/refs/heads/main/Surge/rule/Peter_Lowe_adservers_surge.list",
       "path": "data/ad/upstream/block/45ba1b9c2126dd948c5e_Peter_Lowe_adservers_surge.list",
-      "size_bytes": 109088,
-      "sha256": "74fd7ad9abe98bd4e001949d2e55b1f5ee79e7ae90116730ec74b0da470df974"
+      "size_bytes": 109573,
+      "sha256": "7878949a664f560064b9c570ee0f5ea0e2da68b0c856cce34c25333f5f5f85a1"
     },
     {
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/limbopro/Adblock4limbo/refs/heads/main/rule/Surge/Adblock4limbo_surge.list",
       "path": "data/ad/upstream/block/2b48d5744c632fe75924_Adblock4limbo_surge.list",
       "size_bytes": 23954,
-      "sha256": "a7ba6bdac7ef0e3e663b06e2a9874d6dc2c6f097d8f1901683478bc1e731258d"
+      "sha256": "c7a128335890e31e0a8427b767d5b582a7367275cdcd654ad23bbe48f9b7cd79"
     },
     {
       "bucket": "block",
@@ -166,8 +166,8 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/refs/heads/master/anti-ad-surge.txt",
       "path": "data/ad/upstream/block/d62d22a6db503fdd2364_anti-ad-surge.txt",
-      "size_bytes": 3459859,
-      "sha256": "d097ff642f24b6b61beaa64ed698bf896bf2a0d279f7fb0f2f5934636bf325d3"
+      "size_bytes": 3459831,
+      "sha256": "c7cac6529fc843b17711a1c54f8a0d2cd850b6a33fc290a3eb30f2ef8a2fb5db"
     },
     {
       "bucket": "block",
