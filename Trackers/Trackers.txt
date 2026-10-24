@@ -3337,6 +3337,7 @@ https://tr.aag.moe/announce
 https://tr.abiir.top/announce
 https://tr.abiir.top:443/announce
 https://tr.abir.ga/announce
+https://tr.abir.ga:443/announce
 https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
@@ -3468,7 +3469,6 @@ https://tracker.manager.v6.navy/announce
 https://tracker.maya.no.eu.org/announce
 https://tracker.mg64.net:6881/announce
 https://tracker.midnightprogrammer.net/announce
-https://tracker.midnightprogrammer.net:443/announce
 https://tracker.mlsub.net/announce
 https://tracker.moeblog.cn/announce
 https://tracker.moeking.me/announce
