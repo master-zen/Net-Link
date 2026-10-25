@@ -1,19 +1,19 @@
 {
   "profile": "china",
-  "fetched_at_utc": "2026-10-24T22:34:21Z",
-  "epoch_seconds": 1792881264.76748,
-  "github_run_id": "40139109679",
+  "fetched_at_utc": "2026-10-25T04:45:19Z",
+  "epoch_seconds": 1792903523.5278215,
+  "github_run_id": "40163013541",
   "github_run_attempt": "1",
   "source_count": 20,
   "downloaded_count": 20,
-  "source_bytes_total": 16161463,
+  "source_bytes_total": 16161493,
   "sources": [
     {
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/Hackl0us/GeoIP2-CN/release/CN-ip-cidr.txt",
       "path": "data/china/upstream/8e6d51d39f4dcfdf0aae_CN-ip-cidr.txt",
-      "size_bytes": 110794,
-      "sha256": "437ed806c04edafba37bfca9d48bc74f10c033cc344646e96ff567a982b01476"
+      "size_bytes": 110824,
+      "sha256": "5df396b450daba34ccc72c3afe710bb26f6f095ef8e5f843bbb91e30ca0eed44"
     },
     {
       "bucket": "china",
