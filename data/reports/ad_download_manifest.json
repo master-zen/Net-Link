@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-24T22:14:52Z",
-  "epoch_seconds": 1792880093.8810282,
-  "github_run_id": "40137696809",
+  "fetched_at_utc": "2026-10-25T04:45:17Z",
+  "epoch_seconds": 1792903519.292932,
+  "github_run_id": "40163013350",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 38088758,
+  "source_bytes_total": 38099147,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18244836,
-      "sha256": "129ae023cbf63c37ab1fbe4a680f1d4796a672b33f3d6894a44fbfb2011645d3"
+      "sha256": "bf317598862b52c2b049666099085d64bbec81ab21a8a895e057f4a57305d62a"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4656430,
-      "sha256": "3d5bf609bc451f7d5fbce638dd2fcceab74313764fd59e662f0b8796b5ca0b9b"
+      "size_bytes": 4658477,
+      "sha256": "70e04ed9d225ecd43b29b883f3b5ca831301d7d7866fef4dd72ae5770fb9a651"
     },
     {
       "bucket": "block",
@@ -89,8 +89,8 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/reject.txt",
       "path": "data/ad/upstream/block/5ddf2462fc173642d9c2_reject.txt",
-      "size_bytes": 6976198,
-      "sha256": "90e19f7489a46d6a2e39880dc4b6cf421ddfc8e9b1b6747672408a8ea67252dc"
+      "size_bytes": 6984540,
+      "sha256": "36b9e172c128400df9644572964c5091215332ac251a9b4769c408967ca21855"
     },
     {
       "bucket": "block",
