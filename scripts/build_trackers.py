@@ -10,7 +10,7 @@ import time
 from pathlib import Path
 from typing import Iterable
 from urllib.parse import urlparse, urlunparse
-from urllib.request import Request, urlopen
+from urllib.request import HTTPSHandler, HTTPRedirectHandler, Request, build_opener
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_URLS_FILE = ROOT / "data/sources/TrackersList_URLs.txt"
@@ -21,8 +21,16 @@ OUTPUT_CLASH = ROOT / "Clash/Rules/Trackers.yaml"
 ALLOWED_SCHEMES = {"udp", "http", "https", "ws", "wss"}
 
 
+class HTTPSOnlyRedirectHandler(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        if urlparse(newurl).scheme.lower() != "https":
+            raise ValueError(f"Insecure tracker source redirect: {newurl}")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
 def fetch_text(url: str, timeout: int = 30, retries: int = 3, max_bytes: int = 24_000_000) -> str:
     last_error: Exception | None = None
+    opener = build_opener(HTTPSOnlyRedirectHandler(), HTTPSHandler(context=ssl.create_default_context()))
     for attempt in range(1, retries + 1):
         try:
             req = Request(
@@ -32,8 +40,7 @@ def fetch_text(url: str, timeout: int = 30, retries: int = 3, max_bytes: int = 2
                     "Accept": "text/plain,text/html,*/*",
                 },
             )
-            context = ssl.create_default_context()
-            with urlopen(req, timeout=timeout, context=context) as resp:
+            with opener.open(req, timeout=timeout) as resp:
                 chunks: list[bytes] = []
                 total = 0
                 while True:
@@ -78,6 +85,10 @@ def read_source_urls(path: Path) -> list[str]:
         line = raw_line.strip()
         if not line or line.startswith("#"):
             continue
+        parsed = urlparse(line)
+        if (parsed.scheme.lower() != "https" or not parsed.hostname
+                or parsed.username is not None or parsed.password is not None):
+            raise ValueError(f"Invalid HTTPS tracker source: {line}")
         urls.append(line)
     return unique_sorted(urls)
 
@@ -113,14 +124,23 @@ def normalize_tracker_url(url: str) -> str | None:
         return None
     if not parsed.hostname:
         return None
+    if parsed.username is not None or parsed.password is not None:
+        return None
 
     host = parsed.hostname.lower()
+    if "%" in host or any(ch.isspace() for ch in host):
+        return None
     if ":" in host and not host.startswith("["):
         host_for_netloc = f"[{host}]"
     else:
         host_for_netloc = host
 
-    port = parsed.port
+    try:
+        port = parsed.port
+    except ValueError:
+        return None
+    if port == 0:
+        return None
     netloc = f"{host_for_netloc}:{port}" if port is not None else host_for_netloc
     path = parsed.path or ""
     query = parsed.query or ""

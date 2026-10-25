@@ -9,6 +9,10 @@ on:
       - ".github/workflows/merge-trackers.yml"
       - "scripts/publish_generated.py"
       - "scripts/validate_generated.py"
+      - "scripts/build_trackers.py"
+      - "data/sources/TrackersList_URLs.txt"
+      - "tests/test_trackers.py"
+      - "tests/test_publish_generated.py"
   schedule:
     # 04:40 Asia/Shanghai (UTC+8) every day
     - cron: "40 20 * * *"

@@ -114,6 +114,22 @@ def validate_profile(profile):
         if len(clash_payload) != len(surge_rows) or clash_payload != surge_rows:
             raise RuntimeError(f"Surge and Clash rule CONTENT differs: {surge} / {clash}")
 
+    if profile == "trackers":
+        from build_trackers import (
+            normalize_tracker_url, surge_rule_sort_key, tracker_url_sort_key,
+            tracker_url_to_surge_rule,
+        )
+        urls = Path("Trackers/Trackers.txt").read_text(encoding="utf-8").splitlines()
+        if (any(normalize_tracker_url(url) != url for url in urls)
+                or urls != sorted(set(urls), key=tracker_url_sort_key)):
+            raise RuntimeError("Tracker URL output contains invalid, duplicate or unsorted entries")
+        derived = sorted(
+            {rule for url in urls if (rule := tracker_url_to_surge_rule(url)) is not None},
+            key=surge_rule_sort_key,
+        )
+        if derived != Path("Surge/Rules/Trackers.list").read_text(encoding="utf-8").splitlines():
+            raise RuntimeError("Tracker domain/IP rules do not match the published URLs")
+
     if profile == "china":
         # Independent fetch step must have succeeded in THIS run, and every
         # primary + geographic reference snapshot must still match its hash.

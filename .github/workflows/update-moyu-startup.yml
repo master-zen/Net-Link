@@ -11,6 +11,7 @@ on:
       - "scripts/validate_generated.py"
       - "Surge/Module/.generator/build.py"
       - "Surge/Module/runtime/body-rewrite.js"
+      - "tests/test_publish_generated.py"
 
   schedule:
     # UTC 20:23 = 北京时间次日 04:23

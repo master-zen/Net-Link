@@ -5,7 +5,6 @@ This folder contains generated rule lists for Surge.
 ## Typical Outputs
 
 - `AdblockSet.list`
-- `China.list`
 - `ChinaDomain.list`
 - `httpDNS_Block.list`
 - `Trackers.list`

@@ -30,9 +30,7 @@ def read_remote_json(path):
     return json.loads(value)
 
 
-def guard_against_old_build(paths):
-    # A China build should not be cancelled merely because the Adblock
-    # workflow changed while it ran (and vice versa).
+def guarded_inputs(paths):
     guarded = ["scripts/fetch_rule_sources.py", "scripts/validate_generated.py",
                "scripts/publish_generated.py"]
     if "data/reports/china_download_manifest.json" in paths:
@@ -55,6 +53,34 @@ def guard_against_old_build(paths):
             "data/sources/AdExceptionList_URLs.txt",
             "data/allowlists/AdblockCriticalAllow.list",
         ]
+    elif "Trackers/Trackers.txt" in paths:
+        guarded += [
+            ".github/workflows/merge-trackers.yml",
+            "scripts/build_trackers.py",
+            "data/sources/TrackersList_URLs.txt",
+        ]
+    elif "Surge/Icon.json" in paths:
+        guarded += [
+            ".github/workflows/merge-surge-icons.yml",
+            "scripts/build_icon_json.py",
+            "Surge/Icon/",
+        ]
+    elif "Surge/Module/StartUpAds.sgmodule" in paths:
+        guarded += [
+            ".github/workflows/update-moyu-startup.yml",
+            "Surge/Module/.generator/build.py",
+            "Surge/Module/runtime/body-rewrite.js",
+        ]
+    elif "Surge/Module/Adblock4limbo.sgmodule" in paths:
+        guarded += [
+            ".github/workflows/update-adblock4limbo.yml",
+            "Surge/Module/.generator/update-adblock4limbo.py",
+        ]
+    return guarded
+
+
+def guard_against_old_build(paths):
+    guarded = guarded_inputs(paths)
     changed = execute(
         "git", "diff", "--name-only", os.environ.get("GITHUB_SHA", "HEAD"),
         "origin/main", "--", *guarded,
