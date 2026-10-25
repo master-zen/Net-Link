@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-10-25T04:45:17Z",
-  "epoch_seconds": 1792903519.292932,
-  "github_run_id": "40163013350",
+  "fetched_at_utc": "2026-10-25T22:18:07Z",
+  "epoch_seconds": 1792966689.6143212,
+  "github_run_id": "40239522446",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 38099147,
+  "source_bytes_total": 38129835,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18244836,
-      "sha256": "bf317598862b52c2b049666099085d64bbec81ab21a8a895e057f4a57305d62a"
+      "sha256": "31154d030fddc2831d2f456c64244015c8ab9e697094cf5f5d23b12493ad71ff"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4658477,
-      "sha256": "70e04ed9d225ecd43b29b883f3b5ca831301d7d7866fef4dd72ae5770fb9a651"
+      "size_bytes": 4664499,
+      "sha256": "6709775ad372098fe499d7f1fa93ded310f953cfc273d4ff2af50521e581fe5b"
     },
     {
       "bucket": "block",
@@ -111,7 +111,7 @@
       "url": "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Advertising/Advertising.list",
       "path": "data/ad/upstream/block/0eee5e2450ce192a77e7_Advertising.list",
       "size_bytes": 26927,
-      "sha256": "43bc0a0ad143349a36330ea2befca73d12961305f92457f7435cf20dc56266c1"
+      "sha256": "b990b9f827e1c0fc7aac9e8e6b8813d2eaaeef617408670216cb714660f3eec7"
     },
     {
       "bucket": "block",
@@ -166,8 +166,8 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/refs/heads/master/anti-ad-surge.txt",
       "path": "data/ad/upstream/block/d62d22a6db503fdd2364_anti-ad-surge.txt",
-      "size_bytes": 3459831,
-      "sha256": "c7cac6529fc843b17711a1c54f8a0d2cd850b6a33fc290a3eb30f2ef8a2fb5db"
+      "size_bytes": 3484497,
+      "sha256": "2d5379215b0e32151a00d6af4effed14359aaa8eb0ee11acf6eff53cf6b50668"
     },
     {
       "bucket": "block",
