@@ -1444,6 +1444,7 @@ udp://tracker.rescuecrew7.com:1337/announce
 udp://tracker.riverarmy.xyz:6969/announce
 udp://tracker.sbsub.com:2710/announce
 udp://tracker.segso.net:6969/announce
+udp://tracker.sela.st:6969/announce
 udp://tracker.sharebro.in:6969/announce
 udp://tracker.sheesh.rip:6969/announce
 udp://tracker.shkinev.me:6969/announce
@@ -3030,7 +3031,6 @@ http://tracker.xfapi.top:9999/announce
 http://tracker.xfsub.com:6868/announce
 http://tracker.xiaoduola.xyz:6969/announce
 http://tracker.xn--djrq4gl4hvoi.top/announce
-http://tracker.xn--djrq4gl4hvoi.top:80/announce
 http://tracker.ygsub.com:6969/announce
 http://tracker.ykat.xyz:6969/announce
 http://tracker.yoshi210.com:6969/announce
@@ -3469,6 +3469,7 @@ https://tracker.manager.v6.navy/announce
 https://tracker.maya.no.eu.org/announce
 https://tracker.mg64.net:6881/announce
 https://tracker.midnightprogrammer.net/announce
+https://tracker.midnightprogrammer.net:443/announce
 https://tracker.mlsub.net/announce
 https://tracker.moeblog.cn/announce
 https://tracker.moeking.me/announce
