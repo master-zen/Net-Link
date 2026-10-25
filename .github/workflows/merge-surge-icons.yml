@@ -9,6 +9,9 @@ on:
       - ".github/workflows/merge-surge-icons.yml"
       - "scripts/publish_generated.py"
       - "scripts/validate_generated.py"
+      - "scripts/build_icon_json.py"
+      - "Surge/Icon/**"
+      - "tests/test_publish_generated.py"
   schedule:
     # 05:10 Asia/Shanghai (UTC+8), every 2 days
     - cron: "10 21 */2 * *"

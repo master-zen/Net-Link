@@ -1,0 +1,41 @@
+name: Validate source changes
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/**"
+      - "tests/**"
+      - ".github/workflows/**"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Python syntax
+        run: python -m compileall -q scripts tests Surge/Module/.generator
+      - name: JavaScript syntax
+        run: |
+          node --check Surge/Module/runtime/Adblock4limbo.js
+          node --check Surge/Module/runtime/Adblock4limbo.user.js
+          node --check Surge/Module/runtime/body-rewrite.js
+      - name: Validate tracked outputs without network access
+        run: |
+          python scripts/validate_generated.py trackers
+          python scripts/validate_generated.py icons
+          python scripts/validate_generated.py adblock
+          python scripts/validate_generated.py moyu

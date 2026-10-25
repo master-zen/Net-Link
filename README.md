@@ -5,11 +5,13 @@ Its primary goal is to publish stable, reviewable, automation-generated outputs 
 
 ## Published Outputs
 
-- `Surge/Module/Ad_Block.sgmodule`
-- `Surge/Rules/Ad_Block.list`
-- `Surge/Rules/China.list`
+- `Surge/Module/Adblock4limbo.sgmodule`
+- `Surge/Module/StartUpAds.sgmodule`
+- `Surge/Rules/AdblockSet.list` and `Clash/Rules/AdblockSet.yaml`
+- `Surge/Rules/ChinaDomain.list` and `Clash/Rules/ChinaDomain.yaml`
 - `Surge/Rules/httpDNS_Block.list`
-- `Surge/Rules/Trackers.list`
+- `Surge/Rules/Trackers.list` and `Clash/Rules/Trackers.yaml`
+- `Trackers/Trackers.txt`
 - `Surge/Icon.json`
 
 ## Repository Principles
@@ -23,10 +25,16 @@ Its primary goal is to publish stable, reviewable, automation-generated outputs 
 
 - [Surge](./Surge/README.md): published Surge modules, rules, icons, and generated script assets.
 - [data](./data/README.md): curated source lists and local allowlists that drive the builds.
-- [scripts](./scripts/README.md): repository automation for discovery, normalization, scanning, building, and validation.
+- [scripts](./scripts/README.md): generators, validation, and safe publication.
 - [Trackers](./Trackers/README.md): tracker data products and merged source material.
-- [build](./build/README.md): generated reports and staging outputs used by automation.
+- [data/reports](./data/reports): input manifests and build audit reports.
 - [.github/workflows](./.github/workflows/README.md): CI workflows that regenerate and publish supported artifacts.
+
+## Local Checks
+
+Run `python -m unittest discover -s tests -v` to check pure pipeline regressions.
+Run `python scripts/validate_generated.py trackers` to check the published tracker URLs, rules and Clash payload against each other.
+Other offline profiles are `icons`, `adblock`, and `moyu`. China and Adblock require fresh, run-specific upstream manifests before their full validators can pass.
 
 ## Editing Policy
 

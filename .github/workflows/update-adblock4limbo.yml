@@ -10,6 +10,7 @@ on:
       - "Surge/Module/.generator/update-adblock4limbo.py"
       - "scripts/publish_generated.py"
       - "scripts/validate_generated.py"
+      - "tests/test_publish_generated.py"
   schedule:
     - cron: "41 20 * * *"
 
