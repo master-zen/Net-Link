@@ -5287,6 +5287,7 @@ ad_rule,china_matching_rules
 "DOMAIN-SUFFIX,metrics-ad-drcn.dt.hihonorcloud.com","DOMAIN-SUFFIX,hihonorcloud.com"
 "DOMAIN-SUFFIX,metrics-dra.dt.hicloud.com","DOMAIN-SUFFIX,hicloud.com"
 "DOMAIN-SUFFIX,metrics-ieeexplore.ieee.org","DOMAIN-SUFFIX,ieee.org"
+"DOMAIN-SUFFIX,metrics.abercrombie.cn","DOMAIN-SUFFIX,cn"
 "DOMAIN-SUFFIX,metrics.abercrombie.com","DOMAIN-SUFFIX,abercrombie.com"
 "DOMAIN-SUFFIX,metrics.amd.com","DOMAIN-SUFFIX,amd.com"
 "DOMAIN-SUFFIX,metrics.americanairlines.cn","DOMAIN-SUFFIX,cn"

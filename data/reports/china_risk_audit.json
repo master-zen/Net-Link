@@ -1,14 +1,14 @@
 {
-  "download_run": "40241192734",
-  "download_manifest_sha256": "69060bf1a02fc48cc0e28c7e2ddcbc7a582364b041cfeef1135fb8ce4266fb85",
+  "download_run": "40423103187",
+  "download_manifest_sha256": "40bf3ec03498dec0f7e73de4b80db4e99b4e3edbd2766d1f75d7ff9c3300cd91",
   "foreign_reference_counts": {
     "v2fly_literal_domains": 38,
-    "proxy_reference_rules": 27317,
+    "proxy_reference_rules": 27308,
     "foreign_ip_reference_count": 12,
-    "rir_non_cn_ipv4_prefixes": 49527,
-    "rir_non_cn_ipv6_prefixes": 15235,
-    "rir_cn_ipv4_prefixes": 8797,
-    "rir_cn_ipv6_prefixes": 2046
+    "rir_non_cn_ipv4_prefixes": 49526,
+    "rir_non_cn_ipv6_prefixes": 15237,
+    "rir_cn_ipv4_prefixes": 8795,
+    "rir_cn_ipv6_prefixes": 2045
   },
   "supplement_unique_eligible_rules": 4058,
   "supplement_risk_report": "data/reports/china_supplement_audit.json",
@@ -155,7 +155,7 @@
     "DOMAIN-SUFFIX,honkaiimpact3.com",
     "DOMAIN-SUFFIX,honkaistarrail.com"
   ],
-  "foreign_ip_reference_network_count": 64783,
+  "foreign_ip_reference_network_count": 64784,
   "excluded_foreign_registered_ipv4_address_count": "16625156",
   "excluded_foreign_registered_ipv6_address_count": "2090167559289130793354093658112",
   "limitations": [

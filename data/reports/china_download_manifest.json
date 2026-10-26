@@ -1,12 +1,12 @@
 {
   "profile": "china",
-  "fetched_at_utc": "2026-10-25T22:39:26Z",
-  "epoch_seconds": 1792967970.6505108,
-  "github_run_id": "40241192734",
+  "fetched_at_utc": "2026-10-26T23:56:38Z",
+  "epoch_seconds": 1793059001.4989724,
+  "github_run_id": "40423103187",
   "github_run_attempt": "1",
   "source_count": 20,
   "downloaded_count": 20,
-  "source_bytes_total": 16137448,
+  "source_bytes_total": 16136959,
   "sources": [
     {
       "bucket": "china",
@@ -124,22 +124,22 @@
       "bucket": "foreign_domain",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/proxy.txt",
       "path": "data/china/upstream/e124e5f2380423ef6c60_proxy.txt",
-      "size_bytes": 782555,
-      "sha256": "f8078a275665a99e940cdc98d571f9bf33f70ef4310622c5b391beb515f055d4"
+      "size_bytes": 782266,
+      "sha256": "df4599aa84164efaf8c7f4ade4516be63e187a03c57e12d1dd3301ee493caa64"
     },
     {
       "bucket": "foreign_domain",
       "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/geolocation-!cn",
       "path": "data/china/upstream/7e903edc61731cf55a69_geolocation-_cn",
-      "size_bytes": 5653,
-      "sha256": "275952c7760f18e3929ce28db6d020ab01f911930eabb71fc7adbf3a1b95d5b4"
+      "size_bytes": 5635,
+      "sha256": "9c53dee22cbee2dbda123e1db509d79b3a1ca1c73bda1c31a7a45aa687114c6d"
     },
     {
       "bucket": "foreign_ip",
       "url": "https://ftp.apnic.net/stats/apnic/delegated-apnic-latest",
       "path": "data/china/upstream/a852bf49b576d1913b1b_delegated-apnic-latest",
-      "size_bytes": 4349854,
-      "sha256": "62ef911d016021e7d334f8e10319e3fb9ad98e4369451a08d2f20211cbcca6d0"
+      "size_bytes": 4349672,
+      "sha256": "5144d47b2c5ad25a2901591f1506783f5ec9b44be7fbc3916fe7f91c3356389a"
     },
     {
       "bucket": "foreign_ip",
