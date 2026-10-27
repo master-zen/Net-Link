@@ -865,6 +865,7 @@ DOMAIN,tracker.emule.best
 DOMAIN,tracker.encrypted-data.xyz
 DOMAIN,tracker.enitin.xyz
 DOMAIN,tracker.etree.org
+DOMAIN,tracker.evergarden.uk
 DOMAIN,tracker.ex.ua
 DOMAIN,tracker.exe.in.th
 DOMAIN,tracker.expli.top
@@ -1369,6 +1370,7 @@ IP-CIDR,101.99.91.160/32,no-resolve
 IP-CIDR,101.99.94.187/32,no-resolve
 IP-CIDR,103.122.21.50/32,no-resolve
 IP-CIDR,103.251.166.126/32,no-resolve
+IP-CIDR,103.27.158.117/32,no-resolve
 IP-CIDR,104.131.98.232/32,no-resolve
 IP-CIDR,104.143.10.186/32,no-resolve
 IP-CIDR,104.238.198.186/32,no-resolve
