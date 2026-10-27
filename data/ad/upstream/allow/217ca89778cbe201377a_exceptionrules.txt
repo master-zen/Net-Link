@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
-! Checksum: YFj8ADb91bcAr7KAYdAdBg
-! Version: 202610262322
+! Checksum: ahyGwQ7iyUb7UC7HYb5yWw
+! Version: 202610272322
 ! Title: Allow nonintrusive advertising
 ! Expires: 1 days
 ! Homepage: https://acceptableads.com/
@@ -4068,7 +4068,7 @@ elgourmet.com#@#.ad-module
 issuu.com#@#.ad-native
 emojitracker.com,beautycon.com,accountingweb.co.uk,hrzone.com,trainingzone.co.uk,mycustomer.com,naturallycurly.com,affordablehousing.com,essence.com#@#.ad-position
 boredpanda.es,demilked.com,naturallycurly.com#@#.post-ads
-thekrazycouponlady.com,sharecare.com,gocomics.com,paint-3d.com,haus-wissen.de#@#.ad-rail
+thekrazycouponlady.com,sharecare.com,gocomics.com,paint-3d.com,haus-wissen.de,eintragnews.de#@#.ad-rail
 ign.com#@#.ad-rail-wrapper
 thesimplifydaily.com,rvguide.com,hometalk.com,petguide.com,gocomics.com#@#.ad-rectangle
 gocomics.com#@#.ad-rectangle-container
@@ -4301,7 +4301,7 @@ sapling.com,mindbodygreen.com,whosampled.com,chordify.net,moneywise.com,itstillw
 theroot.com,9gag.com#@#.inline-ad-container
 popsugar.com,nowthisnews.com,thedodo.com,thrillist.com#@#.inline-ad-wrapper
 9to5google.com,9to5mac.com,9to5toys.com,dronedj.com,electrek.co#@#.inlinead
-elgourmet.com,cod-loadouts.com,gocomics.com,haus-wissen.de#@#.js-ad
+elgourmet.com,cod-loadouts.com,gocomics.com,haus-wissen.de,eintragnews.de#@#.js-ad
 newsbomb.gr,cnn.gr#@#.js-ad-slot
 sunday-webry.com,comic-days.com,comic-trail.com,comic-zenon.com,pocket.shonenmagazine.com,shonenjumpplus.com,comic-action.com,comic-gardo.com,comic-ogyaaa.com,comicborder.com,comicbushi-web.com,corocoro.jp,feelweb.jp,kuragebunch.com,magcomi.com,viewer.heros-web.com,tonarinoyj.jp#@#.js-ad-container
 themarker.com#@#.js-dfp-ad
@@ -6035,7 +6035,7 @@ clarin.com#@#.column > div[class] > div[class^="sc-"]:has(div[class^="sc-"] > di
 3djuegosguias.com,3djuegospc.com,compradiccion.com,decoracion.trendencias.com,directoalpaladar.com.mx,mundoxiaomi.com,poprosa.com,vitonica.com,xatakaciencia.com,xatakafoto.com,xatakahome.com,xatakawindows.com,3djuegos.com,applesfera.com,directoalpaladar.com,espinof.com,genbeta.com,sensacine.com,trendencias.com,vidaextra.com,xataka.com.mx,xatakamovil.com,xatakandroid.com,xataka.com#@#.ad-cen2
 askmen.com#@#.ad__sidebar
 dealsofamerica.com#@#.ad-top-728
-truesteamachievements.com,truetrophies.com,hiconsumption.com,goldenknightsnation.com,sportscity.com,ramsnewswire.com,nhlrumors.com,raidersnewswire.com,angelsnation.com,thedevilsnation.com,raptorsnation.com,gamespot.com,lakersnation.com,trueachievements.com,haus-wissen.de#@#.ad-wrap:not(#google_ads_iframe_checktag)
+truesteamachievements.com,truetrophies.com,hiconsumption.com,goldenknightsnation.com,sportscity.com,ramsnewswire.com,nhlrumors.com,raidersnewswire.com,angelsnation.com,thedevilsnation.com,raptorsnation.com,gamespot.com,lakersnation.com,trueachievements.com,haus-wissen.de,eintragnews.de#@#.ad-wrap:not(#google_ads_iframe_checktag)
 the-express.com#@#[data-tb-non-consent]
 fooducate.com#@#.ad-incontent
 infobae.com#@#.dfpAd
