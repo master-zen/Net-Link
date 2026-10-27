@@ -1677,6 +1677,7 @@ payload:
   - 'IP-CIDR,177.139.47.92/32,no-resolve'
   - 'IP-CIDR,177.144.178.170/32,no-resolve'
   - 'IP-CIDR,177.144.178.39/32,no-resolve'
+  - 'IP-CIDR,177.16.198.108/32,no-resolve'
   - 'IP-CIDR,177.16.198.58/32,no-resolve'
   - 'IP-CIDR,177.172.61.236/32,no-resolve'
   - 'IP-CIDR,177.172.61.249/32,no-resolve'
