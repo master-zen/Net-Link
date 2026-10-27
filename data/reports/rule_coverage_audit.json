@@ -1,12 +1,12 @@
 {
   "scope": "entire published rule files, not a sample",
   "files": {
-    "ChinaDomain.list": 122380,
-    "AdblockSet.list": 240292
+    "ChinaDomain.list": 122381,
+    "AdblockSet.list": 240657
   },
   "unique_rules": {
-    "china": 122380,
-    "ad": 240292
+    "china": 122381,
+    "ad": 240657
   },
   "duplicates": {
     "china": 0,
@@ -15,16 +15,16 @@
   "rule_types": {
     "china": {
       "DOMAIN": 266,
-      "DOMAIN-SUFFIX": 110256,
+      "DOMAIN-SUFFIX": 110258,
       "DOMAIN-KEYWORD": 0,
-      "IP-CIDR": 7713,
+      "IP-CIDR": 7712,
       "IP-CIDR6": 4145,
       "IP-ASN": 0,
       "GEOIP": 0
     },
     "ad": {
       "DOMAIN": 18385,
-      "DOMAIN-SUFFIX": 221344,
+      "DOMAIN-SUFFIX": 221709,
       "DOMAIN-KEYWORD": 0,
       "IP-CIDR": 559,
       "IP-CIDR6": 4,
@@ -40,10 +40,10 @@
   },
   "cidr": {
     "IP-CIDR": {
-      "rule_count": 7713,
-      "collapsed_prefix_count": 7713,
+      "rule_count": 7712,
+      "collapsed_prefix_count": 7712,
       "redundant_prefix_count": 0,
-      "unique_address_count": "346804519",
+      "unique_address_count": "346804263",
       "non_public_count": 0,
       "non_public_examples": [],
       "ipv4_mapped_count": 0,
@@ -166,14 +166,14 @@
   },
   "china_keywords": [],
   "keyword_critical_matches": {},
-  "ad_china_domain_overlap_count": 8158,
+  "ad_china_domain_overlap_count": 8160,
   "overlap_category_counts_nonexclusive": {
-    "domain_suffix": 4651,
+    "domain_suffix": 4652,
     "exact_domain": 10,
-    "single_label_suffix": 3497
+    "single_label_suffix": 3498
   },
   "overlap_single_label_suffix_counts": {
-    "cn": 3497
+    "cn": 3498
   },
   "overlap_keyword_counts": {},
   "keyword_review_recommendations": {},
