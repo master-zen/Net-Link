@@ -1,5 +1,5 @@
 {
-  "download_run": "40976739081",
+  "download_run": "41147119938",
   "sources": [
     {
       "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list",
@@ -83,27 +83,21 @@
     {
       "url": "https://raw.githubusercontent.com/nexitallyy/ProxyRules/main/Extra_CN_3.list",
       "snapshot_path": "data/china/upstream/0bdbfa8a259458e0ad08_Extra_CN_3.list",
-      "snapshot_sha256": "911369e9b9d56435bde5394e345da48806f5ec2c61aab19707d7f7fa02ac46c2",
-      "input_lines": 85,
-      "parsed_candidate_count": 14,
+      "snapshot_sha256": "2e8ca81c6aae9796d1017b0ee02bfc9ffaeb903ca612d36712f28aad07e645f5",
+      "input_lines": 79,
+      "parsed_candidate_count": 8,
       "corroborated_domain_candidates": 0,
       "cn_registry_verified_ip_candidates": 0,
-      "unverified_domain_rejections": 11,
+      "unverified_domain_rejections": 5,
       "non_cn_or_unverified_ip_rejections": 3,
       "unsupported_rule_rejections": 0,
       "accepted_unique_rule_count": 0,
       "rejected_examples": [
         "DOMAIN-SUFFIX,blasphemy4985.com",
-        "DOMAIN-SUFFIX,carrousel6917.com",
-        "DOMAIN-SUFFIX,delirium9599.com",
         "DOMAIN-SUFFIX,destitute2725.com",
-        "DOMAIN-SUFFIX,durable0762.com",
         "DOMAIN-SUFFIX,iqsjp.com",
-        "DOMAIN-SUFFIX,kfzzxcx.com",
         "DOMAIN-SUFFIX,ping0.cc",
         "DOMAIN-SUFFIX,prolonged3729.com",
-        "DOMAIN-SUFFIX,simmering3378.com",
-        "DOMAIN-SUFFIX,wrecking7857.com",
         "IP-CIDR,142.248.148.0/24",
         "IP-CIDR,209.248.34.0/24",
         "IP-CIDR,87.83.109.0/24"

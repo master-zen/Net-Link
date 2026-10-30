@@ -1,12 +1,12 @@
 {
   "profile": "china",
-  "fetched_at_utc": "2026-10-29T23:59:39Z",
-  "epoch_seconds": 1793318381.9941769,
-  "github_run_id": "40976739081",
+  "fetched_at_utc": "2026-10-30T23:54:03Z",
+  "epoch_seconds": 1793404446.2757459,
+  "github_run_id": "41147119938",
   "github_run_attempt": "1",
   "source_count": 20,
   "downloaded_count": 20,
-  "source_bytes_total": 16139520,
+  "source_bytes_total": 16140182,
   "sources": [
     {
       "bucket": "china",
@@ -103,8 +103,8 @@
       "bucket": "china_supplement",
       "url": "https://raw.githubusercontent.com/nexitallyy/ProxyRules/main/Extra_CN_3.list",
       "path": "data/china/upstream/0bdbfa8a259458e0ad08_Extra_CN_3.list",
-      "size_bytes": 3292,
-      "sha256": "911369e9b9d56435bde5394e345da48806f5ec2c61aab19707d7f7fa02ac46c2"
+      "size_bytes": 3110,
+      "sha256": "2e8ca81c6aae9796d1017b0ee02bfc9ffaeb903ca612d36712f28aad07e645f5"
     },
     {
       "bucket": "china_supplement",
@@ -124,22 +124,22 @@
       "bucket": "foreign_domain",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/proxy.txt",
       "path": "data/china/upstream/e124e5f2380423ef6c60_proxy.txt",
-      "size_bytes": 782500,
-      "sha256": "e17b8e869b9d70b714e548797fb929744e54042209433bc437ca2e10ddf89675"
+      "size_bytes": 782727,
+      "sha256": "ba69c90fc56051e003ffab4370102bc46c61ff387270cece8043a2b765ff81c4"
     },
     {
       "bucket": "foreign_domain",
       "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/geolocation-!cn",
       "path": "data/china/upstream/7e903edc61731cf55a69_geolocation-_cn",
-      "size_bytes": 5635,
-      "sha256": "9c53dee22cbee2dbda123e1db509d79b3a1ca1c73bda1c31a7a45aa687114c6d"
+      "size_bytes": 5650,
+      "sha256": "7de2d83167e391ddcd49104a46eefce99e3a3b4c3d7b158907084e5741ee066b"
     },
     {
       "bucket": "foreign_ip",
       "url": "https://ftp.apnic.net/stats/apnic/delegated-apnic-latest",
       "path": "data/china/upstream/a852bf49b576d1913b1b_delegated-apnic-latest",
-      "size_bytes": 4351708,
-      "sha256": "3defc6cac4be9d45f8b1d0c980c8c7d5f28281d44e370f72463d6f723caad6a0"
+      "size_bytes": 4352310,
+      "sha256": "429406bb1ea608028b267d16aa3ca38ecd63e08284db1849f75aa708fbfcc072"
     },
     {
       "bucket": "foreign_ip",

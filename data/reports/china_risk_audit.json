@@ -1,18 +1,18 @@
 {
-  "download_run": "40976739081",
-  "download_manifest_sha256": "9af1d85b715201dbe51fcc015163ac06c1dc80a88ab957c339e8be74b3cd4f4b",
+  "download_run": "41147119938",
+  "download_manifest_sha256": "d2cfbddfa518ae034d4d44c32ddd0cc7a2bffa343adbafc483a6cae08e5eb3b4",
   "foreign_reference_counts": {
-    "v2fly_literal_domains": 38,
-    "proxy_reference_rules": 27316,
+    "v2fly_literal_domains": 39,
+    "proxy_reference_rules": 27324,
     "foreign_ip_reference_count": 12,
-    "rir_non_cn_ipv4_prefixes": 49546,
-    "rir_non_cn_ipv6_prefixes": 15251,
+    "rir_non_cn_ipv4_prefixes": 49550,
+    "rir_non_cn_ipv6_prefixes": 15254,
     "rir_cn_ipv4_prefixes": 8796,
-    "rir_cn_ipv6_prefixes": 2045
+    "rir_cn_ipv6_prefixes": 2046
   },
   "supplement_unique_eligible_rules": 4058,
   "supplement_risk_report": "data/reports/china_supplement_audit.json",
-  "protected_foreign_domain_roots": 60,
+  "protected_foreign_domain_roots": 61,
   "foreign_domain_rules_excluded": 52,
   "country_code_cn_suffix_restored": true,
   "sourced_cn_localized_domain_candidates": 177,
@@ -155,7 +155,7 @@
     "DOMAIN-SUFFIX,honkaiimpact3.com",
     "DOMAIN-SUFFIX,honkaistarrail.com"
   ],
-  "foreign_ip_reference_network_count": 64818,
+  "foreign_ip_reference_network_count": 64825,
   "excluded_foreign_registered_ipv4_address_count": "16625412",
   "excluded_foreign_registered_ipv6_address_count": "2090167559289130793354093658112",
   "limitations": [
