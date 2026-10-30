@@ -3244,6 +3244,7 @@ https://evening-badlands-6215.herokuapp.com/announce
 https://explodie.org:6969/announce
 https://fbiagent.cyou/announce
 https://fxtt.ru:80/announce
+https://gargoyleperch.de/announce
 https://gargoyleperch.de:443/announce
 https://git.ustc.edu.cn/users/sign_in?redirect_to=masked_redirect_to";
 https://grifon.info:80/announce
@@ -3506,7 +3507,6 @@ https://tracker.ptchdbits.co/announce
 https://tracker.pterclub.com/announce
 https://tracker.publictorrent.net/announce
 https://tracker.puvvadi.net/announce
-https://tracker.puvvadi.net:443/announce
 https://tracker.qingwa.pro/announce
 https://tracker.qingwapt.org/announce
 https://tracker.qingwapt.org:443/announce
@@ -3540,6 +3540,8 @@ https://tracker.yarr.pt/announce
 https://tracker.yemekyedim.com/announce
 https://tracker.yggleak.top/announce
 https://tracker.yoshi210.com:6969/announce
+https://tracker.yume-hatsuyuki.moe/announce
+https://tracker.yume-hatsuyuki.moe:443/announce
 https://tracker.zhuqiy.com/announce
 https://tracker.zhuqiy.com:443/announce
 https://tracker.zhuqiy.top/announce
