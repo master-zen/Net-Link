@@ -6885,6 +6885,7 @@ ad_rule,china_matching_rules
 "DOMAIN-SUFFIX,static.topxgun.com","DOMAIN-SUFFIX,topxgun.com"
 "DOMAIN-SUFFIX,static.wauee.com","DOMAIN-SUFFIX,wauee.com"
 "DOMAIN-SUFFIX,static.youdm.cn","DOMAIN-SUFFIX,cn"
+"DOMAIN-SUFFIX,static.zongheng.com","DOMAIN-SUFFIX,zongheng.com"
 "DOMAIN-SUFFIX,static1.searchbox.baidu.com","DOMAIN-SUFFIX,baidu.com"
 "DOMAIN-SUFFIX,staticadm.leju.com","DOMAIN-SUFFIX,leju.com"
 "DOMAIN-SUFFIX,staticfile.org","DOMAIN-SUFFIX,staticfile.org"

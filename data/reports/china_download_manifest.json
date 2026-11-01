@@ -1,19 +1,19 @@
 {
   "profile": "china",
-  "fetched_at_utc": "2026-10-31T23:28:26Z",
-  "epoch_seconds": 1793489310.1804354,
-  "github_run_id": "41252653245",
+  "fetched_at_utc": "2026-11-01T23:41:35Z",
+  "epoch_seconds": 1793576497.8490746,
+  "github_run_id": "41363311505",
   "github_run_attempt": "1",
   "source_count": 20,
   "downloaded_count": 20,
-  "source_bytes_total": 16140245,
+  "source_bytes_total": 16140497,
   "sources": [
     {
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/Hackl0us/GeoIP2-CN/release/CN-ip-cidr.txt",
       "path": "data/china/upstream/8e6d51d39f4dcfdf0aae_CN-ip-cidr.txt",
-      "size_bytes": 110824,
-      "sha256": "5df396b450daba34ccc72c3afe710bb26f6f095ef8e5f843bbb91e30ca0eed44"
+      "size_bytes": 110840,
+      "sha256": "a2e953ba4baa3e12732085d75225ec6a39274614392dc515e867d9265a8995d7"
     },
     {
       "bucket": "china",
@@ -124,22 +124,22 @@
       "bucket": "foreign_domain",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/proxy.txt",
       "path": "data/china/upstream/e124e5f2380423ef6c60_proxy.txt",
-      "size_bytes": 782790,
-      "sha256": "ebc503446346dd7b434f2b51cc665bf3809e913768d1e1b41619d25ace507fdc"
+      "size_bytes": 783038,
+      "sha256": "149db07d1c654918f1537afa1e4bbbfc8abcc8ad9f433bec23f2298d8625cb2a"
     },
     {
       "bucket": "foreign_domain",
       "url": "https://raw.githubusercontent.com/v2fly/domain-list-community/master/data/geolocation-!cn",
       "path": "data/china/upstream/7e903edc61731cf55a69_geolocation-_cn",
-      "size_bytes": 5650,
-      "sha256": "7de2d83167e391ddcd49104a46eefce99e3a3b4c3d7b158907084e5741ee066b"
+      "size_bytes": 5638,
+      "sha256": "de134eea1182f417461a4d94d9dac2806446571be8d3a743f86cfc9de9cb0d71"
     },
     {
       "bucket": "foreign_ip",
       "url": "https://ftp.apnic.net/stats/apnic/delegated-apnic-latest",
       "path": "data/china/upstream/a852bf49b576d1913b1b_delegated-apnic-latest",
       "size_bytes": 4352310,
-      "sha256": "07cf16f0be9f9657f0a83b4de94206ffe978ad8bd973279b145692d5a3b8ef4f"
+      "sha256": "dbe5a8294bb0f885499c4e9464be2046be273f9a1daee8acff2cd3c363f47c5b"
     },
     {
       "bucket": "foreign_ip",
