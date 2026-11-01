@@ -5,10 +5,10 @@
 ! Issues: https://github.com/hagezi/dns-blocklists/issues
 ! Disclaimer: https://github.com/hagezi/dns-blocklists/blob/main/README.md#disclaimer
 ! Expires: 8 hours
-! Last modified: 31 Oct 2026 08:27 UTC
-! Version: 2026.1031.0827.52
+! Last modified: 01 Nov 2026 08:42 UTC
+! Version: 2026.1101.0842.59
 ! Syntax: AdBlock
-! Number of entries: 1694
+! Number of entries: 1693
 !
 @@||l.1mp.ru^
 @@||links.2ns.fi^
@@ -529,7 +529,6 @@
 @@||click.e.usa.experian.com^
 @@||cdn.e-pfg.exponea.com^
 @@||cdn.eu1.exponea.com^
-@@||cdn.ftspecialist.exponea.com^
 @@||cdn.mie.exponea.com^
 @@||cdn.network.exponea.com^
 @@||cdn.uk.exponea.com^
@@ -607,6 +606,7 @@
 @@||adservice.google.nl^
 @@||adservice.google.no^
 @@||adservice.google.pl^
+@@||adservice.google.pt^
 @@||adservice.google.ro^
 @@||adservice.google.rs^
 @@||adservice.google.ru^
@@ -798,7 +798,6 @@
 @@||app1e.outreach.io^
 @@||app1f.outreach.io^
 @@||app2a.outreach.io^
-@@||app2b.outreach.io^
 @@||app2c.outreach.io^
 @@||ct.paidmediatrk.com^
 @@||sites.paradox.ai^
