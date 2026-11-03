@@ -177,6 +177,7 @@ udp://177.144.178.170:6969/announce
 udp://177.144.178.39:6969/announce
 udp://177.16.198.108:6969/announce
 udp://177.16.198.58:6969/announce
+udp://177.16.198.72:6969/announce
 udp://177.172.61.249:6969/announce
 udp://177.172.61.26:6969/announce
 udp://177.172.61.33:6969/announce
@@ -1487,6 +1488,7 @@ udp://tracker.trackarr.org:6969/announce
 udp://tracker.trackerfix.com:80/announce
 udp://tracker.trackerfix.com:82/announce
 udp://tracker.trafficmgr.net:6969/announce
+udp://tracker.transfur.org:6969/announce
 udp://tracker.tricitytorrents.com:2710/announce
 udp://tracker.tritan.gg:8080/announce
 udp://tracker.trojangogogo.site:8080/announce
@@ -1867,6 +1869,7 @@ http://177.144.178.170:6969/announce
 http://177.144.178.39:6969/announce
 http://177.16.198.108:6969/announce
 http://177.16.198.58:6969/announce
+http://177.16.198.72:6969/announce
 http://177.172.61.236:6969/announce
 http://177.172.61.249:6969/announce
 http://177.172.61.26:6969/announce
@@ -3397,6 +3400,7 @@ https://tracker.bug38.com/announce
 https://tracker.bulao.ren/announce
 https://tracker.calculate.ru:6969/announce
 https://tracker.cangku.moe/announce
+https://tracker.cangku.moe:443/announce
 https://tracker.carpt.net/announce
 https://tracker.cinefiles.info/announce
 https://tracker.cloudit.top/announce
