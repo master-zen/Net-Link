@@ -1,12 +1,12 @@
 {
-  "download_run": "41566161134",
-  "download_manifest_sha256": "f8a0d2795ccc5518e1474b092e72ff03a66ab066ea25d2e31a1b1f108566f7d4",
+  "download_run": "41748689069",
+  "download_manifest_sha256": "8f543ba5f41d82cf48d12aeea00fc2a50ae3918ca59cacc213bbf7f499c6be0b",
   "foreign_reference_counts": {
     "v2fly_literal_domains": 39,
-    "proxy_reference_rules": 27335,
+    "proxy_reference_rules": 27337,
     "foreign_ip_reference_count": 12,
-    "rir_non_cn_ipv4_prefixes": 49551,
-    "rir_non_cn_ipv6_prefixes": 15256,
+    "rir_non_cn_ipv4_prefixes": 49559,
+    "rir_non_cn_ipv6_prefixes": 15259,
     "rir_cn_ipv4_prefixes": 8796,
     "rir_cn_ipv6_prefixes": 2046
   },
@@ -72,7 +72,7 @@
     "DOMAIN-SUFFIX,windowsupdate.microsoft.com",
     "DOMAIN-SUFFIX,xiaomiflash.com"
   ],
-  "proxy_reference_exact_candidate_count": 190,
+  "proxy_reference_exact_candidate_count": 191,
   "proxy_reference_candidate_examples": [
     "DOMAIN,2mdn-cn.net",
     "DOMAIN,admob-cn.com",
@@ -126,6 +126,7 @@
     "DOMAIN-SUFFIX,asmr.gay",
     "DOMAIN-SUFFIX,astm.org",
     "DOMAIN-SUFFIX,avstar4.com",
+    "DOMAIN-SUFFIX,bilibili.tv",
     "DOMAIN-SUFFIX,binancezh.kim",
     "DOMAIN-SUFFIX,binancezh.link",
     "DOMAIN-SUFFIX,bmj.com",
@@ -152,11 +153,10 @@
     "DOMAIN-SUFFIX,gandi.net",
     "DOMAIN-SUFFIX,genshinimpact.com",
     "DOMAIN-SUFFIX,gvt2-cn.com",
-    "DOMAIN-SUFFIX,honkaiimpact3.com",
-    "DOMAIN-SUFFIX,honkaistarrail.com"
+    "DOMAIN-SUFFIX,honkaiimpact3.com"
   ],
-  "foreign_ip_reference_network_count": 64828,
-  "excluded_foreign_registered_ipv4_address_count": "16625412",
+  "foreign_ip_reference_network_count": 64839,
+  "excluded_foreign_registered_ipv4_address_count": "16625156",
   "excluded_foreign_registered_ipv6_address_count": "2090167559289130793354093658112",
   "limitations": [
     "A proxy routing category is not proof of physical domain geography.",
