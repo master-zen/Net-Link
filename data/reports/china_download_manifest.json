@@ -1,12 +1,12 @@
 {
   "profile": "china",
-  "fetched_at_utc": "2026-11-04T00:41:44Z",
-  "epoch_seconds": 1793752907.456564,
-  "github_run_id": "41748689069",
+  "fetched_at_utc": "2026-11-05T00:56:27Z",
+  "epoch_seconds": 1793840190.2952006,
+  "github_run_id": "41944979981",
   "github_run_attempt": "1",
   "source_count": 20,
   "downloaded_count": 20,
-  "source_bytes_total": 16133290,
+  "source_bytes_total": 16133651,
   "sources": [
     {
       "bucket": "china",
@@ -124,8 +124,8 @@
       "bucket": "foreign_domain",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/proxy.txt",
       "path": "data/china/upstream/e124e5f2380423ef6c60_proxy.txt",
-      "size_bytes": 783090,
-      "sha256": "6bc31d5e3ab0cb63c6a32008eb479c13fed6cdaa473ba4d8d212eeab6f26db0e"
+      "size_bytes": 783255,
+      "sha256": "11365c53763c52cc656a8a5d0eff03d840bba61b495c96ecbf1ae1495609643b"
     },
     {
       "bucket": "foreign_domain",
@@ -138,8 +138,8 @@
       "bucket": "foreign_ip",
       "url": "https://ftp.apnic.net/stats/apnic/delegated-apnic-latest",
       "path": "data/china/upstream/a852bf49b576d1913b1b_delegated-apnic-latest",
-      "size_bytes": 4353097,
-      "sha256": "cc3ff8777c617a8dcc8ca6c544e555c1261b3164e5e852d19a634071435b7f3b"
+      "size_bytes": 4353293,
+      "sha256": "121ab1e7b83577f02d433af513cd03f755e6ec641ff1e58f1cb71734fd867e91"
     },
     {
       "bucket": "foreign_ip",
