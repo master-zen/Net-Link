@@ -3250,7 +3250,6 @@ https://explodie.org:6969/announce
 https://fbiagent.cyou/announce
 https://fxtt.ru:80/announce
 https://gargoyleperch.de/announce
-https://gargoyleperch.de:443/announce
 https://git.ustc.edu.cn/users/sign_in?redirect_to=masked_redirect_to";
 https://grifon.info:80/announce
 https://gwp2-v19.rinet.ru/announce
@@ -3351,6 +3350,7 @@ https://tr.aag.moe/announce
 https://tr.abiir.top/announce
 https://tr.abiir.top:443/announce
 https://tr.abir.ga/announce
+https://tr.abir.ga:443/announce
 https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
