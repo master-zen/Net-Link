@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
 ! Checksum: jvJptq1mgR01vlwkm4rYyQ
-! Version: 202611040011
+! Version: 202611050031
 ! Title: Allow nonintrusive advertising
 ! Expires: 1 days
 ! Homepage: https://acceptableads.com/
