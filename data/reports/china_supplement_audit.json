@@ -1,5 +1,5 @@
 {
-  "download_run": "41944979981",
+  "download_run": "42140643688",
   "sources": [
     {
       "url": "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ChinaCompanyIp.list",
@@ -83,13 +83,13 @@
     {
       "url": "https://raw.githubusercontent.com/nexitallyy/ProxyRules/main/Extra_CN_3.list",
       "snapshot_path": "data/china/upstream/0bdbfa8a259458e0ad08_Extra_CN_3.list",
-      "snapshot_sha256": "2e8ca81c6aae9796d1017b0ee02bfc9ffaeb903ca612d36712f28aad07e645f5",
-      "input_lines": 79,
-      "parsed_candidate_count": 8,
+      "snapshot_sha256": "1f07808f2f82bff1d563b0a221393df72a5a42acf5397651b42f29cc49717493",
+      "input_lines": 74,
+      "parsed_candidate_count": 5,
       "corroborated_domain_candidates": 0,
       "cn_registry_verified_ip_candidates": 0,
       "unverified_domain_rejections": 5,
-      "non_cn_or_unverified_ip_rejections": 3,
+      "non_cn_or_unverified_ip_rejections": 0,
       "unsupported_rule_rejections": 0,
       "accepted_unique_rule_count": 0,
       "rejected_examples": [
@@ -97,10 +97,7 @@
         "DOMAIN-SUFFIX,destitute2725.com",
         "DOMAIN-SUFFIX,iqsjp.com",
         "DOMAIN-SUFFIX,ping0.cc",
-        "DOMAIN-SUFFIX,prolonged3729.com",
-        "IP-CIDR,142.248.148.0/24",
-        "IP-CIDR,209.248.34.0/24",
-        "IP-CIDR,87.83.109.0/24"
+        "DOMAIN-SUFFIX,prolonged3729.com"
       ]
     },
     {
