@@ -239,6 +239,7 @@ DOMAIN,dex.email
 DOMAIN,dht.bt251.com
 DOMAIN,dht.dhtclub.com
 DOMAIN,discord.heihachi.pw
+DOMAIN,discover.curiousfacts.blog
 DOMAIN,dmitrynegoda.com
 DOMAIN,dn42.smrsh.net
 DOMAIN,dns.xxtor.com
@@ -2046,6 +2047,7 @@ IP-CIDR,222.216.138.184/32,no-resolve
 IP-CIDR,222.216.138.211/32,no-resolve
 IP-CIDR,222.216.138.224/32,no-resolve
 IP-CIDR,222.216.138.237/32,no-resolve
+IP-CIDR,222.216.138.251/32,no-resolve
 IP-CIDR,222.216.139.165/32,no-resolve
 IP-CIDR,222.216.139.217/32,no-resolve
 IP-CIDR,222.216.139.248/32,no-resolve
