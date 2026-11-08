@@ -1,8 +1,8 @@
 {
   "profile": "china",
-  "fetched_at_utc": "2026-11-07T23:41:23Z",
-  "epoch_seconds": 1794094886.8921385,
-  "github_run_id": "42426355923",
+  "fetched_at_utc": "2026-11-08T23:48:28Z",
+  "epoch_seconds": 1794181711.2459877,
+  "github_run_id": "42536910804",
   "github_run_attempt": "1",
   "source_count": 20,
   "downloaded_count": 20,
@@ -139,7 +139,7 @@
       "url": "https://ftp.apnic.net/stats/apnic/delegated-apnic-latest",
       "path": "data/china/upstream/a852bf49b576d1913b1b_delegated-apnic-latest",
       "size_bytes": 4354156,
-      "sha256": "1e415e22b576b04f147af37217b6ffafc1675a847cf91775fc0410c237923f51"
+      "sha256": "c8301098acb4b76ae1735b79ffb23c50b9e83f2087772d95316168620758792a"
     },
     {
       "bucket": "foreign_ip",
