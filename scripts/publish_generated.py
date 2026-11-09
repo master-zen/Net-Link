@@ -69,6 +69,7 @@ def guarded_inputs(paths):
         guarded += [
             ".github/workflows/update-moyu-startup.yml",
             "Surge/Module/.generator/build.py",
+            "Surge/Module/.generator/safety.py",
             "Surge/Module/runtime/body-rewrite.js",
         ]
     elif "Surge/Module/Adblock4limbo.sgmodule" in paths:

@@ -21,6 +21,7 @@ class PublicationGuardTests(unittest.TestCase):
             },
             "Surge/Module/StartUpAds.sgmodule": {
                 "Surge/Module/.generator/build.py",
+                "Surge/Module/.generator/safety.py",
                 "Surge/Module/runtime/body-rewrite.js",
                 ".github/workflows/update-moyu-startup.yml",
             },
