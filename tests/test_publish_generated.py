@@ -27,6 +27,7 @@ class PublicationGuardTests(unittest.TestCase):
             },
             "Surge/Module/Adblock4limbo.sgmodule": {
                 "Surge/Module/.generator/update-adblock4limbo.py",
+                "Surge/Module/.generator/adblock_safety.py",
                 ".github/workflows/update-adblock4limbo.yml",
             },
             "data/reports/china_download_manifest.json": {

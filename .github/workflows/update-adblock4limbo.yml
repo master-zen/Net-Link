@@ -8,6 +8,8 @@ on:
     paths:
       - ".github/workflows/update-adblock4limbo.yml"
       - "Surge/Module/.generator/update-adblock4limbo.py"
+      - "Surge/Module/.generator/adblock_safety.py"
+      - "tests/test_adblock_safety.py"
       - "scripts/publish_generated.py"
       - "scripts/validate_generated.py"
       - "tests/test_publish_generated.py"
@@ -35,6 +37,9 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+
+      - name: Safety regression tests
+        run: python3 -m unittest discover -s tests -p "test_adblock_safety.py" -v
 
       - name: Generate
         run: python3 Surge/Module/.generator/update-adblock4limbo.py

@@ -407,8 +407,19 @@ def validate_profile(profile):
             or "floating-warning-box" in user
             or 'douban: "*{display:none!important}"' in user
             or "case 'douban':" in user
+            or "header-replace Content-Security-Policy" in module
+            or "newBody = newBody.replace(WINDOW_OPEN_REGEX" in loader
+            or "domainCSS_Injection =" in loader
+            or "delete newHeaders" in loader
         ):
             raise RuntimeError("Unexpected Adblock4limbo dependency")
+        import sys
+        sys.path.insert(0, str(Path("Surge/Module/.generator").resolve()))
+        from adblock_safety import harden_module
+        if harden_module(module) != module:
+            raise RuntimeError("Adblock4limbo includes unsafe broad interception")
+        if 'test: "*, div,img {display: none !important}"' in user:
+            raise RuntimeError("Adblock4limbo includes an unsafe universal CSS selector")
 
     for name, count in counts.items():
         print(f"{name}: {count}")

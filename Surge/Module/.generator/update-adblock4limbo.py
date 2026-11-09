@@ -6,6 +6,8 @@ import time
 from pathlib import Path
 from urllib.request import Request, urlopen
 
+from adblock_safety import harden_loader, harden_module, harden_user
+
 ROOT = Path(__file__).resolve().parents[1]
 BASE = "https://raw.githubusercontent.com/limbopro/Adblock4limbo/main/"
 SOURCES = {
@@ -114,7 +116,7 @@ def transform_loader(source, js_url):
             raise RuntimeError(f"Unwanted dependency remains: {name}")
     if "function main()" not in source or "main();" not in source:
         raise RuntimeError("Missing main response processor")
-    return source
+    return harden_loader(source)
 
 
 def transform_user(source):
@@ -144,7 +146,7 @@ def transform_user(source):
     for phrase in ("floating-warning-box", "showFloatingWarning()", "function daohang_build()"):
         if phrase in source:
             raise RuntimeError(f"Navigation component remains: {phrase}")
-    return source
+    return harden_user(source)
 
 
 def transform_module(source, loader_url):
@@ -167,7 +169,7 @@ def transform_module(source, loader_url):
     paths = re.findall(r"script-path=([^,\s]+)", source)
     if len(paths) != count or set(paths) != {loader_url}:
         raise RuntimeError("Unexpected external script reference")
-    return source
+    return harden_module(source)
 
 
 def save_if_changed(path, data):
@@ -201,14 +203,16 @@ def main():
     module = transform_module(originals["module"], raw_url)
     loader = transform_loader(originals["loader"], cdn_url)
     user = transform_user(originals["user"])
-    if originals["module"].count(" - reject") != module.count(" - reject"):
-        raise RuntimeError("Reject rules changed")
+    if module.count(" - reject") > originals["module"].count(" - reject"):
+        raise RuntimeError("Additional rewrite rules appeared")
+    if harden_module(module) != module:
+        raise RuntimeError("Adblock4limbo safety policy was not applied")
     if originals["module"].count("type=http-response") != module.count("type=http-response"):
         raise RuntimeError("Response script count changed")
-    if originals["module"].split("[MITM]", 1)[1] != module.split("[MITM]", 1)[1]:
-        raise RuntimeError("MITM rules changed")
-    if "var adsMax" not in user or "domainCSS_URL" not in loader:
+    if "var adsMax" not in user or "FINAL_TITLE_INJECTION" not in loader:
         raise RuntimeError("Core ad filtering functionality missing")
+    if "domainCSS_Injection =" in loader or "newHeaders" in loader:
+        raise RuntimeError("Unsafe HTML response modification remains")
     runtime = ROOT / "runtime"
     runtime.mkdir(parents=True, exist_ok=True)
     save_if_changed(runtime / "Adblock4limbo.js", loader)

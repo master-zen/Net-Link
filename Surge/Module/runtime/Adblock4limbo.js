@@ -30,7 +30,6 @@
  * ... (其他注释不变) ...
  */
 
-//const CSS_URL = "https://limbopro.com/CSS/Adblock4limbo.user.css";
 const JS_URL = "https://cdn.jsdelivr.net/gh/master-zen/Net-Link@main/Surge/Module/runtime/Adblock4limbo.user.js";
 
 // 基础注入内容
@@ -108,11 +107,11 @@ function getRootDomain(hostname) {
 function main() {
     try {
         const url = $request.url;
-        const headers = $response.headers;
+        const headers = $response.headers || {};
         let body = $response.body;
 
         // 1. 必须是 text/html 才处理
-        const contentType = headers['Content-Type'] || headers['content-type'] || '';
+        const contentType = String(headers['Content-Type'] || headers['content-type'] || '').toLowerCase();
         if (!contentType.includes('text/html')) {
             $done({});
             return;
@@ -147,23 +146,8 @@ function main() {
 
         // 3. 使用 getRootDomain 函数获取主域名
         const domain = getRootDomain(hostname);
-        let domainCSS_Injection = '';
-        let domainCSS_Injection_byHand = '';
-
-        // 检查域名是否有效（包含 .）
-        if (domain && domain.includes('.')) {
-            const domainCSS_URL = `https://limbopro.com/CSS/${domain}.css`;
-            domainCSS_Injection = `<link rel="stylesheet" href="${domainCSS_URL}" type="text/css" />\n`;
-            const domainCSS_URLbyHand = `https://limbopro.com/CSS/limbopro.${domain}.css`;
-            domainCSS_Injection_byHand = `<link rel="stylesheet" href="${domainCSS_URLbyHand}" type="text/css" />\n`;
-            console.log(`[Adblock4limbo] Injecting domain-specific CSS: ${domainCSS_URL}`);
-        } else if (hostname) {
-            console.log(`[Adblock4limbo] Ignored non-standard hostname or IP: ${hostname}`);
-        }
-
-        // 动态组合最终的注入内容
-        const FINAL_TITLE_INJECTION = `<head>\n${TITLE_INJECTION_BASE}${domainCSS_Injection}${domainCSS_Injection_byHand}`;
-        const FINAL_BODY_INJECTION = `\n${domainCSS_Injection}${domainCSS_Injection_byHand}${BODY_INJECTION_BASE}`;
+        const FINAL_TITLE_INJECTION = TITLE_INJECTION_BASE;
+        const FINAL_BODY_INJECTION = BODY_INJECTION_BASE;
         // --- 动态 CSS 注入逻辑结束 ---
 
 
@@ -176,11 +160,9 @@ function main() {
 
         if (isTargetSite) {
             if (TITLE_REGEX.test(newBody)) {
-                newBody = newBody.replace(TITLE_REGEX, FINAL_TITLE_INJECTION);
+                newBody = newBody.replace(TITLE_REGEX, head => head + '\n' + FINAL_TITLE_INJECTION);
                 modified = true;
             }
-            newBody = newBody.replace(WINDOW_OPEN_REGEX, 'function block_open(');
-            modified = true;
 
         } else if (isJavbus || isDMM || isMDSP) {
             if (BODY_REGEX.test(newBody)) {
@@ -200,7 +182,7 @@ function main() {
             if (TITLE_REGEX.test(newBody)) {
 
                 
-                newBody = newBody.replace(TITLE_REGEX, FINAL_TITLE_INJECTION);
+                newBody = newBody.replace(TITLE_REGEX, head => head + '\n' + FINAL_TITLE_INJECTION);
                 modified = true;
             }
         }
@@ -211,23 +193,7 @@ function main() {
             return;
         }
 
-        // 6. 修改响应头 (不变)
-        const newHeaders = { ...headers };
-        newHeaders["Cross-Origin-Embedder-Policy"] = "unsafe-none";
-        newHeaders["Cross-Origin-Opener-Policy"] = "unsafe-none";
-        newHeaders["Cross-Origin-Resource-Policy"] = "cross-origin";
-
-        delete newHeaders["Content-Security-Policy"];
-        delete newHeaders["content-security-policy"];
-        delete newHeaders["X-Frame-Options"];
-        delete newHeaders["x-frame-options"];
-        delete newHeaders["Referrer-Policy"];
-
-        // 7. 返回修改后的响应
-        $done({
-            headers: newHeaders,
-            body: newBody
-        });
+        $done({ body: newBody });
 
     } catch (error) {
         console.log(`Adblock4limbo Error: ${error.message}`);
