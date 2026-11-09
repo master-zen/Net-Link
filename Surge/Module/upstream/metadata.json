@@ -1,7 +1,7 @@
 {
   "source": "https://ddgksf2013.top/rewrite/StartUpAds.conf",
   "sha256": "9a3443554fe38d94c1b65d648c89f408c87574c674d4a7f4550c758d5d75639b",
-  "fetched_at_utc": "2026-11-09T06:01:47.119009+00:00",
+  "fetched_at_utc": "2026-11-09T06:06:18.385178+00:00",
   "active_rules": 425,
   "url_rewrite": 15,
   "map_local": 371,
@@ -21,9 +21,9 @@
     "reject": 15,
     "reject-dict": 3,
     "filter-host-suffix": 5,
-    "response-body-native": 8,
     "reject-img": 5,
     "script-response-header": 2,
+    "response-body-native": 8,
     "jsonjq-response-body": 2,
     "excluded-core-config-rewrite": 1,
     "excluded-mitm-host": 51
