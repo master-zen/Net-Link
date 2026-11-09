@@ -12,6 +12,8 @@ from pathlib import Path
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
+from safety import should_skip_rewrite, is_protected_mitm_host
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -235,7 +237,7 @@ def main() -> int:
                         f"第 {line_no} 行 hostname 非法：{host}"
                     )
 
-                if host in EXCLUDED_MITM_HOSTS:
+                if host in EXCLUDED_MITM_HOSTS or is_protected_mitm_host(host):
                     bump("excluded-mitm-host")
                     continue
 
@@ -355,6 +357,10 @@ def main() -> int:
 
         if "api.xiaoyi.com/v5/app/config" in normalized_pattern:
             bump("excluded-core-config-rewrite")
+            continue
+
+        if should_skip_rewrite(pattern):
+            bump("excluded-functional-rewrite")
             continue
 
         active_rules += 1
@@ -821,7 +827,7 @@ def main() -> int:
         if not matched:
             continue
         host, port = matched.groups()
-        if port != "443" and host not in EXCLUDED_MITM_HOSTS:
+        if port != "443" and host not in EXCLUDED_MITM_HOSTS and not is_protected_mitm_host(host):
             entry = f"{host}:{port}"
             if entry not in hosts:
                 hosts.append(entry)
