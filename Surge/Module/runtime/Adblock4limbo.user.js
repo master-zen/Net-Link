@@ -366,8 +366,7 @@ var adsMax = {
         baidu_index: "a[data-tclog] > img, #foot, .recordcode, .index-copyright, div[style*='overflow'], .rn-container, .s-loading-frame.bottom {display:none !important;}",
         ddrk2: "body,div.post-content,a {overflow-x:hidden !important;}", // ddys
         jable: "#footer1,#btimgid1,body {overflow-x:hidden;} div.site-content {overflow-x:hidden!important;} div.text-center > a[target=_blank], li[class*='nav-item'] >  a[target=_blank], div.asg-interstitial, div.asg-interstitial__mask, div[class*=\"exo\"], .exo-native-widget-outer-container, a[href*=\"trwl1\"], div[data-width=\"300\"], div.text-center.mb-e-30, div[data-width*=\"300\"], div[style*=\"300px\"], section[class*=\"justify\"], iframe[width=\"728\"][height=\"90\"], #site-content > div.container > section.pb-3.pb-e-lg-40.text-center, a[href*=\"\?banner=\"],[class*=\"root--\"],.badge,a[href=\"http\:\/\/uus52\.com/\"] {display :none !important; pointer-events: none !important;}", // Jable.tv
-        test: "*, div,img {display: none !important}",
-        tvn: "img[src*='gif'], iframe {display:none !important; pointer-events:none important;}",
+        tvn: "img[src*='gif'] {display:none !important; pointer-events:none important;}",
         comic_18: "div.div2_sticky2, p > a[target=_blank], div.modal-body > a[target=_blank], li[class*='pop'] > a[target=_blank], li[class*='top'] > a[target=_blank], .modal-backdrop,[data-height*='90'],div[data-height='250'][data-width='300'],a[href^='http']:not([href*='18comic.']) > img ,#adsbox ,a[target='_blank'][rel*='nofollow'] > img[src*='.gif'] ,#guide-modal ,iframe[width='300'][height='250'] ,.modal-body > ul.pop-list,.adsbyexoclick,div[data-group^='skyscraper_'],.bot-per,.top-a2db,a[href*='.taobao.com'],div[data-height='264'][data-width='956'],div[style^='position: fixed; top:'],.bot-per.visible-xs.visible-sm  {display: none !important; pointer-events: none !important;}", // 555电影网
         dy555: "div.module {z-index:1!important} div.popup.popup-tips.none.popupShow, a[target=\"_blank\"] img,.playtop.col-pd,a[href*=\"?channelCode=\"] > img[src*=\".com:\"],#adsbox,div.myui-panel.myui-panel-bg.clearfix.wapad {display:none !important}", // 555影院
         wnacg: "div > img[src*='gif'],div.sh,div > a[target='_blank'] > img {display:none !important}", // 绅士漫画
@@ -379,7 +378,7 @@ var adsMax = {
         javtiful: "button[data-front-share-toggle],front-home-premium-alert,a[href*='rdx.jav.si'],a[href*='r.trwl1.com'],.front-watch-text-feature,.front-feature-placement-close {display:none !important; pointer-events: none !important;}",
         bigirl: 'div#container + div, h4.adblock_title,div.adblock_subtitle,[class^=\'adblock\'],div[class^=\'ad_\'], .toppage_av {display:none !important; pointer-events: none !important;}', // https://bi-girl.net/
         marketcap: '.ad-tr {display:none !important; pointer-events: none !important;}', // https://8marketcap.com/
-        opgg: ".AdSense,  div[data-ad], tr.ad, #banner-container, section[class*='md:hidden'] {display:none !important; pointer-events: none !important;}",
+        opgg: ".AdSense,  div[data-ad], tr.ad, #banner-container {display:none !important; pointer-events: none !important;}",
         btc760: ".ad_img,.ad_img,#ad_headerbanner {display:none !important; pointer-events: none !important;}", // btc760
         dnfcloudfront: "div.van-swipe__track,div.swiper-wrapper,div.van-count-down,div[class*=mine-ad],div.van-overlay, div[role=dialog], iframe {display:none !important; pointer-events:none important;}", // cloudfront mdsp
         porny91: "div.row  a[target*='_blank'],[href*='vfrbu1044'], div.coment-bottom, header + #main:nth-child(n+4) .container-fluid.mb-3.p-0,header + #main:nth-child(n+4) > div[id^=\"po-s\"]:not(#po-shd),.row > div.colVideoList:has(> div.video-elem > a[target=\"_blank\"]),.jsv-g1,.fixed-bottom.jsv.jsv-g1 {display:none !important;pointer-events:none important;}", // 91porny
@@ -388,10 +387,10 @@ var adsMax = {
         zhihuAds: "div.css-1izy64v,[class='Card AppBanner'],.Footer,.Banner-link,div.Pc-word {display:none !important; pointer-events: none !important;}",
         pornhubx: ".clearfix.watchpageAd,ins.adsbytrafficjunky,ins.adsbytrafficjunky~.tjLinksWrapper{display:none!important}  div.y20lkk9odsf6bxapqkvaa.clearfix > ins.adsbytrafficjunky[data-spot-id=\"981\"][data-site-id=\"23\"][data-height=\"99px\"][data-width=\"305px\"],.topAdContainter, a[href*='ads'], div.adContainer.clearfix.noBottom, .adContainer.clearfix.middleVideoAdContainer, div.adContainer.clearfix.noBottom, a[href*='fuck'][target='_blank'], [data-href][target='_blank'],iframe, a.ad#link, #header.hasAdAlert {grid-template-rows:60px 40px 0px !important} div.hd.clear, div > img[data-title][srcset], #js-networkBar,div#abAlert, .adsbytrafficjunky, #pb_template, .sponsor-text, #adsbox, .abAlertShown, .abAlertInner, #main-container > .abovePlayer, [rel*='noopener nofollow'],a[href^=\"http://ads.trafficjunky.net/\"], .topAdContainter,.adsbytrafficjunky,.ad-link  {height:0px !important; display:none !important; pointer-events:none;}", // pornhub
         t66y: "div.content-box > div.static-container-4,div.tips[style*='auto'],div[class*=ftad-item] {height:0px !important; display:none !important; pointer-events:none;}", // pornhub
-        xchina: "a[target='_blank']:not([href*='limbopro' i]):not([href*='.m3u8' i]):not(.echo *):not(:has(+ .echo)),a[href*='pre'],div.static-container-5,div.static-container-8,div.block-overlay,.push-slider,.push-top-container,.push-bottom {display:none !important; pointer-events: none !important;}",
+        xchina: "div.static-container-5, div.static-container-8 {display:none !important; pointer-events:none !important;}",
         instagram: "div._aagw {display:none !important}", // 网页版Instagram不能复制图片的问题
         ttsp: "div#playad1,a[href*=\"8616.tech\"],.play_list_adbox,#adsbox,.ads_all > .ads_w,.ads_box,.right_ads {display:none !important}",
-        tz659: "figure, img[src*='mt2.jpg'],img[src*='pf.gif'],[src*='.gif'], iframe {display:none !important}",
+        tz659: "img[src*='mt2.jpg'],img[src*='pf.gif'],[src*='.gif'] {display:none !important}",
         anime: "div[id*=ad] {display:none !important}",
         yhdmp: ".yrtjbmnk_b, .hvitsutz_b {display :none !important; pointer-events: none !important;}", // 樱花动漫
         //nivod: "[style='text-align: center; margin-top: 30px;'], iframe, img[src*=gif], .video-ad, .nav-ads, #adDiv, .v-ad, .ad-text, #video-container + ul[style^=\"width:\"] > li > img {display: none !important; pointer-events:none important;}", // 泥巴影视视频左上角水印贴片 nivod
@@ -405,7 +404,7 @@ var adsMax = {
         hltv: "div.close-container,.presented-by,.mid-container + div[id]:has(> a[href] > img[alt][src]),.kgN8P9bvyb2EqDJR,.mid-container {display:none !important; pointer-events: none !important;}",
         cnys: "div#player_pause, e#time_ad, div.vod-gg, img[src*='b02.gif'], #adsbox, #ADtip, .ec-ad {display:none !important; pointer-events: none !important;}",
         google: "#tvcap, #tads, div.XDZKBc,.jnyxRd.TpRPV {display:none !important}",
-        javday: "p[style], p > a {display:none !important; pointer-events: none !important;} ",
+        javday: "",
         xvideos: ".remove-ads-link, .remove-ads, .adsbyexoclick, #ad-header-mobile, .video-ad, #video-right, #ad-footer {display:none !important; pointer-events: none !important;}", // xvideos
         javbus: "div.row iframe,.ad-item,.ad-box {display:none !important}",
         javdb: "nav.app-desktop-banner,div.moj-content {display:none !important}",
@@ -417,8 +416,8 @@ var adsMax = {
         netflav: "iframe[src*=xlv],.ads_video_overlay_mobile, div.widget-container, a[href*=\"register\"][target=\"_blank\"],div.ads_video_close_button,div.ads_video_overlay_mobile,div.footer_root,div.ads_head_banner_container {display:none !important;}",
         supjav: '.video-wrap > div.right,#pop, .div_pop, #pop.div_pop, .movv-ad, #adsbox, div.right, div.movv-ad.ad_3_3, div.movv-ad.ad_3_2, .movv-ad, .adsbyexoclick, #adsbox, .adsbyexoclick  {display:none !important; pointer-events: none !important;}',
         hitomi: ".container > div[class$=\"content\"] > div[class]:has(> script) {display:none !important; pointer-events: none !important;}",
-        hanime1: ".comics-banner-ads,span.scaled-exoclick, iframe, #close-mobile-ad-btn, #bottom-ads, div[style*=\"width: 310px; height: 282px;\"] {display:none !important; pointer-events: none !important;}",
-        javlibrary: ".menutext.whenmobile {top:90px;z-index:114;} a[href*='redirect'] {display:none!important} #toplogo {height:64px} .videothumblist .videos {min-width:auto;}.titlebox.whenmobile{width:250px} #topmenu.whenmobile {height:70px;} .searchbar.whenmobile{right:2px}  div.videothumblist.whenmobile {overflow:scroll!important;overflow-x:hidden!important;} div#rightcolumn.whenmobile {width:300px} #rightcolumn {right:90px} #leftmenu {width:90px; position:fixed;} div#content {width:auto !important} body.main { min-width: auto; width:auto !important} iframe,img[src*='gif'] , td.advsearch {display:none!important;pointer-events: none !important;}",
+        hanime1: ".comics-banner-ads,span.scaled-exoclick, #close-mobile-ad-btn, #bottom-ads, div[style*=\"width: 310px; height: 282px;\"] {display:none !important; pointer-events: none !important;}",
+        javlibrary: ".menutext.whenmobile {top:90px;z-index:114;} a[href*='redirect'] {display:none!important} #toplogo {height:64px} .videothumblist .videos {min-width:auto;}.titlebox.whenmobile{width:250px} #topmenu.whenmobile {height:70px;} .searchbar.whenmobile{right:2px}  div.videothumblist.whenmobile {overflow:scroll!important;overflow-x:hidden!important;} div#rightcolumn.whenmobile {width:300px} #rightcolumn {right:90px} #leftmenu {width:90px; position:fixed;} div#content {width:auto !important} body.main { min-width: auto; width:auto !important} img[src*='gif'] , td.advsearch {display:none!important;pointer-events: none !important;}",
         douban: "",
         olevod: "#adsbox, .ads-bg {display:none!important}",
         ntdm9: "#adsbox, .yammohxz_b {display:none !important; pointer-events: none !important;}",
@@ -426,8 +425,8 @@ var adsMax = {
         jav_common: ".jw-wrapper > div[style=\"opacity: 0; visibility: hidden; overflow: hidden; display: block; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%;\"],div[style^=\"position:fixed;inset:0px;z-index:2147483647;background:black;opacity:0.01\"] {height:0px; display:none !important; pointer-events: none !important;}",
         huaren_live: "[src*='0d463e36ddf0630.jpg'],.ad-tso,.ad-s,#dm-opacity,.ad-txt, .pause-ad, .ad-link:not(.adsbox), .action-ad, img[src*='ads.jpg'] {display:none !important; pointer-events: none !important;}",
         rouman: 'iframe[src^="//tsyndicate.com/"],ins,a[href^="/api/jump/"] > img[src*=".xyz/m/"] {display:none !important; pointer-events: none !important;}',
-        rouvideo: "div[style*='pointer-events: none'],.flex.items-center.justify-center.my-2,ins > iframe,a.vast-blocker,.p-2.rounded.text-center,.text-xl.mb-1,[class*='hover:underline'],[style*='overflow: hidden'],[data-advadstrackid] {display:none !important; pointer-events: none !important;}",
-        diyibanzhu: "img, #adsbox, .slide-ad {height:0px; display:none !important; pointer-events: none !important;}",
+        rouvideo: "div[style*='pointer-events: none'],.flex.items-center.justify-center.my-2,ins > iframe,a.vast-blocker,.p-2.rounded.text-center,.text-xl.mb-1,[class*='hover:underline'],[data-advadstrackid] {display:none !important; pointer-events: none !important;}",
+        diyibanzhu: "#adsbox, .slide-ad {height:0px; display:none !important; pointer-events: none !important;}",
         alicesw: "a[target='_zblank'] {height:0px; display:none !important; pointer-events: none !important;}",
         novel543: "iframe, div#adfoot, div.px-3.py-3, #adfoot, .gadBlock {height:0px; display:none !important; pointer-events: none !important;}"
         //button_common: "padding: 6px 6px 6px 6px; display: inline-block; color: white;z-index: 114154 !important; border-right: 6px solid #38a3fd; border-left: #292f33 !important; border-top: #292f33 !important; border-bottom: #292f33 !important; background: #2563eb; border-radius: 0px 0px 0px 0px; font-weight: 800 !important; text-align: right !important;" // 按钮/输入框通用样式

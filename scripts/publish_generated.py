@@ -76,6 +76,7 @@ def guarded_inputs(paths):
         guarded += [
             ".github/workflows/update-adblock4limbo.yml",
             "Surge/Module/.generator/update-adblock4limbo.py",
+            "Surge/Module/.generator/adblock_safety.py",
         ]
     return guarded
 
