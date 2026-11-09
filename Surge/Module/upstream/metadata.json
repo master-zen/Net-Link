@@ -1,8 +1,8 @@
 {
   "source": "https://ddgksf2013.top/rewrite/StartUpAds.conf",
   "sha256": "9a3443554fe38d94c1b65d648c89f408c87574c674d4a7f4550c758d5d75639b",
-  "fetched_at_utc": "2026-11-08T23:47:42.492702+00:00",
-  "active_rules": 444,
+  "fetched_at_utc": "2026-11-09T06:01:47.119009+00:00",
+  "active_rules": 443,
   "url_rewrite": 15,
   "map_local": 386,
   "body_rewrite": 11,
@@ -11,22 +11,22 @@
   "mitm_hosts": 409,
   "counts": {
     "version": 1,
-    "reject-200": 381,
+    "reject-200": 380,
     "excluded-sensitive-rewrite": 17,
     "script-response-body": 18,
     "excluded-unscoped-rewrite": 4,
     "excluded-routing": 1,
-    "response-body-script": 5,
+    "excluded-functional-rewrite": 37,
+    "response-body-script": 4,
     "reject": 15,
     "reject-dict": 3,
     "filter-host-suffix": 5,
-    "response-body-native": 8,
+    "response-body-native": 9,
     "reject-img": 5,
     "script-response-header": 2,
     "jsonjq-response-body": 2,
     "excluded-core-config-rewrite": 1,
-    "excluded-mitm-host": 35,
-    "excluded-functional-rewrite": 36
+    "excluded-mitm-host": 36
   },
   "unsupported_rules": 0
 }
