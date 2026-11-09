@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-11-08T23:25:47Z",
-  "epoch_seconds": 1794180349.2719448,
-  "github_run_id": "42535109251",
+  "fetched_at_utc": "2026-11-09T06:01:42Z",
+  "epoch_seconds": 1794204103.569665,
+  "github_run_id": "42570582308",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 38092299,
+  "source_bytes_total": 38022125,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18281959,
-      "sha256": "a314498c24a79cd23b30f0341b43d1968a8b3ef0f4ae683786474354152e5b99"
+      "sha256": "7520c54d7ce7d3f99472e2d6d8fbf01a86b9bb2b119e96397c6fdb00904c519b"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4666617,
-      "sha256": "8fda3fdc4d84c7e4bd007eba72cecc8b6cee3b69fa1dc38e9a5773257bc2af08"
+      "size_bytes": 4596443,
+      "sha256": "7f3694e628209d9d38427ac23a0d94d9840153da5323206e105be2b3af08a41c"
     },
     {
       "bucket": "block",
