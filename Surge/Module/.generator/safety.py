@@ -3,7 +3,6 @@ import re
 
 PROTECTED_REWRITE_MARKERS = (
     "napi.ithome.com/",
-    "api.douban.com/",
     "learn.chaoxing.com/apis/service/appConfig",
     "api.dangdang.com/mapi",
     "mapi.dangdang.com/index.php?action=init",
@@ -45,9 +44,12 @@ PROTECTED_REWRITE_MARKERS = (
     "new-app-api.ylyk.com/v1/user/myinfo/adviser",
     "api.shenyin.name/stay-fork/browse/featured",
 )
+DOUBAN_AD_REWRITES = frozenset({
+    r"^https?://api.douban.com/v2/app_ads/splash",
+    r"^https?://api.douban.com/b.*/common_ads\?.*",
+})
 PROTECTED_MITM_HOSTS = frozenset([
     "napi.ithome.com",
-    "api.douban.com",
     "vt1.doubanio.com",
     "learn.chaoxing.com",
     "api.dangdang.com",
@@ -96,6 +98,8 @@ def normalize_pattern(pattern: str) -> str:
 
 def should_skip_rewrite(pattern: str) -> bool:
     value = normalize_pattern(pattern)
+    if "api.douban.com/" in value:
+        return value not in DOUBAN_AD_REWRITES
     if any(fragment in value for fragment in PROTECTED_REWRITE_MARKERS):
         return True
     if CORE_OPERATION_PATTERN.search(value):

@@ -27,3 +27,7 @@ The HTML loader only modifies HTML response bodies. It preserves original respon
 
 \`tests/test_adblock_safety.py\` and the \`adblock\` output validator run in CI, and upstream changes that break required transformation anchors stop publication.
 
+## Douban split protection
+
+The Moyu generator retains exactly the two upstream Douban ad endpoints (`/v2/app_ads/splash` and `/b.*/common_ads`) and the `api.douban.com` MITM host, while excluding any new Douban business API rewrites by default. The independent `AdblockSet.list` builder removes rules blocking `erebor.douban.com`, which was explicitly observed in Surge logs breaking official movie-trailer playback. These protections are covered by regression tests.
+
