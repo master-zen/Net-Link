@@ -26,6 +26,17 @@ class MoyuFalsePositiveTests(unittest.TestCase):
             with self.subTest(pattern=pattern):
                 self.assertTrue(should_skip_rewrite(pattern))
 
+    def test_additional_business_paths_are_protected(self):
+        for pattern in (
+            r"^https?:\/\/apps\.api\.ke\.com\/config\/config\/(bootpage|getactivityconfig)",
+            r"^https?:\/\/dispatcher\.camera360\.com\/api\/v1\/list$",
+            r"^https?:\/\/home\.mi\.com\/cgi-op\/api\/v\d\/recommendation",
+            r"^https?:\/\/.*zongheng\.com\/iosapi\/system\/startup",
+            r"^https?:\/\/.*flyert.*\/api\/mobile\/index\.php\?module=advis",
+        ):
+            with self.subTest(pattern=pattern):
+                self.assertTrue(should_skip_rewrite(pattern))
+
     def test_ad_specific_apis_still_work(self):
         for pattern in (
             r"^https?:\/\/ad\.mcloud\.139\.com\/advertapi",
