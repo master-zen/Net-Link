@@ -28,7 +28,22 @@ PROTECTED_REWRITE_MARKERS = (
     "rengine-platform.llsapp.com/auth/api/remoteResource/",
     "a.qiumibao.com/activities/config.php",
     "a.qiumibao.com/ios/config/",
-    "meituan.net/movie/"
+    "meituan.net/movie/",
+    "apps.api.ke.com/config/config/",
+    "m.meitun.com/newapi/router/topic/hometptf/feedRecommend",
+    "flyert",
+    "api.smart.jd.com/c/service/getLoadingLinks",
+    "dispatcher.camera360.com/api/v1/list",
+    "home.mi.com/cgi-op/api/",
+    "api.bevol.com/appmain/app/home/launch",
+    "tipatipa.xyz/announcements",
+    "iphone.ac.qq.com/",
+    "api.xueqiu.com/snowpard/launch_strategy/",
+    "api2.yaduo.com/",
+    "zongheng.com/iosapi/system/startup",
+    "mrobot.pconline.com.cn/s-900/onlineinfo/cms/launch",
+    "new-app-api.ylyk.com/v1/user/myinfo/adviser",
+    "api.shenyin.name/stay-fork/browse/featured",
 )
 PROTECTED_MITM_HOSTS = frozenset([
     "napi.ithome.com",
@@ -50,7 +65,23 @@ PROTECTED_MITM_HOSTS = frozenset([
     "api.coolapk.com",
     "notify.baicizhan.com",
     "rengine-platform.llsapp.com",
-    "a.qiumibao.com"
+    "a.qiumibao.com",
+    "apps.api.ke.com",
+    "m.meitun.com",
+    "*.flyert.*",
+    "www.flyert.com",
+    "api.smart.jd.com",
+    "dispatcher.camera360.com",
+    "home.mi.com",
+    "api.bevol.com",
+    "*.tipatipa.xyz",
+    "iphone.ac.qq.com",
+    "api.xueqiu.com",
+    "api2.yaduo.com",
+    "*.zongheng.com",
+    "mrobot.pconline.com.cn",
+    "new-app-api.ylyk.com",
+    "api.shenyin.name",
 ])
 
 CORE_OPERATION_PATTERN = re.compile(
