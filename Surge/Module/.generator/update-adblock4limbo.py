@@ -138,6 +138,9 @@ def transform_user(source):
         r"^/\* 监控用户尝试唤起导航页 \*/.*?(?=^window\.attemptFixScrolling =)",
         "",
     )
+    source = source.replace('douban: "*{display:none!important}"', 'douban: ""')
+    source = replace_exact(source, r"^\s*case 'douban':.*?(?=^\s*case 'zhihu':)", "", 1)
+    source = source.replace("        'douban',\n", "")
     for phrase in ("floating-warning-box", "showFloatingWarning()", "function daohang_build()"):
         if phrase in source:
             raise RuntimeError(f"Navigation component remains: {phrase}")

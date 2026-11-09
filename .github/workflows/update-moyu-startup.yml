@@ -10,6 +10,8 @@ on:
       - "scripts/publish_generated.py"
       - "scripts/validate_generated.py"
       - "Surge/Module/.generator/build.py"
+      - "Surge/Module/.generator/safety.py"
+      - "tests/test_moyu_safety.py"
       - "Surge/Module/runtime/body-rewrite.js"
       - "tests/test_publish_generated.py"
 
@@ -38,6 +40,9 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+
+      - name: Test false-positive guards
+        run: python3 -m unittest discover -s tests -p "test_moyu_safety.py"
 
       - name: Build Moyu StartUpAds Surge Module
         env:

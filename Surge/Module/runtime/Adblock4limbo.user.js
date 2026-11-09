@@ -419,7 +419,7 @@ var adsMax = {
         hitomi: ".container > div[class$=\"content\"] > div[class]:has(> script) {display:none !important; pointer-events: none !important;}",
         hanime1: ".comics-banner-ads,span.scaled-exoclick, iframe, #close-mobile-ad-btn, #bottom-ads, div[style*=\"width: 310px; height: 282px;\"] {display:none !important; pointer-events: none !important;}",
         javlibrary: ".menutext.whenmobile {top:90px;z-index:114;} a[href*='redirect'] {display:none!important} #toplogo {height:64px} .videothumblist .videos {min-width:auto;}.titlebox.whenmobile{width:250px} #topmenu.whenmobile {height:70px;} .searchbar.whenmobile{right:2px}  div.videothumblist.whenmobile {overflow:scroll!important;overflow-x:hidden!important;} div#rightcolumn.whenmobile {width:300px} #rightcolumn {right:90px} #leftmenu {width:90px; position:fixed;} div#content {width:auto !important} body.main { min-width: auto; width:auto !important} iframe,img[src*='gif'] , td.advsearch {display:none!important;pointer-events: none !important;}",
-        douban: "*{display:none!important}",
+        douban: "",
         olevod: "#adsbox, .ads-bg {display:none!important}",
         ntdm9: "#adsbox, .yammohxz_b {display:none !important; pointer-events: none !important;}",
         njav: "div[style=\"position: absolute; inset: 0px; z-index: 999; display: block;\"],.ad-floating,[src*='.gif'],iframe[width='300px'] {display:none!important}",
@@ -535,7 +535,6 @@ function values() {
         "emturbovid.com",
         "turbovidhls.com",
         'fc2stream',
-        'douban',
         'twitter',
         'olevod',
         'njav.com',
@@ -1788,12 +1787,6 @@ function adsDomain_switch(x) { // 匹配参数值 执行相应函数
                 }
                 onPageLoad();
             });
-            break;
-        case 'douban':
-            if (document.querySelectorAll('a.Ims1t')[0]) {
-                alert("首页...")
-                document.querySelectorAll('a.Ims1t').forEach((x) => { x.href = 'https://movie.douban.com/top250' })
-            }
             break;
         case 'zhihu':
             var zhihu_id = "zhihux"

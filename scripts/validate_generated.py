@@ -347,6 +347,11 @@ def validate_profile(profile):
             raise RuntimeError("Moyu has unrelated sensitive rewrites")
 
         import re
+        import sys
+        sys.path.insert(0, str(Path("Surge/Module/.generator").resolve()))
+        from safety import should_skip_rewrite, is_protected_mitm_host
+        if any(is_protected_mitm_host(host) for host in hosts):
+            raise RuntimeError("Moyu MITM includes a protected functional host")
         for name in ("[URL Rewrite]", "[Map Local]", "[Body Rewrite]", "[Script]"):
             for line in sections.get(name, []):
                 if name == "[Script]":
@@ -357,6 +362,8 @@ def validate_profile(profile):
                 else:
                     fields = line.split()
                     pattern = fields[1] if name == "[Body Rewrite]" else fields[0]
+                if should_skip_rewrite(pattern):
+                    raise RuntimeError(f"Moyu contains an unsafe functional rewrite: {pattern}")
                 normalized = pattern.replace(r"\/", "/").replace(r"\.", ".").replace(r"\:", ":")
                 normalized = normalized.replace("https?://", "https://")
                 matched = re.match(r"^\^?https?://([A-Za-z0-9.-]+):(\d{2,5})/", normalized)
@@ -398,6 +405,8 @@ def validate_profile(profile):
             or "elementBlocker.user.js" in loader
             or "function daohang_build()" in user
             or "floating-warning-box" in user
+            or 'douban: "*{display:none!important}"' in user
+            or "case 'douban':" in user
         ):
             raise RuntimeError("Unexpected Adblock4limbo dependency")
 
