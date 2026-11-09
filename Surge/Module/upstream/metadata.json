@@ -25,9 +25,8 @@
     "script-response-header": 2,
     "jsonjq-response-body": 2,
     "excluded-core-config-rewrite": 1,
-    "excluded-mitm-host": 16,
-    "excluded-functional-rewrite": 36,
-    "excluded-functional-mitm": 19
+    "excluded-mitm-host": 35,
+    "excluded-functional-rewrite": 36
   },
   "unsupported_rules": 0
 }
