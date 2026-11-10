@@ -1000,6 +1000,7 @@ udp://globalwave.no-ip.org:6969/announce
 udp://glotorrents.pw:6969/announce
 udp://h85-235-17-132.cust.a3fiber.se:6969/announce
 udp://hbsy.zhuqiy.eu.org:6666/announce
+udp://hidden.torrentonline.cc:42069/announce
 udp://hificode.in:6969/announce
 udp://home.kray.pw:6969/announce
 udp://home.yxgz.club:6969/announce
@@ -1281,6 +1282,7 @@ udp://tracker.6.babico.name.tr:6969/announce
 udp://tracker.acgnx.se/announce
 udp://tracker.alaskantf.com:6969/announce
 udp://tracker.aletorrenty.pl:2710/announce
+udp://tracker.alt.cx:6969/announce
 udp://tracker.altrosky.nl:6969/announce
 udp://tracker.anima.nz:6969/announce
 udp://tracker.arcbox.cc:6969/announce
@@ -3352,7 +3354,6 @@ https://tr.aag.moe/announce
 https://tr.abiir.top/announce
 https://tr.abiir.top:443/announce
 https://tr.abir.ga/announce
-https://tr.abir.ga:443/announce
 https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
@@ -3388,7 +3389,6 @@ https://tracker.aletorrenty.pl:2710/announce
 https://tracker.amelia.fun/announce
 https://tracker.anibt.net/announce
 https://tracker.augrains.com/announce
-https://tracker.augrains.com:443/announce
 https://tracker.babico.name.tr/announce
 https://tracker.baka.ink/announce
 https://tracker.bangumi.zip/announce
