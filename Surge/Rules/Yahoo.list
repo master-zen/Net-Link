@@ -14,13 +14,22 @@ DOMAIN-SUFFIX,yahoo.com.tw
 DOMAIN-SUFFIX,yahoo.co.in
 DOMAIN-SUFFIX,yahoo.com.br
 DOMAIN-SUFFIX,yahoo.com.mx
-DOMAIN-SUFFIX,mail.yahoo.com
-DOMAIN-SUFFIX,mail.g03.yahoodns.net
 DOMAIN-SUFFIX,ymail.com
-DOMAIN-SUFFIX,mail.aol.com
-DOMAIN-SUFFIX,imap.aol.com
-DOMAIN-SUFFIX,mta5.am0.yahoodns.net
-DOMAIN-SUFFIX,mail.gm0.yahoodns.net
+DOMAIN-SUFFIX,myyahoo.com
+DOMAIN-SUFFIX,yahoo.net
+DOMAIN-SUFFIX,yahooapis.com
+DOMAIN-SUFFIX,yahoodns.net
+DOMAIN-SUFFIX,yimg.com
+DOMAIN-SUFFIX,yahoo.jp
+DOMAIN-SUFFIX,yahooapis.jp
+DOMAIN-SUFFIX,yimg.jp
+DOMAIN-SUFFIX,storage-yahoo.jp
+DOMAIN-SUFFIX,aol.com
+DOMAIN-SUFFIX,aol.ca
+DOMAIN-SUFFIX,aol.co.uk
+DOMAIN-SUFFIX,aolnews.com
+DOMAIN-SUFFIX,aolcdn.com
+DOMAIN,service.cmp.oath.com
 
 # Host IPs
 IP-CIDR,98.137.11.163/32,no-resolve
