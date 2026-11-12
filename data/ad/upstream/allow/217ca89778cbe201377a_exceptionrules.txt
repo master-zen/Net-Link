@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
-! Checksum: JGogk9p4UlrMX0Y84vfpuQ
-! Version: 202611111043
+! Checksum: uTc6mDt3CCUDf0wad+VxBQ
+! Version: 202611120142
 ! Title: Allow nonintrusive advertising
 ! Expires: 1 days
 ! Homepage: https://acceptableads.com/
@@ -3334,6 +3334,7 @@ christianitytoday.com#@#.has-ad
 softonic.com#@#.is-premium-hide
 newsnow.co.uk#@#.grid-column__container
 @@||mediavine.com^$third-party,domain=nookazon.com
+@@||vntsm.com/*/srv/g.txt
 ! hidden for compliance
 imore.com##div.inline-text
 nevermundane.com,uniqueinterests.com,travelapples.com,marspeta.com,geekyup.com,readyer.com,oldermillennials.com,simpleblitz.com##div[class^="entry-content"] .ad_placeholder

@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-11-11T10:55:11Z",
-  "epoch_seconds": 1794394514.6029494,
-  "github_run_id": "43007561338",
+  "fetched_at_utc": "2026-11-12T01:47:34Z",
+  "epoch_seconds": 1794448056.3185163,
+  "github_run_id": "43136883926",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 37979979,
+  "source_bytes_total": 38054667,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
-      "size_bytes": 18312302,
-      "sha256": "215b2614bc082dbaca72ccc4e792f28a5fdeb4a57cd44ef23c00a85d3a3e7968"
+      "size_bytes": 18312328,
+      "sha256": "50df2acb4ec0c80adb6cef5c74b32aa4d23495ef5a17dd2f427ac9e61de86a37"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4653101,
-      "sha256": "69737646b52a6f51d41d17926fcbb1ea829cde6d8079bcf68ba7d4eb76c62eef"
+      "size_bytes": 4658723,
+      "sha256": "2979ecfaf52da96c8235c3d7254a08b82908640284b97822dcb65370c02ff6d5"
     },
     {
       "bucket": "block",
@@ -89,8 +89,8 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/reject.txt",
       "path": "data/ad/upstream/block/5ddf2462fc173642d9c2_reject.txt",
-      "size_bytes": 6907501,
-      "sha256": "2a7c39aaea977542d47507d4835cce9ac1e9a804d6d713f7f703189c3621b055"
+      "size_bytes": 6976423,
+      "sha256": "41f675add273563b241dfb405efefc2840236960b9f40a9fd28ced0d77022f6d"
     },
     {
       "bucket": "block",
@@ -180,8 +180,8 @@
       "bucket": "exception",
       "url": "https://raw.githubusercontent.com/AdguardTeam/AdGuardSDNSFilter/master/Filters/exceptions.txt",
       "path": "data/ad/upstream/exception/03c43586aa99a3b221b7_exceptions.txt",
-      "size_bytes": 19101,
-      "sha256": "14eeb66fe6aa6cf37280f2e69a8b0ee4bf63b33b1e2fd66282846e8a43f92192"
+      "size_bytes": 19219,
+      "sha256": "908696a453e162ab839b53a97b3e38fb389ac2102e4a54046ec4b2f4287f664d"
     }
   ]
 }
