@@ -94,6 +94,25 @@ class RulePipelineRegressionTests(unittest.TestCase):
         self.assertEqual(removed, 1)
         self.assertEqual(remaining, ["DOMAIN,ads.other.com"])
 
+    def test_amap_restapi_protection_survives_upstream_refresh(self):
+        allow_path = Path(__file__).resolve().parents[1] / "data/allowlists/AdblockCriticalAllow.list"
+        raw = allow_path.read_text(encoding="utf-8")
+        blocks, allows, _ = ad.parse_rules_from_text(raw, "allow")
+        self.assertFalse(blocks)
+        self.assertIn("DOMAIN,restapi.amap.com", allows)
+        self.assertIn("IP-CIDR,203.119.169.174/32", allows)
+        sample_blocks = [
+            "DOMAIN,restapi.amap.com",
+            "DOMAIN-SUFFIX,restapi.amap.com",
+            "DOMAIN-SUFFIX,amap.com",
+            "IP-CIDR,203.119.169.174/32",
+            "IP-CIDR,203.119.169.0/24",
+            "DOMAIN,optimus-ads.amap.com",
+        ]
+        kept, removed = ad.subtract_allow_rules(sample_blocks, sorted(allows))
+        self.assertEqual(removed, 5)
+        self.assertEqual(kept, ["DOMAIN,optimus-ads.amap.com"])
+
     def test_ad_semantic_duplicate_elimination(self):
         cleaned = ad.remove_semantically_redundant_domains([
             "DOMAIN-SUFFIX,example.com",

@@ -21,3 +21,5 @@ DOMAIN,erebor.douban.com
 DOMAIN,l.yimg.com
 DOMAIN,fc.yahoo.com
 DOMAIN,service.cmp.oath.com
+DOMAIN,restapi.amap.com
+IP-CIDR,203.119.169.174/32

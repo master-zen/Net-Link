@@ -114,6 +114,13 @@ def validate_profile(profile):
         if len(clash_payload) != len(surge_rows) or clash_payload != surge_rows:
             raise RuntimeError(f"Surge and Clash rule CONTENT differs: {surge} / {clash}")
 
+    if profile == "ad":
+        from build_ad_sets import subtract_allow_rules
+        protected = ["DOMAIN,restapi.amap.com", "IP-CIDR,203.119.169.174/32"]
+        _, collisions = subtract_allow_rules(surge_rows, protected)
+        if collisions:
+            raise RuntimeError("Adblock output still blocks protected AMap API host or IP")
+
     if profile == "trackers":
         from build_trackers import (
             normalize_tracker_url, surge_rule_sort_key, tracker_url_sort_key,
