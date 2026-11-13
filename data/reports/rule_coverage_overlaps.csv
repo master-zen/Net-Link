@@ -3392,6 +3392,7 @@ ad_rule,china_matching_rules
 "DOMAIN-SUFFIX,fusion.qq.com","DOMAIN-SUFFIX,qq.com"
 "DOMAIN-SUFFIX,fw.qq.com","DOMAIN-SUFFIX,qq.com"
 "DOMAIN-SUFFIX,fxgate.baidu.com","DOMAIN-SUFFIX,baidu.com"
+"DOMAIN-SUFFIX,fxltsbl.com","DOMAIN-SUFFIX,fxltsbl.com"
 "DOMAIN-SUFFIX,fy6x8o.cn","DOMAIN-SUFFIX,cn"
 "DOMAIN-SUFFIX,fyal.e9emh.cn","DOMAIN-SUFFIX,cn"
 "DOMAIN-SUFFIX,fywuywf.cn","DOMAIN-SUFFIX,cn"
