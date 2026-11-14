@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
-! Checksum: 5NKLXJbXWqvC5RJob3Qu2Q
-! Version: 202611130902
+! Checksum: +57Ashj1SgYkq+w5l9TTNg
+! Version: 202611140032
 ! Title: Allow nonintrusive advertising
 ! Expires: 1 days
 ! Homepage: https://acceptableads.com/
@@ -3317,7 +3317,7 @@ diep.io#@##diep-io_300x250
 diep.io#@#.aa-unit
 psychcentral.com#@#aside:has([data-empty])
 ||services.fandom.com/aa-signal$addheader=request:x-acceptable-ads:1
-@@||cdn.adgtw.orangeads.fr/dist/adgw-light.js$domain=mappy.com
+@@||cdn.adgtw.orangeads.fr/dist/adgw-light.js^$script,domain=mappy.com|bonjour-ratp.fr
 orange.fr#@#[class^="media-advert-"]
 @@||code3.adtlgc.com/js/*.js$domain=oradesibiu.ro
 oradesibiu.ro#@#.newspack_global_ad
@@ -7293,7 +7293,7 @@ qlouisville.com,quanthockey.com,quizfactory.com,quizpin.com,quizwise.com,quotefa
 @@||tlx.3lift.com$domain=msn.com
 @@||cdn.intergi.com/hera^$domain=ebaumsworld.com
 @@||cdn.intergi.com/prebid/prebid.js$domain=ebaumsworld.com
-@@||cdn-adm.pbstck.com/kleanads-prebid/*.js$xmlhttprequest,script,domain=followfollow.com|mappy.com
+@@||cdn-adm.pbstck.com/kleanads-prebid/*.js$xmlhttprequest,script,domain=followfollow.com|mappy.com|bonjour-ratp.fr
 @@||accuweather.com/tags/shared/prebid/*.js$script,domain=accuweather.com
 @@||rv-assets.softonic.com/prebid/*.js$script,domain=softonic-ar.com|softonic-id.com|softonic-th.com|softonic.cn|softonic.com|softonic.com.br|softonic.com.tr|softonic.jp|softonic.kr|softonic.nl|softonic.pl
 @@||cdnjs.cloudflare.com/ajax/libs/videojs-contrib-ads/*.js$script,domain=mobalytics.gg
