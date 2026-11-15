@@ -226,6 +226,10 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleWeather.png"
     },
     {
+      "name": "Austria",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Austria.png"
+    },
+    {
       "name": "Azure",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Azure.png"
     },
@@ -252,6 +256,10 @@
     {
       "name": "bilibili-IV",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/bilibili-IV.png"
+    },
+    {
+      "name": "Bulgaria",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Bulgaria.png"
     },
     {
       "name": "Canon-I",
@@ -284,6 +292,10 @@
     {
       "name": "ChatGPT",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ChatGPT.png"
+    },
+    {
+      "name": "Chile",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Chile.png"
     },
     {
       "name": "Cisco-I",
@@ -654,6 +666,10 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Hulu.png"
     },
     {
+      "name": "Hungary",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Hungary.png"
+    },
+    {
       "name": "Huolala",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Huolala.png"
     },
@@ -664,6 +680,10 @@
     {
       "name": "IMDb",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/IMDb.png"
+    },
+    {
+      "name": "Indonesia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Indonesia.png"
     },
     {
       "name": "infiniPort",
@@ -684,6 +704,10 @@
     {
       "name": "iqiyi",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/iqiyi.png"
+    },
+    {
+      "name": "Ireland",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ireland.png"
     },
     {
       "name": "Jianshu",
@@ -892,6 +916,10 @@
     {
       "name": "NetflixLetter",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/NetflixLetter.png"
+    },
+    {
+      "name": "Netherlands",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Netherlands.png"
     },
     {
       "name": "Nfcloud",
@@ -1674,6 +1702,14 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Suning.png"
     },
     {
+      "name": "Sweden",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sweden.png"
+    },
+    {
+      "name": "Switzerland",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Switzerland.png"
+    },
+    {
       "name": "Taobao-I",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Taobao-I.png"
     },
@@ -1852,6 +1888,10 @@
     {
       "name": "UnionPay",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/UnionPay.png"
+    },
+    {
+      "name": "United_Arab_Emirates",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/United_Arab_Emirates.png"
     },
     {
       "name": "Vimeo",
