@@ -226,10 +226,6 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleWeather.png"
     },
     {
-      "name": "Austria",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Austria.png"
-    },
-    {
       "name": "Azure",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Azure.png"
     },
@@ -256,10 +252,6 @@
     {
       "name": "bilibili-IV",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/bilibili-IV.png"
-    },
-    {
-      "name": "Bulgaria",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Bulgaria.png"
     },
     {
       "name": "Canon-I",
@@ -292,10 +284,6 @@
     {
       "name": "ChatGPT",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ChatGPT.png"
-    },
-    {
-      "name": "Chile",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Chile.png"
     },
     {
       "name": "Cisco-I",
@@ -666,10 +654,6 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Hulu.png"
     },
     {
-      "name": "Hungary",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Hungary.png"
-    },
-    {
       "name": "Huolala",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Huolala.png"
     },
@@ -680,10 +664,6 @@
     {
       "name": "IMDb",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/IMDb.png"
-    },
-    {
-      "name": "Indonesia",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Indonesia.png"
     },
     {
       "name": "infiniPort",
@@ -704,10 +684,6 @@
     {
       "name": "iqiyi",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/iqiyi.png"
-    },
-    {
-      "name": "Ireland",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ireland.png"
     },
     {
       "name": "Jianshu",
@@ -918,10 +894,6 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/NetflixLetter.png"
     },
     {
-      "name": "Netherlands",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Netherlands.png"
-    },
-    {
       "name": "Nfcloud",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Nfcloud.png"
     },
@@ -1122,6 +1094,10 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Australia.png"
     },
     {
+      "name": "Region_Austria",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Austria.png"
+    },
+    {
       "name": "Region_BGP",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_BGP.png"
     },
@@ -1134,6 +1110,10 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Brazil.png"
     },
     {
+      "name": "Region_Bulgaria",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Bulgaria.png"
+    },
+    {
       "name": "Region_CA",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_CA.png"
     },
@@ -1144,6 +1124,10 @@
     {
       "name": "Region_CC",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_CC.png"
+    },
+    {
+      "name": "Region_Chile",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Chile.png"
     },
     {
       "name": "Region_China",
@@ -1210,6 +1194,10 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_HongKong.png"
     },
     {
+      "name": "Region_Hungary",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Hungary.png"
+    },
+    {
       "name": "Region_IEPL",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_IEPL.png"
     },
@@ -1222,8 +1210,16 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_India.png"
     },
     {
+      "name": "Region_Indonesia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Indonesia.png"
+    },
+    {
       "name": "Region_IPLC",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_IPLC.png"
+    },
+    {
+      "name": "Region_Ireland",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Ireland.png"
     },
     {
       "name": "Region_Japan",
@@ -1262,6 +1258,10 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_MY.png"
     },
     {
+      "name": "Region_Netherlands",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Netherlands.png"
+    },
+    {
       "name": "Region_NullNation",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_NullNation.png"
     },
@@ -1296,6 +1296,14 @@
     {
       "name": "Region_Singapore",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Singapore.png"
+    },
+    {
+      "name": "Region_Sweden",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Sweden.png"
+    },
+    {
+      "name": "Region_Switzerland",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Switzerland.png"
     },
     {
       "name": "Region_Taiwan",
@@ -1336,6 +1344,10 @@
     {
       "name": "Region_UN",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UN.png"
+    },
+    {
+      "name": "Region_United_Arab_Emirates",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_United_Arab_Emirates.png"
     },
     {
       "name": "Region_UnitedKingdom",
@@ -1702,14 +1714,6 @@
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Suning.png"
     },
     {
-      "name": "Sweden",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sweden.png"
-    },
-    {
-      "name": "Switzerland",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Switzerland.png"
-    },
-    {
       "name": "Taobao-I",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Taobao-I.png"
     },
@@ -1888,10 +1892,6 @@
     {
       "name": "UnionPay",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/UnionPay.png"
-    },
-    {
-      "name": "United_Arab_Emirates",
-      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/United_Arab_Emirates.png"
     },
     {
       "name": "Vimeo",
