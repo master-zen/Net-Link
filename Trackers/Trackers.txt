@@ -1644,7 +1644,6 @@ http://107.150.14.110:6969/announce
 http://107.152.127.9:6969/announce
 http://107.152.45.140/announce
 http://107.189.10.20.sslip.io:7777/announce
-http://107.189.2.131:1337/announce
 http://107.189.31.134:6969/announce
 http://107.189.7.143:6969/announce
 http://109.121.134.121:1337/announce
@@ -3359,7 +3358,6 @@ https://tr.aag.moe/announce
 https://tr.abiir.top/announce
 https://tr.abiir.top:443/announce
 https://tr.abir.ga/announce
-https://tr.abir.ga:443/announce
 https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
@@ -3550,6 +3548,7 @@ https://tracker.tvunderground.org.ru:3218/announce
 https://tracker.uraniumhexafluori.de/announce
 https://tracker.vectahosting.eu/announce
 https://tracker.vectahosting.eu:2053/announce
+https://tracker.vectahosting.eu:443/announce
 https://tracker.vectahosting.eu:8443/announce
 https://tracker.wsaoa.eu.org/announce
 https://tracker.yarr.pt/announce

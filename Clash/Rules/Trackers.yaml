@@ -1398,7 +1398,6 @@ payload:
   - 'IP-CIDR,107.152.45.140/32,no-resolve'
   - 'IP-CIDR,107.175.221.194/32,no-resolve'
   - 'IP-CIDR,107.189.11.58/32,no-resolve'
-  - 'IP-CIDR,107.189.2.131/32,no-resolve'
   - 'IP-CIDR,107.189.3.200/32,no-resolve'
   - 'IP-CIDR,107.189.31.134/32,no-resolve'
   - 'IP-CIDR,107.189.4.235/32,no-resolve'
