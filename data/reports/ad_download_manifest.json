@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-11-17T02:46:22Z",
-  "epoch_seconds": 1794883584.0665824,
-  "github_run_id": "44005378360",
+  "fetched_at_utc": "2026-11-18T02:07:35Z",
+  "epoch_seconds": 1794967657.4592562,
+  "github_run_id": "44220894411",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 38067227,
+  "source_bytes_total": 38089787,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
-      "size_bytes": 18313482,
-      "sha256": "c4b8df64c99bbe1f79c0f0cf620fb8ee6c1c7c8831c96452cade0f41cf108f72"
+      "size_bytes": 18313949,
+      "sha256": "9531bffacbed0c9b9193d749c804c07901d533475b9fb7d784aaf717333df58e"
     },
     {
       "bucket": "allow",
@@ -47,8 +47,8 @@
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt",
       "path": "data/ad/upstream/allow/69481aca991270b96a83_whitelist-referral-native.txt",
-      "size_bytes": 35039,
-      "sha256": "ea78c61ec34f1f698f24abb2f8f59926c4f0f17b28b9544cd126bd7877a0e018"
+      "size_bytes": 35302,
+      "sha256": "3f3a23910c5cb2bfac6193bb3ae5309933bac1e1b09a82ef44671d3cd284fd6d"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4660951,
-      "sha256": "38f04274e1dd06ebb541422801668d21572eaef1952fcb707d6976c9fff57b61"
+      "size_bytes": 4669300,
+      "sha256": "4d9a9c1fdc04e395abb891a749620622fabf7de2acca9a320f20177fbaef93e8"
     },
     {
       "bucket": "block",
@@ -89,8 +89,8 @@
       "bucket": "block",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/reject.txt",
       "path": "data/ad/upstream/block/5ddf2462fc173642d9c2_reject.txt",
-      "size_bytes": 6978684,
-      "sha256": "10c486df9d3961181296a1363ed24de27f73d92332c12f8637236ecfaa6d39ff"
+      "size_bytes": 6992165,
+      "sha256": "0c4a64c9c117a2714d1de3df12f2c28a0dacd06a607ef70700f32308cbb95501"
     },
     {
       "bucket": "block",

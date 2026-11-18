@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
-! Checksum: 7ZQCKD1SABnawVVkKbLhXg
-! Version: 202611170232
+! Checksum: MBhziudxEXxMrFJ5AwBguw
+! Version: 202611180152
 ! Title: Allow nonintrusive advertising
 ! Expires: 1 days
 ! Homepage: https://acceptableads.com/
@@ -1721,7 +1721,6 @@ freemeteo.gr##.bannerWrp
 cuantarazon.com###banner_header
 nosalty.hu###criteoTPL840783
 nosalty.hu##.m-article div[id^="criteo"]
-ebay-kleinanzeigen.de##[data-liberty-position-name="vip-belly"]
 olx.ro##[id^="Crt-1389022"]
 modernghana.com###ctr_336x280
 modernghana.com###upper-top:has(#ctr_728x90)
@@ -3327,7 +3326,6 @@ flatpanelshd.com#@#.forsideboks2
 @@||cdn.oradesibiu.ro/wp-content/plugins/advanced-ads/*.js^$domain=oradesibiu.ro
 @@||filehippo.com/revamp.js^$domain=filehippo.com
 indiedb.com#@#.supporter
-@@||scripts.scriptwrapper.com/flooring/countryLookup$xmlhttprequest,domain=edhrec.com|traderie.com
 christianitytoday.com#@#.ct-ad-slot
 christianitytoday.com#@#.has-ad
 @@||ziffstatic.com/pg/*$script,xmlhttprequest,stylesheet,domain=pushsquare.com
@@ -3335,7 +3333,17 @@ softonic.com#@#.is-premium-hide
 newsnow.co.uk#@#.grid-column__container
 @@||mediavine.com^$third-party,domain=nookazon.com
 @@||vntsm.com/*/srv/g.txt
-@@||buysellads.net^$third-party,script,domain=fontspace.com|gramfetchr.com|pranx.com|ruwix.com|tomatotimers.com|wumbo.net
+@@||buysellads.net^$third-party,script,domain=fontspace.com|gramfetchr.com|pranx.com|ruwix.com|tomatotimers.com|wumbo.net|infinityfree.com
+es.wallapop.com#@#[class*="__adSlot"]
+es.wallapop.com#@#[class*="__topSky"]
+kleinanzeigen.de#@##vip_pro-billboard
+kleinanzeigen.de#@##vip-middle
+kleinanzeigen.de#@##vip-bottom
+kleinanzeigen.de#@##vip-sky-atf-right-sidebar
+kleinanzeigen.de#@##my_ads-top-banner
+kleinanzeigen.de#@##my_wishlist-top-banner
+kleinanzeigen.de#@##my_wishlist-btf-billboard
+kleinanzeigen.de#@#div[id^="vip-similar-ads-"]
 ! hidden for compliance
 imore.com##div.inline-text
 nevermundane.com,uniqueinterests.com,travelapples.com,marspeta.com,geekyup.com,readyer.com,oldermillennials.com,simpleblitz.com##div[class^="entry-content"] .ad_placeholder
@@ -6598,7 +6606,7 @@ qlouisville.com,quanthockey.com,quizfactory.com,quizpin.com,quizwise.com,quotefa
 @@/prebid.$script,domain=paperela.com|directsharing.com|dadsnews.com|editionist.com|stylechambers.com|wordsa.com|afternoonedition.com|authorspick.com|beansandcreams.com|bestofsenior.com|boiteascoop.com|boredomtreatment.com|buzztreatment.com|carsandyachts.com|cashroadster.com|cidergossip.com|directhealthy.com|divorcepayday.com|doctoreport.com|editorsnation.com|financeblvd.com|financenancy.com|financialadvisorheroes.com|gameofglam.com|goldenglimpse.com|halfeddie.com|healthygeorge.com|hollywood-tale.com|investmentguru.com|isinglemom.com|ladygreat.com|lawyersblvd.com|lawyersfavorite.com|lifeexact.com|likeitviral.com|loanpride.com|locksmithofhearts.com|medicalmatters.com|medicaregranny.com|mightyscoops.com|mikehistory.com|militarybud.com|misspennystocks.com|misterstocks.com|mortgageafterlife.com|networthmagazine.com|pajamawarriors.com|paydayville.com|psychicmonday.com|refinancegold.com|reportercenter.com|revistaglamur.com|seniorglam.com|spicytrends.com|sportpirate.com|starsblvd.com|swiftverdict.com|telehealthdave.com|thechefpick.com|thefinancialmag.com|therapyjoker.com|tiebreaker.com|tommorowdating.com|tradingblvd.com|travelpatriot.com|trend-chaser.com|tummytuckhipo.com|weightlossgroove.com|wiced.com|wittyreporter.com|yourdailylama.com
 @@/x-kinja-static/assets/new-client^$script,domain=qz.com|avclub.com|clickhole.com|deadspin.com|gizmodo.com|jalopnik.com|jezebel.com|kotaku.com|lifehacker.com|splinternews.com|theinventory.com|theonion.com|theroot.com|thetakeout.com
 @@||117.hostedprebid.com^$script,domain=toocool2betrue.com
-@@||scripts.webcontentassessor.com/$script,domain=edclub.com|thisisanfield.com|typingclub.com|liverpoolecho.co.uk|hulldailymail.com|mirror.co.uk|breitbart.com
+@@||scripts.webcontentassessor.com/$script,domain=edclub.com|thisisanfield.com|typingclub.com|liverpoolecho.co.uk|hulldailymail.com|mirror.co.uk|breitbart.com|crosswordsolver.org|thewordfinder.com|oeffentlicher-dienst.info|buchstaben.com|windfinder.com|ultimatespecs.com|wordfinders.com|kreuzwortraetsellexikon.de|wheeloffortunecheats.com|isitdownrightnow.com|bestrandoms.com|semantle.com|coolgenerator.com|gridgames.app
 @@||9to5google.com^*/assets/js/vendor/prebid1.$script
 @@||9to5toys.com^*/assets/js/vendor/prebid1.$script
 @@||a.rltd.net/*.js$domain=recettesmania.com|45secondes.fr|docteurclic.com|fsolver.fr|gebraucht-kaufen.de|infobel.com
@@ -9804,7 +9812,7 @@ tundraheadquarters.com#@#a[href^="http://www.tkqlhce.com/"]
 @@||acuityplatform.com/Adserver/pxl$image,script
 @@||adservice.google.com/ddm/regclk$ping,image
 @@||secure.insightexpressai.com/adServer/adServerESI.aspx$image
-@@||rubiconproject.com/beacon^$image
+@@||rubiconproject.com/beacon^
 @@||tag.yieldoptimizer.com/ps/ps$image
 @@||pixel.sitescout.com/iap/$image
 @@||trc.taboola.com/*/log$image
@@ -10362,8 +10370,6 @@ tundraheadquarters.com#@#a[href^="http://www.tkqlhce.com/"]
 @@||creativecdn.com^$document,subdocument,domain=bett1.de
 @@||lijit.com^$image,domain=bett1.de
 @@||omnitagjs.com^$image,domain=bett1.de
-rubiconproject.com/beacon$domain=msn.com
-rubiconproject.com/beacon$document,subdocument,domain=msn.com
 @@||googlesyndication.com/pagead/images/mobile_unified_button_icon_black.png|$image
 @@||googlesyndication.com/pagead/images/mobile_unified_button_icon_white.png|$image
 @@||googlesyndication.com/pagead/images/ad_choices_*.png|$image
@@ -12080,6 +12086,7 @@ yahoo.com,news.yahoo.com,us.yahoo.com,espanol.yahoo.com,sports.yahoo.com,de.yaho
 ! end of temporary filters
 yahoo.com#@#[style*="300px;"]
 mail.yahoo.com#@##right-rail-container > div:has(> div > div > iframe[id^="Z3B0LWlmcmFtZS"])
+mail.aol.com#@#[role="presentation"]:has(> div[data-ad-row-id])
 !:partner_token=Microsoft
 !:partner_id=c7cdd2fa8a3d0b2a
 ! Bing.com ads
