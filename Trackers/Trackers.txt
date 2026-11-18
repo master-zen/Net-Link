@@ -3113,6 +3113,7 @@ http://wg.mortis.me:6969/announce
 http://widemus.de:6969/announce
 http://wtorrent.manalejandro.com:443/announce
 http://www.all4nothin.net/announce
+http://www.all4nothin.net:80/announce.php
 http://www.ansktracker.net/announce
 http://www.arabp2p.net:2052/f5a1e35785c9f3885fd54f34b6e262b8/announce
 http://www.bit-hdtv.com:2710/announce
@@ -3362,7 +3363,6 @@ https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
 https://tr.burnabyhighstar.com/announce
-https://tr.burnabyhighstar.com:443/announce
 https://tr.doogh.club/announce
 https://tr.fuckbitcoin.xyz/announce
 https://tr.highstar.shop/announce
@@ -3409,6 +3409,7 @@ https://tracker.bug38.com/announce
 https://tracker.bulao.ren/announce
 https://tracker.calculate.ru:6969/announce
 https://tracker.cangku.moe/announce
+https://tracker.cangku.moe:443/announce
 https://tracker.carpt.net/announce
 https://tracker.cinefiles.info/announce
 https://tracker.cloudit.top/announce
@@ -3548,7 +3549,6 @@ https://tracker.tvunderground.org.ru:3218/announce
 https://tracker.uraniumhexafluori.de/announce
 https://tracker.vectahosting.eu/announce
 https://tracker.vectahosting.eu:2053/announce
-https://tracker.vectahosting.eu:443/announce
 https://tracker.vectahosting.eu:8443/announce
 https://tracker.wsaoa.eu.org/announce
 https://tracker.yarr.pt/announce
