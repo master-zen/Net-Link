@@ -1219,7 +1219,9 @@ udp://t.publictracker.xyz:6969/announce
 udp://t.zerg.pw:1337/announce
 udp://t.zerg.pw:6969/announce
 udp://t1.chfs.ch:6969/announce
+udp://t1.itrus.su:1212/announce
 udp://t1.pow7.com:6969/announce
+udp://t2.itrus.su:1212/announce
 udp://t2.leech.ie:1337/announce
 udp://t2.pow7.com:6969/announce
 udp://t3.leech.ie:1337/announce
@@ -1281,6 +1283,7 @@ udp://tracker.0x7c0.com:6969/announce
 udp://tracker.1048576.cn:17272/announce
 udp://tracker.1337x.org:80/announce
 udp://tracker.1h.is:1337/announce
+udp://tracker.23794.top:6969/announce
 udp://tracker.4.babico.name.tr:3131/announce
 udp://tracker.6.babico.name.tr:6969/announce
 udp://tracker.acgnx.se/announce
@@ -2698,6 +2701,7 @@ http://opentracker.acgnx.com:6869/announce
 http://opentracker.acgnx.se/announce
 http://opentracker.i2p.rocks:6969/announce
 http://opentracker.io/announce
+http://opentracker.lain.moscow:6969/announce
 http://opentracker.xyz/announce
 http://opentrackr.org:1337/announce
 http://openwrt.lingyurouqing.xyz:6969/announce
@@ -2981,6 +2985,7 @@ http://tracker.nyaa.vc:6969/announce
 http://tracker.nyaa2p.i2p/announce
 http://tracker.nyacat.pw:7000/announce
 http://tracker.nyap2p.com:8080/announce
+http://tracker.okade.pro:1337/announce
 http://tracker.openbittorrent.com/announce
 http://tracker.openbittorrrent.com/announce
 http://tracker.opentorrent.top:6969/announce
@@ -3113,7 +3118,6 @@ http://wg.mortis.me:6969/announce
 http://widemus.de:6969/announce
 http://wtorrent.manalejandro.com:443/announce
 http://www.all4nothin.net/announce
-http://www.all4nothin.net:80/announce.php
 http://www.ansktracker.net/announce
 http://www.arabp2p.net:2052/f5a1e35785c9f3885fd54f34b6e262b8/announce
 http://www.bit-hdtv.com:2710/announce
@@ -3363,6 +3367,7 @@ https://tr.abirxo.cf/announce
 https://tr.bangumi.moe:6969/announce
 https://tr.bangumi.moe:9696/announce
 https://tr.burnabyhighstar.com/announce
+https://tr.burnabyhighstar.com:443/announce
 https://tr.doogh.club/announce
 https://tr.fuckbitcoin.xyz/announce
 https://tr.highstar.shop/announce
