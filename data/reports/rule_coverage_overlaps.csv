@@ -6573,6 +6573,7 @@ ad_rule,china_matching_rules
 "DOMAIN-SUFFIX,setting.snswin.qq.com","DOMAIN-SUFFIX,qq.com"
 "DOMAIN-SUFFIX,sfd.maizhenai.cn","DOMAIN-SUFFIX,cn"
 "DOMAIN-SUFFIX,sfp.safe.baidu.com","DOMAIN-SUFFIX,baidu.com"
+"DOMAIN-SUFFIX,sg-fp.apitd.net","DOMAIN-SUFFIX,apitd.net"
 "DOMAIN-SUFFIX,sg2p.wns.windows.com","DOMAIN-SUFFIX,windows.com"
 "DOMAIN-SUFFIX,sg536.cn","DOMAIN-SUFFIX,cn"
 "DOMAIN-SUFFIX,sgbbc.cn","DOMAIN-SUFFIX,cn"
