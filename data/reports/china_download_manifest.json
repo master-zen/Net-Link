@@ -1,26 +1,26 @@
 {
   "profile": "china",
-  "fetched_at_utc": "2026-11-19T01:54:49Z",
-  "epoch_seconds": 1795053292.7277122,
-  "github_run_id": "44440388076",
+  "fetched_at_utc": "2026-11-20T01:47:55Z",
+  "epoch_seconds": 1795139278.7632658,
+  "github_run_id": "44656176273",
   "github_run_attempt": "1",
   "source_count": 20,
   "downloaded_count": 20,
-  "source_bytes_total": 16140805,
+  "source_bytes_total": 16142250,
   "sources": [
     {
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/Hackl0us/GeoIP2-CN/release/CN-ip-cidr.txt",
       "path": "data/china/upstream/8e6d51d39f4dcfdf0aae_CN-ip-cidr.txt",
       "size_bytes": 110840,
-      "sha256": "a2e953ba4baa3e12732085d75225ec6a39274614392dc515e867d9265a8995d7"
+      "sha256": "d28781db152136abc5eb12d24b246f9ffbbe5f424b99215bf553477b283e3304"
     },
     {
       "bucket": "china",
       "url": "https://raw.githubusercontent.com/Loyalsoldier/surge-rules/release/ruleset/cncidr.txt",
       "path": "data/china/upstream/b4419558de765e287270_cncidr.txt",
-      "size_bytes": 234179,
-      "sha256": "2455141e8b9ca588712e1cf2ec717c98ecfbe3cdd078a4926296835c7c22b324"
+      "size_bytes": 234865,
+      "sha256": "c38344e4bb36f0fe349bdc54a178b7b13d1bcee3cc89896625a8c70806da8756"
     },
     {
       "bucket": "china",
@@ -138,8 +138,8 @@
       "bucket": "foreign_ip",
       "url": "https://ftp.apnic.net/stats/apnic/delegated-apnic-latest",
       "path": "data/china/upstream/a852bf49b576d1913b1b_delegated-apnic-latest",
-      "size_bytes": 4360650,
-      "sha256": "b754a20ed544e166736a4b194dd6cf7e758e14d83f20c10d66be62bc2dbea34c"
+      "size_bytes": 4361409,
+      "sha256": "a2c43623f4bd7db468a1ae213ba81de447ab8127c102c31a09903ebec6def7e4"
     },
     {
       "bucket": "foreign_ip",
