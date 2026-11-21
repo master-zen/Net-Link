@@ -1,12 +1,12 @@
 {
   "scope": "entire published rule files, not a sample",
   "files": {
-    "ChinaDomain.list": 122385,
-    "AdblockSet.list": 242708
+    "ChinaDomain.list": 122383,
+    "AdblockSet.list": 243062
   },
   "unique_rules": {
-    "china": 122385,
-    "ad": 242708
+    "china": 122383,
+    "ad": 243062
   },
   "duplicates": {
     "china": 0,
@@ -17,14 +17,14 @@
       "DOMAIN": 266,
       "DOMAIN-SUFFIX": 110258,
       "DOMAIN-KEYWORD": 0,
-      "IP-CIDR": 7716,
+      "IP-CIDR": 7714,
       "IP-CIDR6": 4145,
       "IP-ASN": 0,
       "GEOIP": 0
     },
     "ad": {
       "DOMAIN": 18404,
-      "DOMAIN-SUFFIX": 223741,
+      "DOMAIN-SUFFIX": 224095,
       "DOMAIN-KEYWORD": 0,
       "IP-CIDR": 559,
       "IP-CIDR6": 4,
@@ -40,10 +40,10 @@
   },
   "cidr": {
     "IP-CIDR": {
-      "rule_count": 7716,
-      "collapsed_prefix_count": 7716,
+      "rule_count": 7714,
+      "collapsed_prefix_count": 7714,
       "redundant_prefix_count": 0,
-      "unique_address_count": "346806055",
+      "unique_address_count": "346805287",
       "non_public_count": 0,
       "non_public_examples": [],
       "ipv4_mapped_count": 0,
