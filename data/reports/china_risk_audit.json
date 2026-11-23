@@ -1,12 +1,12 @@
 {
-  "download_run": "44966697480",
-  "download_manifest_sha256": "c6032461801e22206a7f4405250c8e03832520a83da1575f8d1b82d94e9288c2",
+  "download_run": "45091741621",
+  "download_manifest_sha256": "5d23c2854c71164ce7311e2461bb69d477463104d53cd9da5443d00c769134fb",
   "foreign_reference_counts": {
     "v2fly_literal_domains": 39,
     "proxy_reference_rules": 27271,
     "foreign_ip_reference_count": 12,
     "rir_non_cn_ipv4_prefixes": 49656,
-    "rir_non_cn_ipv6_prefixes": 15314,
+    "rir_non_cn_ipv6_prefixes": 15315,
     "rir_cn_ipv4_prefixes": 8798,
     "rir_cn_ipv6_prefixes": 2047
   },
@@ -155,7 +155,7 @@
     "DOMAIN-SUFFIX,gvt2-cn.com",
     "DOMAIN-SUFFIX,honkaiimpact3.com"
   ],
-  "foreign_ip_reference_network_count": 64991,
+  "foreign_ip_reference_network_count": 64992,
   "excluded_foreign_registered_ipv4_address_count": "16626180",
   "excluded_foreign_registered_ipv6_address_count": "2090167559289130793354093658112",
   "limitations": [
