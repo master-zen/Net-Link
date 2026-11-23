@@ -3537,6 +3537,7 @@ https://tracker.parrotlinux.org/announce
 https://tracker.parrotsec.org/announce
 https://tracker.piggo.me/announce
 https://tracker.pmman.tech/announce
+https://tracker.pmman.tech:443/announce
 https://tracker.projectk.org/announce
 https://tracker.ptchdbits.co/announce
 https://tracker.pterclub.com/announce
