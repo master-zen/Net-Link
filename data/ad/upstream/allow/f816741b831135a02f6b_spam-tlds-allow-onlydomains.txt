@@ -220,6 +220,7 @@ endoflife.date
 boo.dating
 breeze.dating
 gaudi.dating
+cs.deals
 gg.deals
 opf.degree
 three60.degree
@@ -257,10 +258,12 @@ mer.eco
 nura.eco
 play.eco
 bigdig.energy
+chargee.energy
 eonnext-kraken.energy
 homewizard.energy
 octopus.energy
 oegb-kraken.energy
+planetpod.energy
 shoptopus.energy
 biqu.equipment
 dandelion.events
