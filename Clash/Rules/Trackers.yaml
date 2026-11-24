@@ -1939,6 +1939,7 @@ payload:
   - 'IP-CIDR,194.110.247.18/32,no-resolve'
   - 'IP-CIDR,194.169.160.46/32,no-resolve'
   - 'IP-CIDR,194.195.86.132/32,no-resolve'
+  - 'IP-CIDR,194.247.183.66/32,no-resolve'
   - 'IP-CIDR,194.38.21.77/32,no-resolve'
   - 'IP-CIDR,194.62.248.73/32,no-resolve'
   - 'IP-CIDR,194.87.68.142/32,no-resolve'
