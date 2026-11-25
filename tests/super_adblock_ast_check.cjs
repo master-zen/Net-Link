@@ -15,11 +15,18 @@ try{
     ["let a=JSON.parse($response.body); while(true){} $done({body:JSON.stringify(a)});",false],
     ["let a=JSON.parse($response.body); delete a.user; $done({body:JSON.stringify(a)});",false],
     ["let a=JSON.parse($response.body); a.ads=0; $done({body:JSON.stringify(a)});",false],
-    ["let a=JSON.parse($response.body); delete a.data.adInfo; $done({body:JSON.stringify(a)});",true]
+    ["let a=JSON.parse($response.body); delete a.data.adInfo; $done({body:JSON.stringify(a)});",true],
+    ["let a=JSON.parse($response.body); if(a.ads) delete a.ads; $done({body:JSON.stringify(a)});",true],
+    ["let a=JSON.parse($response.body); if(Array.isArray(a.list)) a.list=a.list.filter(x=>x.type!==\"ad\"); $done({body:JSON.stringify(a)});",true],
+    ["let a=JSON.parse($response.body); a.list=a.list.filter(x=>x.type!==\"article\"); $done({body:JSON.stringify(a)});",false],
+    ["let a=JSON.parse($response.body); if(a.user) delete a.ads; $done({body:JSON.stringify(a)});",false]
   ];
   for(let i=0;i<fixtures.length;i++){
     const file=path.join(dir,i+".js");
     fs.writeFileSync(file,fixtures[i][0]);
-    assert.equal(JSON.parse(cp.execFileSync(process.execPath,[scanner,file],{encoding:"utf8"})).eligible,fixtures[i][1]);
+    const result=JSON.parse(cp.execFileSync(process.execPath,[scanner,file],{encoding:"utf8"}));
+    assert.equal(result.eligible,fixtures[i][1]);
+    if(result.eligible)assert.ok(result.plan.deletes.length+result.plan.filters.length>0);
+    if(i===1)assert.ok(result.inspection.capabilities.includes("network"));
   }
 }finally{fs.rmSync(dir,{recursive:true,force:true})}

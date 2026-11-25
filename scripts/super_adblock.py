@@ -405,6 +405,8 @@ def build(work, review=False):
     origins=defaultdict(list)
     emitted={}
     cleared = sec.eligible(work, review=review)
+    plans=sec.plans(work,cleared)
+    compiled_scripts=defaultdict(set)
     script_hits = defaultdict(set)
     script_origins = defaultdict(set)
     body_hits = defaultdict(set)
@@ -482,15 +484,40 @@ def build(work, review=False):
                     quarantine["script-not-cleared-or-unsupported"] += 1
                     continue
                 pattern,url=spec
-                qualified=url_candidate(pattern,protected)
+                qualified=url_candidate(pattern,protected,body=True)
                 if not qualified or qualified[1]=="api.douban.com":
                     quarantine["script-functional-risk"] += 1
                     continue
                 pattern,host=qualified
                 h=cleared[url]
-                script_hits[pattern].add(h)
-                script_origins[h].add(url)
-                origins[("script",pattern,h)].append(origin)
+                plan=plans.get(url)
+                if not plan:
+                    quarantine["script-plan-unavailable"] += 1
+                    continue
+                deletes=set()
+                filters=set()
+                valid=True
+                raw_pattern=spec[0]
+                if plan.get("deletes"):
+                    parsed=parse_body("http-response-jq "+raw_pattern+" 'delpaths("+json.dumps(plan["deletes"],separators=(",",":"))+")'",protected)
+                    if not parsed:
+                        valid=False
+                    else:
+                        deletes.update(parsed[2])
+                for item in plan.get("filters",[]):
+                    expression="."+".".join(item["path"])+" |= map(select(."+item["field"]+" != "+json.dumps(item["value"])+"))"
+                    parsed=parse_array_filter("http-response-jq "+raw_pattern+" '"+expression+"'",protected)
+                    if not parsed:
+                        valid=False
+                        break
+                    filters.add(parsed[2])
+                if not valid or not (deletes or filters) or len(deletes)+len(filters)>16:
+                    quarantine["script-plan-rejected"] += 1
+                    continue
+                body_hits[pattern].update(deletes)
+                body_filters[pattern].update(filters)
+                origins[("body",pattern)].append({**origin,"script_url":url,"script_sha256":h})
+                compiled_scripts[pattern].add((h,url))
                 url_hosts[pattern]=host
                 continue
             elif section in {"rewrite","url rewrite","map local"}:
@@ -574,6 +601,7 @@ def build(work, review=False):
         if not pattern.startswith("^http://"):
             hosts.add(host)
     bodies=[]
+    compiled_published=defaultdict(set)
     for pattern,paths in sorted(body_hits.items()):
         host=url_hosts[pattern]
         if pattern in cross or any(matches_domain(host,a,k=="DOMAIN-SUFFIX") for k,a in [*domains,*upstream_allow]):
@@ -585,6 +613,8 @@ def build(work, review=False):
         line=f"#!REQUIREMENT CORE_VERSION>=6008000 http-response-jq {pattern} '{body_expression(paths,body_filters[pattern])}'"
         bodies.append(line)
         emitted[("Body Rewrite",line)]=origins[("body",pattern)]
+        for h,u in compiled_scripts[pattern]:
+            compiled_published[h].add(u)
         if not pattern.startswith("^http://"):
             hosts.add(host)
     scripts, published = [], {}
@@ -617,7 +647,7 @@ def build(work, review=False):
     alternatives=json.loads((ROOT/"data/sources/SuperAdBlock_alternatives.json").read_text(encoding="utf-8"))["alternatives"]
     success={e["url"] for e in manifest["sources"] if "error" not in e}
     refs=manifest.get("reference_only",[])
-    report = {"reference_only_count":len(refs),"reference_uncovered":[e["url"] for e in refs if not e["alternative"] or e["alternative"] not in success],"inventory_total":len(sources())+len(refs),"duplicate_content_groups":[v for v in content_sources.values() if len(v)>1],"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"body_rewrite":len(bodies),"array_filter_candidates":sum(len(v) for v in body_filters.values()),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
+    report = {"reference_only_count":len(refs),"reference_uncovered":[e["url"] for e in refs if not e["alternative"] or e["alternative"] not in success],"inventory_total":len(sources())+len(refs),"duplicate_content_groups":[v for v in content_sources.values() if len(v)>1],"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"compiled_script_sources":{h:sorted(us) for h,us in sorted(compiled_published.items())},"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"body_rewrite":len(bodies),"array_filter_candidates":sum(len(v) for v in body_filters.values()),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
     provenance=[{"section":section,"rule_sha256":digest(line.encode()),"origins":records} for (section,line),records in sorted(emitted.items())]
     report["mitm_host_hashes"]=sorted(digest(host.encode()) for host in hosts)
     report["rule_provenance"]=provenance
@@ -664,7 +694,8 @@ def approved(work=None):
         cross_report=json.loads(cross.read_bytes())
         if cross_report.get("module_sha256")!=json.loads((work/"audit.json").read_bytes())["output"]["sha256"] or cross_report.get("counts",{}).get("non-reject-domain-conflict",0):
             return False
-        required={(u,h) for h,urls in json.loads((work/"audit.json").read_text())["published_scripts"].items() for u in urls}
+        release_audit=json.loads((work/"audit.json").read_text())
+        required={(u,h) for group in ("published_scripts","compiled_script_sources") for h,urls in release_audit.get(group,{}).items() for u in urls}
         allowed={(e["url"],e.get("sha256")) for e in config.get("scripts",[]) if e.get("redistribution") is True and e.get("license") and e.get("evidence")}
         return required <= allowed
     return True

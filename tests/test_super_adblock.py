@@ -207,6 +207,16 @@ class SuperAdBlockTests(unittest.TestCase):
         self.assertIn("rule-hash-churn",result["reasons"])
         self.assertIn("cross-module-functional-conflict",result["reasons"])
 
+    def test_compiled_script_plan(self):
+        import super_adblock_scripts as sec
+        url="https://raw.githubusercontent.com/a/b/main/ads.js"
+        with tempfile.TemporaryDirectory() as tmp:
+            work=Path(tmp)
+            plan={"deletes":[["ads"]],"filters":[]}
+            s.dump(work/"script-audit.json",{"entries":[{"url":url,"ast":{"plan":plan}}]})
+            self.assertEqual(sec.plans(work,{url:"a"*64}),{url:plan})
+            self.assertEqual(sec.plans(work,{}),{})
+
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):
             with self.assertRaises(ValueError):
