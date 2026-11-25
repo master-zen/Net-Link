@@ -217,6 +217,39 @@ class SuperAdBlockTests(unittest.TestCase):
             self.assertEqual(sec.plans(work,{url:"a"*64}),{url:plan})
             self.assertEqual(sec.plans(work,{}),{})
 
+    def test_cache_revalidation_and_fail_closed(self):
+        import super_adblock_cache as c
+        from urllib.error import HTTPError
+        from unittest.mock import MagicMock
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch.dict(os.environ,{"SUPER_ADBLOCK_PRIVATE_CACHE":tmp,"GITHUB_ACTIONS":"false"}):
+                endpoint="https://raw.githubusercontent.com/a/b/main/x"
+                raw=b"validated response"
+                resp=MagicMock()
+                resp.__enter__.return_value=resp
+                resp.status=200
+                resp.headers={"ETag":'"v1"'}
+                resp.geturl.return_value=endpoint
+                resp.read.return_value=raw
+                opener=MagicMock()
+                opener.open.return_value=resp
+                validate=lambda x: None
+                self.assertEqual(c.fetch(endpoint,opener,validate,validate,100,1),(raw,"network"))
+                opener.open.side_effect=HTTPError(endpoint,304,"Not Modified",{},None)
+                self.assertEqual(c.fetch(endpoint,opener,validate,validate,100,1),(raw,"revalidated-cache"))
+                self.assertEqual(opener.open.call_args.args[0].get_header("If-none-match"),'"v1"')
+                opener.open.side_effect=HTTPError(endpoint,403,"Forbidden",{},None)
+                with self.assertRaises(HTTPError):
+                    c.fetch(endpoint,opener,validate,validate,100,1)
+                with patch.dict(os.environ,{"GITHUB_ACTIONS":"true"}):
+                    self.assertIsNone(c.private_root())
+
+    def test_output_structure_rejects_extra_mitm(self):
+        raw=b"#!name=SuperAdBlock\n[Rule]\nDOMAIN,ads.test1.com,REJECT\n[MITM]\nhostname = %APPEND% unused.test1.com\n"
+        report={"output":{"rules":1,"url_rewrite":0,"map_local":0,"body_rewrite":0,"scripts":0,"mitm_hosts":1},"mitm_host_hashes":[s.digest(b"unused.test1.com")],"rule_provenance":[{"section":"Rule","rule_sha256":s.digest(b"DOMAIN,ads.test1.com,REJECT")}],"provenance_count":1}
+        with self.assertRaisesRegex(ValueError,"MITM coverage mismatch"):
+            s.validate_structure(raw,report)
+
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):
             with self.assertRaises(ValueError):
