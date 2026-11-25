@@ -23,3 +23,10 @@ assert.deepEqual(run("unknown", {data:{ad:1}}), {data:{ad:1}});
 assert.deepEqual(run("kuaidi", {adsplash:{id:1},tracking:{keep:true}}), {tracking:{keep:true}});
 assert.deepEqual(run("taobao", {data:{items:[{"taobao-splash":{data:[1],other:2}},{data:[3]}]}}), {data:{items:[{"taobao-splash":{data:[],other:2}},{data:[3]}]}});
 assert.deepEqual(run("faw", {data:[1],returnStatus:"SUCCEED",other:2}), {data:[],returnStatus:"SUCCEED",other:2});
+
+assert.deepEqual(run("ireader", {Splash:{id:1},content:2}), {content:2});
+assert.deepEqual(run("missevan", {info:{splash:1,splash_ready:2,tab_bar_live:3}}), {info:{tab_bar_live:3}});
+assert.deepEqual(run("wuta", {regular:{splash:1,home_bottom_right_entry_v2:2},big_day:3}), {regular:{home_bottom_right_entry_v2:2},big_day:3});
+assert.deepEqual(run("duitang", {data:{SPLASH_SWING_OPEN:1,STICKER_SEARCH_HOT_KEYWORDS:2}}), {data:{STICKER_SEARCH_HOT_KEYWORDS:2}});
+assert.deepEqual(run("tuilan", {data:{splashConf:1,splashConfNew:2,servers:3}}), {data:{servers:3}});
+assert.deepEqual(run("jump", {data:{adList:[1],launchAd:{showType:2,other:3},recommendation:4}}), {data:{adList:[],launchAd:{showType:0,other:3},recommendation:4}});

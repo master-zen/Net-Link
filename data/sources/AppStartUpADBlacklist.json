@@ -62,6 +62,56 @@
       "id": "qing-taobao",
       "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E6%B7%98%E5%AE%9D%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
       "reviewed_blob": "e05cf512e6062344faacd0da74af379c671d9c79"
+    },
+    {
+      "id": "qing-ireader",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E6%8E%8C%E9%98%85%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "4a848eefd29bbbd8efdaa499e9c87868da9519c0"
+    },
+    {
+      "id": "qing-missevan",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E7%8C%AB%E8%80%B3FM%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "f012e57d01261a880487a87162a01630571a0969"
+    },
+    {
+      "id": "qing-wuta",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E6%97%A0%E4%BB%96%E7%9B%B8%E6%9C%BA%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "ee5f3f00bb5e8f3928a6598511da230e94395f90"
+    },
+    {
+      "id": "qing-duitang",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E5%A0%86%E7%B3%96%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "1c45c2f52691eac633a84b677f85fb82cc9697c7"
+    },
+    {
+      "id": "qing-qimao",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E4%B8%83%E7%8C%AB%E5%B0%8F%E8%AF%B4%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "a7d2df918426d9fddb105a326d0726c48806debb"
+    },
+    {
+      "id": "qing-gaoding",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E7%A8%BF%E5%AE%9A%E8%AE%BE%E8%AE%A1%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "6bdc661e72ee2c1e34dbd595a747e61ffdcc86dc"
+    },
+    {
+      "id": "qing-tuilan",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E6%8E%A8%E6%A0%8F%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "26f65e3a93a198d8d678cbf9816a0573b7fbb658"
+    },
+    {
+      "id": "qing-jump",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Jump%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "1601b73d58e13dfe393a8544317bd617b724e99a"
+    },
+    {
+      "id": "qing-moegirl",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E8%90%8C%E5%A8%98%E7%99%BE%E7%A7%91%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "1ba37602226a65e2c209f4a6b6777b21359fb665"
+    },
+    {
+      "id": "qing-51job",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E5%89%8D%E7%A8%8B%E6%97%A0%E5%BF%A7%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "c51e7f27d0d3f1be308cda8191ee647015e8c7c7"
     }
   ],
   "protected_hosts": [
@@ -139,6 +189,17 @@
       ]
     },
     {
+      "id": "51job",
+      "app": "前程无忧",
+      "host": "appapi.51jobapp.com",
+      "path": "/api/market/get_launch.php",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "qing-51job"
+      ]
+    },
+    {
       "id": "acfun",
       "app": "AcFun",
       "host": "api-new.app.acfun.cn",
@@ -149,6 +210,18 @@
         "old",
         "moyu"
       ]
+    },
+    {
+      "id": "aiqiangua",
+      "app": "爱抢瓜",
+      "host": "manager.aiqiangua.com",
+      "path": "/AqgNews/api/start_ad.do",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200"
+      ],
+      "port": 8080
     },
     {
       "id": "alibaba-aicloud",
@@ -183,29 +256,6 @@
       "sources": [
         "fmz200",
         "osuphi"
-      ]
-    },
-    {
-      "id": "amap-splash",
-      "app": "高德地图",
-      "host": "m5.amap.com",
-      "path": "/ws/valueadded/alimama/splash_screen",
-      "match": "exact",
-      "action": "json",
-      "sources": [
-        "qing-amap"
-      ]
-    },
-    {
-      "id": "appactive",
-      "app": "东方财富基金相关应用",
-      "host": "appactive.1234567.com.cn",
-      "path": "/AppoperationApi/OperationService/GetAppStartImg",
-      "match": "exact",
-      "action": "empty",
-      "sources": [
-        "moyu",
-        "moyu-original"
       ]
     },
     {
@@ -252,6 +302,18 @@
         "moyu"
       ],
       "query": "type=splashMode"
+    },
+    {
+      "id": "banyuetan",
+      "app": "半月谈",
+      "host": "www.banyuetanapp.com",
+      "path": "/byt-api/ad/getAdvertList",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "fmz200"
+      ],
+      "query": "adSpaceId=100000002"
     },
     {
       "id": "beitaichufang",
@@ -505,6 +567,17 @@
       ]
     },
     {
+      "id": "dada",
+      "app": "达达",
+      "host": "delivery-api.imdada.cn",
+      "path": "/v1_0/transporter/screen/ads_list",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200"
+      ]
+    },
+    {
       "id": "daoyu",
       "app": "叨鱼",
       "host": "daoyu.sdo.com",
@@ -608,6 +681,17 @@
       ]
     },
     {
+      "id": "duitang",
+      "app": "堆糖",
+      "host": "api-2.duitang.com",
+      "path": "/napi/settings/",
+      "match": "exact",
+      "action": "duitang",
+      "sources": [
+        "qing-duitang"
+      ]
+    },
+    {
       "id": "edaijia",
       "app": "e代驾",
       "host": "pic.edaijia.cn",
@@ -690,6 +774,18 @@
       ]
     },
     {
+      "id": "gacmotor",
+      "app": "广汽传祺",
+      "host": "gsp.gacmotor.com",
+      "path": "/gateway/webapi/baseinfo/advertise/getAdvertiseByPositionCode",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200"
+      ],
+      "query": "positionCode=1"
+    },
+    {
       "id": "gameplus",
       "app": "腾讯游戏",
       "host": "api.gameplus.qq.com",
@@ -711,6 +807,17 @@
       "sources": [
         "osuphi",
         "fmz200"
+      ]
+    },
+    {
+      "id": "gaoding-personal",
+      "app": "稿定设计",
+      "host": "www.gaoding.com",
+      "path": "/api/v{version}/oc/v{version}/delivery-pits/ios-splash/modules",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "qing-gaoding"
       ]
     },
     {
@@ -846,6 +953,17 @@
       ]
     },
     {
+      "id": "ireader-boot",
+      "app": "掌阅",
+      "host": "ih2.ireader.com",
+      "path": "/zybook4/iphone/u/p/api.php",
+      "match": "exact",
+      "action": "ireader",
+      "sources": [
+        "qing-ireader"
+      ]
+    },
+    {
       "id": "ireader-ih2",
       "app": "掌阅",
       "host": "ih2.ireader.com",
@@ -855,6 +973,17 @@
       "sources": [
         "moyu",
         "moyu-original"
+      ]
+    },
+    {
+      "id": "ireader-webboot",
+      "app": "掌阅",
+      "host": "webboot.zhangyue.com",
+      "path": "/zybook4/iphone/u/p/api.php",
+      "match": "exact",
+      "action": "ireader",
+      "sources": [
+        "qing-ireader"
       ]
     },
     {
@@ -869,6 +998,18 @@
         "origo"
       ],
       "query": "functionId=start"
+    },
+    {
+      "id": "jd-health",
+      "app": "京东健康",
+      "host": "api.m.jd.com",
+      "path": "/api",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "moyu"
+      ],
+      "query": "functionId=jdh_queryStartupResources"
     },
     {
       "id": "jdcloud-router",
@@ -903,6 +1044,17 @@
       "action": "reject",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "jump-v2",
+      "app": "Jump",
+      "host": "switch.jumpvg.com",
+      "path": "/jump/getlaunchad/v2",
+      "match": "exact",
+      "action": "jump",
+      "sources": [
+        "qing-jump"
       ]
     },
     {
@@ -1134,6 +1286,18 @@
       ]
     },
     {
+      "id": "missevan",
+      "app": "猫耳FM",
+      "host": "app.missevan.com",
+      "path": "/site/launch",
+      "match": "exact",
+      "action": "missevan",
+      "sources": [
+        "qing-missevan",
+        "fmz200"
+      ]
+    },
+    {
       "id": "mitvos",
       "app": "MITVOS",
       "host": "marketing-aibox.v.mitvos.com",
@@ -1154,6 +1318,17 @@
       "action": "empty",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "moegirl",
+      "app": "萌娘百科",
+      "host": "grpc.moegirl.org.cn",
+      "path": "/moegirl.moepad.MoepadService/GetLaunchAdPage",
+      "match": "exact",
+      "action": "reject",
+      "sources": [
+        "qing-moegirl"
       ]
     },
     {
@@ -1297,6 +1472,17 @@
       ]
     },
     {
+      "id": "qimao",
+      "app": "七猫小说",
+      "host": "api-cfg.wtzw.com",
+      "path": "/v{version}/splash/",
+      "match": "subtree",
+      "action": "json",
+      "sources": [
+        "qing-qimao"
+      ]
+    },
+    {
       "id": "qq-mengyou",
       "app": "腾讯游戏助手",
       "host": "qt.qq.com",
@@ -1374,6 +1560,18 @@
       "sources": [
         "moyu",
         "moyu-original"
+      ]
+    },
+    {
+      "id": "shihuo",
+      "app": "识货",
+      "host": "sh-gateway.shihuo.cn",
+      "path": "/v{version}/services/sh-adapi/home/screen",
+      "match": "exact",
+      "action": "reject",
+      "sources": [
+        "moyu-original",
+        "fmz200"
       ]
     },
     {
@@ -1495,6 +1693,28 @@
         "moyu",
         "moyu-original",
         "fmz200"
+      ]
+    },
+    {
+      "id": "tuborg",
+      "app": "乐堡",
+      "host": "tbgapplet.carlsberg.asia",
+      "path": "/tuborg/banner/loading",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200"
+      ]
+    },
+    {
+      "id": "tuilan",
+      "app": "推栏",
+      "host": "m.pvp.xoyo.com",
+      "path": "/conf/server-mapping",
+      "match": "exact",
+      "action": "tuilan",
+      "sources": [
+        "qing-tuilan"
       ]
     },
     {
@@ -1661,6 +1881,29 @@
       ]
     },
     {
+      "id": "wufazhuce",
+      "app": "ONE 一个",
+      "host": "v3.wufazhuce.com",
+      "path": "/api/adpreloadlist",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200"
+      ],
+      "port": 8000
+    },
+    {
+      "id": "wuta",
+      "app": "无他相机",
+      "host": "api-release.wuta-cam.com",
+      "path": "/ad_tree",
+      "match": "exact",
+      "action": "wuta",
+      "sources": [
+        "qing-wuta"
+      ]
+    },
+    {
       "id": "xczim",
       "app": "小触",
       "host": "lchttpapi.xczim.com",
@@ -1706,6 +1949,17 @@
       "action": "json",
       "sources": [
         "osuphi",
+        "fmz200"
+      ]
+    },
+    {
+      "id": "xiaoyuzhou",
+      "app": "小宇宙",
+      "host": "api.xiaoyuzhoufm.com",
+      "path": "/v{version}/flash",
+      "match": "exact",
+      "action": "json",
+      "sources": [
         "fmz200"
       ]
     },
@@ -1767,6 +2021,17 @@
       "sources": [
         "moyu",
         "moyu-original"
+      ]
+    },
+    {
+      "id": "ymm",
+      "app": "运满满",
+      "host": "www.ymm56.com",
+      "path": "/short-distance-match-app/openAppAd",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200"
       ]
     },
     {

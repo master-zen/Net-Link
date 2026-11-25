@@ -38,6 +38,12 @@ class StartupADTests(unittest.TestCase):
             "https://pan.baidu.com/buy/ad/conf?type=normal",
             "https://m5.amap.com/ws/c3frontend/af-launch/page/main",
             "https://guide-acs.m.taobao.com/gw/mtop.taobao.cloudvideo.video.query",
+            "https://www.gaoding.com/api/v3/oc/v2/delivery-pits/home-page-dialog/modules",
+            "https://api-cfg.wtzw.com/v1/config/",
+            "https://delivery-api.imdada.cn/v1_0/transporter/ad",
+            "https://www.banyuetanapp.com/byt-api/ad/getAdvertList?adSpaceId=100000003",
+            "https://api.m.jd.com/api?functionId=jdh_queryOtherResources",
+            "https://sh-gateway.shihuo.cn/v1/services/sh-adapi/home/ad",
             "https://security.wechat.com/",
             "https://wxa.wxs.qq.com/",
         ):

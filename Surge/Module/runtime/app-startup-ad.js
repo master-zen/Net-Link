@@ -48,6 +48,28 @@ function scrub(mode, value) {
                 if (Object.prototype.hasOwnProperty.call(data, key)) { delete data[key]; changed = true; }
             }
         }
+    } else if (mode === "ireader" || mode === "missevan" || mode === "wuta" || mode === "duitang" || mode === "tuilan") {
+        const fields = {
+            ireader: [[value, "Splash"]],
+            missevan: [[value.info, "splash"], [value.info, "splash_ready"]],
+            wuta: [[value.regular, "splash"]],
+            duitang: [[data, "SPLASH_SWING_OPEN"]],
+            tuilan: [[data, "splashConf"], [data, "splashConfNew"]]
+        };
+        for (const [target, key] of fields[mode]) {
+            if (target && typeof target === "object" && Object.prototype.hasOwnProperty.call(target, key)) {
+                delete target[key];
+                changed = true;
+            }
+        }
+    } else if (mode === "jump") {
+        if (data && typeof data === "object") {
+            clear(data, "adList");
+            if (data.launchAd && typeof data.launchAd === "object" && "showType" in data.launchAd && data.launchAd.showType !== 0) {
+                data.launchAd.showType = 0;
+                changed = true;
+            }
+        }
     } else if (mode === "kuaidi") {
         if (Object.prototype.hasOwnProperty.call(value, "adsplash")) {
             delete value.adsplash;
