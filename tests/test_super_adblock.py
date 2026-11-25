@@ -120,6 +120,19 @@ class SuperAdBlockTests(unittest.TestCase):
         pattern=r"^https://api\.example\.com/ads"
         self.assertEqual(s.parse_rewrite("map local",pattern+' data-type=text data="{}" status-code=200 header="Content-Type:application/json"'),(pattern,"reject-dict"))
 
+    def test_safe_body_rewrite(self):
+        p=r"^https://mag1\.sdgun\.net/mag/circle/v4/show/showView"
+        candidate=s.parse_body(f"http-response-jq {p} 'del(.ads,.data.adInfo)'",s.protected_domains())
+        self.assertIsNotNone(candidate)
+        pattern,host,paths=candidate
+        self.assertEqual(paths,{("ads",),("data","adInfo")})
+        self.assertIsNone(s.re.match(pattern,"https://mag1.sdgun.net/mag/circle/v4/show/showViewExtra"))
+        self.assertIsNotNone(s.re.match(pattern,"https://mag1.sdgun.net/mag/circle/v4/show/showView?x=1"))
+        self.assertEqual(s.parse_body(f"http-response-jq {p} 'delpaths([[\"ads\"]])'",set())[2],{("ads",)})
+        for expr in ("del(.data)","del(.user.ads)","del(.ads)|empty","delpaths([[\"data\",0]])","walk(del(.ads))"):
+            self.assertIsNone(s.parse_body(f"http-response-jq {p} '{expr}'",set()))
+        self.assertIsNone(s.parse_body(r"http-response-jq ^https://restapi\.amap\.com/v1/ads 'del(.ads)'",s.protected_domains()))
+
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):
             with self.assertRaises(ValueError):

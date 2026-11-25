@@ -12,6 +12,30 @@ function name(n){
 }
 function root(n){while(n.type==="MemberExpression")n=n.object;return n.type==="Identifier"?n.name:null}
 function children(n,fn){for(const [k,v] of Object.entries(n)){if(Array.isArray(v))v.forEach(x=>{if(x?.type)fn(x,n,k)});else if(v?.type)fn(v,n,k)}}
+const adKeys=new Set("ad ads adinfo adlist aditems adpayload advert adverts advertisement advertisements advertising admetadata adconfig splashad splashads splashadvertisement promotedads commentspageads adbanner adslots adslot adcontent".split(" "));
+const parents=new Set("data result response payload body content page detail info".split(" "));
+function adDeletionOnly(ast){
+  const statements=ast.body;
+  if(statements.length<3||statements.length>34)return false;
+  const first=statements[0],last=statements.at(-1);
+  if(first.type!=="VariableDeclaration"||first.declarations.length!==1)return false;
+  const variable=first.declarations[0];
+  if(variable.id.type!=="Identifier"||variable.init?.type!=="CallExpression"||name(variable.init.callee)!=="JSON.parse"||variable.init.arguments.length!==1||name(variable.init.arguments[0])!=="$response.body")return false;
+  const id=variable.id.name;
+  const done=last.expression;
+  if(last.type!=="ExpressionStatement"||done?.type!=="CallExpression"||name(done.callee)!=="$done"||done.arguments.length!==1)return false;
+  const properties=done.arguments[0].properties;
+  if(properties?.length!==1)return false;
+  const prop=properties[0],v=prop.value;
+  if((prop.key.name??prop.key.value)!=="body"||v.type!=="CallExpression"||name(v.callee)!=="JSON.stringify"||v.arguments.length!==1||name(v.arguments[0])!==id)return false;
+  for(const statement of statements.slice(1,-1)){
+    const e=statement.expression;
+    if(statement.type!=="ExpressionStatement"||e?.type!=="UnaryExpression"||e.operator!=="delete")return false;
+    const path=name(e.argument)?.split(".");
+    if(!path||path.shift()!==id||path.length<1||path.length>4||!adKeys.has(path.at(-1).toLowerCase())||path.slice(0,-1).some(k=>!parents.has(k.toLowerCase())))return false;
+  }
+  return true;
+}
 function audit(source){
   const ast=acorn.parse(source,{ecmaVersion:2024,sourceType:"script"});
   const locals=new Set();let count=0,done=0;
@@ -42,6 +66,7 @@ function audit(source){
   }
   walk(ast,null,"");
   if(done!==1||ast.body.at(-1)?.expression?.callee?.name!=="$done")throw Error("completion");
-  return {eligible:true,reason:"restricted-response-profile"};
+  if(!adDeletionOnly(ast))throw Error("unproven-functional-transform");
+  return {eligible:true,reason:"restricted-ad-field-deletion-profile"};
 }
 try{process.stdout.write(JSON.stringify(audit(fs.readFileSync(process.argv[2],"utf8"))))}catch(e){process.stdout.write(JSON.stringify({eligible:false,reason:e instanceof SyntaxError?"syntax-error":String(e.message).slice(0,80)}))}

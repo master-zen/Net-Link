@@ -12,7 +12,10 @@ try{
     ["let a=JSON.parse($response.body); a['constructor']; $done({body:JSON.stringify(a)});",false],
     ["let a=eval($response.body); $done({body:JSON.stringify(a)});",false],
     ["let a=JSON.parse($response.body); $done({body:JSON.stringify(a),headers:{}});",false],
-    ["let a=JSON.parse($response.body); while(true){} $done({body:JSON.stringify(a)});",false]
+    ["let a=JSON.parse($response.body); while(true){} $done({body:JSON.stringify(a)});",false],
+    ["let a=JSON.parse($response.body); delete a.user; $done({body:JSON.stringify(a)});",false],
+    ["let a=JSON.parse($response.body); a.ads=0; $done({body:JSON.stringify(a)});",false],
+    ["let a=JSON.parse($response.body); delete a.data.adInfo; $done({body:JSON.stringify(a)});",true]
   ];
   for(let i=0;i<fixtures.length;i++){
     const file=path.join(dir,i+".js");

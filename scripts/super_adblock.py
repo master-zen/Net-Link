@@ -204,7 +204,7 @@ def normalize_pattern(pattern):
         return None
     return pattern
 
-def url_candidate(pattern, protected):
+def url_candidate(pattern, protected, body=False):
     pattern = normalize_pattern(pattern)
     if not pattern:
         return None
@@ -216,6 +216,8 @@ def url_candidate(pattern, protected):
     if not host or protected_mitm(host):
         return None
     if pattern in DOUBAN:
+        if body:
+            return None
         if path=="/v2/app_ads/splash":
             return pattern+r"(?:[/?&]|$)",host
         return r"^https?://api\.douban\.com/b[^?#]*/common_ads\?",host
@@ -223,7 +225,7 @@ def url_candidate(pattern, protected):
         return None
     if not re.fullmatch(r"(?:[A-Za-z0-9_/=&-]|\\[.?])+\$?", path):
         return None
-    if should_skip_rewrite(pattern) or SENSITIVE.search(path) or not AD_PATH.search(path.rstrip("$")):
+    if should_skip_rewrite(pattern) or SENSITIVE.search(path) or (not body and not AD_PATH.search(path.rstrip("$"))):
         return None
     if re.search(r"\\[1-9]|\(\?|\([^)]*[+*][^)]*\)[+*{]|\.\*[+*]|\{[0-9]{4,}",path):
         return None
@@ -231,7 +233,13 @@ def url_candidate(pattern, protected):
         return None
     if re.search(r"(?i)(?:login|password|oauth|payment|checkout|location|trailer|playurl)",path):
         return None
-    if not path.endswith(("/", "$", r"\?")):
+    if body:
+        route=path.removesuffix("$").removesuffix(r"\?")
+        if route.count("/")<2 or route.endswith("/") or not re.fullmatch(r"(?:[A-Za-z0-9_/-]|\\.)+",route):
+            return None
+        if not path.endswith(("$",r"\?")):
+            pattern+=r"(?:\?|$)"
+    elif not path.endswith(("/", "$", r"\?")):
         pattern += r"(?:[/?&]|$)"
     return pattern,host
 
@@ -242,7 +250,7 @@ def scopes_overlap(left,right):
             return None
         scheme,host,path=m.groups()
         scheme={"http","https"} if scheme=="https?" else {scheme}
-        path=path.removesuffix(r"(?:[/?&]|$)").removesuffix("$")
+        path=path.removesuffix(r"(?:[/?&]|$)").removesuffix(r"(?:\?|$)").removesuffix("$")
         if not re.fullmatch(r"(?:[A-Za-z0-9_/=&-]|\\[.?])+",path):
             path=None
         else:
@@ -268,6 +276,37 @@ def rewrite_conflicts(hits,hosts):
                 if hits[p]!=hits[q] and scopes_overlap(p,q):
                     result.update((p,q))
     return result
+
+AD_JSON_KEYS={"ad","ads","adinfo","adlist","aditems","adpayload","advert","adverts","advertisement","advertisements","advertising","admetadata","adconfig","splashad","splashads","splashadvertisement","promotedads","commentspageads","adbanner","adslots","adslot","adcontent"}
+JSON_PARENTS={"data","result","response","payload","body","content","page","detail","info"}
+def parse_body(line,protected):
+    m=re.fullmatch(r"http-response-jq\s+(\S+)\s+(['\"])(.+)\2",line)
+    if not m or len(line)>2048:
+        return None
+    pattern,_,expression=m.groups()
+    qualified=url_candidate(pattern,protected,body=True)
+    if not qualified:
+        return None
+    if expression.startswith("delpaths(") and expression.endswith(")"):
+        try:
+            paths=json.loads(expression[9:-1])
+        except ValueError:
+            return None
+    elif re.fullmatch(r"del\(\s*\.[A-Za-z_][A-Za-z0-9_.]*(?:\s*,\s*\.[A-Za-z_][A-Za-z0-9_.]*)*\s*\)",expression):
+        paths=[p.strip()[1:].split(".") for p in expression[4:-1].split(",")]
+    else:
+        return None
+    if not isinstance(paths,list) or not 1<=len(paths)<=16:
+        return None
+    for path in paths:
+        if not isinstance(path,list) or not 1<=len(path)<=4 or not all(isinstance(k,str) and re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*",k) for k in path):
+            return None
+        if path[-1].lower() not in AD_JSON_KEYS or any(k.lower() not in JSON_PARENTS for k in path[:-1]):
+            return None
+    return (*qualified,{tuple(p) for p in paths})
+
+def body_expression(paths):
+    return ". as $original | try (if type == \"object\" then delpaths("+json.dumps([list(p) for p in sorted(paths)],separators=(",",":"))+") else . end) catch $original"
 
 def parse_rewrite(section, line):
     if section == "url rewrite":
@@ -310,6 +349,7 @@ def build(work, review=False):
     cleared = sec.eligible(work, review=review)
     script_hits = defaultdict(set)
     script_origins = defaultdict(set)
+    body_hits = defaultdict(set)
     seen_content = set()
     for entry, text in snapshots(work, review=review):
         source_sections[entry["url"]] = Counter()
@@ -357,6 +397,15 @@ def build(work, review=False):
                 else:
                     quarantine["unsupported-rule"] += 1
                     continue
+            elif section == "body rewrite":
+                parsed=parse_body(line,protected)
+                if not parsed:
+                    quarantine["unsupported-or-unsafe-body-rewrite"] += 1
+                    continue
+                pattern,host,paths=parsed
+                body_hits[pattern].update(paths)
+                url_hosts[pattern]=host
+                continue
             elif section == "script":
                 spec = sec.declaration(line)
                 if not spec or spec[1] not in cleared:
@@ -406,6 +455,15 @@ def build(work, review=False):
     rules = [f"{kind},{domain},REJECT" for kind,domain in domains]
     rewrite, maps, hosts = [], [], set()
     conflicts=rewrite_conflicts(url_hits,url_hosts)
+    cross=set()
+    collections=[url_hits,body_hits,script_hits]
+    for i,group in enumerate(collections):
+        for other in collections[i+1:]:
+            for a in group:
+                for b in other:
+                    if url_hosts[a]==url_hosts[b] and scopes_overlap(a,b):
+                        cross.update((a,b))
+    conflicts.update(cross)
     for pattern,actions in sorted(url_hits.items()):
         host = url_hosts[pattern]
         if pattern in conflicts:
@@ -424,10 +482,22 @@ def build(work, review=False):
             maps.append(f'{pattern} {MAP[action]}')
         if not pattern.startswith("^http://"):
             hosts.add(host)
+    bodies=[]
+    for pattern,paths in sorted(body_hits.items()):
+        host=url_hosts[pattern]
+        if pattern in cross or any(matches_domain(host,a,k=="DOMAIN-SUFFIX") for k,a in [*domains,*upstream_allow]):
+            quarantine["body-conflict-or-covered"] += 1
+            continue
+        if len(paths)>16:
+            quarantine["body-field-limit"] += 1
+            continue
+        bodies.append(f"#!REQUIREMENT CORE_VERSION>=6008000 http-response-jq {pattern} '{body_expression(paths)}'")
+        if not pattern.startswith("^http://"):
+            hosts.add(host)
     scripts, published = [], {}
     for pattern,hashes in sorted(script_hits.items()):
         host=url_hosts[pattern]
-        if len(hashes)!=1 or any(url_hosts[k]==host and scopes_overlap(pattern,k) for k in url_hits) or any(k!=pattern and url_hosts[k]==host and scopes_overlap(pattern,k) for k in script_hits):
+        if pattern in cross or len(hashes)!=1 or any(url_hosts[k]==host and scopes_overlap(pattern,k) for k in url_hits) or any(k!=pattern and url_hosts[k]==host and scopes_overlap(pattern,k) for k in script_hits):
             quarantine["script-conflict"] += 1
             continue
         if any(matches_domain(host,domain,kind=="DOMAIN-SUFFIX") for kind,domain in domains) or any(matches_domain(host,a,k=="DOMAIN-SUFFIX") for k,a in upstream_allow):
@@ -439,19 +509,19 @@ def build(work, review=False):
         published[h]=sorted(set(published.get(h,[]))|script_origins[h])
         if not pattern.startswith("^http://"):
             hosts.add(host)
-    sections = [("Rule",rules),("URL Rewrite",rewrite),("Map Local",maps),("Script",scripts),("MITM",["hostname = %APPEND% "+",".join(sorted(hosts))] if hosts else [])]
+    sections = [("Rule",rules),("URL Rewrite",rewrite),("Map Local",maps),("Body Rewrite",bodies),("Script",scripts),("MITM",["hostname = %APPEND% "+",".join(sorted(hosts))] if hosts else [])]
     output = ["#!name=SuperAdBlock","#!desc=Conservative merged ad-blocking module; source and safety audit in Net-Link","#!category=Advertising"]
     for section,lines in sections:
         if lines:
             output.extend(["",f"[{section}]",*lines])
     module = "\n".join(output)+"\n"
-    if len(rules)+len(rewrite)+len(maps)+len(scripts)<50:
+    if len(rules)+len(rewrite)+len(maps)+len(bodies)+len(scripts)<50:
         raise ValueError("Insufficient safe rules")
     (work/("SuperAdBlock.review.sgmodule" if review else "SuperAdBlock.sgmodule")).write_text(module,encoding="utf-8")
     manifest=json.loads((work/"manifest.json").read_text(encoding="utf-8"))
     alternatives=json.loads((ROOT/"data/sources/SuperAdBlock_alternatives.json").read_text(encoding="utf-8"))["alternatives"]
     success={e["url"] for e in manifest["sources"] if "error" not in e}
-    report = {"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
+    report = {"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"body_rewrite":len(bodies),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
     dump(work/("review-audit.json" if review else "audit.json"),report)
     return report
 
@@ -550,6 +620,11 @@ def verify_release(work):
             raise ValueError("Release script checksum failure")
     if json.loads((runtime/"manifest.json").read_bytes())!=report["published_scripts"]:
         raise ValueError("Release runtime manifest mismatch")
+    for path in runtime.iterdir():
+        if path.name=="manifest.json":
+            continue
+        if not path.is_file() or not re.fullmatch(r"[a-f0-9]{64}\.js",path.name) or digest(path.read_bytes())!=path.stem:
+            raise ValueError("Unexpected or modified runtime file")
 
 def main():
     parser = argparse.ArgumentParser()
