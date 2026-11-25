@@ -1,0 +1,32 @@
+{
+  "runs": [
+    {
+      "audit_sha256": "eac0b11817af414fc36a6abe91824ed9c2ad77e188f79eec2d1323d20fa07fe3",
+      "downloaded": 428,
+      "epoch_seconds": 1795609626,
+      "module_sha256": "b40be8ad6acfa9fc622550020aa6c215e7a4010c85fcd9b21e71ccc89442926e",
+      "output": {
+        "body_rewrite": 6,
+        "map_local": 54,
+        "mitm_hosts": 119,
+        "rules": 172,
+        "scripts": 0,
+        "url_rewrite": 81
+      },
+      "passed": true,
+      "policy_sha256": "afd51a9946d07c3813d84c853122588bf6ab725d6836bf98d0410ca67afd70cc",
+      "reasons": [],
+      "reference_only": 43,
+      "run_attempt": "1",
+      "run_id": "45613821518",
+      "script_decisions": {
+        "download-failed": 87,
+        "quarantine": 48
+      },
+      "script_references": 135,
+      "sources": 428,
+      "unique_downloaded_scripts": 47
+    }
+  ],
+  "schema": 1
+}
