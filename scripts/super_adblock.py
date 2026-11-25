@@ -250,8 +250,17 @@ def build(work, review=False):
     cleared = sec.eligible(work, review=review)
     script_hits = defaultdict(set)
     script_origins = defaultdict(set)
+    seen_content = set()
     for entry, text in snapshots(work, review=review):
         source_sections[entry["url"]] = Counter()
+        if not review and "/QingRex/LoonKissSurge/" in entry["url"] and "/Surge/Beta/" in entry["url"]:
+            quarantine["beta-review-only"] += 1
+            continue
+        fingerprint=(entry["family"],entry["sha256"])
+        if fingerprint in seen_content:
+            quarantine["duplicate-source-content"] += 1
+            continue
+        seen_content.add(fingerprint)
         section = ""
         for original in text.splitlines():
             line = original.strip()

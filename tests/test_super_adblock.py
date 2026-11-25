@@ -11,7 +11,7 @@ import super_adblock as s
 
 class SuperAdBlockTests(unittest.TestCase):
     def test_sources(self):
-        self.assertEqual(len(s.sources()),252)
+        self.assertEqual(len(s.sources()),469)
 
     def test_url_rewrite(self):
         protected=s.protected_domains()
