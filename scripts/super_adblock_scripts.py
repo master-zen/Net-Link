@@ -118,14 +118,18 @@ def audit(work,ready):
     report={"module_manifest_sha256":sha(manifest),"antivirus_ready":ready,"references":len(entries),"entries":entries}
     (work/"script-audit.json").write_text(json.dumps(report,ensure_ascii=False,sort_keys=True,indent=2)+"\n",encoding="utf-8")
 
-def eligible(work):
+def eligible(work, review=False):
     report=json.loads((work/"script-audit.json").read_text(encoding="utf-8"))
     if report["module_manifest_sha256"]!=sha((work/"manifest.json").read_bytes()):
         raise ValueError("Stale script audit")
     if report["references"] and not report["antivirus_ready"]:
+        if review:
+            return {}
         raise ValueError("Antivirus signatures unavailable")
-    if any(e.get("antivirus")=="scan-error" for e in report["entries"]):
-        raise ValueError("Antivirus scan failed")
+    if any(e.get("antivirus")=="scan-error" or e.get("ast",{}).get("reason")=="scanner-error" for e in report["entries"]):
+        if review:
+            return {}
+        raise ValueError("Script scan failed")
     result={}
     for e in report["entries"]:
         if e["decision"]!="eligible":

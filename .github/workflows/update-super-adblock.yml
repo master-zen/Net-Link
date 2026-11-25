@@ -28,7 +28,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 35
+    env:
+      NODE_PATH: /usr/share/nodejs
     steps:
       - uses: actions/checkout@v6
         with:
@@ -53,6 +55,8 @@ jobs:
         env:
           SUPER_ADBLOCK_ANTIVIRUS_READY: ${{ steps.scanner.outcome == 'success' }}
         run: python scripts/super_adblock_scripts.py "$RUNNER_TEMP/super-adblock"
+      - run: python scripts/super_adblock.py review "$RUNNER_TEMP/super-adblock"
+      - run: python scripts/super_adblock.py review-validate "$RUNNER_TEMP/super-adblock"
       - run: python scripts/super_adblock.py build "$RUNNER_TEMP/super-adblock"
       - run: python scripts/super_adblock.py validate "$RUNNER_TEMP/super-adblock"
       - if: always()
@@ -63,6 +67,7 @@ jobs:
           path: |
             ${{ runner.temp }}/super-adblock/manifest.json
             ${{ runner.temp }}/super-adblock/audit.json
+            ${{ runner.temp }}/super-adblock/review-audit.json
             ${{ runner.temp }}/super-adblock/script-audit.json
       - id: gate
         run: echo "approved=$(python scripts/super_adblock.py approved "$RUNNER_TEMP/super-adblock")" >> "$GITHUB_OUTPUT"
@@ -101,7 +106,8 @@ jobs:
           name: super-adblock-approved
           path: .
       - run: |
-          test "$(python scripts/super_adblock.py approved unused)" = true
+          test -f data/reports/super_adblock_audit.json
+          python -c 'import json; a=json.load(open("data/reports/super_adblock_audit.json")); m=json.load(open("data/reports/super_adblock_download_manifest.json")); assert not a["review_only"] and not m["failed"]'
           python scripts/publish_generated.py "chore: update SuperAdBlock" data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/
           git fetch origin main
           git diff --exit-code HEAD origin/main -- data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/

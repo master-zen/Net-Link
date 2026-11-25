@@ -73,6 +73,8 @@ def guarded_inputs(paths):
             "scripts/super_adblock_ast.cjs",
             "tests/test_super_adblock.py",
             "data/sources/SuperAdBlock_URLs.txt",
+            "data/sources/SuperAdBlock_alternatives.json",
+            "tests/super_adblock_ast_check.cjs",
             "data/sources/SuperAdBlock_publication.json",
             "data/allowlists/AdblockCriticalAllow.list",
             "Surge/Module/.generator/safety.py",

@@ -51,7 +51,7 @@ def dump(path, obj):
 
 def sources():
     result = [x.strip() for x in SOURCE.read_text(encoding="utf-8").splitlines() if x.strip()]
-    if len(result) != 64 or len(set(map(safe_url, result))) != len(result):
+    if not result or len({safe_url(u).replace("/refs/heads/","/") for u in result}) != len(result):
         raise ValueError("Invalid source inventory")
     return result
 
@@ -118,19 +118,22 @@ def fetch(work):
         entries = list(pool.map(lambda pair: download_one(pair,base), enumerate(sources(),1)))
     failures = [x for x in entries if "error" in x]
     dump(work / "manifest.json", {"run_id":os.getenv("GITHUB_RUN_ID","local"),"run_attempt":os.getenv("GITHUB_RUN_ATTEMPT","1"),"epoch_seconds":int(time.time()),"sources":entries,"downloaded":len(entries)-len(failures),"failed":len(failures)})
-    if failures:
-        raise RuntimeError("Incomplete snapshot: " + "; ".join(x["file"]+": "+x["error"] for x in failures))
 
-def snapshots(work):
+
+def snapshots(work, review=False):
     manifest = json.loads((work / "manifest.json").read_text(encoding="utf-8"))
     if manifest["run_id"] != os.getenv("GITHUB_RUN_ID","local") or manifest["run_attempt"] != os.getenv("GITHUB_RUN_ATTEMPT","1"):
         raise ValueError("Stale manifest")
-    if manifest.get("failed",0) or [x["url"] for x in manifest["sources"]] != sources():
+    if (manifest.get("failed",0) and not review) or [x["url"] for x in manifest["sources"]] != sources():
         raise ValueError("Incomplete manifest")
     for i, entry in enumerate(manifest["sources"],1):
         expected = f"{i:02d}-{urlsplit(entry['url']).path.rsplit('/',1)[-1]}"
         if entry["file"] != expected or entry["family"] != family(entry["url"]):
             raise ValueError("Invalid manifest path or source family")
+        if "error" in entry:
+            if review:
+                continue
+            raise ValueError("Failed snapshot")
         raw = (work / "upstream" / expected).read_bytes()
         if len(raw) != entry["bytes"] or digest(raw) != entry["sha256"]:
             raise ValueError("Snapshot integrity failure")
@@ -235,7 +238,7 @@ def parse_rewrite(section, line):
             return None
     return None
 
-def build(work):
+def build(work, review=False):
     protected = protected_domains()
     domain_hits = defaultdict(set)
     url_hits = defaultdict(set)
@@ -244,10 +247,10 @@ def build(work):
     counts = Counter()
     quarantine = Counter()
     source_sections = {}
-    cleared = sec.eligible(work)
+    cleared = sec.eligible(work, review=review)
     script_hits = defaultdict(set)
     script_origins = defaultdict(set)
-    for entry, text in snapshots(work):
+    for entry, text in snapshots(work, review=review):
         source_sections[entry["url"]] = Counter()
         section = ""
         for original in text.splitlines():
@@ -373,16 +376,21 @@ def build(work):
     module = "\n".join(output)+"\n"
     if len(rules)+len(rewrite)+len(maps)+len(scripts)<50:
         raise ValueError("Insufficient safe rules")
-    (work/"SuperAdBlock.sgmodule").write_text(module,encoding="utf-8")
-    report = {"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
-    dump(work/"audit.json",report)
+    (work/("SuperAdBlock.review.sgmodule" if review else "SuperAdBlock.sgmodule")).write_text(module,encoding="utf-8")
+    manifest=json.loads((work/"manifest.json").read_text(encoding="utf-8"))
+    alternatives=json.loads((ROOT/"data/sources/SuperAdBlock_alternatives.json").read_text(encoding="utf-8"))["alternatives"]
+    success={e["url"] for e in manifest["sources"] if "error" not in e}
+    report = {"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
+    dump(work/("review-audit.json" if review else "audit.json"),report)
     return report
 
-def validate(work):
-    data = (work/"SuperAdBlock.sgmodule").read_bytes()
-    audit = (work/"audit.json").read_bytes()
-    build(work)
-    if data != (work/"SuperAdBlock.sgmodule").read_bytes() or audit != (work/"audit.json").read_bytes():
+def validate(work, review=False):
+    module=work/("SuperAdBlock.review.sgmodule" if review else "SuperAdBlock.sgmodule")
+    report=work/("review-audit.json" if review else "audit.json")
+    data = module.read_bytes()
+    audit = report.read_bytes()
+    build(work,review=review)
+    if data != module.read_bytes() or audit != report.read_bytes():
         raise ValueError("Non-reproducible output")
     if b"[General]" in data:
         raise ValueError("Global config")
@@ -398,7 +406,11 @@ def approved(work=None):
     approved_urls = {x["url"] for x in config.get("sources",[]) if x.get("redistribution") is True and x.get("evidence") and x.get("license")}
     if not (config.get("enabled") is True and approved_urls == set(sources()) and config.get("combined_license_review")):
         return False
-    if work is not None and (work/"audit.json").exists():
+    if work is not None:
+        if not (work/"audit.json").exists() or not (work/"manifest.json").exists():
+            return False
+        if json.loads((work/"manifest.json").read_text())["failed"] or json.loads((work/"audit.json").read_text()).get("review_only",True):
+            return False
         required={u for urls in json.loads((work/"audit.json").read_text())["published_scripts"].values() for u in urls}
         allowed={e["url"] for e in config.get("scripts",[]) if e.get("redistribution") is True and e.get("license") and e.get("evidence")}
         return required <= allowed
@@ -431,7 +443,7 @@ def stage(work):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("action",choices=["fetch","build","validate","stage","approved"])
+    parser.add_argument("action",choices=["fetch","build","validate","review","review-validate","stage","approved"])
     parser.add_argument("work",type=Path)
     args = parser.parse_args()
     if args.action=="approved":
@@ -442,6 +454,10 @@ def main():
         build(args.work)
     elif args.action=="validate":
         print(json.dumps(validate(args.work)["output"],sort_keys=True))
+    elif args.action=="review":
+        build(args.work,review=True)
+    elif args.action=="review-validate":
+        print(json.dumps(validate(args.work,review=True)["output"],sort_keys=True))
     else:
         stage(args.work)
 
