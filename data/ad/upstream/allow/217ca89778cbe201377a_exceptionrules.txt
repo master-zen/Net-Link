@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
-! Checksum: kAD+M/9ApcfMhN1HOpVO9Q
-! Version: 202611251153
+! Checksum: IqyJtIE6eVFl+2pgXohqnQ
+! Version: 202611251203
 ! Title: Allow nonintrusive advertising
 ! Expires: 12 hours
 ! Homepage: https://acceptableads.com/
@@ -3348,6 +3348,9 @@ kleinanzeigen.de#@#div[id^="vip-similar-ads-"]
 kleinanzeigen.de#@#div[data-liberty-position-name]
 kleinanzeigen.de#@#div[data-liberty-subarea]
 kleinanzeigen.de#@#div[id="viewad-sidebar-banner"]
+@@||*.ay.delivery^$~xmlhttprequest
+@@||event.ay.delivery^$xmlhttprequest
+@@||ay.delivery/cookie_sync$xmlhttprequest
 ! hidden for compliance
 imore.com##div.inline-text
 nevermundane.com,uniqueinterests.com,travelapples.com,marspeta.com,geekyup.com,readyer.com,oldermillennials.com,simpleblitz.com##div[class^="entry-content"] .ad_placeholder

@@ -1,16 +1,16 @@
 {
-  "download_run": "45609719244",
+  "download_run": "45611788624",
   "parser_safety_version": "strict-unconditional-dns-v2",
   "official_dns_source": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
   "official_dns_rule_count": 193890,
   "official_dns_source_sha256": "635412751a3851e72528863f054a2886a062b79b39782095c10f7789e6511b3a",
   "scope_restricted_rules_skipped": {
     "block": 579,
-    "allow": 9723
+    "allow": 9726
   },
-  "fetched_at_utc": "2026-11-25T12:01:13Z",
+  "fetched_at_utc": "2026-11-25T12:14:18Z",
   "input_sources": 25,
-  "input_total_bytes": 38408637,
+  "input_total_bytes": 38408753,
   "block_source_rules": 284734,
   "allow_and_exception_rules": 4482,
   "independent_exception_rules": 187,
@@ -20,15 +20,15 @@
     "block": {
       "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanAD.list": 566,
       "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/BanProgramAD.list": 1008,
-      "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Advertising/Advertising.list": 486,
       "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Hijacking/Hijacking_Resolve.list": 228,
+      "https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/hosts.txt": 312,
+      "https://raw.githubusercontent.com/limbopro/Adblock4limbo/refs/heads/main/rule/Surge/BanAD_surge.list": 563,
+      "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Advertising/Advertising.list": 486,
+      "https://raw.githubusercontent.com/limbopro/Adblock4limbo/refs/heads/main/Surge/rule/Peter_Lowe_adservers_surge.list": 3562,
       "https://raw.githubusercontent.com/anudeepND/blacklist/master/CoinMiner.txt": 5830,
       "https://raw.githubusercontent.com/limbopro/Adblock4limbo/refs/heads/main/rule/Surge/Adblock4limbo_surge.list": 495,
-      "https://raw.githubusercontent.com/limbopro/Adblock4limbo/refs/heads/main/rule/Surge/BanAD_surge.list": 563,
-      "https://raw.githubusercontent.com/limbopro/Adblock4limbo/refs/heads/main/Surge/rule/Peter_Lowe_adservers_surge.list": 3562,
-      "https://raw.githubusercontent.com/hoshsadiq/adblock-nocoin-list/master/hosts.txt": 312,
-      "https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt": 42343,
       "https://ruleset.skk.moe/List/non_ip/reject.conf": 211,
+      "https://raw.githubusercontent.com/anudeepND/blacklist/master/adservers.txt": 42343,
       "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/Privacy/Privacy_All.list": 39926,
       "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rule/Surge/EasyPrivacy/EasyPrivacy_All.list": 39947,
       "https://raw.githubusercontent.com/privacy-protection-tools/anti-AD/refs/heads/master/anti-ad-surge.txt": 103309,
@@ -36,13 +36,13 @@
       "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt": 193890
     },
     "allow": {
-      "https://slickdeals.net/attachment/extension/allowlist.txt": 2,
-      "https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/optional-list.txt": 143,
-      "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt": 1460,
       "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/spam-tlds-adblock-allow.txt": 1081,
+      "https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/optional-list.txt": 143,
       "https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/referral-sites.txt": 76,
       "https://raw.githubusercontent.com/anudeepND/whitelist/master/domains/whitelist.txt": 191,
       "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/spam-tlds-allow-onlydomains.txt": 1081,
+      "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt": 1460,
+      "https://slickdeals.net/attachment/extension/allowlist.txt": 2,
       "https://easylist-downloads.adblockplus.org/exceptionrules.txt": 261
     }
   },
