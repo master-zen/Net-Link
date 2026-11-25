@@ -1,19 +1,19 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-11-25T03:22:13Z",
-  "epoch_seconds": 1795576935.4239016,
-  "github_run_id": "45539454676",
+  "fetched_at_utc": "2026-11-25T11:45:41Z",
+  "epoch_seconds": 1795607143.6176972,
+  "github_run_id": "45607357230",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 38405806,
+  "source_bytes_total": 38408637,
   "sources": [
     {
       "bucket": "allow",
       "url": "https://easylist-downloads.adblockplus.org/exceptionrules.txt",
       "path": "data/ad/upstream/allow/217ca89778cbe201377a_exceptionrules.txt",
       "size_bytes": 18356864,
-      "sha256": "29085cdd1a96af785cef2b4020783adea6bc9f6a818516de48797eb869f78047"
+      "sha256": "17b0bcbdc23d8ee2ae4a09416937c6f1d9520b247a073def827570214d43daea"
     },
     {
       "bucket": "allow",
@@ -47,8 +47,8 @@
       "bucket": "allow",
       "url": "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/adblock/whitelist-referral-native.txt",
       "path": "data/ad/upstream/allow/69481aca991270b96a83_whitelist-referral-native.txt",
-      "size_bytes": 36221,
-      "sha256": "54da84af7460150fbba8be9973185bbeef6a01dff48e57af77b19809c75004a0"
+      "size_bytes": 36286,
+      "sha256": "3bc0a2e150aca33620650477b33b75b8c0bd0611518ad60941bb15d78dbcfc58"
     },
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4760138,
-      "sha256": "9b25cdd710b52c0829dc915c32e6e74df7e92be5e209e69f19bc847170c6342c"
+      "size_bytes": 4762904,
+      "sha256": "635412751a3851e72528863f054a2886a062b79b39782095c10f7789e6511b3a"
     },
     {
       "bucket": "block",
