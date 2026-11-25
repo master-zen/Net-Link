@@ -190,6 +190,23 @@ class SuperAdBlockTests(unittest.TestCase):
         self.assertEqual(r["counts"]["exact-url-overlap"],1)
         self.assertNotIn("pattern",r["examples"][0]["candidate"])
 
+    def test_host_case_canonicalization(self):
+        a=s.url_candidate(r"^https://API\.example\.com/ads",set())
+        b=s.url_candidate(r"^https://api\.example\.com/ads",set())
+        self.assertEqual(a,b)
+
+    def test_quality_hash_churn(self):
+        import super_adblock_quality as q
+        policy=json.loads(q.POLICY.read_bytes())
+        out=dict(policy["baseline"]["output"])
+        audit={"output":out,"review_only":False,"failed":0,"sources":428,"downloaded":428,"rule_provenance":[{"rule_sha256":str(i)} for i in range(sum(out[k] for k in q.RULES))],"provenance_count":sum(out[k] for k in q.RULES)}
+        manifest={"failed":0,"downloaded":428}
+        script={"references":0,"antivirus_ready":True,"entries":[]}
+        prior={"output":out,"rule_hashes":[str(i+1000) for i in range(100)]}
+        result=q.evaluate(audit,manifest,script,policy,prior,{"counts":{"non-reject-domain-conflict":1}})
+        self.assertIn("rule-hash-churn",result["reasons"])
+        self.assertIn("cross-module-functional-conflict",result["reasons"])
+
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):
             with self.assertRaises(ValueError):

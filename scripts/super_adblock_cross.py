@@ -75,6 +75,8 @@ def compare(candidate,existing):
             matched.extend(x for x in urls[host] if scopes_overlap(row["pattern"],x["pattern"]))
         else:
             matched.extend(urls[host])
+            if row["kind"]=="DOMAIN-SUFFIX":
+                matched.extend(x for h,items in urls.items() if h.endswith("."+host) for x in items)
         for other in matched:
             if other["kind"] in {"DOMAIN","DOMAIN-SUFFIX"} and other["action"] not in {"REJECT","REJECT-DROP","REJECT-TINYGIF","REJECT-NO-DROP"}:
                 category="non-reject-domain-conflict"
@@ -103,8 +105,7 @@ def run(work):
     report.update(inputs=inputs,candidate_records=len(candidate),candidate_unsupported=sum(r["kind"]=="unsupported" for r in candidate),scope="static exact-domain and conservative literal-host URL overlap; unsupported syntax counted, not deemed safe",module_sha256=digest(module.read_bytes()))
     dump(work/"cross-audit.json",report)
     print(json.dumps({"counts":report["counts"],"candidate_records":len(candidate),"candidate_unsupported":report["candidate_unsupported"],"inputs":inputs},sort_keys=True))
-    if report["counts"].get("non-reject-domain-conflict"):
-        raise SystemExit("Cross-module functional conflict")
+    return report
 
 if __name__=="__main__":
     run(Path(sys.argv[1]))

@@ -18,7 +18,8 @@
     "maximum_section_loss_fraction": 0.25,
     "maximum_mitm_growth_fraction": 0.25,
     "minimum_section_loss_count": 3,
-    "minimum_mitm_growth_count": 5
+    "minimum_mitm_growth_count": 5,
+    "maximum_rule_churn_fraction": 0.25
   },
   "history_limit": 180
 }

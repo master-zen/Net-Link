@@ -258,6 +258,8 @@ def url_candidate(pattern, protected, body=False):
             pattern+=r"(?:\?|$)"
     elif not path.endswith(("/", "$", r"\?")):
         pattern += r"(?:[/?&]|$)"
+    scheme,_,suffix=pattern.partition("://")
+    pattern=scheme+"://"+match.group(1).lower()+suffix[len(match.group(1)):]
     return pattern,host
 
 def scopes_overlap(left,right):
@@ -536,7 +538,20 @@ def build(work, review=False):
                     if url_hosts[a]==url_hosts[b] and scopes_overlap(a,b):
                         cross.update((a,b))
     conflicts.update(cross)
+    redundant=set()
     for pattern,actions in sorted(url_hits.items()):
+        if pattern in conflicts or len(actions)!=1:
+            continue
+        if pattern.startswith(("^https://","^http://")):
+            wide="^https?://"+pattern.split("://",1)[1]
+            if wide in url_hits and wide not in conflicts and url_hits[wide]==actions:
+                action=next(iter(actions))
+                origins[("url",wide,action)].extend(origins[("url",pattern,action)])
+                redundant.add(pattern)
+    for pattern,actions in sorted(url_hits.items()):
+        if pattern in redundant:
+            quarantine["scheme-subset-redundant"] += 1
+            continue
         host = url_hosts[pattern]
         if pattern in conflicts:
             quarantine["conflicting-rewrite"] += 1
@@ -604,6 +619,7 @@ def build(work, review=False):
     refs=manifest.get("reference_only",[])
     report = {"reference_only_count":len(refs),"reference_uncovered":[e["url"] for e in refs if not e["alternative"] or e["alternative"] not in success],"inventory_total":len(sources())+len(refs),"duplicate_content_groups":[v for v in content_sources.values() if len(v)>1],"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"body_rewrite":len(bodies),"array_filter_candidates":sum(len(v) for v in body_filters.values()),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
     provenance=[{"section":section,"rule_sha256":digest(line.encode()),"origins":records} for (section,line),records in sorted(emitted.items())]
+    report["mitm_host_hashes"]=sorted(digest(host.encode()) for host in hosts)
     report["rule_provenance"]=provenance
     report["provenance_count"]=len(provenance)
     dump(work/("review-audit.json" if review else "audit.json"),report)
@@ -642,6 +658,12 @@ def approved(work=None):
         q=json.loads(quality.read_bytes())
         if q.get("passed") is not True or q.get("audit_sha256")!=digest((work/"audit.json").read_bytes()) or q.get("policy_sha256")!=digest((ROOT/"data/sources/SuperAdBlock_quality_policy.json").read_bytes()):
             return False
+        cross=work/"cross-audit.json"
+        if not cross.exists() or q.get("cross_sha256")!=digest(cross.read_bytes()):
+            return False
+        cross_report=json.loads(cross.read_bytes())
+        if cross_report.get("module_sha256")!=json.loads((work/"audit.json").read_bytes())["output"]["sha256"] or cross_report.get("counts",{}).get("non-reject-domain-conflict",0):
+            return False
         required={(u,h) for h,urls in json.loads((work/"audit.json").read_text())["published_scripts"].items() for u in urls}
         allowed={(e["url"],e.get("sha256")) for e in config.get("scripts",[]) if e.get("redistribution") is True and e.get("license") and e.get("evidence")}
         return required <= allowed
@@ -671,13 +693,14 @@ def stage(work):
     dump(runtime/"manifest.json",published)
     shutil.copyfile(work/"script-audit.json",ROOT/"data/reports/super_adblock_script_audit.json")
     shutil.copyfile(work/"quality.json",ROOT/"data/reports/super_adblock_release_quality.json")
+    shutil.copyfile(work/"cross-audit.json",ROOT/"data/reports/super_adblock_cross_audit.json")
     for name,dest in [("manifest.json","data/reports/super_adblock_download_manifest.json"),("audit.json","data/reports/super_adblock_audit.json"),("SuperAdBlock.sgmodule","Surge/Module/SuperAdBlock.sgmodule")]:
         shutil.copyfile(work/name,ROOT/dest)
 
 def verify_release(work):
     work.mkdir(parents=True,exist_ok=False)
     reports=ROOT/"data/reports"
-    for name,source in [("manifest.json","super_adblock_download_manifest.json"),("audit.json","super_adblock_audit.json"),("script-audit.json","super_adblock_script_audit.json"),("quality.json","super_adblock_release_quality.json")]:
+    for name,source in [("manifest.json","super_adblock_download_manifest.json"),("audit.json","super_adblock_audit.json"),("script-audit.json","super_adblock_script_audit.json"),("quality.json","super_adblock_release_quality.json"),("cross-audit.json","super_adblock_cross_audit.json")]:
         shutil.copyfile(reports/source,work/name)
     shutil.copyfile(ROOT/"Surge/Module/SuperAdBlock.sgmodule",work/"SuperAdBlock.sgmodule")
     shutil.copytree(ROOT/"data/super-adblock/upstream",work/"upstream")
@@ -695,6 +718,10 @@ def verify_release(work):
             shutil.copyfile(path,work/"script-snapshots"/path.name)
     if not approved(work):
         raise ValueError("Release not approved")
+    cross=json.loads((work/"cross-audit.json").read_bytes())
+    from super_adblock_cross import TARGETS
+    if set(cross["inputs"])!=set(TARGETS) or any(digest((ROOT/path).read_bytes())!=cross["inputs"][path]["sha256"] for path in TARGETS):
+        raise ValueError("Cross-module inputs changed")
     manifest=json.loads((work/"manifest.json").read_bytes())
     if manifest["run_id"]!=os.getenv("GITHUB_RUN_ID","local") or manifest["run_attempt"]!=os.getenv("GITHUB_RUN_ATTEMPT","1"):
         raise ValueError("Stale release")
