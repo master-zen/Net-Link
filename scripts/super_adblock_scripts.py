@@ -5,6 +5,7 @@ import json
 import os
 import re
 import subprocess
+import super_adblock_cache as cache
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -93,12 +94,11 @@ class ScriptRedirect(HTTPRedirectHandler):
 def download(url,folder):
     try:
         endpoint=script_endpoint(url)
-        with build_opener(ScriptRedirect()).open(Request(endpoint,headers={"User-Agent":"Net-Link-SuperAdBlock/1.0","Accept":"text/plain,*/*"}),timeout=25) as response:
-            script_endpoint(response.geturl(),redirect=urlsplit(endpoint).hostname=="github.com")
-            raw=response.read(2*1024*1024+1)
-        if not raw or len(raw)>2*1024*1024 or b"\x00" in raw or raw.lstrip().lower().startswith((b"<html",b"<!doctype")):
-            raise ValueError("invalid-script")
-        raw.decode("utf-8-sig")
+        def check(raw):
+            if not raw or len(raw)>2*1024*1024 or b"\x00" in raw or raw.lstrip().lower().startswith((b"<html",b"<!doctype")):
+                raise ValueError("invalid-script")
+            raw.decode("utf-8-sig")
+        raw,transport=cache.fetch(endpoint,build_opener(ScriptRedirect()),lambda u:script_endpoint(u,redirect=urlsplit(endpoint).hostname=="github.com"),check,2*1024*1024,25)
         h=sha(raw)
         target=folder/(h+".js")
         try:
@@ -106,7 +106,7 @@ def download(url,folder):
                 out.write(raw)
         except FileExistsError:
             pass
-        return {"url":url,"sha256":h,"bytes":len(raw),"download":"ok"}
+        return {"url":url,"sha256":h,"bytes":len(raw),"download":"ok","transport":transport}
     except Exception as exc:
         return {"url":url,"download":"failed","reason":str(exc)[:120] if isinstance(exc,ValueError) else type(exc).__name__,"http_status":getattr(exc,"code",None)}
 

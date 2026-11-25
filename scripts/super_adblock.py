@@ -10,6 +10,7 @@ import shutil
 import shlex
 import fnmatch
 import super_adblock_scripts as sec
+import super_adblock_cache as cache
 import sys
 import time
 from collections import Counter, defaultdict
@@ -121,14 +122,9 @@ def download_one(index_url, base):
     path = f"{index:02d}-{urlsplit(url).path.rsplit('/',1)[-1]}"
     for attempt in range(3):
         try:
-            with build_opener(Redirect()).open(Request(safe_url(url), headers={"User-Agent":"Net-Link-SuperAdBlock/1.0","Accept":"text/plain,*/*"}), timeout=40) as response:
-                if response.status != 200:
-                    raise ValueError("Unexpected HTTP status")
-                safe_url(response.geturl())
-                raw = response.read(MAX_BYTES + 1)
-            decode(raw)
+            raw,transport=cache.fetch(safe_url(url),build_opener(Redirect()),safe_url,decode,MAX_BYTES,40)
             (base / path).write_bytes(raw)
-            return {"url":url,"family":family(url),"file":path,"bytes":len(raw),"sha256":digest(raw)}
+            return {"url":url,"family":family(url),"file":path,"bytes":len(raw),"sha256":digest(raw),"transport":transport}
         except Exception as exc:
             permanent=isinstance(exc,ValueError) or isinstance(exc,HTTPError) and exc.code not in {408,425,429,500,502,503,504}
             if attempt == 2 or permanent:
@@ -655,6 +651,79 @@ def build(work, review=False):
     dump(work/("review-audit.json" if review else "audit.json"),report)
     return report
 
+def validate_structure(data,report):
+    sections={}
+    current=""
+    allowed={"Rule","URL Rewrite","Map Local","Body Rewrite","Script","MITM"}
+    for raw in data.decode("utf-8").splitlines():
+        line=raw.strip()
+        if not line:
+            continue
+        if line.startswith("["):
+            if not re.fullmatch(r"\[[^\]]+\]",line):
+                raise ValueError("Malformed section")
+            current=line[1:-1]
+            if current not in allowed or current in sections:
+                raise ValueError("Unexpected section")
+            sections[current]=[]
+            continue
+        if line.startswith("#!") and not line.startswith("#!REQUIREMENT "):
+            if current:
+                raise ValueError("Unexpected metadata")
+            continue
+        if current not in allowed:
+            raise ValueError("Rule outside section")
+        sections[current].append(line)
+    expected=set()
+    actual=set()
+    protected=protected_domains()
+    provenance={(r["section"],r["rule_sha256"]) for r in report["rule_provenance"]}
+    observed=set()
+    mapping={"Rule":"rules","URL Rewrite":"url_rewrite","Map Local":"map_local","Body Rewrite":"body_rewrite","Script":"scripts"}
+    for section,key in mapping.items():
+        lines=sections.get(section,[])
+        if len(lines)!=report["output"][key] or len(lines)!=len(set(lines)):
+            raise ValueError("Unexpected rule count or duplicate")
+        for line in lines:
+            observed.add((section,digest(line.encode())))
+            if section=="Rule":
+                parts=parse_csv(line)
+                if len(parts)!=3 or parts[0] not in {"DOMAIN","DOMAIN-SUFFIX"} or parts[2]!="REJECT" or normalize_domain(parts[1])!=parts[1] or blocked_domain(parts[0],parts[1],protected,set()):
+                    raise ValueError("Unsafe domain output")
+                continue
+            if section=="Body Rewrite":
+                m=re.fullmatch(r"#!REQUIREMENT CORE_VERSION>=6008000 http-response-jq (\S+) '(.+)'",line)
+                if not m:
+                    raise ValueError("Malformed body rewrite")
+                pattern=m.group(1)
+            elif section=="Script":
+                m=re.search(r"(?:^|,)pattern=([^,]+)",line)
+                if not m:
+                    raise ValueError("Malformed script")
+                pattern=m.group(1)
+            else:
+                pattern=line.split()[0]
+            m=re.match(r"^\^https?\??://([a-z0-9-]+(?:\\\.[a-z0-9-]+)+)/",pattern)
+            if not m:
+                raise ValueError("Nonliteral output host")
+            host=m.group(1).replace(r"\.",".")
+            if protected_mitm(host) or any(matches_domain(host,x,True) for x in protected) and host!="api.douban.com":
+                raise ValueError("Protected output host")
+            if not pattern.startswith("^http://"):
+                expected.add(host)
+    for line in sections.get("MITM",[]):
+        prefix="hostname = %APPEND% "
+        if not line.startswith(prefix) or actual:
+            raise ValueError("Unexpected MITM declaration")
+        hosts=line[len(prefix):].split(",")
+        if len(hosts)!=len(set(hosts)) or any(normalize_domain(h)!=h for h in hosts):
+            raise ValueError("Invalid MITM host")
+        actual.update(hosts)
+    if actual!=expected or len(actual)!=report["output"]["mitm_hosts"] or sorted(digest(h.encode()) for h in actual)!=report["mitm_host_hashes"]:
+        raise ValueError("MITM coverage mismatch")
+    if observed!=provenance or len(provenance)!=report["provenance_count"]:
+        raise ValueError("Rule provenance mismatch")
+
 def validate(work, review=False):
     module=work/("SuperAdBlock.review.sgmodule" if review else "SuperAdBlock.sgmodule")
     report=work/("review-audit.json" if review else "audit.json")
@@ -665,6 +734,7 @@ def validate(work, review=False):
         raise ValueError("Non-reproducible output")
     if b"[General]" in data:
         raise ValueError("Global config")
+    validate_structure(data,json.loads(audit))
     for line in data.decode().splitlines():
         if "script-path=" in line:
             ref=line.split("script-path=",1)[1]
