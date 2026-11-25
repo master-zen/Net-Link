@@ -37,6 +37,13 @@ jobs:
       - run: python scripts/super_adblock.py fetch "$RUNNER_TEMP/super-adblock"
       - run: python scripts/super_adblock.py build "$RUNNER_TEMP/super-adblock"
       - run: python scripts/super_adblock.py validate "$RUNNER_TEMP/super-adblock"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: super-adblock-review
+          retention-days: 7
+          path: |
+            ${{ runner.temp }}/super-adblock/manifest.json
+            ${{ runner.temp }}/super-adblock/audit.json
       - id: gate
         run: echo "approved=$(python scripts/super_adblock.py approved unused)" >> "$GITHUB_OUTPUT"
       - if: steps.gate.outputs.approved == 'true'

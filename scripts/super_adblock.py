@@ -7,6 +7,8 @@ import json
 import os
 import re
 import shutil
+import shlex
+import fnmatch
 import sys
 import time
 from collections import Counter, defaultdict
@@ -20,7 +22,7 @@ SOURCE = ROOT / "data/sources/SuperAdBlock_URLs.txt"
 APPROVAL = ROOT / "data/sources/SuperAdBlock_publication.json"
 ALLOW = ROOT / "data/allowlists/AdblockCriticalAllow.list"
 sys.path.insert(0, str(ROOT / "Surge/Module/.generator"))
-from safety import should_skip_rewrite, is_protected_mitm_host
+from safety import should_skip_rewrite, is_protected_mitm_host, PROTECTED_MITM_HOSTS
 
 MAX_BYTES = 8 * 1024 * 1024
 HOSTS = {"raw.githubusercontent.com", "kelee.one"}
@@ -47,7 +49,7 @@ def dump(path, obj):
 
 def sources():
     result = [x.strip() for x in SOURCE.read_text(encoding="utf-8").splitlines() if x.strip()]
-    if len(result) != 49 or len(set(result)) != len(result):
+    if len(result) != 57 or len(set(map(safe_url, result))) != len(result):
         raise ValueError("Invalid source inventory")
     return result
 
@@ -66,7 +68,11 @@ def family(url):
         return "kelee"
     if "AWAvenue-Ads-Rule/" in url:
         return "awavenue"
-    return "blackmatrix7"
+    if "blackmatrix7/" in url:
+        return "blackmatrix7"
+    if "Amlabort/" in url or "Maasea/" in url or "master-zen/Net-Link/" in url:
+        return "unverified-lineage"
+    raise ValueError("Unknown source family")
 
 def decode(data):
     if not 80 <= len(data) <= MAX_BYTES:
@@ -143,8 +149,11 @@ def protected_domains():
 def matches_domain(host, base, suffix=False):
     return host == base or (suffix and host.endswith("." + base))
 
+def protected_mitm(host):
+    return is_protected_mitm_host(host) or any(fnmatch.fnmatchcase(host, x) for x in PROTECTED_MITM_HOSTS)
+
 def blocked_domain(kind, domain, protected, upstream_allow):
-    if is_protected_mitm_host(domain):
+    if protected_mitm(domain):
         return True
     if any(matches_domain(domain,x,True) or matches_domain(x,domain,kind=="DOMAIN-SUFFIX") for x in protected):
         return True
@@ -171,13 +180,15 @@ def url_candidate(pattern, protected):
         return None
     host = normalize_domain(match.group(1).replace(r"\.","."))
     path = match.group(2)
-    if not host or is_protected_mitm_host(host):
+    if not host or protected_mitm(host):
         return None
     if pattern in DOUBAN:
         return pattern,host
     if any(matches_domain(host,x,True) for x in protected):
         return None
-    if should_skip_rewrite(pattern) or SENSITIVE.search(path) or not AD_PATH.search(path):
+    if not re.fullmatch(r"(?:[A-Za-z0-9_/%=&-]|\\[.?])+\$?", path):
+        return None
+    if should_skip_rewrite(pattern) or SENSITIVE.search(path) or not AD_PATH.search(path.rstrip("$")):
         return None
     if re.search(r"\\[1-9]|\(\?|\([^)]*[+*][^)]*\)[+*{]|\.\*[+*]|\{[0-9]{4,}",path):
         return None
@@ -185,6 +196,8 @@ def url_candidate(pattern, protected):
         return None
     if re.search(r"(?i)(?:login|password|oauth|payment|checkout|location|trailer|playurl)",path):
         return None
+    if not path.endswith(("/", "$", r"\?")):
+        pattern += r"(?:[/?&]|$)"
     return pattern,host
 
 def parse_rewrite(section, line):
@@ -200,9 +213,18 @@ def parse_rewrite(section, line):
         if match:
             return match.group(1),{"reject":"reject-200","reject_img":"reject-img","reject_dict":"reject-dict","reject_array":"reject-array"}[match.group(2)]
     if section == "map local":
-        for action, value in MAP.items():
-            if line.endswith(" "+value):
-                return line[:-len(value)-1].strip('"'),action
+        pattern, sep, raw = line.partition(" ")
+        if not sep:
+            return None
+        try:
+            args = shlex.split(raw)
+            if len(args) != len({x.split("=",1)[0] for x in args}):
+                return None
+            for action, value in MAP.items():
+                if sorted(args) == sorted(shlex.split(value)):
+                    return pattern.strip('"'), action
+        except ValueError:
+            return None
     return None
 
 def build(work):
@@ -213,7 +235,9 @@ def build(work):
     upstream_allow = set()
     counts = Counter()
     quarantine = Counter()
+    source_sections = {}
     for entry, text in snapshots(work):
+        source_sections[entry["url"]] = Counter()
         section = ""
         for original in text.splitlines():
             line = original.strip()
@@ -223,6 +247,7 @@ def build(work):
                 section = line[1:-1].lower()
                 continue
             counts[section] += 1
+            source_sections[entry["url"]][section] += 1
             if section == "rule":
                 fields = parse_csv(line)
                 if len(fields) < 3:
@@ -272,7 +297,7 @@ def build(work):
         if not any(AD_LABEL.fullmatch(label) for label in domain.split(".")[:-1]):
             quarantine["ambiguous-domain"] += 1
             continue
-        if kind == "DOMAIN-SUFFIX" and (len(families)<2 or domain in PUBLIC_SUFFIX):
+        if kind == "DOMAIN-SUFFIX" and (len(families - {"unverified-lineage"}) < 2 or domain in PUBLIC_SUFFIX):
             quarantine["unconfirmed-suffix"] += 1
             continue
         accepted.add((kind,domain))
@@ -293,7 +318,7 @@ def build(work):
             continue
         action = next(iter(actions))
         if action == "reject":
-            rewrite.append(f'{pattern} - reject')
+            rewrite.append(f'{pattern} _ reject')
         else:
             maps.append(f'{pattern} {MAP[action]}')
         if not pattern.startswith("^http://"):
@@ -307,7 +332,7 @@ def build(work):
     if len(rules)+len(rewrite)+len(maps)<50:
         raise ValueError("Insufficient safe rules")
     (work/"SuperAdBlock.sgmodule").write_text(module,encoding="utf-8")
-    report = {"sources":49,"input_sections":dict(counts),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
+    report = {"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
     dump(work/"audit.json",report)
     return report
 

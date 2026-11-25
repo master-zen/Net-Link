@@ -7,7 +7,7 @@ import super_adblock as s
 
 class SuperAdBlockTests(unittest.TestCase):
     def test_sources(self):
-        self.assertEqual(len(s.sources()),49)
+        self.assertEqual(len(s.sources()),57)
 
     def test_url_rewrite(self):
         protected=s.protected_domains()
@@ -21,6 +21,18 @@ class SuperAdBlockTests(unittest.TestCase):
             self.assertTrue(s.blocked_domain("DOMAIN",host,s.protected_domains(),set()))
         self.assertTrue(s.blocked_domain("DOMAIN-SUFFIX","douban.com",s.protected_domains(),set()))
         self.assertTrue(s.blocked_domain("DOMAIN-SUFFIX","ad.example.com",set(),{("DOMAIN","login.ad.example.com")}))
+
+    def test_new_sources_and_regex_scope(self):
+        self.assertEqual(s.family("https://raw.githubusercontent.com/Maasea/sgmodule/master/a"),"unverified-lineage")
+        self.assertEqual(s.family("https://raw.githubusercontent.com/master-zen/Net-Link/main/a"),"unverified-lineage")
+        protected=s.protected_domains()
+        for pattern in (r"^https://api\.example\.com/ads|.*",r"^https://api\.example\.com/ads/.*",r"^https://api\.example\.com/ads(foo|bar)",r"^https://foo\.tipatipa\.xyz/ads"):
+            self.assertIsNone(s.url_candidate(pattern,protected))
+        pattern,host=s.url_candidate(r"^https://api\.example\.com/ads",protected)
+        self.assertEqual(host,"api.example.com")
+        self.assertIsNotNone(s.re.match(pattern,"https://api.example.com/ads?x=1"))
+        self.assertIsNone(s.re.match(pattern,"https://api.example.com/adservice"))
+        self.assertEqual(s.parse_rewrite("map local",r'^https://api\.example\.com/ads status-code=200 data-type=text data=""'),(r"^https://api\.example\.com/ads","reject-200"))
 
     def test_actions(self):
         p=r"^https?:\/\/api\.example\.com\/ads"

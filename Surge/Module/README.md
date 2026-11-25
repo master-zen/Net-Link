@@ -31,3 +31,7 @@ The HTML loader only modifies HTML response bodies. It preserves original respon
 
 The Moyu generator retains exactly the two upstream Douban ad endpoints (`/v2/app_ads/splash` and `/b.*/common_ads`) and the `api.douban.com` MITM host, while excluding any new Douban business API rewrites by default. The independent `AdblockSet.list` builder removes rules blocking `erebor.douban.com`, which was explicitly observed in Surge logs breaking official movie-trailer playback. These protections are covered by regression tests.
 
+
+## SuperAdBlock
+
+The 57-source aggregation pipeline is described in [SuperAdBlock.md](./SuperAdBlock.md). It remains review-only until source-specific redistribution permission and combined licensing have been documented.

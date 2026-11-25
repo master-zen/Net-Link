@@ -47,3 +47,11 @@ https://kelee.one/Tool/Loon/Lpx/YoudaoTrans_remove_ads.lpx
 https://kelee.one/Tool/Loon/Lpx/YoudaoDict_remove_ads.lpx
 https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rewrite/Surge/AllInOne/AllInOne.sgmodule
 https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/refs/heads/master/rewrite/Surge/Advertising/Advertising.sgmodule
+https://raw.githubusercontent.com/Amlabort/MY_clash/refs/heads/main/files/surge/spot-NoAd.module
+https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Spotify%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule
+https://raw.githubusercontent.com/Maasea/sgmodule/master/YouTube.Enhance.sgmodule
+https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/喜马拉雅去广告.sgmodule
+https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/StartUpAds.sgmodule
+https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/彩云天气去广告.sgmodule
+https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/微信公众号去广告.sgmodule
+https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Beta/微信小程序去广告.beta.sgmodule
