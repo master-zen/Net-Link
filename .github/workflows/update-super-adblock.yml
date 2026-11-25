@@ -7,6 +7,7 @@ on:
     paths:
       - ".github/workflows/update-super-adblock.yml"
       - "scripts/super_adblock.py"
+      - "scripts/super_adblock_discover.py"
       - "scripts/super_adblock_scripts.py"
       - "scripts/super_adblock_ast.cjs"
       - "scripts/publish_generated.py"
@@ -41,6 +42,9 @@ jobs:
       - run: python -m unittest discover -s tests -p test_super_adblock.py -v
       - id: fetch
         run: python scripts/super_adblock.py fetch "$RUNNER_TEMP/super-adblock"
+      - name: Discover upstream candidates and license metadata
+        continue-on-error: true
+        run: python scripts/super_adblock_discover.py "$RUNNER_TEMP/super-adblock"
       - id: scanner
         if: always() && steps.fetch.outcome != 'skipped'
         continue-on-error: true
@@ -68,7 +72,7 @@ jobs:
           from pathlib import Path
           base=Path(os.environ["RUNNER_TEMP"])/"super-adblock"
           with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as out:
-              for name, keys in [("manifest.json",("downloaded","failed")),("review-audit.json",("sources","downloaded","failed","alternative_coverage","failure_reasons","output")),("script-audit.json",("references","unique_downloaded_scripts","antivirus_ready"))]:
+              for name, keys in [("manifest.json",("downloaded","failed")),("review-audit.json",("sources","inventory_total","reference_only_count","reference_uncovered","downloaded","failed","alternative_coverage","failure_reasons","output")),("script-audit.json",("references","unique_downloaded_scripts","antivirus_ready"))]:
                   path=base/name
                   if path.exists():
                       data=json.loads(path.read_text())
@@ -94,6 +98,7 @@ jobs:
             ${{ runner.temp }}/super-adblock/audit.json
             ${{ runner.temp }}/super-adblock/review-audit.json
             ${{ runner.temp }}/super-adblock/script-audit.json
+            ${{ runner.temp }}/super-adblock/discovery.json
       - id: gate
         run: echo "approved=$(python scripts/super_adblock.py approved "$RUNNER_TEMP/super-adblock")" >> "$GITHUB_OUTPUT"
       - if: steps.gate.outputs.approved == 'true'

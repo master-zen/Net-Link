@@ -11,7 +11,7 @@ import super_adblock as s
 
 class SuperAdBlockTests(unittest.TestCase):
     def test_sources(self):
-        self.assertEqual(len(s.sources()),471)
+        self.assertEqual(len(s.sources()),428)
 
     def test_url_rewrite(self):
         protected=s.protected_domains()
@@ -141,6 +141,21 @@ class SuperAdBlockTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 sec.script_endpoint(u)
         self.assertEqual(sec.script_endpoint("https://github.com/Biliverse/ADBlock/releases/download/v0.6.24/response.bundle.js"),"https://github.com/Biliverse/ADBlock/releases/download/v0.6.24/response.bundle.js")
+
+    def test_reference_inventory(self):
+        refs=s.reference_only()
+        self.assertEqual(len(refs),43)
+        self.assertEqual(sum(e["alternative"] is None for e in refs),2)
+        self.assertTrue(set(s.sources()).isdisjoint(e["url"] for e in refs))
+        self.assertTrue(all(e["alternative"] is None or e["alternative"] in s.sources() for e in refs))
+
+    def test_discovery_selection(self):
+        import super_adblock_discover as discover
+        paths=["Surge/Example去广告.sgmodule","Surge/Beta/Example去广告.beta.sgmodule","Surge/Official/Example去广告.sgmodule","Surge/Example签到.sgmodule"]
+        tree={"truncated":False,"tree":[{"path":p,"type":"blob"} for p in paths]}
+        self.assertEqual(discover.candidates(tree),set(paths[:3]))
+        with self.assertRaises(ValueError):
+            discover.candidates({"truncated":True,"tree":[]})
 
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):

@@ -1,0 +1,222 @@
+{
+  "reason": "Persistent HTTP 403 and upstream anti-scraping/redistribution policy; original URLs retained as references, not active daily inputs.",
+  "evidence": "https://github.com/master-zen/Net-Link/actions/runs/45611400171",
+  "upstream": "https://hub.kelee.one",
+  "sources": [
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/BlockAdvertisers.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/广告平台拦截器.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/IThome_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/IT之家去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/12306_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/12306去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Keep_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Keep去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Line_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Line去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Pinterest_remove_ads.lpx",
+      "alternative": null,
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/QQMusic_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/QQ音乐去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Reddit_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Reddit去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Spotify_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/Spotify%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/YouTube_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/Maasea/sgmodule/master/YouTube.Enhance.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/iQiYi_Video_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/爱奇艺视频去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/AliYunDrive_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/阿里云盘去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/BaiduNetDisk_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/百度网盘去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/BaiduSearchWebpage_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/百度搜索网页去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Bilibili_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/哔哩哔哩去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Cainiao_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/菜鸟去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/ColorfulClouds_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/彩云天气去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Damai_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/大麦去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/DiDi_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/滴滴出行去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/DouBan_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/豆瓣去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/FC_Box_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/丰巢去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/ifengNews_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partF/PhoenixNewMedia.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Amap_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/高德地图去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/EasyBike_remove_ads.lpx",
+      "alternative": null,
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Umetrip_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/航旅纵横去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/JD_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/京东去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/AutoHome_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/汽车之家去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Taobao_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/淘宝去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Tencent_Video_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/腾讯视频去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/NeteaseNews_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/网易新闻去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/NeteaseCloudMusic_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/网易云音乐去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Weibo_intl_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/微博国际版去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Weibo_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/微博去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Weixin_Official_Accounts_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/微信公众号去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/WexinMiniPrograms_Remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/微信小程序去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/FleaMarket_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/闲鱼去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/HKDouYin_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/香港抖音去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/RedPaper_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/小红书去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Himalaya_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/喜马拉雅去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/YouKu_Video_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/优酷视频去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/Zhihu_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/知乎去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/YoudaoTrans_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/有道翻译官去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    },
+    {
+      "url": "https://kelee.one/Tool/Loon/Lpx/YoudaoDict_remove_ads.lpx",
+      "alternative": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/网易有道词典去广告.sgmodule",
+      "last_verified_status": "HTTP 403"
+    }
+  ]
+}

@@ -22,6 +22,7 @@ from urllib.error import HTTPError, URLError
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data/sources/SuperAdBlock_URLs.txt"
 APPROVAL = ROOT / "data/sources/SuperAdBlock_publication.json"
+REFERENCE = ROOT / "data/sources/SuperAdBlock_reference_only.json"
 ALLOW = ROOT / "data/allowlists/AdblockCriticalAllow.list"
 sys.path.insert(0, str(ROOT / "Surge/Module/.generator"))
 from safety import should_skip_rewrite, is_protected_mitm_host, PROTECTED_MITM_HOSTS
@@ -54,6 +55,19 @@ def sources():
     if not result or len({canonical_url(u) for u in result}) != len(result):
         raise ValueError("Invalid source inventory")
     return result
+
+def reference_only():
+    records=json.loads(REFERENCE.read_text(encoding="utf-8"))["sources"]
+    active=set(sources())
+    seen=set()
+    for e in records:
+        u=e["url"]
+        if urlsplit(safe_url(u)).hostname!="kelee.one" or u in active or u in seen or e["last_verified_status"]!="HTTP 403":
+            raise ValueError("Invalid reference-only source")
+        if e["alternative"] is not None and e["alternative"] not in active:
+            raise ValueError("Unknown alternative")
+        seen.add(u)
+    return records
 
 def safe_url(url):
     u = urlsplit(url)
@@ -127,18 +141,21 @@ def download_one(index_url, base):
 def fetch(work):
     if work.exists():
         raise ValueError("Workspace already exists")
+    excluded=reference_only()
     base = work / "upstream"
     base.mkdir(parents=True)
     with ThreadPoolExecutor(max_workers=10) as pool:
         entries = list(pool.map(lambda pair: download_one(pair,base), enumerate(sources(),1)))
     failures = [x for x in entries if "error" in x]
-    dump(work / "manifest.json", {"run_id":os.getenv("GITHUB_RUN_ID","local"),"run_attempt":os.getenv("GITHUB_RUN_ATTEMPT","1"),"epoch_seconds":int(time.time()),"sources":entries,"downloaded":len(entries)-len(failures),"failed":len(failures)})
+    dump(work / "manifest.json", {"run_id":os.getenv("GITHUB_RUN_ID","local"),"run_attempt":os.getenv("GITHUB_RUN_ATTEMPT","1"),"epoch_seconds":int(time.time()),"sources":entries,"downloaded":len(entries)-len(failures),"failed":len(failures),"reference_only":excluded,"reference_policy_sha256":digest(REFERENCE.read_bytes())})
 
 
 def snapshots(work, review=False):
     manifest = json.loads((work / "manifest.json").read_text(encoding="utf-8"))
     if manifest["run_id"] != os.getenv("GITHUB_RUN_ID","local") or manifest["run_attempt"] != os.getenv("GITHUB_RUN_ATTEMPT","1"):
         raise ValueError("Stale manifest")
+    if "reference_policy_sha256" in manifest and (manifest["reference_policy_sha256"]!=digest(REFERENCE.read_bytes()) or manifest["reference_only"]!=reference_only()):
+        raise ValueError("Reference policy changed")
     failures=sum("error" in e for e in manifest["sources"])
     if manifest.get("failed")!=failures or ("downloaded" in manifest and manifest["downloaded"]!=len(manifest["sources"])-failures):
         raise ValueError("Inconsistent manifest counts")
@@ -523,7 +540,8 @@ def build(work, review=False):
     manifest=json.loads((work/"manifest.json").read_text(encoding="utf-8"))
     alternatives=json.loads((ROOT/"data/sources/SuperAdBlock_alternatives.json").read_text(encoding="utf-8"))["alternatives"]
     success={e["url"] for e in manifest["sources"] if "error" not in e}
-    report = {"duplicate_content_groups":[v for v in content_sources.values() if len(v)>1],"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"body_rewrite":len(bodies),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
+    refs=manifest.get("reference_only",[])
+    report = {"reference_only_count":len(refs),"reference_uncovered":[e["url"] for e in refs if not e["alternative"] or e["alternative"] not in success],"inventory_total":len(sources())+len(refs),"duplicate_content_groups":[v for v in content_sources.values() if len(v)>1],"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"body_rewrite":len(bodies),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
     dump(work/("review-audit.json" if review else "audit.json"),report)
     return report
 
