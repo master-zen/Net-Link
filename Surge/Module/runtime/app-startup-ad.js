@@ -48,6 +48,25 @@ function scrub(mode, value) {
                 if (Object.prototype.hasOwnProperty.call(data, key)) { delete data[key]; changed = true; }
             }
         }
+    } else if (mode === "kuaidi") {
+        if (Object.prototype.hasOwnProperty.call(value, "adsplash")) {
+            delete value.adsplash;
+            changed = true;
+        }
+    } else if (mode === "taobao") {
+        function visit(node) {
+            if (!node || typeof node !== "object") return;
+            if (Array.isArray(node)) { for (const item of node) visit(item); return; }
+            for (const key of Object.keys(node)) {
+                const child = node[key];
+                if (key === "taobao-splash" && child && typeof child === "object") {
+                    clear(child, "data");
+                } else { visit(child); }
+            }
+        }
+        visit(value);
+    } else if (mode === "faw") {
+        clear(value, "data");
     } else if (mode === "meituan") {
         const start = data && data.startpicture;
         clear(start, "ad");

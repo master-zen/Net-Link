@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "data/sources/AppStartUpADBlacklist.json"
 OUTPUT = ROOT / "Surge/Module/AppStartUpADBlacklist.sgmodule"
 SCRIPT_URL = "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/app-startup-ad.js"
-ACTIONS = {"reject", "empty", "json", "bili", "vg", "jd", "dmall", "family", "dida", "xhs", "meituan"}
+ACTIONS = {"reject", "empty", "json", "bili", "vg", "jd", "dmall", "family", "dida", "xhs", "meituan", "kuaidi", "taobao", "faw"}
 
 def escape(value):
     return re.sub(r"([.\\?*+^$()[\]{}|])", r"\\\1", value)

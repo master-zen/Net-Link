@@ -34,6 +34,10 @@ class StartupADTests(unittest.TestCase):
             "https://l.yimg.com/resource",
             "https://fc.yahoo.com/",
             "https://service.cmp.oath.com/",
+            "https://oneapp-api.faw-vw.com/content/booth/getBoothList/v1?showPositionCode=VWAPP_ICE_CAR_ZHIHU_COLLEGE",
+            "https://pan.baidu.com/buy/ad/conf?type=normal",
+            "https://m5.amap.com/ws/c3frontend/af-launch/page/main",
+            "https://guide-acs.m.taobao.com/gw/mtop.taobao.cloudvideo.video.query",
             "https://security.wechat.com/",
             "https://wxa.wxs.qq.com/",
         ):

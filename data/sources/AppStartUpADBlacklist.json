@@ -42,6 +42,26 @@
       "id": "old",
       "url": "https://raw.githubusercontent.com/master-zen/Net-Link/5758cd1dd0a5fc0cfbe5ec6343def7b4f67e5df3/Surge/Module/StartUpAds.sgmodule",
       "reviewed_blob": "7465a4e98b09d486a5d84b96552686800686fe3d"
+    },
+    {
+      "id": "moyu-original",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/5758cd1dd0a5fc0cfbe5ec6343def7b4f67e5df3/Surge/Module/upstream/StartUpAds.conf",
+      "reviewed_blob": "341469e87fc4b14800ad2755d329652040954470"
+    },
+    {
+      "id": "qing-amap",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E9%AB%98%E5%BE%B7%E5%9C%B0%E5%9B%BE%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "bfa9871462670b95eda20a48a87c2bdb96b54b2a"
+    },
+    {
+      "id": "qing-weibo",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E5%BE%AE%E5%8D%9A%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "d27d78f14493e8dd2b3a247b053fdc9213ed56b7"
+    },
+    {
+      "id": "qing-taobao",
+      "url": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/%E6%B7%98%E5%AE%9D%E5%8E%BB%E5%B9%BF%E5%91%8A.sgmodule",
+      "reviewed_blob": "e05cf512e6062344faacd0da74af379c671d9c79"
     }
   ],
   "protected_hosts": [
@@ -107,6 +127,18 @@
   ],
   "entries": [
     {
+      "id": "369cx",
+      "app": "369出行",
+      "host": "api.369cx.cn",
+      "path": "/v{version}/Splash/GetSplashAd",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
       "id": "acfun",
       "app": "AcFun",
       "host": "api-new.app.acfun.cn",
@@ -119,6 +151,18 @@
       ]
     },
     {
+      "id": "alibaba-aicloud",
+      "app": "阿里",
+      "host": "acs.m.taobao.com",
+      "path": "/gw/mtop.alibaba.aicloud.splash",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
       "id": "amap",
       "app": "高德地图",
       "host": "amap-aos-info-nogw.amap.com",
@@ -127,6 +171,41 @@
       "action": "reject",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "amap-dsp",
+      "app": "高德地图",
+      "host": "m5.amap.com",
+      "path": "/ws/shield/dsp/app/startup/init",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200",
+        "osuphi"
+      ]
+    },
+    {
+      "id": "amap-splash",
+      "app": "高德地图",
+      "host": "m5.amap.com",
+      "path": "/ws/valueadded/alimama/splash_screen",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "qing-amap"
+      ]
+    },
+    {
+      "id": "appactive",
+      "app": "东方财富基金相关应用",
+      "host": "appactive.1234567.com.cn",
+      "path": "/AppoperationApi/OperationService/GetAppStartImg",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
       ]
     },
     {
@@ -160,6 +239,41 @@
       "action": "reject",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "baidu-pan",
+      "app": "百度网盘",
+      "host": "pan.baidu.com",
+      "path": "/buy/ad/conf",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "moyu"
+      ],
+      "query": "type=splashMode"
+    },
+    {
+      "id": "beitaichufang",
+      "app": "贝太厨房",
+      "host": "channel.beitaichufang.com",
+      "path": "/channel/api/v{version}/promote/ios/start/page",
+      "match": "exact",
+      "action": "reject",
+      "sources": [
+        "fmz200"
+      ]
+    },
+    {
+      "id": "benewtech",
+      "app": "Benewtech",
+      "host": "gateway.benewtech.cn",
+      "path": "/resources-app/app/startup/prepage",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200",
+        "osuphi"
       ]
     },
     {
@@ -261,6 +375,18 @@
       ]
     },
     {
+      "id": "black-unique",
+      "app": "BLACK UNIQUE",
+      "host": "facade-api.black-unique.com",
+      "path": "/app/v1/startScreen",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200",
+        "osuphi"
+      ]
+    },
+    {
       "id": "bodivis",
       "app": "bodivis",
       "host": "www.bodivis.com.cn",
@@ -283,6 +409,18 @@
       ]
     },
     {
+      "id": "caiyicloud",
+      "app": "彩云",
+      "host": "appapi.caiyicloud.com",
+      "path": "/cyy_gatewayapi/home/pub/v3/banners/app_start_page",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200",
+        "osuphi"
+      ]
+    },
+    {
       "id": "cls",
       "app": "财联社",
       "host": "api3.cls.cn",
@@ -292,6 +430,32 @@
       "sources": [
         "old"
       ]
+    },
+    {
+      "id": "cotti",
+      "app": "库迪咖啡",
+      "host": "gateway.cotticoffee.com",
+      "path": "/cotti-capi/customer/position/list",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ],
+      "query": "code=cotti-launch-window"
+    },
+    {
+      "id": "cotti-abite",
+      "app": "库迪咖啡",
+      "host": "gateway.abite.com",
+      "path": "/cotti-capi/customer/position/list",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ],
+      "query": "code=cotti-launch-window"
     },
     {
       "id": "csdn",
@@ -329,6 +493,18 @@
       ]
     },
     {
+      "id": "ctaiot",
+      "app": "点读标签",
+      "host": "imagepc.ctaiot.com",
+      "path": "/dlabel/0/startpage",
+      "match": "exact",
+      "action": "reject",
+      "sources": [
+        "fmz200",
+        "osuphi"
+      ]
+    },
+    {
       "id": "daoyu",
       "app": "叨鱼",
       "host": "daoyu.sdo.com",
@@ -337,6 +513,18 @@
       "action": "reject",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "ddxq",
+      "app": "叮咚买菜",
+      "host": "maicai.api.ddxq.mobi",
+      "path": "/advert/startUpScreen",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
       ]
     },
     {
@@ -408,6 +596,18 @@
       ]
     },
     {
+      "id": "dudian",
+      "app": "点读标签",
+      "host": "dudian-oss.oss-cn-shenzhen.aliyuncs.com",
+      "path": "/dlabel/1/startpage",
+      "match": "exact",
+      "action": "reject",
+      "sources": [
+        "fmz200",
+        "osuphi"
+      ]
+    },
+    {
       "id": "edaijia",
       "app": "e代驾",
       "host": "pic.edaijia.cn",
@@ -427,6 +627,42 @@
       "action": "family",
       "sources": [
         "blackmatrix7"
+      ]
+    },
+    {
+      "id": "faw-ice",
+      "app": "一汽大众",
+      "host": "oneapp-api.faw-vw.com",
+      "path": "/content/booth/getBoothList/v1",
+      "match": "exact",
+      "action": "faw",
+      "sources": [
+        "fmz200"
+      ],
+      "query": "showPositionCode=VWAPP_ICE_OPEN_SCREEN_ADS"
+    },
+    {
+      "id": "faw-meb",
+      "app": "一汽大众",
+      "host": "oneapp-api.faw-vw.com",
+      "path": "/content/booth/getBoothList/v1",
+      "match": "exact",
+      "action": "faw",
+      "sources": [
+        "fmz200"
+      ],
+      "query": "showPositionCode=VWAPP_MEB_OPEN_SCREEN_ADS"
+    },
+    {
+      "id": "fengshows",
+      "app": "凤凰秀",
+      "host": "api.fengshows.com",
+      "path": "/api/launchAD",
+      "match": "exact",
+      "action": "reject",
+      "sources": [
+        "fmz200",
+        "osuphi"
       ]
     },
     {
@@ -454,6 +690,18 @@
       ]
     },
     {
+      "id": "gameplus",
+      "app": "腾讯游戏",
+      "host": "api.gameplus.qq.com",
+      "path": "/community.OnloadSrv/GetPreloadScreenInfo",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
       "id": "gaoding",
       "app": "稿定设计",
       "host": "qiye.gaoding.com",
@@ -477,6 +725,18 @@
       ]
     },
     {
+      "id": "gugong",
+      "app": "故宫",
+      "host": "gugongmini.dpm.org.cn",
+      "path": "/gugong_applet/open-screen",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200",
+        "osuphi"
+      ]
+    },
+    {
       "id": "guiderank",
       "app": "盖得排行",
       "host": "zone.guiderank-app.com",
@@ -485,6 +745,19 @@
       "action": "reject",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "hbooker",
+      "app": "刺猬猫阅读",
+      "host": "app.hbooker.com",
+      "path": "/setting/get_startpage_url_list",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original",
+        "fmz200"
       ]
     },
     {
@@ -499,6 +772,43 @@
         "osuphi"
       ],
       "query": "type=splashAd"
+    },
+    {
+      "id": "hpoi",
+      "app": "Hpoi",
+      "host": "www.hpoi.net.cn",
+      "path": "/api/item/startPage",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
+      "id": "ibus",
+      "app": "车来了",
+      "host": "m.ibuscloud.com",
+      "path": "/v{version}/app/getStartPage",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original",
+        "fmz200"
+      ]
+    },
+    {
+      "id": "ibus-skip",
+      "app": "车来了",
+      "host": "app.ibuscloud.com",
+      "path": "/v{version}/app/getSkipAdvert",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
     },
     {
       "id": "inke",
@@ -536,6 +846,18 @@
       ]
     },
     {
+      "id": "ireader-ih2",
+      "app": "掌阅",
+      "host": "ih2.ireader.com",
+      "path": "/zyapi/self/screen/ad",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
       "id": "jd",
       "app": "京东",
       "host": "api.m.jd.com",
@@ -558,6 +880,19 @@
       "sources": [
         "origo"
       ]
+    },
+    {
+      "id": "jetour",
+      "app": "捷途",
+      "host": "mobile-consumer.jetour.com.cn",
+      "path": "/web/position/details",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ],
+      "query": "pageCode=Splashscreens"
     },
     {
       "id": "jump",
@@ -594,6 +929,29 @@
       ]
     },
     {
+      "id": "kuaidi100",
+      "app": "快递100",
+      "host": "p.kuaidi100.com",
+      "path": "/mobile/mobileapi.do",
+      "match": "exact",
+      "action": "kuaidi",
+      "sources": [
+        "fmz200"
+      ]
+    },
+    {
+      "id": "kurobbs",
+      "app": "库街区",
+      "host": "api.kurobbs.com",
+      "path": "/config/getOpenScreen",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
       "id": "laifeng",
       "app": "来疯直播",
       "host": "api.laifeng.com",
@@ -605,6 +963,18 @@
       ]
     },
     {
+      "id": "leapmotor",
+      "app": "零跑汽车",
+      "host": "apptec.leapmotor.cn",
+      "path": "/appNewInterface/getAppStartPageInfo",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
       "id": "lenovo-club",
       "app": "联想社区",
       "host": "api.club.lenovo.cn",
@@ -613,6 +983,18 @@
       "action": "reject",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "lenovo-image",
+      "app": "联想",
+      "host": "abcapi.lenovoimage.com",
+      "path": "/v1/promote/startup",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200",
+        "osuphi"
       ]
     },
     {
@@ -786,6 +1168,68 @@
       ]
     },
     {
+      "id": "narwal",
+      "app": "云鲸",
+      "host": "cn-app.narwaltech.com",
+      "path": "/operate/appPosition/listSplash",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
+      "id": "netease-game",
+      "app": "网易游戏",
+      "host": "god.gameyw.netease.com",
+      "path": "/v{version}/ad/serving/app-start",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
+      "id": "oclean",
+      "app": "Oclean",
+      "host": "careapi.oclean.com",
+      "path": "/mall/v{version}/Temporary/SafetyGetStartAdvert",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
+      "id": "oray-start",
+      "app": "向日葵",
+      "host": "client-api.oray.com",
+      "path": "/materials/SLCC_IOS_STARTUP",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ],
+      "query": "lang=zh-Hans-CN"
+    },
+    {
+      "id": "oray-v2",
+      "app": "向日葵",
+      "host": "client-api-v2.oray.com",
+      "path": "/materials/SLCC_IOS_STARTUP",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "moyu",
+        "moyu-original",
+        "fmz200"
+      ]
+    },
+    {
       "id": "pinduoduo",
       "app": "拼多多",
       "host": "api.pinduoduo.com",
@@ -816,6 +1260,18 @@
       "action": "reject",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "qdmetro",
+      "app": "青岛地铁",
+      "host": "api.qd-metro.com",
+      "path": "/ngstatic/appScreenAds",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
       ]
     },
     {
@@ -897,6 +1353,78 @@
       ]
     },
     {
+      "id": "qyer",
+      "app": "穷游",
+      "host": "open.qyer.com",
+      "path": "/qyer/startpage/",
+      "match": "subtree",
+      "action": "empty",
+      "sources": [
+        "fmz200",
+        "osuphi"
+      ]
+    },
+    {
+      "id": "sf-shopic",
+      "app": "顺丰",
+      "host": "shopic.sf-express.com",
+      "path": "/crm/mobile/common/flashscreen",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
+      "id": "szy",
+      "app": "深圳相关应用",
+      "host": "api.szy.cn",
+      "path": "/appOpenServer/ad",
+      "match": "exact",
+      "action": "reject",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
+      "id": "taobao-splash",
+      "app": "淘宝",
+      "host": "guide-acs.m.taobao.com",
+      "path": "/gw/mtop.taobao.wireless.home.splash.awesome.get",
+      "match": "exact",
+      "action": "taobao",
+      "sources": [
+        "osuphi",
+        "qing-taobao"
+      ]
+    },
+    {
+      "id": "taobao-splash-sub",
+      "app": "淘宝",
+      "host": "guide-acs.m.taobao.com",
+      "path": "/gw/mtop.taobao.wireless.home.splash.awesome.get/",
+      "match": "subtree",
+      "action": "taobao",
+      "sources": [
+        "osuphi",
+        "qing-taobao"
+      ]
+    },
+    {
+      "id": "taptap",
+      "app": "TapTap",
+      "host": "api.taptapdada.com",
+      "path": "/startup-logo/v{version}/combo",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200",
+        "osuphi"
+      ]
+    },
+    {
       "id": "tianyi-banner",
       "app": "天翼云盘",
       "host": "api.cloud.189.cn",
@@ -945,6 +1473,31 @@
       ]
     },
     {
+      "id": "tmuyun",
+      "app": "天目云",
+      "host": "vapp.tmuyun.com",
+      "path": "/api/app_start_page/list/new",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "fmz200",
+        "osuphi"
+      ]
+    },
+    {
+      "id": "touker",
+      "app": "投客",
+      "host": "api.touker.com",
+      "path": "/v2/IAdvertisementAPI.queryStartAdvertisement",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original",
+        "fmz200"
+      ]
+    },
+    {
       "id": "tujia",
       "app": "途家",
       "host": "client.tujia.com",
@@ -964,6 +1517,19 @@
       "action": "reject",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "umetrip-startup",
+      "app": "航旅纵横",
+      "host": "startup.umetrip.com",
+      "path": "/gateway/api/umetrip/native",
+      "match": "exact",
+      "action": "reject",
+      "sources": [
+        "moyu",
+        "moyu-original",
+        "fmz200"
       ]
     },
     {
@@ -1025,6 +1591,18 @@
       ]
     },
     {
+      "id": "watsons",
+      "app": "屈臣氏",
+      "host": "mystore-gw.watsonsvip.com.cn",
+      "path": "/gfu/popup/advert/launch",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
       "id": "weibo-intl",
       "app": "微博国际版",
       "host": "weibointl.api.weibo.cn",
@@ -1034,6 +1612,28 @@
       "query": "a=get_coopen_ads",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "weibo-realtime-v2",
+      "app": "微博",
+      "host": "bootrealtime.uve.weibo.com",
+      "path": "/v2/ad/realtime",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "qing-weibo"
+      ]
+    },
+    {
+      "id": "weibo-realtime-v3",
+      "app": "微博",
+      "host": "bootrealtime.uve.weibo.com",
+      "path": "/v3/ad/realtime",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "qing-weibo"
       ]
     },
     {
@@ -1058,6 +1658,18 @@
       "action": "reject",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "xczim",
+      "app": "小触",
+      "host": "lchttpapi.xczim.com",
+      "path": "/1.1/functions/getLaunchImageForIOS",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
       ]
     },
     {
@@ -1146,6 +1758,31 @@
       ]
     },
     {
+      "id": "yanxuan",
+      "app": "网易严选",
+      "host": "support.you.163.com",
+      "path": "/xhr/boot/getBootMedia.json",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
+      ]
+    },
+    {
+      "id": "youdao-dict",
+      "app": "有道词典",
+      "host": "cdke.youdao.com",
+      "path": "/course3/recommend/dict/startup",
+      "match": "exact",
+      "action": "json",
+      "sources": [
+        "moyu",
+        "moyu-original",
+        "fmz200"
+      ]
+    },
+    {
       "id": "youshu",
       "app": "有书",
       "host": "gongdu.youshu.cc",
@@ -1211,6 +1848,18 @@
       "action": "reject",
       "sources": [
         "origo"
+      ]
+    },
+    {
+      "id": "zol",
+      "app": "中关村在线",
+      "host": "apicloud.zol.com.cn",
+      "path": "/Article/WapLaunchLogo",
+      "match": "exact",
+      "action": "empty",
+      "sources": [
+        "moyu",
+        "moyu-original"
       ]
     }
   ]

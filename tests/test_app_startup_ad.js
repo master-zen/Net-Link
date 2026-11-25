@@ -19,3 +19,7 @@ assert.deepEqual(run("dmall", {data:{welcomePage:[{onlineTime:1,offlineTime:2,ot
 assert.deepEqual(run("bili", {data:{list:[1]}}, 500), {data:{list:[1]}});
 assert.equal(run("bili", "not-json"), "not-json");
 assert.deepEqual(run("unknown", {data:{ad:1}}), {data:{ad:1}});
+
+assert.deepEqual(run("kuaidi", {adsplash:{id:1},tracking:{keep:true}}), {tracking:{keep:true}});
+assert.deepEqual(run("taobao", {data:{items:[{"taobao-splash":{data:[1],other:2}},{data:[3]}]}}), {data:{items:[{"taobao-splash":{data:[],other:2}},{data:[3]}]}});
+assert.deepEqual(run("faw", {data:[1],returnStatus:"SUCCEED",other:2}), {data:[],returnStatus:"SUCCEED",other:2});
