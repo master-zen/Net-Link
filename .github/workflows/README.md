@@ -17,6 +17,8 @@ This directory contains the GitHub Actions workflows that regenerate and publish
 - `merge-surge-icons.yml` scans `Surge/Icon/` and publishes:
   - `Surge/Icon.json`
 
+- `update-app-startup-ad.yml` rebuilds `Surge/Module/AppStartUpADBlacklist.sgmodule` and audits source changes. New endpoints need review before inclusion.
+
 ## Maintenance Notes
 
 - Workflows should publish deterministic outputs only.

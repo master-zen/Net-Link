@@ -19,11 +19,11 @@ class PublicationGuardTests(unittest.TestCase):
                 "scripts/build_icon_json.py", "Surge/Icon/",
                 ".github/workflows/merge-surge-icons.yml",
             },
-            "Surge/Module/StartUpAds.sgmodule": {
-                "Surge/Module/.generator/build.py",
-                "Surge/Module/.generator/safety.py",
-                "Surge/Module/runtime/body-rewrite.js",
-                ".github/workflows/update-moyu-startup.yml",
+            "Surge/Module/AppStartUpADBlacklist.sgmodule": {
+                "scripts/build_app_startup_ad.py",
+                "data/sources/AppStartUpADBlacklist.json",
+                "Surge/Module/runtime/app-startup-ad.js",
+                ".github/workflows/update-app-startup-ad.yml",
             },
             "Surge/Module/Adblock4limbo.sgmodule": {
                 "Surge/Module/.generator/update-adblock4limbo.py",

@@ -27,8 +27,8 @@ PROFILES = {
     "icons": [
         ("Surge/Icon.json", "icons", 250, 0.70),
     ],
-    "moyu": [
-        ("Surge/Module/StartUpAds.sgmodule", "module", 100, 0.55),
+    "startup": [
+        ("Surge/Module/AppStartUpADBlacklist.sgmodule", "module", 60, 0.55),
     ],
     "adblock": [
         ("Surge/Module/Adblock4limbo.sgmodule", "module", 80, 0.70),
@@ -292,114 +292,10 @@ def validate_profile(profile):
             raise RuntimeError(f"Adblock blocks critical service endpoints: {removed} conflicting rules")
         print(f"Adblock fresh source and protection audit verified: {len(rules)} rules")
 
-    if profile == "moyu":
-        module = Path("Surge/Module/StartUpAds.sgmodule").read_text(encoding="utf-8")
-        metadata = json.loads(Path("Surge/Module/upstream/metadata.json").read_text(encoding="utf-8"))
-        sections = {}
-        section = ""
-        for raw_line in module.splitlines():
-            line = raw_line.strip()
-            if line.startswith("[") and line.endswith("]"):
-                section = line
-                sections.setdefault(section, [])
-            elif line and not line.startswith("#") and section:
-                sections[section].append(line)
-
-        for kind in ("[URL Rewrite]", "[Map Local]", "[Body Rewrite]", "[Rule]", "[Script]"):
-            entries = sections.get(kind, [])
-            if len(entries) != len(set(entries)):
-                raise RuntimeError(f"Duplicate Moyu entries in {kind}")
-
-        checks = {
-            "[URL Rewrite]": "url_rewrite",
-            "[Map Local]": "map_local",
-            "[Body Rewrite]": "body_rewrite",
-            "[Rule]": "rules",
-            "[Script]": "scripts",
-        }
-        for kind, key in checks.items():
-            if len(sections.get(kind, [])) != metadata[key]:
-                raise RuntimeError(f"Moyu output/metadata mismatch: {kind}")
-
-        mitm_rows = sections.get("[MITM]", [])
-        if len(mitm_rows) != 1 or not mitm_rows[0].startswith("hostname = %APPEND% "):
-            raise RuntimeError("Invalid Moyu MITM host list")
-        hosts = [part.strip() for part in mitm_rows[0].split("%APPEND%", 1)[1].split(",")]
-        if not hosts or len(hosts) != len(set(hosts)) or len(hosts) != metadata["mitm_hosts"]:
-            raise RuntimeError("Invalid or duplicated Moyu MITM hostnames")
-
-        forbidden_hosts = {
-            "security.wechat.com", "weixin110.qq.com", "wxa.wxs.qq.com",
-            "ad.12306.cn", "spclient.wg.spotify.com",
-            "mobilepaas.abchina.com.cn", "ump.sz.creditcard.ecitic.com",
-            "creditcardapp.bankcomm.com", "creditcardapp.bankcomm.cn",
-            "zjmbank.js96008.com",
-            "smsrebuild1.mail.10086.cn",
-            "fuwu.nhsa.gov.cn",
-            "client.app.coc.10086.cn",
-            "api.futunn.com",
-            "gab.122.gov.cn",
-        }
-        if forbidden_hosts.intersection(hosts):
-            raise RuntimeError("Moyu contains excluded MITM hosts")
-        if any("ad.12306.cn" in item for item in sections.get("[Rule]", [])):
-            raise RuntimeError("Moyu changed 12306 routing")
-        for name in ("testflight", "mp\\.weixin", "ad\\.12306"):
-            if name in module:
-                raise RuntimeError(f"Moyu sensitive rewrite still present: {name}")
-        if any(name in module for name in (
-            "spclient.wg.spotify.com", "mobilepaas", "creditcardapp",
-            "zjmbank", "ump\\.sz\\.creditcard",
-        )):
-            raise RuntimeError("Moyu has unrelated sensitive rewrites")
-
-        import re
-        import sys
-        sys.path.insert(0, str(Path("Surge/Module/.generator").resolve()))
-        from safety import should_skip_rewrite, is_protected_mitm_host
-        if any(is_protected_mitm_host(host) for host in hosts):
-            raise RuntimeError("Moyu MITM includes a protected functional host")
-        for name in ("[URL Rewrite]", "[Map Local]", "[Body Rewrite]", "[Script]"):
-            for line in sections.get(name, []):
-                if name == "[Script]":
-                    found = re.search(r'pattern=(?:"([^"]+)"|([^,]+)),script-path=', line)
-                    if not found:
-                        raise RuntimeError("Invalid Moyu Script pattern")
-                    pattern = found.group(1) or found.group(2)
-                else:
-                    fields = line.split()
-                    pattern = fields[1] if name == "[Body Rewrite]" else fields[0]
-                if should_skip_rewrite(pattern):
-                    raise RuntimeError(f"Moyu contains an unsafe functional rewrite: {pattern}")
-                normalized = pattern.replace(r"\/", "/").replace(r"\.", ".").replace(r"\:", ":")
-                normalized = normalized.replace("https?://", "https://")
-                matched = re.match(r"^\^?https?://([A-Za-z0-9.-]+):(\d{2,5})/", normalized)
-                if matched:
-                    host, port = matched.groups()
-                    if port != "443" and f"{host}:{port}" not in hosts:
-                        raise RuntimeError(f"Moyu missing port-specific MITM: {host}:{port}")
-
-        for item in sections.get("[Body Rewrite]", []):
-            if item.startswith(("http-response ", "http-request ")):
-                fields = item.split()
-                if len(fields) < 4 or len(fields) % 2:
-                    raise RuntimeError("Invalid Moyu native body rewrite fields")
-                for expression in fields[2:]:
-                    if expression.count('"') % 2:
-                        raise RuntimeError("Invalid Moyu native body rewrite quotation")
-
-        for section_name in ("[URL Rewrite]", "[Map Local]", "[Script]"):
-            for item in sections.get(section_name, []):
-                normalized = item.replace(r"\/", "/").replace(r"\.", ".")
-                if any(marker in normalized for marker in (
-                    "https?://[a-zA-Z0-9_-]+(",
-                    "http://[a-zA-Z0-9_-]+(",
-                    "api.xiaoyi.com/v5/app/config",
-                )):
-                    raise RuntimeError("Moyu contains unsafe universal or core config rewrite")
-
-        if metadata["unsupported_rules"] != 0:
-            raise RuntimeError("Moyu has unsupported rules")
+    if profile == "startup":
+        from build_app_startup_ad import load, render, OUTPUT
+        if OUTPUT.read_text(encoding="utf-8") != render(load()):
+            raise RuntimeError("Startup module differs from reviewed manifest")
 
     if profile == "adblock":
         module = Path("Surge/Module/Adblock4limbo.sgmodule").read_text(encoding="utf-8")

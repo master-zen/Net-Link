@@ -6,7 +6,7 @@ Its primary goal is to publish stable, reviewable, automation-generated outputs 
 ## Published Outputs
 
 - `Surge/Module/Adblock4limbo.sgmodule`
-- `Surge/Module/StartUpAds.sgmodule`
+- `Surge/Module/AppStartUpADBlacklist.sgmodule`
 - `Surge/Rules/AdblockSet.list` and `Clash/Rules/AdblockSet.yaml`
 - `Surge/Rules/ChinaDomain.list` and `Clash/Rules/ChinaDomain.yaml`
 - `Surge/Rules/httpDNS_Block.list`
@@ -34,7 +34,7 @@ Its primary goal is to publish stable, reviewable, automation-generated outputs 
 
 Run `python -m unittest discover -s tests -v` to check pure pipeline regressions.
 Run `python scripts/validate_generated.py trackers` to check the published tracker URLs, rules and Clash payload against each other.
-Other offline profiles are `icons`, `adblock`, and `moyu`. China and Adblock require fresh, run-specific upstream manifests before their full validators can pass.
+Other offline profiles are `icons`, `adblock`, and `startup`. China and Adblock require fresh, run-specific upstream manifests before their full validators can pass.
 
 ## Editing Policy
 

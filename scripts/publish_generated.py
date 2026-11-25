@@ -65,12 +65,14 @@ def guarded_inputs(paths):
             "scripts/build_icon_json.py",
             "Surge/Icon/",
         ]
-    elif "Surge/Module/StartUpAds.sgmodule" in paths:
+    elif "Surge/Module/AppStartUpADBlacklist.sgmodule" in paths:
         guarded += [
-            ".github/workflows/update-moyu-startup.yml",
-            "Surge/Module/.generator/build.py",
-            "Surge/Module/.generator/safety.py",
-            "Surge/Module/runtime/body-rewrite.js",
+            ".github/workflows/update-app-startup-ad.yml",
+            "scripts/build_app_startup_ad.py",
+            "data/sources/AppStartUpADBlacklist.json",
+            "Surge/Module/runtime/app-startup-ad.js",
+            "tests/test_app_startup_ad.py",
+            "tests/test_app_startup_ad.js",
         ]
     elif "Surge/Module/Adblock4limbo.sgmodule" in paths:
         guarded += [

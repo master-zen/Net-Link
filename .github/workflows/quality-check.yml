@@ -7,6 +7,8 @@ on:
       - main
     paths:
       - "scripts/**"
+      - "Surge/Module/**"
+      - "data/sources/AppStartUpADBlacklist.json"
       - "tests/**"
       - ".github/workflows/**"
 
@@ -32,10 +34,11 @@ jobs:
         run: |
           node --check Surge/Module/runtime/Adblock4limbo.js
           node --check Surge/Module/runtime/Adblock4limbo.user.js
-          node --check Surge/Module/runtime/body-rewrite.js
+          node --check Surge/Module/runtime/app-startup-ad.js
+          node tests/test_app_startup_ad.js
       - name: Validate tracked outputs without network access
         run: |
           python scripts/validate_generated.py trackers
           python scripts/validate_generated.py icons
           python scripts/validate_generated.py adblock
-          python scripts/validate_generated.py moyu
+          python scripts/validate_generated.py startup
