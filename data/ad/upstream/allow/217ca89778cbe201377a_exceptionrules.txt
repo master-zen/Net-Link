@@ -1,6 +1,6 @@
 [Adblock Plus 2.0]
-! Checksum: IqyJtIE6eVFl+2pgXohqnQ
-! Version: 202611251203
+! Checksum: DuFCKaErpOOh2Fi70XnNHg
+! Version: 202611251223
 ! Title: Allow nonintrusive advertising
 ! Expires: 12 hours
 ! Homepage: https://acceptableads.com/
@@ -10501,7 +10501,6 @@ galeria.de#@#div[id^="viewHomeDesktop-outGrid-sponsored_products-"]
 @@||id.a-mx.com/sync^
 @@||sync6.im-apps.net^$xmlhttprequest
 @@||dsum.casalemedia.com/pbusermatch^
-@@||*.ay.delivery
 @@||secure.cdn.fastclick.net/js/pubcid/latest/pubcid.min.js^
 @@||cdn.jsdelivr.net/gh/prebid/shared-id/pubcid.js/docs/pubcid.min.js^
 @@||ads.pubmatic.com/AdServer/js/userSync.js^
