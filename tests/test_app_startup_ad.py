@@ -44,6 +44,7 @@ class StartupADTests(unittest.TestCase):
             "https://www.banyuetanapp.com/byt-api/ad/getAdvertList?adSpaceId=100000003",
             "https://api.m.jd.com/api?functionId=jdh_queryOtherResources",
             "https://sh-gateway.shihuo.cn/v1/services/sh-adapi/home/ad",
+            "https://cdke.youdao.com/course3/recommend/dict/lesson",
             "https://security.wechat.com/",
             "https://wxa.wxs.qq.com/",
         ):
@@ -56,8 +57,13 @@ class StartupADTests(unittest.TestCase):
             if entry["host"] == "wmapi.meituan.com" and "loadInfo" in entry["path"]:
                 self.assertEqual(entry["action"], "meituan")
             if entry["host"] == "api.m.jd.com":
-                self.assertEqual(entry["query"], "functionId=start")
-                self.assertEqual(entry["action"], "jd")
+                if entry["path"] == "/client.action":
+                    self.assertEqual(entry["query"], "functionId=start")
+                    self.assertEqual(entry["action"], "jd")
+                else:
+                    self.assertEqual(entry["path"], "/api")
+                    self.assertEqual(entry["query"], "functionId=jdh_queryStartupResources")
+                    self.assertEqual(entry["action"], "json")
 
     def test_douban_trailer_preservation(self):
         user = (ROOT / "Surge/Module/runtime/Adblock4limbo.user.js").read_text(encoding="utf-8")

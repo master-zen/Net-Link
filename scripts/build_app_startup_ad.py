@@ -60,7 +60,8 @@ def render(data):
             raise ValueError("Invalid protocol or port")
         if host == "api.douban.com" and path != "/v2/app_ads/splash":
             raise ValueError("Non-splash Douban route")
-        if re.search(r"/(?:feed|recommend|search|login|payment|pay|tracking)(?:/|$)", path, re.I):
+        startup_exception = (host, path) == ("cdke.youdao.com", "/course3/recommend/dict/startup")
+        if not startup_exception and re.search(r"/(?:feed|recommend|search|login|payment|pay|tracking)(?:/|$)", path, re.I):
             raise ValueError(f"Non-splash route: {path}")
         p = pattern(entry)
         compiled = re.compile(p)
