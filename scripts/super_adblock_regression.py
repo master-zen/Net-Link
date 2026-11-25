@@ -28,7 +28,7 @@ def checks(work,cli=None):
         if not match:
             raise ValueError("Malformed emitted jq")
         expression=match.group(1)
-        fixtures=[None,True,7,"untouched",[1,{"user":{"id":42}}],{},{"user":{"id":42},"account":{"name":"keep"},"playback":{"url":"keep"},"data":7},{"data":{"title":"keep","id":42},"list":[{"type":"article","id":1},null,3]}]
+        fixtures=[None,True,7,"untouched",[1,{"user":{"id":42}}],{},{"user":{"id":42},"account":{"name":"keep"},"playback":{"url":"keep"},"data":7},{"data":{"title":"keep","id":42},"list":[{"type":"article","id":1},None,3]}]
         for original in fixtures:
             if run_jq(expression,original)!=original:
                 raise ValueError("Non-ad response regression")

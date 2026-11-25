@@ -257,6 +257,22 @@ class SuperAdBlockTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             discover.NoRedirect().redirect_request(None,None,302,"",{},"https://evil.example/")
 
+    def test_generated_jq_regression_runs_fixtures(self):
+        import shutil
+        import super_adblock_regression as reg
+        if not shutil.which("jq"):
+            self.skipTest("jq unavailable")
+        with tempfile.TemporaryDirectory() as tmp:
+            work=Path(tmp)
+            line="#!REQUIREMENT CORE_VERSION>=6008000 http-response-jq ^https://api\\.example\\.com/v1/items(?:\\?|$) '"+s.body_expression({("ads",)})+"'"
+            raw=("#!name=SuperAdBlock\n[Body Rewrite]\n"+line+"\n[MITM]\nhostname = %APPEND% api.example.com\n").encode()
+            (work/"SuperAdBlock.sgmodule").write_bytes(raw)
+            s.dump(work/"audit.json",{"output":{"rules":0,"url_rewrite":0,"map_local":0,"body_rewrite":1,"scripts":0,"mitm_hosts":1},"mitm_host_hashes":[s.digest(b"api.example.com")],"rule_provenance":[{"section":"Body Rewrite","rule_sha256":s.digest(line.encode())}],"provenance_count":1})
+            reg.checks(work)
+            report=json.loads((work/"regression.json").read_bytes())
+            self.assertEqual(report["jq_preservation_checks"],8)
+            self.assertEqual(report["structure"],"passed")
+
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):
             with self.assertRaises(ValueError):
