@@ -135,6 +135,7 @@ jobs:
             Surge/Module/SuperAdBlock.sgmodule
             data/reports/super_adblock_script_audit.json
             data/reports/super_adblock_release_quality.json
+            data/reports/super_adblock_cross_audit.json
             Surge/Scripts/Converted/SuperAdBlock/
     outputs:
       approved: ${{ steps.gate.outputs.approved }}
@@ -183,6 +184,6 @@ jobs:
           path: .
       - run: |
           python scripts/super_adblock.py verify-release "$RUNNER_TEMP/super-adblock-release"
-          python scripts/publish_generated.py "chore: update SuperAdBlock" data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json data/reports/super_adblock_release_quality.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/
+          python scripts/publish_generated.py "chore: update SuperAdBlock" data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json data/reports/super_adblock_release_quality.json data/reports/super_adblock_cross_audit.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/
           git fetch origin main
-          git diff --exit-code HEAD origin/main -- data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json data/reports/super_adblock_release_quality.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/
+          git diff --exit-code HEAD origin/main -- data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json data/reports/super_adblock_release_quality.json data/reports/super_adblock_cross_audit.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/

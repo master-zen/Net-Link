@@ -73,6 +73,7 @@ def guarded_inputs(paths):
             "scripts/super_adblock.py",
             "scripts/super_adblock_quality.py",
             "scripts/super_adblock_cross.py",
+            "data/sources/SuperAdBlock_quality_policy.json",
             "Surge/Module/StartUpAds.sgmodule",
             "Surge/Module/Adblock4limbo.sgmodule",
             "Surge/Rules/AdblockSet.list",
