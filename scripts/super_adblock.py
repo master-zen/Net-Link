@@ -9,6 +9,7 @@ import re
 import shutil
 import shlex
 import fnmatch
+import super_adblock_scripts as sec
 import sys
 import time
 from collections import Counter, defaultdict
@@ -50,7 +51,7 @@ def dump(path, obj):
 
 def sources():
     result = [x.strip() for x in SOURCE.read_text(encoding="utf-8").splitlines() if x.strip()]
-    if len(result) != 57 or len(set(map(safe_url, result))) != len(result):
+    if len(result) != 63 or len(set(map(safe_url, result))) != len(result):
         raise ValueError("Invalid source inventory")
     return result
 
@@ -71,7 +72,7 @@ def family(url):
         return "awavenue"
     if "blackmatrix7/" in url:
         return "blackmatrix7"
-    if "Amlabort/" in url or "Maasea/" in url or "master-zen/Net-Link/" in url:
+    if "Amlabort/" in url or "Maasea/" in url or "master-zen/Net-Link/" in url or "fmz200/" in url or "app2smile/" in url:
         return "unverified-lineage"
     raise ValueError("Unknown source family")
 
@@ -243,6 +244,9 @@ def build(work):
     counts = Counter()
     quarantine = Counter()
     source_sections = {}
+    cleared = sec.eligible(work)
+    script_hits = defaultdict(set)
+    script_origins = defaultdict(set)
     for entry, text in snapshots(work):
         source_sections[entry["url"]] = Counter()
         section = ""
@@ -280,6 +284,22 @@ def build(work):
                 else:
                     quarantine["unsupported-rule"] += 1
                     continue
+            elif section == "script":
+                spec = sec.declaration(line)
+                if not spec or spec[1] not in cleared:
+                    quarantine["script-not-cleared-or-unsupported"] += 1
+                    continue
+                pattern,url=spec
+                qualified=url_candidate(pattern,protected)
+                if not qualified or qualified[0] in DOUBAN:
+                    quarantine["script-functional-risk"] += 1
+                    continue
+                pattern,host=qualified
+                h=cleared[url]
+                script_hits[pattern].add(h)
+                script_origins[h].add(url)
+                url_hosts[pattern]=host
+                continue
             elif section in {"rewrite","url rewrite","map local"}:
                 candidate = parse_rewrite(section,line)
             else:
@@ -330,16 +350,31 @@ def build(work):
             maps.append(f'{pattern} {MAP[action]}')
         if not pattern.startswith("^http://"):
             hosts.add(host)
-    sections = [("Rule",rules),("URL Rewrite",rewrite),("Map Local",maps),("MITM",["hostname = %APPEND% "+",".join(sorted(hosts))] if hosts else [])]
+    scripts, published = [], {}
+    for pattern,hashes in sorted(script_hits.items()):
+        host=url_hosts[pattern]
+        if len(hashes)!=1 or any(url_hosts[k]==host for k in url_hits) or any(k!=pattern and url_hosts[k]==host for k in script_hits):
+            quarantine["script-conflict"] += 1
+            continue
+        if any(matches_domain(host,domain,kind=="DOMAIN-SUFFIX") for kind,domain in domains) or any(matches_domain(host,a,k=="DOMAIN-SUFFIX") for k,a in upstream_allow):
+            quarantine["script-covered-or-allowed"] += 1
+            continue
+        h=next(iter(hashes))
+        name="super-"+digest((pattern+h).encode())[:20]
+        scripts.append(f"{name} = type=http-response,pattern={pattern},requires-body=true,max-size=1048576,timeout=5,script-path={sec.PREFIX}{h}.js")
+        published[h]=sorted(script_origins[h])
+        if not pattern.startswith("^http://"):
+            hosts.add(host)
+    sections = [("Rule",rules),("URL Rewrite",rewrite),("Map Local",maps),("Script",scripts),("MITM",["hostname = %APPEND% "+",".join(sorted(hosts))] if hosts else [])]
     output = ["#!name=SuperAdBlock","#!desc=Conservative merged ad-blocking module; source and safety audit in Net-Link","#!category=Advertising"]
     for section,lines in sections:
         if lines:
             output.extend(["",f"[{section}]",*lines])
     module = "\n".join(output)+"\n"
-    if len(rules)+len(rewrite)+len(maps)<50:
+    if len(rules)+len(rewrite)+len(maps)+len(scripts)<50:
         raise ValueError("Insufficient safe rules")
     (work/"SuperAdBlock.sgmodule").write_text(module,encoding="utf-8")
-    report = {"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
+    report = {"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
     dump(work/"audit.json",report)
     return report
 
@@ -349,17 +384,28 @@ def validate(work):
     build(work)
     if data != (work/"SuperAdBlock.sgmodule").read_bytes() or audit != (work/"audit.json").read_bytes():
         raise ValueError("Non-reproducible output")
-    if b"[Script]" in data or b"[General]" in data or b"script-path=" in data:
-        raise ValueError("Executable or global config")
+    if b"[General]" in data:
+        raise ValueError("Global config")
+    for line in data.decode().splitlines():
+        if "script-path=" in line:
+            ref=line.split("script-path=",1)[1]
+            if not ref.startswith(sec.PREFIX) or not re.fullmatch(r"[0-9a-f]{64}\.js",ref[len(sec.PREFIX):]):
+                raise ValueError("Unpinned script")
     return json.loads(audit)
 
-def approved():
+def approved(work=None):
     config = json.loads(APPROVAL.read_text(encoding="utf-8"))
     approved_urls = {x["url"] for x in config.get("sources",[]) if x.get("redistribution") is True and x.get("evidence") and x.get("license")}
-    return config.get("enabled") is True and approved_urls == set(sources()) and bool(config.get("combined_license_review"))
+    if not (config.get("enabled") is True and approved_urls == set(sources()) and config.get("combined_license_review")):
+        return False
+    if work is not None and (work/"audit.json").exists():
+        required={u for urls in json.loads((work/"audit.json").read_text())["published_scripts"].values() for u in urls}
+        allowed={e["url"] for e in config.get("scripts",[]) if e.get("redistribution") is True and e.get("license") and e.get("evidence")}
+        return required <= allowed
+    return True
 
 def stage(work):
-    if not approved():
+    if not approved(work):
         raise ValueError("Public redistribution not approved")
     validate(work)
     target = ROOT/"data/super-adblock/upstream"
@@ -369,6 +415,17 @@ def stage(work):
             path.unlink()
     for path in (work/"upstream").iterdir():
         shutil.copyfile(path,target/path.name)
+    published=json.loads((work/"audit.json").read_text())["published_scripts"]
+    runtime=ROOT/sec.RUNTIME
+    runtime.mkdir(parents=True,exist_ok=True)
+    for h in published:
+        raw=(work/"script-snapshots"/(h+".js")).read_bytes()
+        target=runtime/(h+".js")
+        if digest(raw)!=h or (target.exists() and target.read_bytes()!=raw):
+            raise ValueError("Runtime integrity failure")
+        target.write_bytes(raw)
+    dump(runtime/"manifest.json",published)
+    shutil.copyfile(work/"script-audit.json",ROOT/"data/reports/super_adblock_script_audit.json")
     for name,dest in [("manifest.json","data/reports/super_adblock_download_manifest.json"),("audit.json","data/reports/super_adblock_audit.json"),("SuperAdBlock.sgmodule","Surge/Module/SuperAdBlock.sgmodule")]:
         shutil.copyfile(work/name,ROOT/dest)
 
@@ -378,7 +435,7 @@ def main():
     parser.add_argument("work",type=Path)
     args = parser.parse_args()
     if args.action=="approved":
-        print("true" if approved() else "false")
+        print("true" if approved(args.work) else "false")
     elif args.action=="fetch":
         fetch(args.work)
     elif args.action=="build":

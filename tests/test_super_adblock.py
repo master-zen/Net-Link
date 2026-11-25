@@ -7,7 +7,7 @@ import super_adblock as s
 
 class SuperAdBlockTests(unittest.TestCase):
     def test_sources(self):
-        self.assertEqual(len(s.sources()),57)
+        self.assertEqual(len(s.sources()),63)
 
     def test_url_rewrite(self):
         protected=s.protected_domains()
@@ -41,6 +41,16 @@ class SuperAdBlockTests(unittest.TestCase):
         self.assertEqual(s.parse_rewrite("map local",p+" "+s.MAP["reject-array"]),(p,"reject-array"))
         self.assertIsNone(s.parse_rewrite("rewrite",p+" 302 https://evil.example"))
         self.assertIsNone(s.parse_rewrite("rewrite",p+" script-path=https://evil.example/a.js"))
+
+    def test_script_parser(self):
+        import super_adblock_scripts as sec
+        u="https://raw.githubusercontent.com/a/b/main/ads.js"
+        p=r"^https://api\.example\.com/ads"
+        line=f"ads = type=http-response,pattern={p},requires-body=true,script-path={u}"
+        self.assertEqual(sec.discover("[Script]\n"+line),{u})
+        self.assertEqual(sec.declaration(line),(p,u))
+        self.assertIsNone(sec.declaration(line+",binary-body-mode=true"))
+        self.assertIsNone(sec.declaration(line.replace("http-response","http-request")))
 
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):

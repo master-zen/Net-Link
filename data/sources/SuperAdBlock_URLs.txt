@@ -55,3 +55,9 @@ https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/StartUpA
 https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/彩云天气去广告.sgmodule
 https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/微信公众号去广告.sgmodule
 https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Beta/微信小程序去广告.beta.sgmodule
+https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partF/Facebook.sgmodule
+https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partT/Twitter.sgmodule
+https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partS/Spotify.sgmodule
+https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partY/YouTube.sgmodule
+https://raw.githubusercontent.com/app2smile/rules/master/module/spotify.module
+https://raw.githubusercontent.com/app2smile/rules/master/module/youtube.sgmodule

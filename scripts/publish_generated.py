@@ -69,6 +69,8 @@ def guarded_inputs(paths):
         guarded += [
             ".github/workflows/update-super-adblock.yml",
             "scripts/super_adblock.py",
+            "scripts/super_adblock_scripts.py",
+            "scripts/super_adblock_ast.cjs",
             "tests/test_super_adblock.py",
             "data/sources/SuperAdBlock_URLs.txt",
             "data/sources/SuperAdBlock_publication.json",

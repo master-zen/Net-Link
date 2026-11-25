@@ -7,6 +7,8 @@ on:
     paths:
       - ".github/workflows/update-super-adblock.yml"
       - "scripts/super_adblock.py"
+      - "scripts/super_adblock_scripts.py"
+      - "scripts/super_adblock_ast.cjs"
       - "scripts/publish_generated.py"
       - "tests/test_super_adblock.py"
       - "data/sources/SuperAdBlock*"
@@ -34,7 +36,21 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m unittest discover -s tests -p test_super_adblock.py -v
-      - run: python scripts/super_adblock.py fetch "$RUNNER_TEMP/super-adblock"
+      - id: fetch
+        run: python scripts/super_adblock.py fetch "$RUNNER_TEMP/super-adblock"
+      - id: scanner
+        if: always() && steps.fetch.outcome != 'skipped'
+        continue-on-error: true
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends clamav node-acorn
+          sudo systemctl stop clamav-freshclam || true
+          sudo freshclam
+          node -e "require('acorn')"
+      - if: always() && steps.fetch.outcome != 'skipped'
+        env:
+          SUPER_ADBLOCK_ANTIVIRUS_READY: ${{ steps.scanner.outcome == 'success' }}
+        run: python scripts/super_adblock_scripts.py "$RUNNER_TEMP/super-adblock"
       - run: python scripts/super_adblock.py build "$RUNNER_TEMP/super-adblock"
       - run: python scripts/super_adblock.py validate "$RUNNER_TEMP/super-adblock"
       - if: always()
@@ -45,8 +61,9 @@ jobs:
           path: |
             ${{ runner.temp }}/super-adblock/manifest.json
             ${{ runner.temp }}/super-adblock/audit.json
+            ${{ runner.temp }}/super-adblock/script-audit.json
       - id: gate
-        run: echo "approved=$(python scripts/super_adblock.py approved unused)" >> "$GITHUB_OUTPUT"
+        run: echo "approved=$(python scripts/super_adblock.py approved "$RUNNER_TEMP/super-adblock")" >> "$GITHUB_OUTPUT"
       - if: steps.gate.outputs.approved == 'true'
         run: python scripts/super_adblock.py stage "$RUNNER_TEMP/super-adblock"
       - if: steps.gate.outputs.approved == 'true'
@@ -59,6 +76,8 @@ jobs:
             data/reports/super_adblock_download_manifest.json
             data/reports/super_adblock_audit.json
             Surge/Module/SuperAdBlock.sgmodule
+            data/reports/super_adblock_script_audit.json
+            Surge/Scripts/Converted/SuperAdBlock/
     outputs:
       approved: ${{ steps.gate.outputs.approved }}
   publish:
@@ -81,6 +100,6 @@ jobs:
           path: .
       - run: |
           test "$(python scripts/super_adblock.py approved unused)" = true
-          python scripts/publish_generated.py "chore: update SuperAdBlock" data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json Surge/Module/SuperAdBlock.sgmodule
+          python scripts/publish_generated.py "chore: update SuperAdBlock" data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/
           git fetch origin main
-          git diff --exit-code HEAD origin/main -- data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json Surge/Module/SuperAdBlock.sgmodule
+          git diff --exit-code HEAD origin/main -- data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/
