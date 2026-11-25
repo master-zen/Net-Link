@@ -65,10 +65,14 @@ def guarded_inputs(paths):
             "scripts/build_icon_json.py",
             "Surge/Icon/",
         ]
+    elif "data/reports/super_adblock_quality_history.json" in paths:
+        guarded += ["scripts/super_adblock_quality.py","data/sources/SuperAdBlock_quality_policy.json","data/reports/super_adblock_quality_history.json"]
     elif "Surge/Module/SuperAdBlock.sgmodule" in paths:
         guarded += [
             ".github/workflows/update-super-adblock.yml",
             "scripts/super_adblock.py",
+            "scripts/super_adblock_quality.py",
+            "data/sources/SuperAdBlock_quality_policy.json",
             "scripts/super_adblock_discover.py",
             "data/sources/SuperAdBlock_reference_only.json",
             "scripts/super_adblock_scripts.py",

@@ -616,6 +616,12 @@ def approved(work=None):
             return False
         if json.loads((work/"manifest.json").read_text())["failed"] or json.loads((work/"audit.json").read_text()).get("review_only",True):
             return False
+        quality=work/"quality.json"
+        if not quality.exists():
+            return False
+        q=json.loads(quality.read_bytes())
+        if q.get("passed") is not True or q.get("audit_sha256")!=digest((work/"audit.json").read_bytes()) or q.get("policy_sha256")!=digest((ROOT/"data/sources/SuperAdBlock_quality_policy.json").read_bytes()):
+            return False
         required={(u,h) for h,urls in json.loads((work/"audit.json").read_text())["published_scripts"].items() for u in urls}
         allowed={(e["url"],e.get("sha256")) for e in config.get("scripts",[]) if e.get("redistribution") is True and e.get("license") and e.get("evidence")}
         return required <= allowed
@@ -644,13 +650,14 @@ def stage(work):
         target.write_bytes(raw)
     dump(runtime/"manifest.json",published)
     shutil.copyfile(work/"script-audit.json",ROOT/"data/reports/super_adblock_script_audit.json")
+    shutil.copyfile(work/"quality.json",ROOT/"data/reports/super_adblock_release_quality.json")
     for name,dest in [("manifest.json","data/reports/super_adblock_download_manifest.json"),("audit.json","data/reports/super_adblock_audit.json"),("SuperAdBlock.sgmodule","Surge/Module/SuperAdBlock.sgmodule")]:
         shutil.copyfile(work/name,ROOT/dest)
 
 def verify_release(work):
     work.mkdir(parents=True,exist_ok=False)
     reports=ROOT/"data/reports"
-    for name,source in [("manifest.json","super_adblock_download_manifest.json"),("audit.json","super_adblock_audit.json"),("script-audit.json","super_adblock_script_audit.json")]:
+    for name,source in [("manifest.json","super_adblock_download_manifest.json"),("audit.json","super_adblock_audit.json"),("script-audit.json","super_adblock_script_audit.json"),("quality.json","super_adblock_release_quality.json")]:
         shutil.copyfile(reports/source,work/name)
     shutil.copyfile(ROOT/"Surge/Module/SuperAdBlock.sgmodule",work/"SuperAdBlock.sgmodule")
     shutil.copytree(ROOT/"data/super-adblock/upstream",work/"upstream")

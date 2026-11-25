@@ -7,6 +7,7 @@ on:
     paths:
       - ".github/workflows/update-super-adblock.yml"
       - "scripts/super_adblock.py"
+      - "scripts/super_adblock_quality.py"
       - "scripts/super_adblock_discover.py"
       - "scripts/super_adblock_scripts.py"
       - "scripts/super_adblock_ast.cjs"
@@ -70,6 +71,8 @@ jobs:
       - run: python scripts/super_adblock.py review-validate "$RUNNER_TEMP/super-adblock"
       - run: python scripts/super_adblock.py build "$RUNNER_TEMP/super-adblock"
       - run: python scripts/super_adblock.py validate "$RUNNER_TEMP/super-adblock"
+      - id: quality
+        run: python scripts/super_adblock_quality.py evaluate "$RUNNER_TEMP/super-adblock"
       - if: always()
         run: |
           python - <<'PY'
@@ -104,6 +107,14 @@ jobs:
             ${{ runner.temp }}/super-adblock/review-audit.json
             ${{ runner.temp }}/super-adblock/script-audit.json
             ${{ runner.temp }}/super-adblock/discovery.json
+            ${{ runner.temp }}/super-adblock/quality.json
+      - if: always() && steps.quality.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: super-adblock-quality
+          retention-days: 7
+          if-no-files-found: error
+          path: ${{ runner.temp }}/super-adblock/quality.json
       - id: gate
         run: echo "approved=$(python scripts/super_adblock.py approved "$RUNNER_TEMP/super-adblock")" >> "$GITHUB_OUTPUT"
       - if: steps.gate.outputs.approved == 'true'
@@ -119,9 +130,34 @@ jobs:
             data/reports/super_adblock_audit.json
             Surge/Module/SuperAdBlock.sgmodule
             data/reports/super_adblock_script_audit.json
+            data/reports/super_adblock_release_quality.json
             Surge/Scripts/Converted/SuperAdBlock/
     outputs:
       approved: ${{ steps.gate.outputs.approved }}
+  quality-history:
+    needs: build
+    if: always() && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - id: quality-artifact
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: super-adblock-quality
+          path: ${{ runner.temp }}/super-adblock-quality
+      - if: steps.quality-artifact.outcome == 'success'
+        run: |
+          python scripts/super_adblock_quality.py record "$RUNNER_TEMP/super-adblock-quality/quality.json"
+          python scripts/publish_generated.py "chore: record SuperAdBlock quality" data/reports/super_adblock_quality_history.json
   publish:
     needs: build
     if: needs.build.outputs.approved == 'true' && github.ref == 'refs/heads/main'
@@ -143,6 +179,6 @@ jobs:
           path: .
       - run: |
           python scripts/super_adblock.py verify-release "$RUNNER_TEMP/super-adblock-release"
-          python scripts/publish_generated.py "chore: update SuperAdBlock" data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/
+          python scripts/publish_generated.py "chore: update SuperAdBlock" data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json data/reports/super_adblock_release_quality.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/
           git fetch origin main
-          git diff --exit-code HEAD origin/main -- data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/
+          git diff --exit-code HEAD origin/main -- data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json data/reports/super_adblock_release_quality.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/

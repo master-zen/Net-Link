@@ -166,6 +166,19 @@ class SuperAdBlockTests(unittest.TestCase):
         for expr in ('.list |= map(select(.type != "article"))','.list |= map(select(.id != 1))','.list |= map(select(.type != "ad")) | empty','.users |= map(select(.type != "ad"))'):
             self.assertIsNone(s.parse_array_filter(f"http-response-jq {p} '{expr}'",set()))
 
+    def test_quality_regression_gate(self):
+        import super_adblock_quality as q
+        policy=json.loads(q.POLICY.read_bytes())
+        output=dict(policy["baseline"]["output"])
+        audit={"output":output,"review_only":False,"failed":0,"sources":428,"downloaded":428}
+        manifest={"failed":0,"downloaded":428}
+        script={"references":1,"antivirus_ready":True,"entries":[]}
+        self.assertTrue(q.evaluate(audit,manifest,script,policy)["passed"])
+        output["rules"]=1
+        self.assertIn("total-rule-loss",q.evaluate(audit,manifest,script,policy)["reasons"])
+        output["mitm_hosts"]=1000
+        self.assertIn("mitm-growth",q.evaluate(audit,manifest,script,policy)["reasons"])
+
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):
             with self.assertRaises(ValueError):
