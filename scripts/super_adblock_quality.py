@@ -65,6 +65,10 @@ def run(work):
         raise ValueError("Stale cross audit")
     result=evaluate(audit,manifest,script,policy,previous,cross)
     result["cross_sha256"]=digest(cross_path.read_bytes())
+    regression=json.loads((work/"regression.json").read_bytes())
+    if regression["module_sha256"]!=audit["output"]["sha256"] or regression["structure"]!="passed":
+        raise ValueError("Stale regression report")
+    result["regression_checks"]=regression["jq_preservation_checks"]
     result.update(run_id=manifest["run_id"],run_attempt=manifest["run_attempt"],epoch_seconds=manifest.get("epoch_seconds",0),module_sha256=audit["output"]["sha256"],audit_sha256=digest((work/"audit.json").read_bytes()),policy_sha256=digest(POLICY.read_bytes()))
     dump(work/"quality.json",result)
     print(json.dumps(result,sort_keys=True))
@@ -72,7 +76,7 @@ def run(work):
 
 def record(path):
     data=json.loads(path.read_bytes())
-    required={"passed","reasons","output","sources","downloaded","reference_only","script_references","unique_downloaded_scripts","script_decisions","run_id","run_attempt","epoch_seconds","module_sha256","audit_sha256","policy_sha256","cross_sha256","rule_hashes","mitm_host_hashes","rules_added","rules_removed","cross_counts"}
+    required={"passed","reasons","output","sources","downloaded","reference_only","script_references","unique_downloaded_scripts","script_decisions","run_id","run_attempt","epoch_seconds","module_sha256","audit_sha256","policy_sha256","cross_sha256","rule_hashes","mitm_host_hashes","rules_added","rules_removed","cross_counts","regression_checks"}
     if set(data)!=required or set(data["output"])!=set(COUNTS) or any(type(v) is not int or v<0 for v in data["output"].values()):
         raise ValueError("Invalid quality record")
     if data["policy_sha256"]!=digest(POLICY.read_bytes()):
