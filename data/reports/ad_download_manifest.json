@@ -1,12 +1,12 @@
 {
   "profile": "ad",
-  "fetched_at_utc": "2026-11-25T12:14:18Z",
-  "epoch_seconds": 1795608860.2571716,
-  "github_run_id": "45611788624",
+  "fetched_at_utc": "2026-11-25T12:16:15Z",
+  "epoch_seconds": 1795608976.9862506,
+  "github_run_id": "45612088525",
   "github_run_attempt": "1",
   "source_count": 25,
   "downloaded_count": 25,
-  "source_bytes_total": 38408753,
+  "source_bytes_total": 38409452,
   "sources": [
     {
       "bucket": "allow",
@@ -68,8 +68,8 @@
       "bucket": "block",
       "url": "https://adguardteam.github.io/AdGuardSDNSFilter/Filters/filter.txt",
       "path": "data/ad/upstream/block/e5d742a036de04978665_filter.txt",
-      "size_bytes": 4762904,
-      "sha256": "635412751a3851e72528863f054a2886a062b79b39782095c10f7789e6511b3a"
+      "size_bytes": 4763603,
+      "sha256": "a401b093b9f8457bcee242460f0efc742f57b8af05cfb1e4beae9a2d44ff0c14"
     },
     {
       "bucket": "block",
