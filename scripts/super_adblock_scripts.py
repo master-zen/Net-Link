@@ -194,5 +194,9 @@ def eligible(work, review=False):
         result[e["url"]]=h
     return result
 
+def plans(work,cleared):
+    report=json.loads((work/"script-audit.json").read_bytes())
+    return {e["url"]:e["ast"]["plan"] for e in report["entries"] if e["url"] in cleared and isinstance(e.get("ast",{}).get("plan"),dict)}
+
 if __name__=="__main__":
     audit(Path(sys.argv[1]),os.getenv("SUPER_ADBLOCK_ANTIVIRUS_READY")=="true")
