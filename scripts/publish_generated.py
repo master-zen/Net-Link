@@ -65,36 +65,6 @@ def guarded_inputs(paths):
             "scripts/build_icon_json.py",
             "Surge/Icon/",
         ]
-    elif "data/reports/super_adblock_quality_history.json" in paths:
-        guarded += ["scripts/super_adblock_quality.py","data/sources/SuperAdBlock_quality_policy.json","data/reports/super_adblock_quality_history.json"]
-    elif "Surge/Module/SuperAdBlock.sgmodule" in paths:
-        guarded += [
-            ".github/workflows/update-super-adblock.yml",
-            "scripts/super_adblock.py",
-            "scripts/super_adblock_cache.py",
-            "scripts/super_adblock_regression.py",
-            "scripts/super_adblock_quality.py",
-            "scripts/super_adblock_cross.py",
-            "data/sources/SuperAdBlock_quality_policy.json",
-            "Surge/Module/StartUpAds.sgmodule",
-            "Surge/Module/Adblock4limbo.sgmodule",
-            "Surge/Rules/AdblockSet.list",
-            "data/sources/SuperAdBlock_quality_policy.json",
-            "scripts/super_adblock_discover.py",
-            "data/sources/SuperAdBlock_reference_only.json",
-            "scripts/super_adblock_scripts.py",
-            "scripts/super_adblock_ast.cjs",
-            "scripts/super_adblock_protobuf.cjs",
-            "tests/super_adblock_protobuf_check.cjs",
-            "data/sources/SuperAdBlock_platform_profiles.json",
-            "tests/test_super_adblock.py",
-            "data/sources/SuperAdBlock_URLs.txt",
-            "data/sources/SuperAdBlock_alternatives.json",
-            "tests/super_adblock_ast_check.cjs",
-            "data/sources/SuperAdBlock_publication.json",
-            "data/allowlists/AdblockCriticalAllow.list",
-            "Surge/Module/.generator/safety.py",
-        ]
     elif "Surge/Module/StartUpAds.sgmodule" in paths:
         guarded += [
             ".github/workflows/update-moyu-startup.yml",
@@ -121,7 +91,7 @@ def guard_against_old_build(paths):
     if changed:
         raise RuntimeError("This build used superseded generator/source configuration; "
                            "newer main requires a fresh download/build: " + changed[:300])
-    for profile in ("china", "ad", "super_adblock"):
+    for profile in ("china", "ad"):
         local_name = f"data/reports/{profile}_download_manifest.json"
         if local_name not in paths:
             continue
