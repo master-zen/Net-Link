@@ -250,6 +250,13 @@ class SuperAdBlockTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,"MITM coverage mismatch"):
             s.validate_structure(raw,report)
 
+    def test_discovery_token_scope(self):
+        import super_adblock_discover as discover
+        with self.assertRaises(ValueError):
+            discover.api("https://evil.example/")
+        with self.assertRaises(ValueError):
+            discover.NoRedirect().redirect_request(None,None,302,"",{},"https://evil.example/")
+
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):
             with self.assertRaises(ValueError):
