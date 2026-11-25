@@ -80,6 +80,31 @@ def download(url,folder):
     except Exception as exc:
         return {"url":url,"download":"failed","reason":type(exc).__name__,"http_status":getattr(exc,"code",None)}
 
+def batch_scan(folder,hashes,ready):
+    if not ready:
+        return dict.fromkeys(hashes,"not-verified")
+    if not hashes:
+        return {}
+    result=dict.fromkeys(hashes,"scan-error")
+    try:
+        run=subprocess.run(["clamscan","--no-summary","--max-filesize=4M","--max-scansize=8M","--alert-exceeds-max=yes",str(folder)],capture_output=True,text=True,timeout=600)
+        if run.returncode not in {0,1}:
+            return result
+        for line in run.stdout.splitlines():
+            path,sep,status=line.rpartition(": ")
+            if not sep:
+                continue
+            h=Path(path).stem
+            if h not in result or Path(path).parent.resolve()!=folder.resolve():
+                continue
+            if status=="OK":
+                result[h]="no-signature-hit"
+            elif status.endswith(" FOUND"):
+                result[h]="detected"
+        return result
+    except (OSError,subprocess.TimeoutExpired):
+        return result
+
 def audit(work,ready):
     from super_adblock import decode
     manifest=(work/"manifest.json").read_bytes()
@@ -98,15 +123,11 @@ def audit(work,ready):
     with ThreadPoolExecutor(max_workers=8) as pool:
         entries=list(pool.map(lambda u:download(u,folder),sorted(urls)))
     findings={}
-    for h in sorted({e["sha256"] for e in entries if e["download"]=="ok"}):
+    hashes=sorted({e["sha256"] for e in entries if e["download"]=="ok"})
+    antivirus=batch_scan(folder,hashes,ready)
+    for h in hashes:
         file=folder/(h+".js")
-        av="not-verified"
-        if ready:
-            try:
-                scan=subprocess.run(["clamscan","--no-summary","--max-filesize=4M","--max-scansize=8M","--alert-exceeds-max=yes",str(file)],capture_output=True,text=True,timeout=60)
-                av={0:"no-signature-hit",1:"detected"}.get(scan.returncode,"scan-error")
-            except (OSError,subprocess.TimeoutExpired):
-                av="scan-error"
+        av=antivirus[h]
         try:
             parsed=subprocess.run(["node",str(ROOT/"scripts/super_adblock_ast.cjs"),str(file)],capture_output=True,text=True,timeout=15,check=True)
             ast=json.loads(parsed.stdout)

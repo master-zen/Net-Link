@@ -11,7 +11,7 @@ import super_adblock as s
 
 class SuperAdBlockTests(unittest.TestCase):
     def test_sources(self):
-        self.assertEqual(len(s.sources()),97)
+        self.assertEqual(len(s.sources()),252)
 
     def test_url_rewrite(self):
         protected=s.protected_domains()
@@ -84,6 +84,16 @@ class SuperAdBlockTests(unittest.TestCase):
                 with self.assertRaises(ValueError):
                     s.build(work)
                 self.assertFalse(s.approved(work))
+
+    def test_batch_antivirus(self):
+        import super_adblock_scripts as sec
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp)
+            hashes=["a"*64,"b"*64,"c"*64]
+            output=f"{folder/hashes[0]}.js: OK\n{folder/hashes[1]}.js: Test.Signature FOUND\n"
+            with patch.object(sec.subprocess,"run",return_value=sec.subprocess.CompletedProcess([],1,stdout=output)):
+                result=sec.batch_scan(folder,hashes,True)
+            self.assertEqual([result[h] for h in hashes],["no-signature-hit","detected","scan-error"])
 
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):
