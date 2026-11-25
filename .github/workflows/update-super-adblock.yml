@@ -10,6 +10,8 @@ on:
       - "scripts/super_adblock_discover.py"
       - "scripts/super_adblock_scripts.py"
       - "scripts/super_adblock_ast.cjs"
+      - "scripts/super_adblock_protobuf.cjs"
+      - "tests/super_adblock_protobuf_check.cjs"
       - "scripts/publish_generated.py"
       - "tests/test_super_adblock.py"
       - "tests/super_adblock_ast_check.cjs"
@@ -40,6 +42,8 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m unittest discover -s tests -p test_super_adblock.py -v
+      - name: Verify experimental binary response profile
+        run: node tests/super_adblock_protobuf_check.cjs
       - id: fetch
         run: python scripts/super_adblock.py fetch "$RUNNER_TEMP/super-adblock"
       - name: Discover upstream candidates and license metadata
