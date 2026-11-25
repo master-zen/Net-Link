@@ -38,4 +38,5 @@ jobs:
         with:
           name: startup-source-audit
           path: startup-source-audit.json
-      - run: python scripts/publish_generated.py "chore: update App Start Up AD Blacklist" Surge/Module/AppStartUpADBlacklist.sgmodule
+      - run: |
+          python scripts/publish_generated.py "chore: update App Start Up AD Blacklist" Surge/Module/AppStartUpADBlacklist.sgmodule
