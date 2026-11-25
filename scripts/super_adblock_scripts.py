@@ -30,6 +30,7 @@ def discover(text):
             section=line[1:-1].lower()
         elif section=="script":
             result.update(REF.findall(line))
+            result.update(re.findall(r"""(?i)\bscript-path\s*=\s*["']?(https://[^\s,"'<>]+)""",line))
     return result
 
 def declaration(line):
@@ -121,6 +122,10 @@ def eligible(work):
     report=json.loads((work/"script-audit.json").read_text(encoding="utf-8"))
     if report["module_manifest_sha256"]!=sha((work/"manifest.json").read_bytes()):
         raise ValueError("Stale script audit")
+    if report["references"] and not report["antivirus_ready"]:
+        raise ValueError("Antivirus signatures unavailable")
+    if any(e.get("antivirus")=="scan-error" for e in report["entries"]):
+        raise ValueError("Antivirus scan failed")
     result={}
     for e in report["entries"]:
         if e["decision"]!="eligible":

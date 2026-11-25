@@ -61,3 +61,4 @@ https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/pa
 https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partY/YouTube.sgmodule
 https://raw.githubusercontent.com/app2smile/rules/master/module/spotify.module
 https://raw.githubusercontent.com/app2smile/rules/master/module/youtube.sgmodule
+https://raw.githubusercontent.com/fmz200/wool_scripts/refs/heads/main/Surge/module/XWebAds.module

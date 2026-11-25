@@ -51,7 +51,7 @@ def dump(path, obj):
 
 def sources():
     result = [x.strip() for x in SOURCE.read_text(encoding="utf-8").splitlines() if x.strip()]
-    if len(result) != 63 or len(set(map(safe_url, result))) != len(result):
+    if len(result) != 64 or len(set(map(safe_url, result))) != len(result):
         raise ValueError("Invalid source inventory")
     return result
 

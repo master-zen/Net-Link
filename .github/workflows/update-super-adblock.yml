@@ -11,6 +11,7 @@ on:
       - "scripts/super_adblock_ast.cjs"
       - "scripts/publish_generated.py"
       - "tests/test_super_adblock.py"
+      - "tests/super_adblock_ast_check.cjs"
       - "data/sources/SuperAdBlock*"
       - "data/allowlists/AdblockCriticalAllow.list"
       - "Surge/Module/.generator/safety.py"
@@ -47,6 +48,7 @@ jobs:
           sudo systemctl stop clamav-freshclam || true
           sudo freshclam
           node -e "require('acorn')"
+          node tests/super_adblock_ast_check.cjs
       - if: always() && steps.fetch.outcome != 'skipped'
         env:
           SUPER_ADBLOCK_ANTIVIRUS_READY: ${{ steps.scanner.outcome == 'success' }}
