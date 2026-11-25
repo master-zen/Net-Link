@@ -8,8 +8,8 @@ import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from urllib.request import Request, build_opener
-from urllib.parse import urlsplit
+from urllib.request import Request, build_opener, HTTPRedirectHandler
+from urllib.parse import urlsplit, urlunsplit, quote, unquote
 
 ROOT=Path(__file__).resolve().parents[1]
 RUNTIME="Surge/Scripts/Converted/SuperAdBlock"
@@ -62,12 +62,39 @@ def declaration(line):
     url=fields.get("script-path")
     return (pattern,url) if pattern and url else None
 
+def script_endpoint(url,redirect=False):
+    from super_adblock import safe_url
+    u=urlsplit(url)
+    if u.scheme!="https" or u.username or u.password or u.port or u.fragment or not u.hostname:
+        raise ValueError("Unapproved script endpoint")
+    if u.hostname in {"raw.githubusercontent.com","kelee.one"}:
+        return safe_url(url)
+    path=unquote(u.path,errors="strict")
+    if "\\" in path or any(ord(c)<32 or ord(c)==127 for c in path) or any(p in {"",".",".."} for p in path[1:].split("/")) or re.search(r"%2f|%5c|%25",u.path,re.I):
+        raise ValueError("Unsafe script path")
+    if u.hostname=="release-assets.githubusercontent.com" and redirect and u.query and path.startswith("/github-production-release-asset"):
+        return url
+    if u.query:
+        raise ValueError("Unexpected script query")
+    allowed=(u.hostname=="gist.githubusercontent.com" and bool(re.fullmatch(r"/[A-Za-z0-9_-]+/[a-f0-9]{32}/raw/(?:[a-f0-9]{40}/)?[^/]+\.js",path,re.I))) or (u.hostname=="raw.perzikkop.com" and path.startswith("/Scripts/") and path.endswith(".js")) or (u.hostname=="github.com" and bool(re.fullmatch(r"/(?:BiliUniverse|Biliverse)/ADBlock/releases/download/v[0-9.]+/(?:request|response)\.bundle\.js",path)))
+    if not allowed:
+        raise ValueError("Unapproved script host or path")
+    return urlunsplit(("https",u.hostname,quote(path,safe="/"),"",""))
+
+class ScriptRedirect(HTTPRedirectHandler):
+    def redirect_request(self,req,fp,code,msg,headers,newurl):
+        old=urlsplit(req.full_url)
+        new=urlsplit(newurl)
+        release=old.hostname=="github.com" and "/ADBlock/releases/download/" in old.path
+        if new.hostname!=old.hostname and not (release and new.hostname=="release-assets.githubusercontent.com"):
+            raise ValueError("Unexpected script redirect host")
+        return super().redirect_request(req,fp,code,msg,headers,script_endpoint(newurl,redirect=release))
+
 def download(url,folder):
-    from super_adblock import safe_url,Redirect
     try:
-        endpoint=safe_url(url)
-        with build_opener(Redirect()).open(Request(endpoint,headers={"User-Agent":"Net-Link-SuperAdBlock/1.0","Accept":"text/plain,*/*"}),timeout=25) as response:
-            safe_url(response.geturl())
+        endpoint=script_endpoint(url)
+        with build_opener(ScriptRedirect()).open(Request(endpoint,headers={"User-Agent":"Net-Link-SuperAdBlock/1.0","Accept":"text/plain,*/*"}),timeout=25) as response:
+            script_endpoint(response.geturl(),redirect=urlsplit(endpoint).hostname=="github.com")
             raw=response.read(2*1024*1024+1)
         if not raw or len(raw)>2*1024*1024 or b"\x00" in raw or raw.lstrip().lower().startswith((b"<html",b"<!doctype")):
             raise ValueError("invalid-script")
@@ -81,7 +108,7 @@ def download(url,folder):
             pass
         return {"url":url,"sha256":h,"bytes":len(raw),"download":"ok"}
     except Exception as exc:
-        return {"url":url,"download":"failed","reason":type(exc).__name__,"http_status":getattr(exc,"code",None)}
+        return {"url":url,"download":"failed","reason":str(exc)[:120] if isinstance(exc,ValueError) else type(exc).__name__,"http_status":getattr(exc,"code",None)}
 
 def batch_scan(folder,hashes,ready):
     if not ready:

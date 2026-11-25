@@ -46,7 +46,7 @@ jobs:
         continue-on-error: true
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends clamav node-acorn
+          sudo apt-get install -y --no-install-recommends clamav node-acorn jq
           sudo systemctl stop clamav-freshclam || true
           sudo freshclam --stdout
           node -e "require('acorn')"
@@ -76,9 +76,12 @@ jobs:
                       for key in keys:
                           if key in data:
                               out.write("- "+key+": "+str(data[key])+"\n")
+                              print(name,key,json.dumps(data[key],ensure_ascii=False,sort_keys=True))
                       if name=="script-audit.json":
                           from collections import Counter
-                          out.write("- decisions: "+str(dict(Counter(e["decision"] for e in data["entries"])))+"\n")
+                          decisions=dict(Counter(e["decision"] for e in data["entries"]))
+                          out.write("- decisions: "+str(decisions)+"\n")
+                          print(name,"decisions",json.dumps(decisions,sort_keys=True))
                       out.write("\n")
           PY
       - if: always()

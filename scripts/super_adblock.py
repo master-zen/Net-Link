@@ -351,12 +351,14 @@ def build(work, review=False):
     script_origins = defaultdict(set)
     body_hits = defaultdict(set)
     seen_content = set()
+    content_sources=defaultdict(list)
     for entry, text in snapshots(work, review=review):
         source_sections[entry["url"]] = Counter()
         if not review and "/QingRex/LoonKissSurge/" in entry["url"] and "/Surge/Beta/" in entry["url"]:
             quarantine["beta-review-only"] += 1
             continue
-        fingerprint=(entry["family"],entry["sha256"])
+        fingerprint=entry["sha256"]
+        content_sources[fingerprint].append(entry["url"])
         if fingerprint in seen_content:
             quarantine["duplicate-source-content"] += 1
             continue
@@ -521,7 +523,7 @@ def build(work, review=False):
     manifest=json.loads((work/"manifest.json").read_text(encoding="utf-8"))
     alternatives=json.loads((ROOT/"data/sources/SuperAdBlock_alternatives.json").read_text(encoding="utf-8"))["alternatives"]
     success={e["url"] for e in manifest["sources"] if "error" not in e}
-    report = {"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"body_rewrite":len(bodies),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
+    report = {"duplicate_content_groups":[v for v in content_sources.values() if len(v)>1],"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"body_rewrite":len(bodies),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
     dump(work/("review-audit.json" if review else "audit.json"),report)
     return report
 

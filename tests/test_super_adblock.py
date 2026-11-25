@@ -11,7 +11,7 @@ import super_adblock as s
 
 class SuperAdBlockTests(unittest.TestCase):
     def test_sources(self):
-        self.assertEqual(len(s.sources()),469)
+        self.assertEqual(len(s.sources()),471)
 
     def test_url_rewrite(self):
         protected=s.protected_domains()
@@ -132,6 +132,15 @@ class SuperAdBlockTests(unittest.TestCase):
         for expr in ("del(.data)","del(.user.ads)","del(.ads)|empty","delpaths([[\"data\",0]])","walk(del(.ads))"):
             self.assertIsNone(s.parse_body(f"http-response-jq {p} '{expr}'",set()))
         self.assertIsNone(s.parse_body(r"http-response-jq ^https://restapi\.amap\.com/v1/ads 'del(.ads)'",s.protected_domains()))
+
+    def test_script_endpoint_policy(self):
+        import super_adblock_scripts as sec
+        self.assertEqual(sec.script_endpoint("https://raw.perzikkop.com/Scripts/MiniPrograms/T3.js"),"https://raw.perzikkop.com/Scripts/MiniPrograms/T3.js")
+        self.assertEqual(sec.script_endpoint("https://gist.githubusercontent.com/blackmatrix7/f5f780d0f56b319b6ad9848fd080bb18/raw/zheye.min.js"),"https://gist.githubusercontent.com/blackmatrix7/f5f780d0f56b319b6ad9848fd080bb18/raw/zheye.min.js")
+        for u in ("https://evil.example/script.js","https://raw.perzikkop.com/other/a.js","https://release-assets.githubusercontent.com/github-production-release-asset/a?x=1","https://github.com/a/b/releases/download/v1/a.js"):
+            with self.assertRaises(ValueError):
+                sec.script_endpoint(u)
+        self.assertEqual(sec.script_endpoint("https://github.com/Biliverse/ADBlock/releases/download/v0.6.24/response.bundle.js"),"https://github.com/Biliverse/ADBlock/releases/download/v0.6.24/response.bundle.js")
 
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):

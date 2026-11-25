@@ -467,3 +467,5 @@ https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Official/腾�
 https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Official/贴吧去广告.official.sgmodule
 https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Official/起点中文去广告.official.sgmodule
 https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/Official/🍟 BiliADBlock.official.sgmodule
+https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partF/PhoenixNewMedia.sgmodule
+https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partF/FengChao.sgmodule

@@ -34,4 +34,4 @@ The Moyu generator retains exactly the two upstream Douban ad endpoints (`/v2/ap
 
 ## SuperAdBlock
 
-The 469-source aggregation pipeline is described in [SuperAdBlock.md](./SuperAdBlock.md). It remains review-only until source-specific redistribution permission and combined licensing have been documented.
+The 471-source aggregation pipeline is described in [SuperAdBlock.md](./SuperAdBlock.md). It remains review-only until source-specific redistribution permission and combined licensing have been documented.

@@ -1,5 +1,5 @@
 {
-  "kind": "same-family-public-conversion-not-identical",
+  "kind": "public-alternative-not-identical-or-equivalent",
   "alternatives": {
     "https://kelee.one/Tool/Loon/Lpx/BlockAdvertisers.lpx": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/广告平台拦截器.sgmodule",
     "https://kelee.one/Tool/Loon/Lpx/IThome_remove_ads.lpx": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/IT之家去广告.sgmodule",
@@ -38,6 +38,9 @@
     "https://kelee.one/Tool/Loon/Lpx/YouKu_Video_remove_ads.lpx": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/优酷视频去广告.sgmodule",
     "https://kelee.one/Tool/Loon/Lpx/Zhihu_remove_ads.lpx": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/知乎去广告.sgmodule",
     "https://kelee.one/Tool/Loon/Lpx/YoudaoTrans_remove_ads.lpx": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/有道翻译官去广告.sgmodule",
-    "https://kelee.one/Tool/Loon/Lpx/YoudaoDict_remove_ads.lpx": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/网易有道词典去广告.sgmodule"
+    "https://kelee.one/Tool/Loon/Lpx/YoudaoDict_remove_ads.lpx": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/网易有道词典去广告.sgmodule",
+    "https://kelee.one/Tool/Loon/Lpx/FC_Box_remove_ads.lpx": "https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/丰巢去广告.sgmodule",
+    "https://kelee.one/Tool/Loon/Lpx/ifengNews_remove_ads.lpx": "https://raw.githubusercontent.com/fmz200/wool_scripts/main/Surge/module/split/partF/PhoenixNewMedia.sgmodule",
+    "https://kelee.one/Tool/Loon/Lpx/YouTube_remove_ads.lpx": "https://raw.githubusercontent.com/Maasea/sgmodule/master/YouTube.Enhance.sgmodule"
   }
 }
