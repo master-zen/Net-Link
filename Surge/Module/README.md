@@ -5,7 +5,7 @@ This folder contains generated Surge module files intended for direct subscripti
 ## Current Focus
 
 - `Adblock4limbo.sgmodule` is produced by the ads-only Adblock4limbo generator.
-- `StartUpAds.sgmodule` is produced by the Moyu startup-ads generator.
+- `AppStartUpADBlacklist.sgmodule` is generated from a reviewed opening-screen-only manifest.
 
 ## Expectations
 
@@ -13,11 +13,11 @@ This folder contains generated Surge module files intended for direct subscripti
 - The domain-based ad-block rules are published separately as `Surge/Rules/AdblockSet.list`.
 - Only validated outputs should be published here.
 
-## Functional API protection
+## App Start Up AD Blacklist
 
-The Moyu converter intentionally excludes IT Home feed interception, Douban rewrites, movie media URLs, and high-risk initialization, configuration, update and business API routes. Exclusions also remove matching hostnames from MITM when the host is explicitly protected. The original upstream snapshot is retained for auditing.
+Only dedicated opening-screen ads, explicit preload and narrowly reviewed response fields are included. The manifest records source provenance; the generator bounds literal hosts, paths and query discriminators, rejects overlap and preserves the protected host list. Shared initialization routes are never rejected wholesale. The local response script is fail-open and does not execute upstream JavaScript. No domain blocking, SDK blocking, information-feed filtering, payment or tracking interference, global UDP blocking or wildcard MITM is included.
 
-Run `python3 -m unittest discover -s tests -p "test_moyu_safety.py"` and `python3 scripts/validate_generated.py moyu` before publishing. Exact DNS-level exceptions for the IT Home API, Douban API and the documented Douban trailer host are kept in `data/allowlists/AdblockCriticalAllow.list`. App playback still requires on-device checks against all simultaneously enabled Surge modules.
+Daily upstream auditing preserves reviewed rules and reports changed source hashes for review. New upstream rules are not silently published. Run `python scripts/validate_generated.py startup`, the Python regression tests and `node tests/test_app_startup_ad.js`. Live app/Surge behavior still requires device testing.
 
 ## Adblock4limbo interception safety
 
@@ -29,4 +29,4 @@ The HTML loader only modifies HTML response bodies. It preserves original respon
 
 ## Douban split protection
 
-The Moyu generator retains exactly the two upstream Douban ad endpoints (`/v2/app_ads/splash` and `/b.*/common_ads`) and the `api.douban.com` MITM host, while excluding any new Douban business API rewrites by default. The independent `AdblockSet.list` builder removes rules blocking `erebor.douban.com`, which was explicitly observed in Surge logs breaking official movie-trailer playback. These protections are covered by regression tests.
+Only `/v2/app_ads/splash` is intercepted by the startup module. General advertising, movie APIs and trailer CDN hosts are untouched; the independent AdblockSet exceptions remain in force.
