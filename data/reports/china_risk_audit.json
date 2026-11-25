@@ -1,6 +1,6 @@
 {
-  "download_run": "45615497132",
-  "download_manifest_sha256": "3a6ec71f5a9e30f97c335e69249d2b09b425b378b9b556c26a4fcd31d2f1d65d",
+  "download_run": "45617260164",
+  "download_manifest_sha256": "58204a55900edec7df7d9c5cd794efe6f6a74b886d78d0439fef0faec8c5c396",
   "foreign_reference_counts": {
     "v2fly_literal_domains": 40,
     "proxy_reference_rules": 27277,
