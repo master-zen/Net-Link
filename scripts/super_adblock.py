@@ -322,8 +322,45 @@ def parse_body(line,protected):
             return None
     return (*qualified,{tuple(p) for p in paths})
 
-def body_expression(paths):
-    return ". as $original | try (if type == \"object\" then delpaths("+json.dumps([list(p) for p in sorted(paths)],separators=(",",":"))+") else . end) catch $original"
+ARRAY_CONTAINERS={"list","items","entries","cards","results","contents","feed","feeds","modules","sections"}
+AD_ENUMS={"ad","ads","advertisement","advert","pic_ad","adpost","admetadatacell","promoted_ad","sponsored_ad","advertising"}
+AD_BOOLEAN_FIELDS={"isad","isadpost","isadvertisement","isadvertising","issponsoredad"}
+AD_TYPE_FIELDS={"type","_type","__typename","itemtype","cardtype","celltype","adtype","ad_type"}
+def parse_array_filter(line,protected):
+    m=re.fullmatch(r"http-response-jq\s+(\S+)\s+(['\"])(.+)\2",line)
+    if not m or len(line)>2048:
+        return None
+    pattern,_,expression=m.groups()
+    qualified=url_candidate(pattern,protected,body=True)
+    if not qualified:
+        return None
+    match=re.fullmatch(r"\s*\.([A-Za-z_][A-Za-z0-9_.]*)\s*\|=\s*map\(\s*select\(\s*\.([A-Za-z_][A-Za-z0-9_]*)\s*!=\s*(\"[A-Za-z0-9_]+\"|true|1)\s*\)\s*\)\s*",expression)
+    if not match:
+        return None
+    path,field,literal=match.groups()
+    path=tuple(path.split("."))
+    if not 1<=len(path)<=4 or path[-1].lower() not in ARRAY_CONTAINERS or any(k.lower() not in JSON_PARENTS for k in path[:-1]):
+        return None
+    value=json.loads(literal)
+    if isinstance(value,str):
+        if field.lower() not in AD_TYPE_FIELDS or value.lower() not in AD_ENUMS:
+            return None
+    elif value is True:
+        if field.lower() not in AD_BOOLEAN_FIELDS:
+            return None
+    elif field.lower()!="info_list_ad_style_type" or value!=1:
+        return None
+    return (*qualified,(path,field,literal))
+
+def body_expression(paths,filters=()):
+    operations=[]
+    if paths:
+        operations.append("delpaths("+json.dumps([list(p) for p in sorted(paths)],separators=(",",":"))+")")
+    for path,field,literal in sorted(filters):
+        route=json.dumps(list(path),separators=(",",":"))
+        key=json.dumps(field)
+        operations.append("(if (try getpath("+route+") catch null | type)==\"array\" then setpath("+route+"; getpath("+route+") | map(if type==\"object\" then select(.["+key+"] != "+literal+") else . end)) else . end)")
+    return ". as $original | try (if type == \"object\" then "+(" | ".join(operations) or ".")+" else . end) catch $original"
 
 def parse_rewrite(section, line):
     if section == "url rewrite":
@@ -367,6 +404,7 @@ def build(work, review=False):
     script_hits = defaultdict(set)
     script_origins = defaultdict(set)
     body_hits = defaultdict(set)
+    body_filters=defaultdict(set)
     seen_content = set()
     content_sources=defaultdict(list)
     for entry, text in snapshots(work, review=review):
@@ -418,11 +456,17 @@ def build(work, review=False):
                     continue
             elif section == "body rewrite":
                 parsed=parse_body(line,protected)
-                if not parsed:
-                    quarantine["unsupported-or-unsafe-body-rewrite"] += 1
-                    continue
-                pattern,host,paths=parsed
-                body_hits[pattern].update(paths)
+                if parsed:
+                    pattern,host,paths=parsed
+                    body_hits[pattern].update(paths)
+                else:
+                    filtered=parse_array_filter(line,protected)
+                    if not filtered:
+                        quarantine["unsupported-or-unsafe-body-rewrite"] += 1
+                        continue
+                    pattern,host,filter_spec=filtered
+                    body_filters[pattern].add(filter_spec)
+                    body_hits[pattern]
                 url_hosts[pattern]=host
                 continue
             elif section == "script":
@@ -507,10 +551,10 @@ def build(work, review=False):
         if pattern in cross or any(matches_domain(host,a,k=="DOMAIN-SUFFIX") for k,a in [*domains,*upstream_allow]):
             quarantine["body-conflict-or-covered"] += 1
             continue
-        if len(paths)>16:
+        if len(paths)+len(body_filters[pattern])>16:
             quarantine["body-field-limit"] += 1
             continue
-        bodies.append(f"#!REQUIREMENT CORE_VERSION>=6008000 http-response-jq {pattern} '{body_expression(paths)}'")
+        bodies.append(f"#!REQUIREMENT CORE_VERSION>=6008000 http-response-jq {pattern} '{body_expression(paths,body_filters[pattern])}'")
         if not pattern.startswith("^http://"):
             hosts.add(host)
     scripts, published = [], {}
@@ -541,7 +585,7 @@ def build(work, review=False):
     alternatives=json.loads((ROOT/"data/sources/SuperAdBlock_alternatives.json").read_text(encoding="utf-8"))["alternatives"]
     success={e["url"] for e in manifest["sources"] if "error" not in e}
     refs=manifest.get("reference_only",[])
-    report = {"reference_only_count":len(refs),"reference_uncovered":[e["url"] for e in refs if not e["alternative"] or e["alternative"] not in success],"inventory_total":len(sources())+len(refs),"duplicate_content_groups":[v for v in content_sources.values() if len(v)>1],"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"body_rewrite":len(bodies),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
+    report = {"reference_only_count":len(refs),"reference_uncovered":[e["url"] for e in refs if not e["alternative"] or e["alternative"] not in success],"inventory_total":len(sources())+len(refs),"duplicate_content_groups":[v for v in content_sources.values() if len(v)>1],"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"body_rewrite":len(bodies),"array_filter_candidates":sum(len(v) for v in body_filters.values()),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
     dump(work/("review-audit.json" if review else "audit.json"),report)
     return report
 

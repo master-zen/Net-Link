@@ -157,6 +157,15 @@ class SuperAdBlockTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             discover.candidates({"truncated":True,"tree":[]})
 
+    def test_array_filter_parser(self):
+        p=r"^https://mag1\.sdgun\.net/mag/info/v2/channel/infoListByCatId"
+        line=f"http-response-jq {p} '.list |= map(select(._type != \"pic_ad\"))'"
+        a=s.parse_array_filter(line,s.protected_domains())
+        self.assertIsNotNone(a)
+        self.assertEqual(a[2],(("list",),"_type",'"pic_ad"'))
+        for expr in ('.list |= map(select(.type != "article"))','.list |= map(select(.id != 1))','.list |= map(select(.type != "ad")) | empty','.users |= map(select(.type != "ad"))'):
+            self.assertIsNone(s.parse_array_filter(f"http-response-jq {p} '{expr}'",set()))
+
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):
             with self.assertRaises(ValueError):

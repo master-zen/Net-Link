@@ -57,6 +57,7 @@ jobs:
           node tests/super_adblock_ast_check.cjs
           jq --version
           python -c 'import sys; sys.path.insert(0,"scripts"); import super_adblock as s, subprocess, json; data={"ads":[1],"data":{"adInfo":[2],"title":"keep"},"user":{"id":1}}; result=subprocess.check_output(["jq","-c",s.body_expression({("ads",),("data","adInfo")})],input=json.dumps(data),text=True); assert json.loads(result)=={"data":{"title":"keep"},"user":{"id":1}}'
+          python -c 'import sys; sys.path.insert(0,"scripts"); import super_adblock as s, subprocess, json; data={"list":[{"_type":"pic_ad"},{"_type":"post","title":"keep"},42,{"id":3}],"other":[1,2]}; result=subprocess.check_output(["jq","-c",s.body_expression(set(),{(("list",),"_type",json.dumps("pic_ad"))})],input=json.dumps(data),text=True); assert json.loads(result)=={"list":[{"_type":"post","title":"keep"},42,{"id":3}],"other":[1,2]}'
       - if: always() && steps.fetch.outcome != 'skipped'
         env:
           SUPER_ADBLOCK_ANTIVIRUS_READY: ${{ steps.scanner.outcome == 'success' }}
