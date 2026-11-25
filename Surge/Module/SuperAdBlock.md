@@ -17,3 +17,5 @@ The daily workflow additionally discovers third-party JavaScript from downloaded
 A failed antivirus setup or scan blocks generation when JavaScript references are present. The X web module is a distinct mechanism, not an independent author or a verified native-app ad blocker.
 
 Public same-family Surge conversions are cataloged in `data/sources/SuperAdBlock_alternatives.json`. They are separate input URLs, not mirrors of the exact unavailable Loon bytes and not independent corroboration. The daily review stage uses verified successful inputs, records missing originals and alternative coverage, and never publishes the review module or source bytes. The formal build still requires every listed source and all publication evidence. The workflow sets the distro Node package search path explicitly for Acorn.
+
+The partial-build regression fixture checks that missing input may produce a deterministic review-only candidate but cannot create or approve a formal module. Each workflow publishes summary counts to its job summary without distributing the review module.

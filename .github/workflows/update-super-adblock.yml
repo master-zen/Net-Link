@@ -60,6 +60,26 @@ jobs:
       - run: python scripts/super_adblock.py build "$RUNNER_TEMP/super-adblock"
       - run: python scripts/super_adblock.py validate "$RUNNER_TEMP/super-adblock"
       - if: always()
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          base=Path(os.environ["RUNNER_TEMP"])/"super-adblock"
+          with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as out:
+              for name, keys in [("manifest.json",("downloaded","failed")),("review-audit.json",("sources","downloaded","failed","alternative_coverage","output")),("script-audit.json",("references","antivirus_ready"))]:
+                  path=base/name
+                  if path.exists():
+                      data=json.loads(path.read_text())
+                      out.write("### "+name+"\n\n")
+                      for key in keys:
+                          if key in data:
+                              out.write("- "+key+": "+str(data[key])+"\n")
+                      if name=="script-audit.json":
+                          from collections import Counter
+                          out.write("- decisions: "+str(dict(Counter(e["decision"] for e in data["entries"])))+"\n")
+                      out.write("\n")
+          PY
+      - if: always()
         uses: actions/upload-artifact@v4
         with:
           name: super-adblock-review

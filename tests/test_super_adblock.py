@@ -1,5 +1,9 @@
 import sys
 import unittest
+import json
+import os
+import tempfile
+from unittest.mock import patch
 from pathlib import Path
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"scripts"))
@@ -51,6 +55,35 @@ class SuperAdBlockTests(unittest.TestCase):
         self.assertEqual(sec.declaration(line),(p,u))
         self.assertIsNone(sec.declaration(line+",binary-body-mode=true"))
         self.assertIsNone(sec.declaration(line.replace("http-response","http-request")))
+
+    def test_review_build_never_publishes_partial_input(self):
+        import super_adblock_scripts as sec
+        urls=s.sources()[:2]
+        raw=("[Rule]\n"+"\n".join(f"DOMAIN,ads.test{i}.com,REJECT" for i in range(60))+"\n").encode()
+        with tempfile.TemporaryDirectory() as tmp:
+            work=Path(tmp)
+            (work/"upstream").mkdir()
+            entries=[]
+            for i,u in enumerate(urls,1):
+                path=f"{i:02d}-{s.urlsplit(u).path.rsplit('/',1)[-1]}"
+                e={"url":u,"family":s.family(u),"file":path}
+                if i==1:
+                    e.update(bytes=len(raw),sha256=s.digest(raw))
+                    (work/"upstream"/path).write_bytes(raw)
+                else:
+                    e["error"]="HTTP 403"
+                entries.append(e)
+            s.dump(work/"manifest.json",{"run_id":os.getenv("GITHUB_RUN_ID","local"),"run_attempt":os.getenv("GITHUB_RUN_ATTEMPT","1"),"sources":entries,"failed":1})
+            s.dump(work/"script-audit.json",{"module_manifest_sha256":sec.sha((work/"manifest.json").read_bytes()),"antivirus_ready":False,"references":0,"entries":[]})
+            with patch.object(s,"sources",return_value=urls):
+                report=s.build(work,review=True)
+                self.assertEqual(report["output"]["rules"],60)
+                self.assertEqual(report["failed"],1)
+                self.assertTrue(s.validate(work,review=True)["review_only"])
+                self.assertFalse((work/"SuperAdBlock.sgmodule").exists())
+                with self.assertRaises(ValueError):
+                    s.build(work)
+                self.assertFalse(s.approved(work))
 
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):
