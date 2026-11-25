@@ -16,6 +16,7 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import quote, urlsplit, urlunsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
+from urllib.error import HTTPError, URLError
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "data/sources/SuperAdBlock_URLs.txt"
@@ -99,9 +100,12 @@ def download_one(index_url, base):
             decode(raw)
             (base / path).write_bytes(raw)
             return {"url":url,"family":family(url),"file":path,"bytes":len(raw),"sha256":digest(raw)}
-        except Exception:
+        except Exception as exc:
             if attempt == 2:
-                raise RuntimeError(f"Source {index} download or validation failed") from None
+                reason = (f"HTTP {exc.code}" if isinstance(exc, HTTPError) else
+                          type(exc.reason).__name__ if isinstance(exc, URLError) else
+                          str(exc) if isinstance(exc, ValueError) else type(exc).__name__)
+                return {"url":url,"family":family(url),"file":path,"error":reason[:180]}
             time.sleep(2 ** attempt)
 
 def fetch(work):
@@ -111,13 +115,16 @@ def fetch(work):
     base.mkdir(parents=True)
     with ThreadPoolExecutor(max_workers=6) as pool:
         entries = list(pool.map(lambda pair: download_one(pair,base), enumerate(sources(),1)))
-    dump(work / "manifest.json", {"run_id":os.getenv("GITHUB_RUN_ID","local"),"run_attempt":os.getenv("GITHUB_RUN_ATTEMPT","1"),"epoch_seconds":int(time.time()),"sources":entries})
+    failures = [x for x in entries if "error" in x]
+    dump(work / "manifest.json", {"run_id":os.getenv("GITHUB_RUN_ID","local"),"run_attempt":os.getenv("GITHUB_RUN_ATTEMPT","1"),"epoch_seconds":int(time.time()),"sources":entries,"downloaded":len(entries)-len(failures),"failed":len(failures)})
+    if failures:
+        raise RuntimeError("Incomplete snapshot: " + "; ".join(x["file"]+": "+x["error"] for x in failures))
 
 def snapshots(work):
     manifest = json.loads((work / "manifest.json").read_text(encoding="utf-8"))
     if manifest["run_id"] != os.getenv("GITHUB_RUN_ID","local") or manifest["run_attempt"] != os.getenv("GITHUB_RUN_ATTEMPT","1"):
         raise ValueError("Stale manifest")
-    if [x["url"] for x in manifest["sources"]] != sources():
+    if manifest.get("failed",0) or [x["url"] for x in manifest["sources"]] != sources():
         raise ValueError("Incomplete manifest")
     for i, entry in enumerate(manifest["sources"],1):
         expected = f"{i:02d}-{urlsplit(entry['url']).path.rsplit('/',1)[-1]}"
