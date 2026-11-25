@@ -15,7 +15,7 @@ import time
 from collections import Counter, defaultdict
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from urllib.parse import quote, urlsplit, urlunsplit
+from urllib.parse import quote, unquote, urlsplit, urlunsplit
 from urllib.request import HTTPRedirectHandler, Request, build_opener
 from urllib.error import HTTPError, URLError
 
@@ -51,7 +51,7 @@ def dump(path, obj):
 
 def sources():
     result = [x.strip() for x in SOURCE.read_text(encoding="utf-8").splitlines() if x.strip()]
-    if not result or len({safe_url(u).replace("/refs/heads/","/") for u in result}) != len(result):
+    if not result or len({canonical_url(u) for u in result}) != len(result):
         raise ValueError("Invalid source inventory")
     return result
 
@@ -59,20 +59,34 @@ def safe_url(url):
     u = urlsplit(url)
     if u.scheme != "https" or u.hostname not in HOSTS or u.username or u.password or u.port or u.fragment:
         raise ValueError("Unapproved source endpoint")
-    return urlunsplit((u.scheme, u.netloc, quote(u.path, safe="/%"), u.query, ""))
+    path=unquote(u.path,errors="strict")
+    if not path.startswith("/") or "\\" in path or any(ord(c)<32 or ord(c)==127 for c in path) or any(p in {"",".",".."} for p in path[1:].split("/")) or re.search(r"%2f|%5c|%25",u.path,re.I):
+        raise ValueError("Unsafe source path")
+    if u.query:
+        raise ValueError("Source query not permitted")
+    return urlunsplit((u.scheme, u.hostname, quote(path, safe="/"), "", ""))
+
+def canonical_url(url):
+    endpoint=safe_url(url)
+    if urlsplit(endpoint).hostname=="raw.githubusercontent.com":
+        endpoint=endpoint.replace("/refs/heads/","/",1)
+    return endpoint
 
 class Redirect(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return super().redirect_request(req, fp, code, msg, headers, safe_url(newurl))
 
 def family(url):
-    if "QingRex/" in url or "kelee.one/" in url:
+    u=urlsplit(safe_url(url))
+    owner,repo,*_=u.path.strip("/").split("/")
+    identity=(owner.lower(),repo.lower())
+    if u.hostname=="kelee.one" or identity==("qingrex","loonkisssurge"):
         return "kelee"
-    if "AWAvenue-Ads-Rule/" in url:
+    if identity==("tg-twilight","awavenue-ads-rule"):
         return "awavenue"
-    if "blackmatrix7/" in url:
+    if identity==("blackmatrix7","ios_rule_script"):
         return "blackmatrix7"
-    if "Amlabort/" in url or "Maasea/" in url or "master-zen/Net-Link/" in url or "fmz200/" in url or "app2smile/" in url:
+    if identity in {("amlabort","my_clash"),("maasea","sgmodule"),("master-zen","net-link"),("fmz200","wool_scripts"),("app2smile","rules")}:
         return "unverified-lineage"
     raise ValueError("Unknown source family")
 
@@ -102,7 +116,8 @@ def download_one(index_url, base):
             (base / path).write_bytes(raw)
             return {"url":url,"family":family(url),"file":path,"bytes":len(raw),"sha256":digest(raw)}
         except Exception as exc:
-            if attempt == 2:
+            permanent=isinstance(exc,ValueError) or isinstance(exc,HTTPError) and exc.code not in {408,425,429,500,502,503,504}
+            if attempt == 2 or permanent:
                 reason = (f"HTTP {exc.code}" if isinstance(exc, HTTPError) else
                           type(exc.reason).__name__ if isinstance(exc, URLError) else
                           str(exc) if isinstance(exc, ValueError) else type(exc).__name__)
@@ -114,7 +129,7 @@ def fetch(work):
         raise ValueError("Workspace already exists")
     base = work / "upstream"
     base.mkdir(parents=True)
-    with ThreadPoolExecutor(max_workers=6) as pool:
+    with ThreadPoolExecutor(max_workers=10) as pool:
         entries = list(pool.map(lambda pair: download_one(pair,base), enumerate(sources(),1)))
     failures = [x for x in entries if "error" in x]
     dump(work / "manifest.json", {"run_id":os.getenv("GITHUB_RUN_ID","local"),"run_attempt":os.getenv("GITHUB_RUN_ATTEMPT","1"),"epoch_seconds":int(time.time()),"sources":entries,"downloaded":len(entries)-len(failures),"failed":len(failures)})
@@ -124,7 +139,10 @@ def snapshots(work, review=False):
     manifest = json.loads((work / "manifest.json").read_text(encoding="utf-8"))
     if manifest["run_id"] != os.getenv("GITHUB_RUN_ID","local") or manifest["run_attempt"] != os.getenv("GITHUB_RUN_ATTEMPT","1"):
         raise ValueError("Stale manifest")
-    if (manifest.get("failed",0) and not review) or [x["url"] for x in manifest["sources"]] != sources():
+    failures=sum("error" in e for e in manifest["sources"])
+    if manifest.get("failed")!=failures or ("downloaded" in manifest and manifest["downloaded"]!=len(manifest["sources"])-failures):
+        raise ValueError("Inconsistent manifest counts")
+    if (failures and not review) or [x["url"] for x in manifest["sources"]] != sources():
         raise ValueError("Incomplete manifest")
     for i, entry in enumerate(manifest["sources"],1):
         expected = f"{i:02d}-{urlsplit(entry['url']).path.rsplit('/',1)[-1]}"
@@ -166,6 +184,10 @@ def protected_mitm(host):
 def blocked_domain(kind, domain, protected, upstream_allow):
     if protected_mitm(domain):
         return True
+    if kind=="DOMAIN-SUFFIX" and any("*" in h and (h.endswith("."+domain) or h.lstrip("*.")==domain) for h in PROTECTED_MITM_HOSTS):
+        return True
+    if any(SENSITIVE.search("/"+label+"/") for label in domain.split(".")[:-1]):
+        return True
     if any(matches_domain(domain,x,True) or matches_domain(x,domain,kind=="DOMAIN-SUFFIX") for x in protected):
         return True
     return any(matches_domain(domain,x,k=="DOMAIN-SUFFIX") or matches_domain(x,domain,kind=="DOMAIN-SUFFIX") for k,x in upstream_allow)
@@ -194,10 +216,12 @@ def url_candidate(pattern, protected):
     if not host or protected_mitm(host):
         return None
     if pattern in DOUBAN:
-        return pattern,host
+        if path=="/v2/app_ads/splash":
+            return pattern+r"(?:[/?&]|$)",host
+        return r"^https?://api\.douban\.com/b[^?#]*/common_ads\?",host
     if any(matches_domain(host,x,True) for x in protected):
         return None
-    if not re.fullmatch(r"(?:[A-Za-z0-9_/%=&-]|\\[.?])+\$?", path):
+    if not re.fullmatch(r"(?:[A-Za-z0-9_/=&-]|\\[.?])+\$?", path):
         return None
     if should_skip_rewrite(pattern) or SENSITIVE.search(path) or not AD_PATH.search(path.rstrip("$")):
         return None
@@ -210,6 +234,40 @@ def url_candidate(pattern, protected):
     if not path.endswith(("/", "$", r"\?")):
         pattern += r"(?:[/?&]|$)"
     return pattern,host
+
+def scopes_overlap(left,right):
+    def scope(p):
+        m=re.match(r"^\^(https\?|https|http)://([^/]+)(/.*)$",p)
+        if not m:
+            return None
+        scheme,host,path=m.groups()
+        scheme={"http","https"} if scheme=="https?" else {scheme}
+        path=path.removesuffix(r"(?:[/?&]|$)").removesuffix("$")
+        if not re.fullmatch(r"(?:[A-Za-z0-9_/=&-]|\\[.?])+",path):
+            path=None
+        else:
+            path=path.replace(r"\.","." ).replace(r"\?","?")
+        return scheme,host.lower(),path
+    a,b=scope(left),scope(right)
+    if not a or not b:
+        return True
+    if not a[0]&b[0] or a[1]!=b[1]:
+        return False
+    return a[2] is None or b[2] is None or a[2].startswith(b[2]) or b[2].startswith(a[2])
+
+def rewrite_conflicts(hits,hosts):
+    groups=defaultdict(list)
+    for p in hits:
+        groups[hosts[p]].append(p)
+    result=set()
+    for patterns in groups.values():
+        for i,p in enumerate(patterns):
+            if len(hits[p])!=1:
+                result.add(p)
+            for q in patterns[i+1:]:
+                if hits[p]!=hits[q] and scopes_overlap(p,q):
+                    result.update((p,q))
+    return result
 
 def parse_rewrite(section, line):
     if section == "url rewrite":
@@ -231,8 +289,10 @@ def parse_rewrite(section, line):
             args = shlex.split(raw)
             if len(args) != len({x.split("=",1)[0] for x in args}):
                 return None
+            args=[x.replace("Content-Type:application/json;charset=utf-8","Content-Type:application/json").replace("Content-Type:application/json; charset=utf-8","Content-Type:application/json") for x in args]
             for action, value in MAP.items():
-                if sorted(args) == sorted(shlex.split(value)):
+                reference=[x.replace("Content-Type:application/json;charset=utf-8","Content-Type:application/json") for x in shlex.split(value)]
+                if sorted(args) == sorted(reference):
                     return pattern.strip('"'), action
         except ValueError:
             return None
@@ -283,11 +343,12 @@ def build(work, review=False):
                     if not domain or any(x.lower() not in {"extended-matching","pre-matching"} for x in fields[3:]):
                         quarantine["domain-syntax"] += 1
                         continue
-                    if policy == "DIRECT":
+                    if policy not in {"REJECT","REJECT-DROP","REJECT-TINYGIF","REJECT-NO-DROP"}:
                         upstream_allow.add((kind,domain))
+                        quarantine["non-reject-policy-protected"] += 1
                         continue
-                    if policy != "REJECT":
-                        quarantine["domain-policy"] += 1
+                    if policy!="REJECT":
+                        quarantine["different-reject-semantics"] += 1
                         continue
                     domain_hits[(kind,domain)].add(entry["family"])
                     continue
@@ -303,7 +364,7 @@ def build(work, review=False):
                     continue
                 pattern,url=spec
                 qualified=url_candidate(pattern,protected)
-                if not qualified or qualified[0] in DOUBAN:
+                if not qualified or qualified[1]=="api.douban.com":
                     quarantine["script-functional-risk"] += 1
                     continue
                 pattern,host=qualified
@@ -344,9 +405,10 @@ def build(work, review=False):
     domains = sorted((kind,domain) for kind,domain in accepted if not any(matches_domain(domain,suffix,True) and (kind!="DOMAIN-SUFFIX" or domain!=suffix) for suffix in suffixes))
     rules = [f"{kind},{domain},REJECT" for kind,domain in domains]
     rewrite, maps, hosts = [], [], set()
+    conflicts=rewrite_conflicts(url_hits,url_hosts)
     for pattern,actions in sorted(url_hits.items()):
         host = url_hosts[pattern]
-        if len(actions) != 1:
+        if pattern in conflicts:
             quarantine["conflicting-rewrite"] += 1
             continue
         if any(matches_domain(host,domain,kind=="DOMAIN-SUFFIX") for kind,domain in domains):
@@ -365,7 +427,7 @@ def build(work, review=False):
     scripts, published = [], {}
     for pattern,hashes in sorted(script_hits.items()):
         host=url_hosts[pattern]
-        if len(hashes)!=1 or any(url_hosts[k]==host for k in url_hits) or any(k!=pattern and url_hosts[k]==host for k in script_hits):
+        if len(hashes)!=1 or any(url_hosts[k]==host and scopes_overlap(pattern,k) for k in url_hits) or any(k!=pattern and url_hosts[k]==host and scopes_overlap(pattern,k) for k in script_hits):
             quarantine["script-conflict"] += 1
             continue
         if any(matches_domain(host,domain,kind=="DOMAIN-SUFFIX") for kind,domain in domains) or any(matches_domain(host,a,k=="DOMAIN-SUFFIX") for k,a in upstream_allow):
@@ -374,7 +436,7 @@ def build(work, review=False):
         h=next(iter(hashes))
         name="super-"+digest((pattern+h).encode())[:20]
         scripts.append(f"{name} = type=http-response,pattern={pattern},requires-body=true,max-size=1048576,timeout=5,script-path={sec.PREFIX}{h}.js")
-        published[h]=sorted(script_origins[h])
+        published[h]=sorted(set(published.get(h,[]))|script_origins[h])
         if not pattern.startswith("^http://"):
             hosts.add(host)
     sections = [("Rule",rules),("URL Rewrite",rewrite),("Map Local",maps),("Script",scripts),("MITM",["hostname = %APPEND% "+",".join(sorted(hosts))] if hosts else [])]
@@ -389,7 +451,7 @@ def build(work, review=False):
     manifest=json.loads((work/"manifest.json").read_text(encoding="utf-8"))
     alternatives=json.loads((ROOT/"data/sources/SuperAdBlock_alternatives.json").read_text(encoding="utf-8"))["alternatives"]
     success={e["url"] for e in manifest["sources"] if "error" not in e}
-    report = {"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
+    report = {"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
     dump(work/("review-audit.json" if review else "audit.json"),report)
     return report
 
@@ -420,8 +482,8 @@ def approved(work=None):
             return False
         if json.loads((work/"manifest.json").read_text())["failed"] or json.loads((work/"audit.json").read_text()).get("review_only",True):
             return False
-        required={u for urls in json.loads((work/"audit.json").read_text())["published_scripts"].values() for u in urls}
-        allowed={e["url"] for e in config.get("scripts",[]) if e.get("redistribution") is True and e.get("license") and e.get("evidence")}
+        required={(u,h) for h,urls in json.loads((work/"audit.json").read_text())["published_scripts"].items() for u in urls}
+        allowed={(e["url"],e.get("sha256")) for e in config.get("scripts",[]) if e.get("redistribution") is True and e.get("license") and e.get("evidence")}
         return required <= allowed
     return True
 
@@ -434,7 +496,8 @@ def stage(work):
     for path in target.iterdir():
         if path.is_file():
             path.unlink()
-    for path in (work/"upstream").iterdir():
+    for entry,_ in snapshots(work):
+        path=work/"upstream"/entry["file"]
         shutil.copyfile(path,target/path.name)
     published=json.loads((work/"audit.json").read_text())["published_scripts"]
     runtime=ROOT/sec.RUNTIME
@@ -450,9 +513,47 @@ def stage(work):
     for name,dest in [("manifest.json","data/reports/super_adblock_download_manifest.json"),("audit.json","data/reports/super_adblock_audit.json"),("SuperAdBlock.sgmodule","Surge/Module/SuperAdBlock.sgmodule")]:
         shutil.copyfile(work/name,ROOT/dest)
 
+def verify_release(work):
+    work.mkdir(parents=True,exist_ok=False)
+    reports=ROOT/"data/reports"
+    for name,source in [("manifest.json","super_adblock_download_manifest.json"),("audit.json","super_adblock_audit.json"),("script-audit.json","super_adblock_script_audit.json")]:
+        shutil.copyfile(reports/source,work/name)
+    shutil.copyfile(ROOT/"Surge/Module/SuperAdBlock.sgmodule",work/"SuperAdBlock.sgmodule")
+    shutil.copytree(ROOT/"data/super-adblock/upstream",work/"upstream")
+    report=json.loads((work/"audit.json").read_bytes())
+    runtime=ROOT/sec.RUNTIME
+    (work/"script-snapshots").mkdir()
+    for e in json.loads((work/"script-audit.json").read_bytes())["entries"]:
+        if e["decision"]!="eligible":
+            continue
+        h=e["sha256"]
+        if not re.fullmatch(r"[a-f0-9]{64}",h):
+            raise ValueError("Invalid eligible script hash")
+        path=runtime/(h+".js")
+        if h in report["published_scripts"]:
+            shutil.copyfile(path,work/"script-snapshots"/path.name)
+    if not approved(work):
+        raise ValueError("Release not approved")
+    manifest=json.loads((work/"manifest.json").read_bytes())
+    if manifest["run_id"]!=os.getenv("GITHUB_RUN_ID","local") or manifest["run_attempt"]!=os.getenv("GITHUB_RUN_ATTEMPT","1"):
+        raise ValueError("Stale release")
+    if set(p.name for p in (work/"upstream").iterdir())!={e["file"] for e in manifest["sources"]}:
+        raise ValueError("Unexpected released upstream files")
+    list(snapshots(work))
+    if digest((work/"SuperAdBlock.sgmodule").read_bytes())!=report["output"]["sha256"] or digest((work/"script-audit.json").read_bytes())!=report["script_audit_sha256"]:
+        raise ValueError("Release checksum failure")
+    refs=set(re.findall(re.escape(sec.PREFIX)+r"([0-9a-f]{64})\.js",(work/"SuperAdBlock.sgmodule").read_text()))
+    if refs!=set(report["published_scripts"]):
+        raise ValueError("Release script inventory mismatch")
+    for h in refs:
+        if digest((work/"script-snapshots"/(h+".js")).read_bytes())!=h:
+            raise ValueError("Release script checksum failure")
+    if json.loads((runtime/"manifest.json").read_bytes())!=report["published_scripts"]:
+        raise ValueError("Release runtime manifest mismatch")
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("action",choices=["fetch","build","validate","review","review-validate","stage","approved"])
+    parser.add_argument("action",choices=["fetch","build","validate","review","review-validate","stage","approved","verify-release"])
     parser.add_argument("work",type=Path)
     args = parser.parse_args()
     if args.action=="approved":
@@ -467,6 +568,8 @@ def main():
         build(args.work,review=True)
     elif args.action=="review-validate":
         print(json.dumps(validate(args.work,review=True)["output"],sort_keys=True))
+    elif args.action=="verify-release":
+        verify_release(args.work)
     else:
         stage(args.work)
 

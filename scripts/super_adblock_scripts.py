@@ -66,8 +66,6 @@ def download(url,folder):
     from super_adblock import safe_url,Redirect
     try:
         endpoint=safe_url(url)
-        if not urlsplit(endpoint).path.lower().endswith(".js"):
-            raise ValueError("non-js-path")
         with build_opener(Redirect()).open(Request(endpoint,headers={"User-Agent":"Net-Link-SuperAdBlock/1.0","Accept":"text/plain,*/*"}),timeout=25) as response:
             safe_url(response.geturl())
             raw=response.read(2*1024*1024+1)
@@ -75,7 +73,12 @@ def download(url,folder):
             raise ValueError("invalid-script")
         raw.decode("utf-8-sig")
         h=sha(raw)
-        (folder/(h+".js")).write_bytes(raw)
+        target=folder/(h+".js")
+        try:
+            with target.open("xb") as out:
+                out.write(raw)
+        except FileExistsError:
+            pass
         return {"url":url,"sha256":h,"bytes":len(raw),"download":"ok"}
     except Exception as exc:
         return {"url":url,"download":"failed","reason":type(exc).__name__,"http_status":getattr(exc,"code",None)}
@@ -106,16 +109,16 @@ def batch_scan(folder,hashes,ready):
         return result
 
 def audit(work,ready):
-    from super_adblock import decode
+    from super_adblock import snapshots
     manifest=(work/"manifest.json").read_bytes()
-    urls=set()
-    for entry in json.loads(manifest)["sources"]:
-        if "error" in entry:
-            continue
-        raw=(work/"upstream"/entry["file"]).read_bytes()
-        if sha(raw)!=entry["sha256"]:
-            raise ValueError("Module snapshot integrity failure")
-        urls.update(discover(decode(raw)))
+    origins={}
+    declaration_counts={}
+    for entry,body in snapshots(work,review=True):
+        refs=discover(body)
+        declaration_counts[entry["url"]]=len(refs)
+        for url in refs:
+            origins.setdefault(url,[]).append(entry["url"])
+    urls=set(origins)
     if len(urls)>1000:
         raise ValueError("Excessive script references")
     folder=work/"script-snapshots"
@@ -135,8 +138,9 @@ def audit(work,ready):
             ast={"eligible":False,"reason":"scanner-error"}
         findings[h]={"antivirus":av,"ast":ast,"decision":"eligible" if av=="no-signature-hit" and ast.get("eligible") is True else "quarantine"}
     for e in entries:
+        e["sources"]=sorted(origins[e["url"]])
         e.update(findings[e["sha256"]] if e["download"]=="ok" else {"decision":"download-failed"})
-    report={"module_manifest_sha256":sha(manifest),"antivirus_ready":ready,"references":len(entries),"entries":entries}
+    report={"module_manifest_sha256":sha(manifest),"antivirus_ready":ready,"references":len(entries),"unique_downloaded_scripts":len(hashes),"source_reference_counts":declaration_counts,"entries":entries}
     (work/"script-audit.json").write_text(json.dumps(report,ensure_ascii=False,sort_keys=True,indent=2)+"\n",encoding="utf-8")
 
 def eligible(work, review=False):
@@ -151,6 +155,8 @@ def eligible(work, review=False):
         if review:
             return {}
         raise ValueError("Script scan failed")
+    if report["references"]!=len(report["entries"]) or len({e["url"] for e in report["entries"]})!=len(report["entries"]):
+        raise ValueError("Invalid script reference inventory")
     result={}
     for e in report["entries"]:
         if e["decision"]!="eligible":

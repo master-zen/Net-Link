@@ -27,7 +27,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 75
     env:
       NODE_PATH: /usr/share/nodejs
@@ -48,7 +48,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y --no-install-recommends clamav node-acorn
           sudo systemctl stop clamav-freshclam || true
-          sudo freshclam
+          sudo freshclam --stdout
           node -e "require('acorn')"
           node tests/super_adblock_ast_check.cjs
       - if: always() && steps.fetch.outcome != 'skipped'
@@ -66,7 +66,7 @@ jobs:
           from pathlib import Path
           base=Path(os.environ["RUNNER_TEMP"])/"super-adblock"
           with open(os.environ["GITHUB_STEP_SUMMARY"],"a") as out:
-              for name, keys in [("manifest.json",("downloaded","failed")),("review-audit.json",("sources","downloaded","failed","alternative_coverage","output")),("script-audit.json",("references","antivirus_ready"))]:
+              for name, keys in [("manifest.json",("downloaded","failed")),("review-audit.json",("sources","downloaded","failed","alternative_coverage","failure_reasons","output")),("script-audit.json",("references","unique_downloaded_scripts","antivirus_ready"))]:
                   path=base/name
                   if path.exists():
                       data=json.loads(path.read_text())
@@ -121,13 +121,13 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+      - run: rm -rf data/super-adblock/upstream Surge/Scripts/Converted/SuperAdBlock
       - uses: actions/download-artifact@v4
         with:
           name: super-adblock-approved
           path: .
       - run: |
-          test -f data/reports/super_adblock_audit.json
-          python -c 'import json; a=json.load(open("data/reports/super_adblock_audit.json")); m=json.load(open("data/reports/super_adblock_download_manifest.json")); assert not a["review_only"] and not m["failed"]'
+          python scripts/super_adblock.py verify-release "$RUNNER_TEMP/super-adblock-release"
           python scripts/publish_generated.py "chore: update SuperAdBlock" data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/
           git fetch origin main
           git diff --exit-code HEAD origin/main -- data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json data/reports/super_adblock_script_audit.json Surge/Module/SuperAdBlock.sgmodule Surge/Scripts/Converted/SuperAdBlock/

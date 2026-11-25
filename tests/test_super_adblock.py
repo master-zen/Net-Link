@@ -95,6 +95,31 @@ class SuperAdBlockTests(unittest.TestCase):
                 result=sec.batch_scan(folder,hashes,True)
             self.assertEqual([result[h] for h in hashes],["no-signature-hit","detected","scan-error"])
 
+    def test_source_canonicalization(self):
+        a="https://raw.githubusercontent.com/QingRex/LoonKissSurge/main/Surge/可莉.sgmodule"
+        b="https://raw.githubusercontent.com/QingRex/LoonKissSurge/refs/heads/main/Surge/%E5%8F%AF%E8%8E%89.sgmodule"
+        self.assertEqual(s.canonical_url(a),s.canonical_url(b))
+        for u in ("https://raw.githubusercontent.com/a/b/main/../x","https://raw.githubusercontent.com/a/b/main/%2Fx","https://raw.githubusercontent.com/a/b/main/x?token=x"):
+            with self.assertRaises(ValueError):
+                s.safe_url(u)
+
+    def test_overlapping_actions(self):
+        protected=s.protected_domains()
+        a,h=s.url_candidate(r"^https?://api\.example\.com/ads",protected)
+        b,_=s.url_candidate(r"^https://api\.example\.com/ads/list",protected)
+        c,_=s.url_candidate(r"^https://api\.example\.com/advertisement",protected)
+        self.assertTrue(s.scopes_overlap(a,b))
+        self.assertFalse(s.scopes_overlap(a,c))
+        self.assertEqual(s.rewrite_conflicts({a:{"reject"},b:{"reject-dict"},c:{"reject"}},{a:h,b:h,c:h}),{a,b})
+        self.assertIsNone(s.url_candidate(r"^https://api\.example\.com/ads/%6cogin",protected))
+        p,_=s.url_candidate(r"^https?://api\.douban\.com/v2/app_ads/splash",protected)
+        self.assertIsNone(s.re.match(p,"https://api.douban.com/v2/app_ads/splashback"))
+        self.assertIsNotNone(s.re.match(p,"https://api.douban.com/v2/app_ads/splash?x=1"))
+
+    def test_map_local_content_type(self):
+        pattern=r"^https://api\.example\.com/ads"
+        self.assertEqual(s.parse_rewrite("map local",pattern+' data-type=text data="{}" status-code=200 header="Content-Type:application/json"'),(pattern,"reject-dict"))
+
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):
             with self.assertRaises(ValueError):
