@@ -65,6 +65,16 @@ def guarded_inputs(paths):
             "scripts/build_icon_json.py",
             "Surge/Icon/",
         ]
+    elif "Surge/Module/SuperAdBlock.sgmodule" in paths:
+        guarded += [
+            ".github/workflows/update-super-adblock.yml",
+            "scripts/super_adblock.py",
+            "tests/test_super_adblock.py",
+            "data/sources/SuperAdBlock_URLs.txt",
+            "data/sources/SuperAdBlock_publication.json",
+            "data/allowlists/AdblockCriticalAllow.list",
+            "Surge/Module/.generator/safety.py",
+        ]
     elif "Surge/Module/StartUpAds.sgmodule" in paths:
         guarded += [
             ".github/workflows/update-moyu-startup.yml",
@@ -91,7 +101,7 @@ def guard_against_old_build(paths):
     if changed:
         raise RuntimeError("This build used superseded generator/source configuration; "
                            "newer main requires a fresh download/build: " + changed[:300])
-    for profile in ("china", "ad"):
+    for profile in ("china", "ad", "super_adblock"):
         local_name = f"data/reports/{profile}_download_manifest.json"
         if local_name not in paths:
             continue

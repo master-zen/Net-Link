@@ -1,0 +1,13 @@
+# SuperAdBlock
+
+Status: review-only; no public module or raw source mirror is published until redistribution rights are verified.
+
+49 sources are listed in `data/sources/SuperAdBlock_URLs.txt`. The daily workflow runs at 21:43 UTC (05:43 Beijing time), downloads each source into an isolated runner workspace, records SHA-256 and verifies run identity, builds offline, performs deterministic validation and reports counts. A failed source stops the build. Source text is never executed or written to public artifacts while publication is disabled.
+
+Conservative scope: domain and suffix blocks with ad-specific evidence, exact-host ad URL rejects, and a small set of equivalent static local responses. Unknown or broad regex, ambiguous domains, global settings, logical/IP rules, external redirects, third-party scripts, remote resources and arbitrary body manipulation are excluded. Existing critical allowlist and Moyu functional API protections apply. Beta and stable KeLee sources count as one family. Conflicting actions are excluded; exact and suffix domain redundancy is removed. This is not a complete semantic translator, antivirus or substitute for Surge and app testing.
+
+The upstream QingRex README defers redistribution rights to original authors; KeLee ProxyResource uses CC BY-NC-SA 4.0, AWAvenue uses GPL-3.0 and blackmatrix7 uses GPL-2.0. Publicly combining potentially protected material under these different terms requires source-specific permission and a compatible combined-license review, including attribution, applicable notices and source distribution. Do not enable the publication gate without documenting evidence for every URL and the combined license review in `data/sources/SuperAdBlock_publication.json`. The gate is an administrative attestation, not legal advice or an automated license determination.
+
+When approved, the workflow stages tracked upstream snapshots, manifests and the final module at `Surge/Module/SuperAdBlock.sgmodule`, then publishes via the existing non-force publisher. Until then, no public module URL is active.
+
+Upstream references: [QingRex](https://github.com/QingRex/LoonKissSurge), [KeLee](https://github.com/luestr/ProxyResource), [AWAvenue](https://github.com/TG-Twilight/AWAvenue-Ads-Rule), [blackmatrix7](https://github.com/blackmatrix7/ios_rule_script).

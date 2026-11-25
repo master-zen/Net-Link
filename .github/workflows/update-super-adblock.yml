@@ -1,0 +1,78 @@
+name: Update SuperAdBlock
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/update-super-adblock.yml"
+      - "scripts/super_adblock.py"
+      - "scripts/publish_generated.py"
+      - "tests/test_super_adblock.py"
+      - "data/sources/SuperAdBlock*"
+      - "data/allowlists/AdblockCriticalAllow.list"
+      - "Surge/Module/.generator/safety.py"
+  schedule:
+    - cron: "43 21 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: net-link-super-adblock
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - run: python -m unittest discover -s tests -p test_super_adblock.py -v
+      - run: python scripts/super_adblock.py fetch "$RUNNER_TEMP/super-adblock"
+      - run: python scripts/super_adblock.py build "$RUNNER_TEMP/super-adblock"
+      - run: python scripts/super_adblock.py validate "$RUNNER_TEMP/super-adblock"
+      - id: gate
+        run: echo "approved=$(python scripts/super_adblock.py approved unused)" >> "$GITHUB_OUTPUT"
+      - if: steps.gate.outputs.approved == 'true'
+        run: python scripts/super_adblock.py stage "$RUNNER_TEMP/super-adblock"
+      - if: steps.gate.outputs.approved == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: super-adblock-approved
+          retention-days: 1
+          path: |
+            data/super-adblock/upstream/
+            data/reports/super_adblock_download_manifest.json
+            data/reports/super_adblock_audit.json
+            Surge/Module/SuperAdBlock.sgmodule
+    outputs:
+      approved: ${{ steps.gate.outputs.approved }}
+  publish:
+    needs: build
+    if: needs.build.outputs.approved == 'true' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: super-adblock-approved
+          path: .
+      - run: |
+          test "$(python scripts/super_adblock.py approved unused)" = true
+          python scripts/publish_generated.py "chore: update SuperAdBlock" data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json Surge/Module/SuperAdBlock.sgmodule
+          git fetch origin main
+          git diff --exit-code HEAD origin/main -- data/super-adblock/upstream/ data/reports/super_adblock_download_manifest.json data/reports/super_adblock_audit.json Surge/Module/SuperAdBlock.sgmodule
