@@ -8,6 +8,7 @@ on:
       - ".github/workflows/update-super-adblock.yml"
       - "scripts/super_adblock.py"
       - "scripts/super_adblock_quality.py"
+      - "scripts/super_adblock_cross.py"
       - "scripts/super_adblock_discover.py"
       - "scripts/super_adblock_scripts.py"
       - "scripts/super_adblock_ast.cjs"
@@ -71,6 +72,8 @@ jobs:
       - run: python scripts/super_adblock.py review-validate "$RUNNER_TEMP/super-adblock"
       - run: python scripts/super_adblock.py build "$RUNNER_TEMP/super-adblock"
       - run: python scripts/super_adblock.py validate "$RUNNER_TEMP/super-adblock"
+      - name: Cross-module static conflict audit
+        run: python scripts/super_adblock_cross.py "$RUNNER_TEMP/super-adblock"
       - id: quality
         run: python scripts/super_adblock_quality.py evaluate "$RUNNER_TEMP/super-adblock"
       - if: always()
@@ -108,6 +111,7 @@ jobs:
             ${{ runner.temp }}/super-adblock/script-audit.json
             ${{ runner.temp }}/super-adblock/discovery.json
             ${{ runner.temp }}/super-adblock/quality.json
+            ${{ runner.temp }}/super-adblock/cross-audit.json
       - if: always() && steps.quality.outcome != 'skipped'
         uses: actions/upload-artifact@v4
         with:

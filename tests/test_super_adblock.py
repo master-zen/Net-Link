@@ -78,6 +78,8 @@ class SuperAdBlockTests(unittest.TestCase):
             with patch.object(s,"sources",return_value=urls):
                 report=s.build(work,review=True)
                 self.assertEqual(report["output"]["rules"],60)
+                self.assertEqual(report["provenance_count"],60)
+                self.assertEqual(report["rule_provenance"][0]["origins"][0]["source"],urls[0])
                 self.assertEqual(report["failed"],1)
                 self.assertTrue(s.validate(work,review=True)["review_only"])
                 self.assertFalse((work/"SuperAdBlock.sgmodule").exists())
@@ -178,6 +180,15 @@ class SuperAdBlockTests(unittest.TestCase):
         self.assertIn("total-rule-loss",q.evaluate(audit,manifest,script,policy)["reasons"])
         output["mitm_hosts"]=1000
         self.assertIn("mitm-growth",q.evaluate(audit,manifest,script,policy)["reasons"])
+
+    def test_cross_module_conflict(self):
+        import super_adblock_cross as c
+        candidate=list(c.rows("[Rule]\nDOMAIN,ads.example.com,REJECT\n[URL Rewrite]\n^https://api\\.example\\.com/ads _ reject\n","candidate"))
+        existing=list(c.rows("[Rule]\nDOMAIN-SUFFIX,example.com,DIRECT\n[Map Local]\n^https://api\\.example\\.com/ads data-type=text data=\"\" status-code=200\n","existing"))
+        r=c.compare(candidate,existing)
+        self.assertEqual(r["counts"]["non-reject-domain-conflict"],2)
+        self.assertEqual(r["counts"]["exact-url-overlap"],1)
+        self.assertNotIn("pattern",r["examples"][0]["candidate"])
 
     def test_download_validation(self):
         for raw in (b"<html>"+b"x"*100,b"\x00"*100,b"invalid"*100):

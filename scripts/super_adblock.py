@@ -400,6 +400,8 @@ def build(work, review=False):
     counts = Counter()
     quarantine = Counter()
     source_sections = {}
+    origins=defaultdict(list)
+    emitted={}
     cleared = sec.eligible(work, review=review)
     script_hits = defaultdict(set)
     script_origins = defaultdict(set)
@@ -419,13 +421,14 @@ def build(work, review=False):
             continue
         seen_content.add(fingerprint)
         section = ""
-        for original in text.splitlines():
+        for line_number,original in enumerate(text.splitlines(),1):
             line = original.strip()
             if not line or line.startswith(("#",";","//")):
                 continue
             if re.fullmatch(r"\[[^\]]+\]",line):
                 section = line[1:-1].lower()
                 continue
+            origin={"source":entry["url"],"snapshot_sha256":entry["sha256"],"line":line_number,"line_sha256":digest(line.encode()),"section":section}
             counts[section] += 1
             source_sections[entry["url"]][section] += 1
             if section == "rule":
@@ -448,6 +451,7 @@ def build(work, review=False):
                         quarantine["different-reject-semantics"] += 1
                         continue
                     domain_hits[(kind,domain)].add(entry["family"])
+                    origins[("rule",kind,domain)].append(origin)
                     continue
                 if kind == "URL-REGEX" and policy == "REJECT" and all(x.lower()=="extended-matching" for x in fields[3:]):
                     candidate = (fields[1],"reject")
@@ -468,6 +472,7 @@ def build(work, review=False):
                     body_filters[pattern].add(filter_spec)
                     body_hits[pattern]
                 url_hosts[pattern]=host
+                origins[("body",pattern)].append(origin)
                 continue
             elif section == "script":
                 spec = sec.declaration(line)
@@ -483,6 +488,7 @@ def build(work, review=False):
                 h=cleared[url]
                 script_hits[pattern].add(h)
                 script_origins[h].add(url)
+                origins[("script",pattern,h)].append(origin)
                 url_hosts[pattern]=host
                 continue
             elif section in {"rewrite","url rewrite","map local"}:
@@ -499,6 +505,7 @@ def build(work, review=False):
                 continue
             pattern,host = qualified
             url_hits[pattern].add(candidate[1])
+            origins[("url",pattern,candidate[1])].append(origin)
             url_hosts[pattern] = host
 
     accepted = set()
@@ -516,6 +523,8 @@ def build(work, review=False):
     suffixes = {domain for kind,domain in accepted if kind=="DOMAIN-SUFFIX"}
     domains = sorted((kind,domain) for kind,domain in accepted if not any(matches_domain(domain,suffix,True) and (kind!="DOMAIN-SUFFIX" or domain!=suffix) for suffix in suffixes))
     rules = [f"{kind},{domain},REJECT" for kind,domain in domains]
+    for kind,domain in domains:
+        emitted[("Rule",f"{kind},{domain},REJECT")]=origins[("rule",kind,domain)]
     rewrite, maps, hosts = [], [], set()
     conflicts=rewrite_conflicts(url_hits,url_hosts)
     cross=set()
@@ -540,9 +549,13 @@ def build(work, review=False):
             continue
         action = next(iter(actions))
         if action == "reject":
-            rewrite.append(f'{pattern} _ reject')
+            line=f'{pattern} _ reject'
+            rewrite.append(line)
+            emitted[("URL Rewrite",line)]=origins[("url",pattern,action)]
         else:
-            maps.append(f'{pattern} {MAP[action]}')
+            line=f'{pattern} {MAP[action]}'
+            maps.append(line)
+            emitted[("Map Local",line)]=origins[("url",pattern,action)]
         if not pattern.startswith("^http://"):
             hosts.add(host)
     bodies=[]
@@ -554,7 +567,9 @@ def build(work, review=False):
         if len(paths)+len(body_filters[pattern])>16:
             quarantine["body-field-limit"] += 1
             continue
-        bodies.append(f"#!REQUIREMENT CORE_VERSION>=6008000 http-response-jq {pattern} '{body_expression(paths,body_filters[pattern])}'")
+        line=f"#!REQUIREMENT CORE_VERSION>=6008000 http-response-jq {pattern} '{body_expression(paths,body_filters[pattern])}'"
+        bodies.append(line)
+        emitted[("Body Rewrite",line)]=origins[("body",pattern)]
         if not pattern.startswith("^http://"):
             hosts.add(host)
     scripts, published = [], {}
@@ -568,7 +583,9 @@ def build(work, review=False):
             continue
         h=next(iter(hashes))
         name="super-"+digest((pattern+h).encode())[:20]
-        scripts.append(f"{name} = type=http-response,pattern={pattern},requires-body=true,max-size=1048576,timeout=5,script-path={sec.PREFIX}{h}.js")
+        line=f"{name} = type=http-response,pattern={pattern},requires-body=true,max-size=1048576,timeout=5,script-path={sec.PREFIX}{h}.js"
+        scripts.append(line)
+        emitted[("Script",line)]=origins[("script",pattern,h)]
         published[h]=sorted(set(published.get(h,[]))|script_origins[h])
         if not pattern.startswith("^http://"):
             hosts.add(host)
@@ -586,6 +603,9 @@ def build(work, review=False):
     success={e["url"] for e in manifest["sources"] if "error" not in e}
     refs=manifest.get("reference_only",[])
     report = {"reference_only_count":len(refs),"reference_uncovered":[e["url"] for e in refs if not e["alternative"] or e["alternative"] not in success],"inventory_total":len(sources())+len(refs),"duplicate_content_groups":[v for v in content_sources.values() if len(v)>1],"source_status":{e["url"]:{"family":e["family"],"status":"failed" if "error" in e else "downloaded","beta":"/Surge/Beta/" in e["url"]} for e in manifest["sources"]},"failure_reasons":dict(Counter(e["error"] for e in manifest["sources"] if "error" in e)),"review_only":review,"downloaded":len(success),"failed":len(manifest["sources"])-len(success),"alternative_coverage":sum(a in success and u not in success for u,a in alternatives.items()),"sources":len(sources()),"input_sections":dict(counts),"source_sections":source_sections,"published_scripts":published,"script_audit_sha256":digest((work/"script-audit.json").read_bytes()),"quarantine":dict(quarantine),"output":{"rules":len(rules),"url_rewrite":len(rewrite),"map_local":len(maps),"body_rewrite":len(bodies),"array_filter_candidates":sum(len(v) for v in body_filters.values()),"scripts":len(scripts),"mitm_hosts":len(hosts),"sha256":digest(module.encode())}}
+    provenance=[{"section":section,"rule_sha256":digest(line.encode()),"origins":records} for (section,line),records in sorted(emitted.items())]
+    report["rule_provenance"]=provenance
+    report["provenance_count"]=len(provenance)
     dump(work/("review-audit.json" if review else "audit.json"),report)
     return report
 
