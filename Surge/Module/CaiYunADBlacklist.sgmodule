@@ -7,8 +7,8 @@
 DOMAIN,ad.cyapi.cn,REJECT,extended-matching,pre-matching
 
 [Script]
-caiyun.activity = type=http-response,pattern=^https?://(?:api\.caiyunapp\.com|cdn-w\.caiyunapp\.com|wrapper\.cyapi\.cn)/v[0-9]+/activity/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/caiyun-ad.js?v=2.0.0,requires-body=true,max-size=-1,timeout=30
-caiyun.config = type=http-response,pattern=^https?://starplucker\.cyapi\.cn/v[0-9]+/(?:config|config/cypage/[A-Za-z0-9_-]+/conditions|operation/(?:homefeatures|banners|feeds|features)|campaigns)/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/caiyun-ad.js?v=2.0.0,requires-body=true,max-size=-1,timeout=30
+caiyun.activity = type=http-response,pattern=^https?://(?:api\.caiyunapp\.com|cdn-w\.caiyunapp\.com|wrapper\.cyapi\.cn)/v[0-9]+/activity/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Scripts/caiyun-ad.js?v=2.0.0,requires-body=true,max-size=-1,timeout=30
+caiyun.config = type=http-response,pattern=^https?://starplucker\.cyapi\.cn/v[0-9]+/(?:config|config/cypage/[A-Za-z0-9_-]+/conditions|operation/(?:homefeatures|banners|feeds|features)|campaigns)/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Scripts/caiyun-ad.js?v=2.0.0,requires-body=true,max-size=-1,timeout=30
 
 [MITM]
 hostname = %APPEND% api.caiyunapp.com, cdn-w.caiyunapp.com, starplucker.cyapi.cn, wrapper.cyapi.cn

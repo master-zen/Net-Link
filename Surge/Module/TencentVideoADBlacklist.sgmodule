@@ -27,9 +27,9 @@ AND,((DOMAIN,vv.video.qq.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
 ^https?://vip\.video\.qq\.com/rpc/trpc\.vip_ad_promotion\.accessor\.Accessor/Access(?:\?[^#]*)?$ data-type=text data="{\"trace_id\":\"\",\"map_ads\":{},\"ext_info\":\"\"}" status-code=200 header="Content-Type:application/json"
 
 [Script]
-tencentvideo.splash.request = type=http-request,pattern=^https?://(?:i|pre)\.video\.qq\.com/(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/tencentvideo-ad.js?v=1.2.0,requires-body=true,binary-body-mode=true,max-size=1048576,timeout=10
-tencentvideo.trpc = type=http-response,pattern=^https?://(?:i|pre)\.video\.qq\.com/(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/tencentvideo-ad.js?v=1.2.0,requires-body=true,binary-body-mode=true,max-size=1048576,timeout=10
-tencentvideo.jce = type=http-response,pattern=^https?://iacc\.qq\.com/(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/tencentvideo-ad.js?v=1.2.0,requires-body=true,binary-body-mode=true,max-size=1048576,timeout=10
+tencentvideo.splash.request = type=http-request,pattern=^https?://(?:i|pre)\.video\.qq\.com/(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Scripts/tencentvideo-ad.js?v=1.2.0,requires-body=true,binary-body-mode=true,max-size=1048576,timeout=10
+tencentvideo.trpc = type=http-response,pattern=^https?://(?:i|pre)\.video\.qq\.com/(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Scripts/tencentvideo-ad.js?v=1.2.0,requires-body=true,binary-body-mode=true,max-size=1048576,timeout=10
+tencentvideo.jce = type=http-response,pattern=^https?://iacc\.qq\.com/(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Scripts/tencentvideo-ad.js?v=1.2.0,requires-body=true,binary-body-mode=true,max-size=1048576,timeout=10
 
 [MITM]
 hostname = %APPEND% apd-vlive.apdcdn.tc.qq.com, i.video.qq.com, iacc.qq.com, pre.video.qq.com, vip.video.qq.com, vv.video.qq.com

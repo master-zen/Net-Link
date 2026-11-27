@@ -47,7 +47,7 @@ DOMAIN,wxsnsdythumb.wxs.qq.com,REJECT
 ^https://wxs\-weixin\.sd\.zhumanggroup\.com/api/v2/ad(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
 
 [Script]
-wechat.external.link = type=http-response,pattern=^https://(?:security\.wechat\.com|weixin110\.qq\.com)/cgi-bin/mmspamsupport-bin/newredirectconfirmcgi\?[^#]+$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/wechat-links.js,requires-body=true,max-size=1048576,timeout=5,engine=webview
+wechat.external.link = type=http-response,pattern=^https://(?:security\.wechat\.com|weixin110\.qq\.com)/cgi-bin/mmspamsupport-bin/newredirectconfirmcgi\?[^#]+$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Scripts/wechat-links.js,requires-body=true,max-size=1048576,timeout=5,engine=webview
 
 [MITM]
 hostname = %APPEND% aag.enmonster.com, ads.ishansong.com, api-marketing.zhinengxiyifang.cn, apiproxy.zuche.com, apis.alenable.com, dsp.fcbox.com, extra.csair.com, gw-passenger-wap.01zhuanche.com, hdgateway.zto.com, m.sh.189.cn, mcs-mimp-web.sf-express.com, minicap.caocaokeji.cn, minipro.95504.net, mp.weixin.qq.com, mxsa.mxbc.net, ne.gdsz.sinopec.com, qapi.huolala.cn, r2.gzyct.com, security.wechat.com, ucmp.sf-express.com, ump.ems.com.cn, webapi.qmai.cn, wechat-api-dj.mstand.cn, weixin110.qq.com, wx.17u.cn, wx.maoyan.com, wxapi.csair.com, wxs-weixin.sd.zhumanggroup.com

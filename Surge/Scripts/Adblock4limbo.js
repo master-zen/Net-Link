@@ -30,7 +30,7 @@
  * ... (其他注释不变) ...
  */
 
-const JS_URL = "https://cdn.jsdelivr.net/gh/master-zen/Net-Link@main/Surge/Module/runtime/Adblock4limbo.user.js";
+const JS_URL = "https://cdn.jsdelivr.net/gh/master-zen/Net-Link@main/Surge/Scripts/Adblock4limbo.user.js";
 
 // 基础注入内容
 // const TITLE_INJECTION_BASE = `<link rel="stylesheet" href="${CSS_URL}" type="text/css" />

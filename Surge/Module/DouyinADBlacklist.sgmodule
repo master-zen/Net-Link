@@ -9,7 +9,7 @@
 ^https?://aweme\.snssdk\.com/aweme/v1/screen/ad/?(?:\?[^#]*)?$ _ reject
 
 [Script]
-douyin.feed = type=http-response,pattern=^https?://(?:api3-core-c\.amemv\.com|api3-normal-c\.amemv\.com|api\.amemv\.com|aweme\.snssdk\.com)/aweme/v[12]/feed/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/douyin-ad.js?v=0.1.0,requires-body=true,max-size=8388608,timeout=15
+douyin.feed = type=http-response,pattern=^https?://(?:api3-core-c\.amemv\.com|api3-normal-c\.amemv\.com|api\.amemv\.com|aweme\.snssdk\.com)/aweme/v[12]/feed/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Scripts/douyin-ad.js?v=0.1.0,requires-body=true,max-size=8388608,timeout=15
 
 [MITM]
 hostname = %APPEND% ad.zijieapi.com, api.amemv.com, api3-core-c.amemv.com, api3-normal-c.amemv.com, aweme.snssdk.com

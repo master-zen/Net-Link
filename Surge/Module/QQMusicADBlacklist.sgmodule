@@ -24,7 +24,7 @@ DOMAIN,tmeadquic.y.qq.com,REJECT,extended-matching,pre-matching
 ^https?://y\.gtimg\.cn/music/common/upload/targeted_ads(?:/[^?#]*)?(?:\?[^#]*)?$ data-type=tiny-gif status-code=200
 
 [Script]
-qqmusic.hall = type=http-response,pattern=^https?://u\.y\.qq\.com/cgi-bin/musicu\.fcg(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/qqmusic-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+qqmusic.hall = type=http-response,pattern=^https?://u\.y\.qq\.com/cgi-bin/musicu\.fcg(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Scripts/qqmusic-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
 
 [MITM]
 hostname = %APPEND% music.y.qq.com, u.y.qq.com, y.gtimg.cn
