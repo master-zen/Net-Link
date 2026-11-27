@@ -1,0 +1,15 @@
+#!name=Douyin AD Blacklist
+#!desc=V0.1.0 - Experimental mainland Douyin splash and explicit feed ads; device validation pending.
+#!version=0.1.0
+#!category=Advertising
+
+[URL Rewrite]
+^https?://ad\.zijieapi\.com/api/ad/v1/(?:slot|long/video|recall_ads/banner)/?(?:\?[^#]*)?$ _ reject
+^https?://(?:api3-core-c\.amemv\.com|api3-normal-c\.amemv\.com|api\.amemv\.com|aweme\.snssdk\.com)/api/ad/(?:v1/splash/stock|v16/splash/preload|splash/stock/realtime/v1[45]|splash/aweme/v15)/?(?:\?[^#]*)?$ _ reject
+^https?://aweme\.snssdk\.com/aweme/v1/screen/ad/?(?:\?[^#]*)?$ _ reject
+
+[Script]
+douyin.feed = type=http-response,pattern=^https?://(?:api3-core-c\.amemv\.com|api3-normal-c\.amemv\.com|api\.amemv\.com|aweme\.snssdk\.com)/aweme/v[12]/feed/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/douyin-ad.js?v=0.1.0,requires-body=true,max-size=8388608,timeout=15
+
+[MITM]
+hostname = %APPEND% ad.zijieapi.com, api.amemv.com, api3-core-c.amemv.com, api3-normal-c.amemv.com, aweme.snssdk.com

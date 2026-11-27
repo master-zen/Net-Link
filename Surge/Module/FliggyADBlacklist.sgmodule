@@ -1,0 +1,19 @@
+#!name=Fliggy AD Blacklist
+#!desc=V1.0.0 - Fliggy splash, prefetch and dedicated CRM advertising.
+#!version=1.0.0
+#!category=Advertising
+
+[Rule]
+DOMAIN,ad-track.fliggy.com,REJECT,extended-matching,pre-matching
+
+[URL Rewrite]
+^https?://acs\.m\.taobao\.com/gw/mtop\.fliggy\.crm\.popresource(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$ _ reject
+
+[Map Local]
+^https?://acs\.m\.taobao\.com/gw/mtop\.fliggy\.crm\.screen\.availablesplashstrategies(?:\?[^#]*)?$ data-type=text data="" status-code=200
+^https?://acs\.m\.taobao\.com/gw/mtop\.fliggy\.crm\.screen\.availablesplashstrategies/[^?#]*(?:\?[^#]*)?$ data-type=text data="" status-code=200
+^https?://acs\.m\.taobao\.com/gw/mtop\.fliggy\.crm\.screen\.allresource(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://acs\.m\.taobao\.com/gw/mtop\.fliggy\.crm\.screen\.predict(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% acs.m.taobao.com

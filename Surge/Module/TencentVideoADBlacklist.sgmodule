@@ -1,0 +1,35 @@
+#!name=Tencent Video AD Blacklist
+#!desc=V1.2.0 - Tencent Video scoped splash preload, QUIC fallback and tRPC/JCE filtering.
+#!version=1.2.0
+#!category=Advertising
+
+[Rule]
+DOMAIN,ad.tencentvideo.com,REJECT,extended-matching,pre-matching
+DOMAIN,adsmind.gdtimg.com,REJECT,extended-matching,pre-matching
+DOMAIN,adstats.tencentvideo.com,REJECT,extended-matching,pre-matching
+DOMAIN,lives.l.qq.com,REJECT,extended-matching,pre-matching
+DOMAIN,news.l.qq.com,REJECT,extended-matching,pre-matching
+DOMAIN,pgdt.gtimg.cn,REJECT,extended-matching,pre-matching
+AND,((DOMAIN,i.video.qq.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+AND,((DOMAIN,pre.video.qq.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+AND,((DOMAIN,iacc.qq.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+AND,((DOMAIN,iacc.stgw.qq.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+AND,((DOMAIN,tacc.video.qq.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+AND,((DOMAIN,vv.video.qq.com),(PROTOCOL,UDP),(DEST-PORT,443)),REJECT
+
+[URL Rewrite]
+^http://(?:[0-9]{1,3}\.){3}[0-9]{1,3}(?::[0-9]+)?/vmind\.qqvideo\.tc\.qq\.com/[^?#]+(?:\?[^#]*)?$ _ reject
+^https?://apd-vlive\.apdcdn\.tc\.qq\.com/vmind\.qqvideo\.tc\.qq\.com/[^?#]+(?:\?[^#]*)?$ _ reject
+^http://apd-[A-Za-z0-9_-]+\.v\.smtcdns\.com/vmind\.qqvideo\.tc\.qq\.com/[^?#]+(?:\?[^#]*)?$ _ reject
+
+[Map Local]
+^https?://vv\.video\.qq\.com/(?:diff|get)vmind/?(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://vip\.video\.qq\.com/rpc/trpc\.vip_ad_promotion\.accessor\.Accessor/Access(?:\?[^#]*)?$ data-type=text data="{\"trace_id\":\"\",\"map_ads\":{},\"ext_info\":\"\"}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+tencentvideo.splash.request = type=http-request,pattern=^https?://(?:i|pre)\.video\.qq\.com/(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/tencentvideo-ad.js?v=1.2.0,requires-body=true,binary-body-mode=true,max-size=1048576,timeout=10
+tencentvideo.trpc = type=http-response,pattern=^https?://(?:i|pre)\.video\.qq\.com/(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/tencentvideo-ad.js?v=1.2.0,requires-body=true,binary-body-mode=true,max-size=1048576,timeout=10
+tencentvideo.jce = type=http-response,pattern=^https?://iacc\.qq\.com/(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/tencentvideo-ad.js?v=1.2.0,requires-body=true,binary-body-mode=true,max-size=1048576,timeout=10
+
+[MITM]
+hostname = %APPEND% apd-vlive.apdcdn.tc.qq.com, i.video.qq.com, iacc.qq.com, pre.video.qq.com, vip.video.qq.com, vv.video.qq.com

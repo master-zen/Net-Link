@@ -1,0 +1,31 @@
+#!name=Douban AD Blacklist
+#!desc=V1.0.0 - Douban dedicated ad APIs and assets; preserve trailer, search and marketplace.
+#!version=1.0.0
+#!category=Advertising
+
+[Rule]
+DOMAIN,ad.doubanio.com,REJECT
+
+[URL Rewrite]
+^https?://img1\.doubanio\.com/view/dale-online/dale_ad/[^?#]+(?:\?[^#]*)?$ _ reject
+^https?://img2\.doubanio\.com/view/dale-online/dale_ad/[^?#]+(?:\?[^#]*)?$ _ reject
+^https?://img3\.doubanio\.com/view/dale-online/dale_ad/[^?#]+(?:\?[^#]*)?$ _ reject
+^https?://img9\.doubanio\.com/view/dale-online/dale_ad/[^?#]+(?:\?[^#]*)?$ _ reject
+^https?://qnmob3\.doubanio\.com/view/dale-online/dale_ad/[^?#]+(?:\?[^#]*)?$ _ reject
+
+[Map Local]
+^https?://api\.douban\.com/v[0-9]+/app_ads/splash(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://api\.douban\.com/v[0-9]+/app_ads/splash/(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://api\.douban\.com/b[0-9]+/common_ads(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://api\.douban\.com/b[0-9]+/common_ads/(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://frodo\.douban\.com/api/v[0-9]+/erebor/feed_ad(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://frodo\.douban\.com/api/v[0-9]+/erebor/feed_ad/(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://frodo\.douban\.com/api/v[0-9]+/movie/ad(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://frodo\.douban\.com/api/v[0-9]+/movie/ad/(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://frodo\.douban\.com/api/v[0-9]+/home_banner(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://frodo\.douban\.com/api/v[0-9]+/home_banner/(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://frodo\.douban\.com/api/v2/movie/banner(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://frodo\.douban\.com/api/v2/movie/banner/(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% api.douban.com, frodo.douban.com, img1.doubanio.com, img2.doubanio.com, img3.doubanio.com, img9.doubanio.com, qnmob3.doubanio.com

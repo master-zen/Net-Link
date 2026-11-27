@@ -1,0 +1,21 @@
+#!name=Taobao AD Blacklist
+#!desc=V1.0.0 - Taobao splash and dedicated advertising delivery filters.
+#!version=1.0.0
+#!category=Advertising
+#!icon=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Taobao.png
+
+[Rule]
+DOMAIN,dsp.simba.taobao.com,REJECT,extended-matching,pre-matching
+DOMAIN,m.simba.taobao.com,REJECT,extended-matching,pre-matching
+DOMAIN,simba.m.taobao.com,REJECT,extended-matching,pre-matching
+
+[Map Local]
+^https?://acs\.m\.taobao\.com/gw/mtop\.alibaba\.advertisementservice\.getadv(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://acs\.m\.taobao\.com/gw/mtop\.o2o\.ad\.gateway\.get(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+taobao.splash0 = type=http-response,pattern=^https?://guide-acs\.m\.taobao\.com/gw/mtop\.taobao\.wireless\.home\.splash\.awesome\.get(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/taobao-ad.js?v=1.0.0,requires-body=true,max-size=1048576,timeout=5
+taobao.splash1 = type=http-response,pattern=^https?://guide-acs\.m\.taobao\.com/gw/mtop\.taobao\.wireless\.home\.splash\.awesome\.get/[^?#]*(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/taobao-ad.js?v=1.0.0,requires-body=true,max-size=1048576,timeout=5
+
+[MITM]
+hostname = %APPEND% acs.m.taobao.com, guide-acs.m.taobao.com

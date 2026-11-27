@@ -1,0 +1,25 @@
+#!name=Meituan AD Blacklist
+#!desc=V1.0.0 - Meituan and shared delivery splash and dedicated ad material filtering.
+#!version=1.0.0
+#!category=Advertising
+
+[Rule]
+DOMAIN,ad.e.waimai.sankuai.com,REJECT,extended-matching,pre-matching
+DOMAIN,mads.meituan.com,REJECT,extended-matching,pre-matching
+
+[URL Rewrite]
+^https?://s3plus\.meituan\.net/v[0-9]+/mss_[A-Za-z0-9_-]+/brandcpt-vedio/[A-Za-z0-9_-]+\.zip(?:\?[^#]*)?$ _ reject
+
+[Map Local]
+^https?://wmapi\.meituan\.com/api/v[0-9]+/(?:openscreen|startpicture)/?(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://mall\.meituan\.com/api/c/homepage/splash/?(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://img\.meituan\.net/bizad/bizad_brandCpt_[0-9]+\.jpg(?:\?[^#]*)?$ data-type=tiny-gif status-code=200
+^https?://img\.meituan\.net/(?:adunion|midas)/[A-Za-z0-9_-]+\.(?:gif|jpg)(?:\.webp)?(?:\?[^#]*)?$ data-type=tiny-gif status-code=200
+^https?://p[0-9]\.meituan\.net/(?:bizad|brandCpt)/[A-Za-z0-9_-]+\.jpg(?:\?[^#]*)?$ data-type=tiny-gif status-code=200
+
+[Script]
+meituan.load = type=http-response,pattern=^https?://wmapi\.meituan\.com/api/v[0-9]+/loadInfo(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/meituan-ad.js?v=1.0.0,requires-body=true,max-size=1048576,timeout=5
+meituan.load-slash = type=http-response,pattern=^https?://wmapi\.meituan\.com/api/v[0-9]+/loadInfo/(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/meituan-ad.js?v=1.0.0,requires-body=true,max-size=1048576,timeout=5
+
+[MITM]
+hostname = %APPEND% img.meituan.net, mall.meituan.com, p0.meituan.net, p1.meituan.net, p2.meituan.net, p3.meituan.net, p4.meituan.net, p5.meituan.net, p6.meituan.net, p7.meituan.net, p8.meituan.net, p9.meituan.net, s3plus.meituan.net, wmapi.meituan.com

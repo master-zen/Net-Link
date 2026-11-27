@@ -1,0 +1,2057 @@
+{
+  "name": "Icon ZEN",
+  "icons": [
+    {
+      "name": "AdGuard",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AdGuard.png"
+    },
+    {
+      "name": "Adobe-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Adobe-I.png"
+    },
+    {
+      "name": "Adobe-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Adobe-II.png"
+    },
+    {
+      "name": "Adobe-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Adobe-III.png"
+    },
+    {
+      "name": "Adobe",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Adobe.png"
+    },
+    {
+      "name": "AdobeCreativeCloud",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AdobeCreativeCloud.png"
+    },
+    {
+      "name": "AfreecaTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AfreecaTV.png"
+    },
+    {
+      "name": "AGA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AGA.png"
+    },
+    {
+      "name": "AIA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AIA.png"
+    },
+    {
+      "name": "AirChina",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AirChina.png"
+    },
+    {
+      "name": "Akamai-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Akamai-II.png"
+    },
+    {
+      "name": "Akamai",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Akamai.png"
+    },
+    {
+      "name": "Alibaba",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Alibaba.png"
+    },
+    {
+      "name": "AliPay",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AliPay.png"
+    },
+    {
+      "name": "Amazon-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Amazon-I.png"
+    },
+    {
+      "name": "Amazon-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Amazon-II.png"
+    },
+    {
+      "name": "Amazon-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Amazon-III.png"
+    },
+    {
+      "name": "Amazon-IV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Amazon-IV.png"
+    },
+    {
+      "name": "AMD-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AMD-I.png"
+    },
+    {
+      "name": "AMD-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AMD-II.png"
+    },
+    {
+      "name": "AMD",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AMD.png"
+    },
+    {
+      "name": "AOL",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AOL.png"
+    },
+    {
+      "name": "Apple-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Apple-I.png"
+    },
+    {
+      "name": "Apple-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Apple-II.png"
+    },
+    {
+      "name": "Apple-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Apple-III.png"
+    },
+    {
+      "name": "Apple-IV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Apple-IV.png"
+    },
+    {
+      "name": "Apple",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Apple.png"
+    },
+    {
+      "name": "AppleAppStore",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleAppStore.png"
+    },
+    {
+      "name": "AppleArcade",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleArcade.png"
+    },
+    {
+      "name": "AppleBooks",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleBooks.png"
+    },
+    {
+      "name": "AppleFindMy",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleFindMy.png"
+    },
+    {
+      "name": "AppleFitness+",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleFitness%2B.png"
+    },
+    {
+      "name": "AppleFitness+Letter",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleFitness%2BLetter.png"
+    },
+    {
+      "name": "AppleFitness",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleFitness.png"
+    },
+    {
+      "name": "AppleGameCenter",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleGameCenter.png"
+    },
+    {
+      "name": "AppleHome",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleHome.png"
+    },
+    {
+      "name": "AppleiCloud",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleiCloud.png"
+    },
+    {
+      "name": "AppleiRingo",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleiRingo.png"
+    },
+    {
+      "name": "AppleiTunesStore",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleiTunesStore.png"
+    },
+    {
+      "name": "AppleMail",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleMail.png"
+    },
+    {
+      "name": "AppleMusic",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleMusic.png"
+    },
+    {
+      "name": "AppleNews",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleNews.png"
+    },
+    {
+      "name": "AppleOriginal",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleOriginal.png"
+    },
+    {
+      "name": "ApplePay",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ApplePay.png"
+    },
+    {
+      "name": "AppleSafari-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleSafari-I.png"
+    },
+    {
+      "name": "AppleSafari",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleSafari.png"
+    },
+    {
+      "name": "AppleSiri",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleSiri.png"
+    },
+    {
+      "name": "AppleSpringLoaded",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleSpringLoaded.png"
+    },
+    {
+      "name": "AppleTestFlight-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleTestFlight-I.png"
+    },
+    {
+      "name": "AppleTestFlight-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleTestFlight-II.png"
+    },
+    {
+      "name": "AppleTestFlight",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleTestFlight.png"
+    },
+    {
+      "name": "AppleTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleTV.png"
+    },
+    {
+      "name": "AppleTVPlus",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleTVPlus.png"
+    },
+    {
+      "name": "AppleUpdate",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleUpdate.png"
+    },
+    {
+      "name": "AppleWallet",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleWallet.png"
+    },
+    {
+      "name": "AppleWeather",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/AppleWeather.png"
+    },
+    {
+      "name": "Azure",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Azure.png"
+    },
+    {
+      "name": "Baidu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Baidu.png"
+    },
+    {
+      "name": "BBC",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/BBC.png"
+    },
+    {
+      "name": "Bilibili-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Bilibili-I.png"
+    },
+    {
+      "name": "Bilibili-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Bilibili-II.png"
+    },
+    {
+      "name": "bilibili-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/bilibili-III.png"
+    },
+    {
+      "name": "bilibili-IV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/bilibili-IV.png"
+    },
+    {
+      "name": "Canon-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Canon-I.png"
+    },
+    {
+      "name": "Canon",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Canon.png"
+    },
+    {
+      "name": "CCTV-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CCTV-I.png"
+    },
+    {
+      "name": "CCTV-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CCTV-II.png"
+    },
+    {
+      "name": "CCTV-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CCTV-III.png"
+    },
+    {
+      "name": "CCTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CCTV.png"
+    },
+    {
+      "name": "ChatGPT-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ChatGPT-I.png"
+    },
+    {
+      "name": "ChatGPT",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ChatGPT.png"
+    },
+    {
+      "name": "Cisco-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cisco-I.png"
+    },
+    {
+      "name": "Cisco",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cisco.png"
+    },
+    {
+      "name": "Claude",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Claude.png"
+    },
+    {
+      "name": "Cloudflare-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cloudflare-I.png"
+    },
+    {
+      "name": "Cloudflare",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cloudflare.png"
+    },
+    {
+      "name": "Clubhouse-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Clubhouse-I.png"
+    },
+    {
+      "name": "Clubhouse-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Clubhouse-II.png"
+    },
+    {
+      "name": "Clubhouse",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Clubhouse.png"
+    },
+    {
+      "name": "CNN",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CNN.png"
+    },
+    {
+      "name": "CNTV-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CNTV-II.png"
+    },
+    {
+      "name": "CNTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CNTV.png"
+    },
+    {
+      "name": "Cryptocurrency-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cryptocurrency-I.png"
+    },
+    {
+      "name": "Cryptocurrency",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cryptocurrency.png"
+    },
+    {
+      "name": "CSDN-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CSDN-I.png"
+    },
+    {
+      "name": "CSDN",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/CSDN.png"
+    },
+    {
+      "name": "Ctfile",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ctfile.png"
+    },
+    {
+      "name": "Cydia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Cydia.png"
+    },
+    {
+      "name": "Daily",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Daily.png"
+    },
+    {
+      "name": "Dailymotion-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Dailymotion-I.png"
+    },
+    {
+      "name": "Dailymotion",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Dailymotion.png"
+    },
+    {
+      "name": "Damai",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Damai.png"
+    },
+    {
+      "name": "Dangdang",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Dangdang.png"
+    },
+    {
+      "name": "Dazongdianpin",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Dazongdianpin.png"
+    },
+    {
+      "name": "Didi",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Didi.png"
+    },
+    {
+      "name": "Direct",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Direct.png"
+    },
+    {
+      "name": "Discord-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Discord-I.png"
+    },
+    {
+      "name": "Discord-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Discord-II.png"
+    },
+    {
+      "name": "Discord",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Discord.png"
+    },
+    {
+      "name": "Discovery",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Discovery.png"
+    },
+    {
+      "name": "Disney+",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Disney%2B.png"
+    },
+    {
+      "name": "Disney",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Disney.png"
+    },
+    {
+      "name": "DNS-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/DNS-I.png"
+    },
+    {
+      "name": "DNS-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/DNS-II.png"
+    },
+    {
+      "name": "DNS-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/DNS-III.png"
+    },
+    {
+      "name": "DNS-IV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/DNS-IV.png"
+    },
+    {
+      "name": "DNS",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/DNS.png"
+    },
+    {
+      "name": "Docker-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Docker-I.png"
+    },
+    {
+      "name": "Docker-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Docker-II.png"
+    },
+    {
+      "name": "Docker",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Docker.png"
+    },
+    {
+      "name": "Douban-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Douban-I.png"
+    },
+    {
+      "name": "Douban",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Douban.png"
+    },
+    {
+      "name": "DuckDuckGo",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/DuckDuckGo.png"
+    },
+    {
+      "name": "eBay",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/eBay.png"
+    },
+    {
+      "name": "ele",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ele.png"
+    },
+    {
+      "name": "encoreTVB",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/encoreTVB.png"
+    },
+    {
+      "name": "Epic_Games",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Epic_Games.png"
+    },
+    {
+      "name": "ESPN+-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ESPN%2B-I.png"
+    },
+    {
+      "name": "ESPN+",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ESPN%2B.png"
+    },
+    {
+      "name": "Feizhu-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Feizhu-I.png"
+    },
+    {
+      "name": "Feizhu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Feizhu.png"
+    },
+    {
+      "name": "Fenghuang",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Fenghuang.png"
+    },
+    {
+      "name": "Flamingo",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Flamingo.png"
+    },
+    {
+      "name": "Foobar2000",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Foobar2000.png"
+    },
+    {
+      "name": "FOX",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/FOX.png"
+    },
+    {
+      "name": "FriDay-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/FriDay-I.png"
+    },
+    {
+      "name": "FriDay",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/FriDay.png"
+    },
+    {
+      "name": "fuboTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/fuboTV.png"
+    },
+    {
+      "name": "Game",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Game.png"
+    },
+    {
+      "name": "Gaode_AliMaps-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Gaode_AliMaps-I.png"
+    },
+    {
+      "name": "Gaode_AliMaps",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Gaode_AliMaps.png"
+    },
+    {
+      "name": "Gaotie-I230-VI",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Gaotie-I230-VI.png"
+    },
+    {
+      "name": "GitLab",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GitLab.png"
+    },
+    {
+      "name": "Google Gmail",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Google%20Gmail.png"
+    },
+    {
+      "name": "Google-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Google-II.png"
+    },
+    {
+      "name": "Google",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Google.png"
+    },
+    {
+      "name": "GoogleCloud",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleCloud.png"
+    },
+    {
+      "name": "GoogleDinosaur",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleDinosaur.png"
+    },
+    {
+      "name": "GoogleDrive",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleDrive.png"
+    },
+    {
+      "name": "GoogleEarth",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleEarth.png"
+    },
+    {
+      "name": "GoogleFirebaseCloudMessaging",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleFirebaseCloudMessaging.png"
+    },
+    {
+      "name": "GoogleGemini-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleGemini-I.png"
+    },
+    {
+      "name": "GoogleGemini-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleGemini-II.png"
+    },
+    {
+      "name": "GoogleGemini-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleGemini-III.png"
+    },
+    {
+      "name": "GoogleGemini",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleGemini.png"
+    },
+    {
+      "name": "GoogleMaps-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleMaps-I.png"
+    },
+    {
+      "name": "GoogleMaps-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleMaps-II.png"
+    },
+    {
+      "name": "GoogleMaps",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleMaps.png"
+    },
+    {
+      "name": "GoogleOpinionRewards-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleOpinionRewards-I.png"
+    },
+    {
+      "name": "GoogleOpinionRewards",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleOpinionRewards.png"
+    },
+    {
+      "name": "GooglePlay",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GooglePlay.png"
+    },
+    {
+      "name": "GoogleSearch",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleSearch.png"
+    },
+    {
+      "name": "GoogleTranslate",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleTranslate.png"
+    },
+    {
+      "name": "GoogleVoice",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/GoogleVoice.png"
+    },
+    {
+      "name": "Grok",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Grok.png"
+    },
+    {
+      "name": "HBO-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/HBO-I.png"
+    },
+    {
+      "name": "HBO",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/HBO.png"
+    },
+    {
+      "name": "Heart",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Heart.png"
+    },
+    {
+      "name": "Hema",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Hema.png"
+    },
+    {
+      "name": "Huawei-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Huawei-I.png"
+    },
+    {
+      "name": "Huawei",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Huawei.png"
+    },
+    {
+      "name": "Hulu-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Hulu-I.png"
+    },
+    {
+      "name": "Hulu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Hulu.png"
+    },
+    {
+      "name": "Huolala",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Huolala.png"
+    },
+    {
+      "name": "IBM",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/IBM.png"
+    },
+    {
+      "name": "IMDb",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/IMDb.png"
+    },
+    {
+      "name": "infiniPort",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/infiniPort.png"
+    },
+    {
+      "name": "Infuse-VII",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Infuse-VII.png"
+    },
+    {
+      "name": "Infuse",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Infuse.png"
+    },
+    {
+      "name": "iQIYI-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/iQIYI-I.png"
+    },
+    {
+      "name": "iqiyi",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/iqiyi.png"
+    },
+    {
+      "name": "Jianshu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Jianshu.png"
+    },
+    {
+      "name": "Jingdong-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Jingdong-I.png"
+    },
+    {
+      "name": "Jingdong",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Jingdong.png"
+    },
+    {
+      "name": "Kingsoft-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Kingsoft-I.png"
+    },
+    {
+      "name": "Kingsoft",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Kingsoft.png"
+    },
+    {
+      "name": "Lambda",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Lambda.png"
+    },
+    {
+      "name": "LeagueofLegends",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/LeagueofLegends.png"
+    },
+    {
+      "name": "Line",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Line.png"
+    },
+    {
+      "name": "LineTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/LineTV.png"
+    },
+    {
+      "name": "Linkedin",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Linkedin.png"
+    },
+    {
+      "name": "LiTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/LiTV.png"
+    },
+    {
+      "name": "LOL",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/LOL.png"
+    },
+    {
+      "name": "Luffy",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Luffy.png"
+    },
+    {
+      "name": "Map_Africa",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Map_Africa.png"
+    },
+    {
+      "name": "Map_America",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Map_America.png"
+    },
+    {
+      "name": "Map_Asia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Map_Asia.png"
+    },
+    {
+      "name": "Map_China",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Map_China.png"
+    },
+    {
+      "name": "Map_Europe",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Map_Europe.png"
+    },
+    {
+      "name": "Map_LA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Map_LA.png"
+    },
+    {
+      "name": "Map_MetaFacebook",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Map_MetaFacebook.png"
+    },
+    {
+      "name": "Map_Oceania",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Map_Oceania.png"
+    },
+    {
+      "name": "Map_World",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Map_World.png"
+    },
+    {
+      "name": "Meituan",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Meituan.png"
+    },
+    {
+      "name": "Meituxiuxiu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Meituxiuxiu.png"
+    },
+    {
+      "name": "Meta",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Meta.png"
+    },
+    {
+      "name": "MetaFacebook",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MetaFacebook.png"
+    },
+    {
+      "name": "MetaInstagram-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MetaInstagram-I.png"
+    },
+    {
+      "name": "MetaInstagram",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MetaInstagram.png"
+    },
+    {
+      "name": "MetaThreads",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MetaThreads.png"
+    },
+    {
+      "name": "Microsoft",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Microsoft.png"
+    },
+    {
+      "name": "Microsoft_GitHub",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Microsoft_GitHub.png"
+    },
+    {
+      "name": "Microsoft_GitHubB",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Microsoft_GitHubB.png"
+    },
+    {
+      "name": "Microsoft_GitHubC",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Microsoft_GitHubC.png"
+    },
+    {
+      "name": "Microsoft_GitHubD",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Microsoft_GitHubD.png"
+    },
+    {
+      "name": "Microsoft_GitHubLetter",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Microsoft_GitHubLetter.png"
+    },
+    {
+      "name": "MicrosoftBing",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MicrosoftBing.png"
+    },
+    {
+      "name": "MicrosoftCopilot",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MicrosoftCopilot.png"
+    },
+    {
+      "name": "MicrosoftEdge",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MicrosoftEdge.png"
+    },
+    {
+      "name": "MicrosoftOffice",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MicrosoftOffice.png"
+    },
+    {
+      "name": "MicrosoftOneDrive",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MicrosoftOneDrive.png"
+    },
+    {
+      "name": "MicrosoftOutlook-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MicrosoftOutlook-I.png"
+    },
+    {
+      "name": "MicrosoftOutlook",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MicrosoftOutlook.png"
+    },
+    {
+      "name": "MozillaFirefox",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MozillaFirefox.png"
+    },
+    {
+      "name": "myTVSUPER",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/myTVSUPER.png"
+    },
+    {
+      "name": "Naiko",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Naiko.png"
+    },
+    {
+      "name": "NBA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/NBA.png"
+    },
+    {
+      "name": "NBC",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/NBC.png"
+    },
+    {
+      "name": "Netease",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Netease.png"
+    },
+    {
+      "name": "NeteaseMusic",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/NeteaseMusic.png"
+    },
+    {
+      "name": "NeteaseMusicUnlock",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/NeteaseMusicUnlock.png"
+    },
+    {
+      "name": "Netflix",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Netflix.png"
+    },
+    {
+      "name": "NetflixLetter",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/NetflixLetter.png"
+    },
+    {
+      "name": "Nfcloud",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Nfcloud.png"
+    },
+    {
+      "name": "niconico-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/niconico-I.png"
+    },
+    {
+      "name": "niconico",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/niconico.png"
+    },
+    {
+      "name": "NIKE-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/NIKE-I.png"
+    },
+    {
+      "name": "NIKE",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/NIKE.png"
+    },
+    {
+      "name": "Ninja",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ninja.png"
+    },
+    {
+      "name": "Nintendo",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Nintendo.png"
+    },
+    {
+      "name": "Notion",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Notion.png"
+    },
+    {
+      "name": "nowe",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/nowe.png"
+    },
+    {
+      "name": "Nvidia-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Nvidia-I.png"
+    },
+    {
+      "name": "Nvidia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Nvidia.png"
+    },
+    {
+      "name": "Opera",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Opera.png"
+    },
+    {
+      "name": "Oracle-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Oracle-II.png"
+    },
+    {
+      "name": "Oracle-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Oracle-III.png"
+    },
+    {
+      "name": "Oracle-IV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Oracle-IV.png"
+    },
+    {
+      "name": "Oracle",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Oracle.png"
+    },
+    {
+      "name": "Ox",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ox.png"
+    },
+    {
+      "name": "Panda",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Panda.png"
+    },
+    {
+      "name": "Pandora",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Pandora.png"
+    },
+    {
+      "name": "Paramount",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Paramount.png"
+    },
+    {
+      "name": "Paypal-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Paypal-I.png"
+    },
+    {
+      "name": "Paypal-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Paypal-II.png"
+    },
+    {
+      "name": "Paypal",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Paypal.png"
+    },
+    {
+      "name": "PBS",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PBS.png"
+    },
+    {
+      "name": "Peacock-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Peacock-I.png"
+    },
+    {
+      "name": "Peacock",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Peacock.png"
+    },
+    {
+      "name": "Pig",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Pig.png"
+    },
+    {
+      "name": "Pikpak",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Pikpak.png"
+    },
+    {
+      "name": "Pinterest",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Pinterest.png"
+    },
+    {
+      "name": "PlayStation-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PlayStation-I.png"
+    },
+    {
+      "name": "PlayStation",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PlayStation.png"
+    },
+    {
+      "name": "PornHub-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PornHub-I.png"
+    },
+    {
+      "name": "PornHub",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PornHub.png"
+    },
+    {
+      "name": "PostBox-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PostBox-I.png"
+    },
+    {
+      "name": "PostBox",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PostBox.png"
+    },
+    {
+      "name": "PrimeVideo-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PrimeVideo-I.png"
+    },
+    {
+      "name": "PrimeVideo",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/PrimeVideo.png"
+    },
+    {
+      "name": "Puzzle",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Puzzle.png"
+    },
+    {
+      "name": "Python-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Python-I.png"
+    },
+    {
+      "name": "Python-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Python-II.png"
+    },
+    {
+      "name": "Python",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Python.png"
+    },
+    {
+      "name": "Qichezhijia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Qichezhijia.png"
+    },
+    {
+      "name": "Qihoo360",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Qihoo360.png"
+    },
+    {
+      "name": "Rainbow",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Rainbow.png"
+    },
+    {
+      "name": "Reddit-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Reddit-I.png"
+    },
+    {
+      "name": "Reddit",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Reddit.png"
+    },
+    {
+      "name": "Region_AR",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_AR.png"
+    },
+    {
+      "name": "Region_Argentina",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Argentina.png"
+    },
+    {
+      "name": "Region_AU",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_AU.png"
+    },
+    {
+      "name": "Region_Australia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Australia.png"
+    },
+    {
+      "name": "Region_Austria",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Austria.png"
+    },
+    {
+      "name": "Region_BGP",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_BGP.png"
+    },
+    {
+      "name": "Region_BR",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_BR.png"
+    },
+    {
+      "name": "Region_Brazil",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Brazil.png"
+    },
+    {
+      "name": "Region_Bulgaria",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Bulgaria.png"
+    },
+    {
+      "name": "Region_CA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_CA.png"
+    },
+    {
+      "name": "Region_Canada",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Canada.png"
+    },
+    {
+      "name": "Region_CC",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_CC.png"
+    },
+    {
+      "name": "Region_Chile",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Chile.png"
+    },
+    {
+      "name": "Region_China",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_China.png"
+    },
+    {
+      "name": "Region_CN",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_CN.png"
+    },
+    {
+      "name": "Region_DE",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_DE.png"
+    },
+    {
+      "name": "Region_EG",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_EG.png"
+    },
+    {
+      "name": "Region_Egypt",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Egypt.png"
+    },
+    {
+      "name": "Region_EU",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_EU.png"
+    },
+    {
+      "name": "Region_EuropeanUnion",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_EuropeanUnion.png"
+    },
+    {
+      "name": "Region_FI",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_FI.png"
+    },
+    {
+      "name": "Region_Finland",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Finland.png"
+    },
+    {
+      "name": "Region_FR",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_FR.png"
+    },
+    {
+      "name": "Region_France",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_France.png"
+    },
+    {
+      "name": "Region_Germany",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Germany.png"
+    },
+    {
+      "name": "Region_GIA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_GIA.png"
+    },
+    {
+      "name": "Region_HC",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_HC.png"
+    },
+    {
+      "name": "Region_HK",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_HK.png"
+    },
+    {
+      "name": "Region_HongKong",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_HongKong.png"
+    },
+    {
+      "name": "Region_Hungary",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Hungary.png"
+    },
+    {
+      "name": "Region_IEPL",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_IEPL.png"
+    },
+    {
+      "name": "Region_IN",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_IN.png"
+    },
+    {
+      "name": "Region_India",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_India.png"
+    },
+    {
+      "name": "Region_Indonesia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Indonesia.png"
+    },
+    {
+      "name": "Region_IPLC",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_IPLC.png"
+    },
+    {
+      "name": "Region_Ireland",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Ireland.png"
+    },
+    {
+      "name": "Region_Japan",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Japan.png"
+    },
+    {
+      "name": "Region_JP",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_JP.png"
+    },
+    {
+      "name": "Region_Korea",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Korea.png"
+    },
+    {
+      "name": "Region_KR",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_KR.png"
+    },
+    {
+      "name": "Region_LA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_LA.png"
+    },
+    {
+      "name": "Region_Macao",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Macao.png"
+    },
+    {
+      "name": "Region_Malaysia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Malaysia.png"
+    },
+    {
+      "name": "Region_MO",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_MO.png"
+    },
+    {
+      "name": "Region_MY",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_MY.png"
+    },
+    {
+      "name": "Region_Netherlands",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Netherlands.png"
+    },
+    {
+      "name": "Region_NullNation",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_NullNation.png"
+    },
+    {
+      "name": "Region_PH",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_PH.png"
+    },
+    {
+      "name": "Region_Philippines",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Philippines.png"
+    },
+    {
+      "name": "Region_PirateNation",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_PirateNation.png"
+    },
+    {
+      "name": "Region_Rainbow",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Rainbow.png"
+    },
+    {
+      "name": "Region_RU",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_RU.png"
+    },
+    {
+      "name": "Region_Russia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Russia.png"
+    },
+    {
+      "name": "Region_SG",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_SG.png"
+    },
+    {
+      "name": "Region_Singapore",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Singapore.png"
+    },
+    {
+      "name": "Region_Sweden",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Sweden.png"
+    },
+    {
+      "name": "Region_Switzerland",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Switzerland.png"
+    },
+    {
+      "name": "Region_Taiwan",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Taiwan.png"
+    },
+    {
+      "name": "Region_TH",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_TH.png"
+    },
+    {
+      "name": "Region_Thailand",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Thailand.png"
+    },
+    {
+      "name": "Region_TR",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_TR.png"
+    },
+    {
+      "name": "Region_Turkey",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Turkey.png"
+    },
+    {
+      "name": "Region_TW",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_TW.png"
+    },
+    {
+      "name": "Region_UA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UA.png"
+    },
+    {
+      "name": "Region_UK",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UK.png"
+    },
+    {
+      "name": "Region_Ukraine",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_Ukraine.png"
+    },
+    {
+      "name": "Region_UN",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UN.png"
+    },
+    {
+      "name": "Region_United_Arab_Emirates",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_United_Arab_Emirates.png"
+    },
+    {
+      "name": "Region_UnitedKingdom",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UnitedKingdom.png"
+    },
+    {
+      "name": "Region_UnitedNations",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UnitedNations.png"
+    },
+    {
+      "name": "Region_UnitedStates",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_UnitedStates.png"
+    },
+    {
+      "name": "Region_US",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Region_US.png"
+    },
+    {
+      "name": "Renzhe",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Renzhe.png"
+    },
+    {
+      "name": "Ring",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ring.png"
+    },
+    {
+      "name": "Ruanmei",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ruanmei.png"
+    },
+    {
+      "name": "Ruanmei_ITzhijia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ruanmei_ITzhijia.png"
+    },
+    {
+      "name": "Ryan",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ryan.png"
+    },
+    {
+      "name": "Samsung-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Samsung-I.png"
+    },
+    {
+      "name": "Samsung",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Samsung.png"
+    },
+    {
+      "name": "Scholar",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Scholar.png"
+    },
+    {
+      "name": "Shansong",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Shansong.png"
+    },
+    {
+      "name": "Shenmezhidemai",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Shenmezhidemai.png"
+    },
+    {
+      "name": "Sina",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sina.png"
+    },
+    {
+      "name": "SlingTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/SlingTV.png"
+    },
+    {
+      "name": "Snap-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Snap-II.png"
+    },
+    {
+      "name": "Snap-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Snap-III.png"
+    },
+    {
+      "name": "Snap",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Snap.png"
+    },
+    {
+      "name": "Sohu-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sohu-I.png"
+    },
+    {
+      "name": "Sohu-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sohu-II.png"
+    },
+    {
+      "name": "Sohu-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sohu-III.png"
+    },
+    {
+      "name": "Sohu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Sohu.png"
+    },
+    {
+      "name": "SONY-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/SONY-I.png"
+    },
+    {
+      "name": "SONY",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/SONY.png"
+    },
+    {
+      "name": "Spark",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Spark.png"
+    },
+    {
+      "name": "Speedtest",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Speedtest.png"
+    },
+    {
+      "name": "Spotify",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Spotify.png"
+    },
+    {
+      "name": "ssLinks",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ssLinks.png"
+    },
+    {
+      "name": "Star+",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Star%2B.png"
+    },
+    {
+      "name": "Star-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Star-I.png"
+    },
+    {
+      "name": "Star",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Star.png"
+    },
+    {
+      "name": "Starbucks-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Starbucks-I.png"
+    },
+    {
+      "name": "Starbucks-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Starbucks-II.png"
+    },
+    {
+      "name": "Starbucks",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Starbucks.png"
+    },
+    {
+      "name": "STARZ",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/STARZ.png"
+    },
+    {
+      "name": "Steam",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Steam.png"
+    },
+    {
+      "name": "Strategy_ADBlack",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_ADBlack.png"
+    },
+    {
+      "name": "Strategy_ADVertising",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_ADVertising.png"
+    },
+    {
+      "name": "Strategy_ADWhite",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_ADWhite.png"
+    },
+    {
+      "name": "Strategy_Airport",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Airport.png"
+    },
+    {
+      "name": "Strategy_Area",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Area.png"
+    },
+    {
+      "name": "Strategy_Auto",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Auto.png"
+    },
+    {
+      "name": "Strategy_Available-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Available-I.png"
+    },
+    {
+      "name": "Strategy_Available",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Available.png"
+    },
+    {
+      "name": "Strategy_Back",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Back.png"
+    },
+    {
+      "name": "Strategy_Blackhole",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Blackhole.png"
+    },
+    {
+      "name": "Strategy_Blinkload",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Blinkload.png"
+    },
+    {
+      "name": "Strategy_Bypass",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Bypass.png"
+    },
+    {
+      "name": "Strategy_Cellular",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Cellular.png"
+    },
+    {
+      "name": "Strategy_Domestic",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Domestic.png"
+    },
+    {
+      "name": "Strategy_DomesticMedia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_DomesticMedia.png"
+    },
+    {
+      "name": "Strategy_Download",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Download.png"
+    },
+    {
+      "name": "Strategy_Drill",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Drill.png"
+    },
+    {
+      "name": "Strategy_Emby",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Emby.png"
+    },
+    {
+      "name": "Strategy_Filter",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Filter.png"
+    },
+    {
+      "name": "Strategy_Final-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Final-I.png"
+    },
+    {
+      "name": "Strategy_Final",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Final.png"
+    },
+    {
+      "name": "Strategy_ForeignMedia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_ForeignMedia.png"
+    },
+    {
+      "name": "Strategy_Global",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Global.png"
+    },
+    {
+      "name": "Strategy_Hijacking",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Hijacking.png"
+    },
+    {
+      "name": "Strategy_HKMTMedia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_HKMTMedia.png"
+    },
+    {
+      "name": "Strategy_Lab",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Lab.png"
+    },
+    {
+      "name": "Strategy_Lock",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Lock.png"
+    },
+    {
+      "name": "Strategy_Loop",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Loop.png"
+    },
+    {
+      "name": "Strategy_Magic",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Magic.png"
+    },
+    {
+      "name": "Strategy_Media",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Media.png"
+    },
+    {
+      "name": "Strategy_MusicEnhance",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_MusicEnhance.png"
+    },
+    {
+      "name": "Strategy_Proxy",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Proxy.png"
+    },
+    {
+      "name": "Strategy_Reject",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Reject.png"
+    },
+    {
+      "name": "Strategy_Rocket",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Rocket.png"
+    },
+    {
+      "name": "Strategy_RoundRobin-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_RoundRobin-I.png"
+    },
+    {
+      "name": "Strategy_RoundRobin",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_RoundRobin.png"
+    },
+    {
+      "name": "Strategy_Server",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Server.png"
+    },
+    {
+      "name": "Strategy_SSID-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_SSID-I.png"
+    },
+    {
+      "name": "Strategy_SSID",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_SSID.png"
+    },
+    {
+      "name": "Strategy_SSL",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_SSL.png"
+    },
+    {
+      "name": "Strategy_Stack",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Stack.png"
+    },
+    {
+      "name": "Strategy_Star",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Star.png"
+    },
+    {
+      "name": "Strategy_Static-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Static-I.png"
+    },
+    {
+      "name": "Strategy_Static",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Static.png"
+    },
+    {
+      "name": "Strategy_Streaming",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Streaming.png"
+    },
+    {
+      "name": "Strategy_StreamingCN",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_StreamingCN.png"
+    },
+    {
+      "name": "Strategy_StreamingSE",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_StreamingSE.png"
+    },
+    {
+      "name": "Strategy_ULB-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_ULB-I.png"
+    },
+    {
+      "name": "Strategy_ULB",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_ULB.png"
+    },
+    {
+      "name": "Strategy_Unlock",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_Unlock.png"
+    },
+    {
+      "name": "Strategy_WiFi",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Strategy_WiFi.png"
+    },
+    {
+      "name": "SublimeText",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/SublimeText.png"
+    },
+    {
+      "name": "Suning-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Suning-I.png"
+    },
+    {
+      "name": "Suning",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Suning.png"
+    },
+    {
+      "name": "Taobao-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Taobao-I.png"
+    },
+    {
+      "name": "Taobao",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Taobao.png"
+    },
+    {
+      "name": "TeamViewer-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TeamViewer-I.png"
+    },
+    {
+      "name": "TeamViewer",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TeamViewer.png"
+    },
+    {
+      "name": "TelecomOperators-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TelecomOperators-I.png"
+    },
+    {
+      "name": "TelecomOperators-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TelecomOperators-II.png"
+    },
+    {
+      "name": "TelecomOperators-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TelecomOperators-III.png"
+    },
+    {
+      "name": "TelecomOperators-IV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TelecomOperators-IV.png"
+    },
+    {
+      "name": "TelecomOperators-V",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TelecomOperators-V.png"
+    },
+    {
+      "name": "TelecomOperators-VI",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TelecomOperators-VI.png"
+    },
+    {
+      "name": "TelecomOperators-VII",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TelecomOperators-VII.png"
+    },
+    {
+      "name": "TelecomOperators",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TelecomOperators.png"
+    },
+    {
+      "name": "Telegram-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Telegram-I.png"
+    },
+    {
+      "name": "Telegram-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Telegram-II.png"
+    },
+    {
+      "name": "Telegram",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Telegram.png"
+    },
+    {
+      "name": "TelegramX",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TelegramX.png"
+    },
+    {
+      "name": "Tencent",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Tencent.png"
+    },
+    {
+      "name": "Tencent_WeChat-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Tencent_WeChat-II.png"
+    },
+    {
+      "name": "Tencent_WeChat-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Tencent_WeChat-III.png"
+    },
+    {
+      "name": "Tencent_WeChat",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Tencent_WeChat.png"
+    },
+    {
+      "name": "TencentCloud",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TencentCloud.png"
+    },
+    {
+      "name": "TencentQQ",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TencentQQ.png"
+    },
+    {
+      "name": "TencentQQMusic",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TencentQQMusic.png"
+    },
+    {
+      "name": "TencentVideo",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TencentVideo.png"
+    },
+    {
+      "name": "Tesla",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Tesla.png"
+    },
+    {
+      "name": "TIDAL-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TIDAL-I.png"
+    },
+    {
+      "name": "TIDAL",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TIDAL.png"
+    },
+    {
+      "name": "TikTok-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TikTok-I.png"
+    },
+    {
+      "name": "TikTok-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TikTok-II.png"
+    },
+    {
+      "name": "TikTok",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TikTok.png"
+    },
+    {
+      "name": "Tingximalaya",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Tingximalaya.png"
+    },
+    {
+      "name": "Tubi",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Tubi.png"
+    },
+    {
+      "name": "Tumblr-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Tumblr-II.png"
+    },
+    {
+      "name": "Tumblr-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Tumblr-III.png"
+    },
+    {
+      "name": "Tumblr-IV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Tumblr-IV.png"
+    },
+    {
+      "name": "Tumblr",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Tumblr.png"
+    },
+    {
+      "name": "TVB",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/TVB.png"
+    },
+    {
+      "name": "Twitch-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Twitch-II.png"
+    },
+    {
+      "name": "Twitch-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Twitch-III.png"
+    },
+    {
+      "name": "Twitch-IV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Twitch-IV.png"
+    },
+    {
+      "name": "Twitch",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Twitch.png"
+    },
+    {
+      "name": "Ubuntu-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ubuntu-I.png"
+    },
+    {
+      "name": "Ubuntu-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ubuntu-II.png"
+    },
+    {
+      "name": "Ubuntu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Ubuntu.png"
+    },
+    {
+      "name": "UnionPay",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/UnionPay.png"
+    },
+    {
+      "name": "Vimeo",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Vimeo.png"
+    },
+    {
+      "name": "Visa-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Visa-I.png"
+    },
+    {
+      "name": "Visa-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Visa-II.png"
+    },
+    {
+      "name": "Visa-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Visa-III.png"
+    },
+    {
+      "name": "Visa",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Visa.png"
+    },
+    {
+      "name": "Viu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Viu.png"
+    },
+    {
+      "name": "ViuTV",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/ViuTV.png"
+    },
+    {
+      "name": "VOA-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/VOA-I.png"
+    },
+    {
+      "name": "VOA",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/VOA.png"
+    },
+    {
+      "name": "Weibo",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Weibo.png"
+    },
+    {
+      "name": "WeiboG",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/WeiboG.png"
+    },
+    {
+      "name": "Weipinhui",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Weipinhui.png"
+    },
+    {
+      "name": "Wikimedia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Wikimedia.png"
+    },
+    {
+      "name": "Wikipedia-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Wikipedia-I.png"
+    },
+    {
+      "name": "Wikipedia",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Wikipedia.png"
+    },
+    {
+      "name": "X",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/X.png"
+    },
+    {
+      "name": "X_Twitter-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/X_Twitter-I.png"
+    },
+    {
+      "name": "X_Twitter",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/X_Twitter.png"
+    },
+    {
+      "name": "Xianyu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xianyu.png"
+    },
+    {
+      "name": "XianyuB",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/XianyuB.png"
+    },
+    {
+      "name": "Xiaohongshu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xiaohongshu.png"
+    },
+    {
+      "name": "Xiaomi-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xiaomi-I.png"
+    },
+    {
+      "name": "Xiaomi-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xiaomi-II.png"
+    },
+    {
+      "name": "Xiaomi-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xiaomi-III.png"
+    },
+    {
+      "name": "Xiecheng-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xiecheng-I.png"
+    },
+    {
+      "name": "Xiecheng",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xiecheng.png"
+    },
+    {
+      "name": "Xunlei-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xunlei-I.png"
+    },
+    {
+      "name": "Xunlei-II",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xunlei-II.png"
+    },
+    {
+      "name": "Xunlei-III",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xunlei-III.png"
+    },
+    {
+      "name": "Xunlei",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xunlei.png"
+    },
+    {
+      "name": "Yahoo",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Yahoo.png"
+    },
+    {
+      "name": "YahooSearch",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/YahooSearch.png"
+    },
+    {
+      "name": "Yandex",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Yandex.png"
+    },
+    {
+      "name": "YandexBrowser",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/YandexBrowser.png"
+    },
+    {
+      "name": "YandexSearch",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/YandexSearch.png"
+    },
+    {
+      "name": "Youku-I",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Youku-I.png"
+    },
+    {
+      "name": "Youku",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Youku.png"
+    },
+    {
+      "name": "YouTube",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/YouTube.png"
+    },
+    {
+      "name": "YouTubeMusic",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/YouTubeMusic.png"
+    },
+    {
+      "name": "Zhihu",
+      "url": "https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Zhihu.png"
+    }
+  ]
+}

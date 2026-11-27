@@ -1,0 +1,26 @@
+#!name=Bilibili AD Blacklist
+#!desc=V1.0.0 - Bilibili splash, feed, live and scoped gRPC ad filtering.
+#!version=1.0.0
+#!category=Advertising
+
+[URL Rewrite]
+^http://upos-sz-static\.bilivideo\.com/ssaxcode/[A-Za-z0-9_]{2}/[A-Za-z0-9_]{2}/[A-Za-z0-9_]{32}-1-SPLASH[^?#]*(?:\?[^#]*)?$ _ reject
+^https?://cm\.bilibili\.com/cm/api/(?:conversion/mobile/v2|fees/wise)(?:\?[^#]*)?$ _ reject
+
+[Map Local]
+^https?://(?:api\.bilibili\.com|api\.biliapi\.net)/pgc/activity/deliver/material/receive(?:\?[^#]*)?$ data-type=text data="{\"code\":0,\"data\":{\"closeType\":\"close_win\",\"container\":[],\"showTime\":\"\"},\"message\":\"success\"}" status-code=200 header="Content-Type:application/json"
+^https?://(?:api\.bilibili\.com|api\.biliapi\.net)/x/vip/ads/materials(?:\?[^#]*)?$ data-type=text data="{\"code\":0,\"message\":\"0\",\"data\":{}}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+bilibili.splash = type=http-response,pattern=^https?://(?:app\.bilibili\.com|app\.biliapi\.(?:net|com))/x/v2/splash/(?:list|show|brand/list|event/list2?)(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/bilibili-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+bilibili.feed = type=http-response,pattern=^https?://(?:app\.bilibili\.com|app\.biliapi\.(?:net|com))/x/v2/feed/index(?:/(?:relate/)?story)?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/bilibili-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+bilibili.web-feed = type=http-response,pattern=^https?://(?:api\.bilibili\.com|api\.biliapi\.net)/x/web-interface/wbi/index/top/feed/rcmd(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/bilibili-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+bilibili.live = type=http-response,pattern=^https?://api\.live\.bilibili\.com/xlive/(?:app-interface/v2/(?:index/feed|room/recList)|app-room/v1/index/getInfoByRoom)(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/bilibili-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+bilibili.unite = type=http-response,pattern=^https://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.(?:net|com))/bilibili\.app\.viewunite\.v1\.View/View$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/bilibili-ad.js?v=1.0.0,requires-body=true,binary-body-mode=true,max-size=2097152,timeout=15
+bilibili.view = type=http-response,pattern=^https://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.(?:net|com))/bilibili\.app\.view\.v1\.View/View$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/bilibili-ad.js?v=1.0.0,requires-body=true,binary-body-mode=true,max-size=2097152,timeout=15
+bilibili.dynamic = type=http-response,pattern=^https://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.(?:net|com))/bilibili\.app\.dynamic\.v2\.Dynamic/DynAll$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/bilibili-ad.js?v=1.0.0,requires-body=true,binary-body-mode=true,max-size=2097152,timeout=15
+bilibili.pause = type=http-response,pattern=^https://(?:grpc\.biliapi\.net|grpc\.bilibili\.com|app\.bilibili\.com|app\.biliapi\.(?:net|com))/bilibili\.app\.viewunite\.v1\.View/(?:PlayPause|ViewEndPage)$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/bilibili-ad.js?v=1.0.0,requires-body=true,binary-body-mode=true,max-size=2097152,timeout=15
+
+[MITM]
+hostname = %APPEND% api.biliapi.net, api.bilibili.com, api.live.bilibili.com, app.biliapi.com, app.biliapi.net, app.bilibili.com, cm.bilibili.com, grpc.biliapi.net, grpc.bilibili.com
+h2 = true

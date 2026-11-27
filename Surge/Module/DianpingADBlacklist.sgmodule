@@ -1,0 +1,13 @@
+#!name=Dianping AD Blacklist
+#!desc=V1.0.0 - Dianping native app splash and dedicated promotion endpoints.
+#!version=1.0.0
+#!category=Advertising
+
+[URL Rewrite]
+^https?://mapi\.dianping\.com/mapi/operating/loadsplashconfig(?:\?[^#]*)?$ _ reject
+^https?://mapi\.dianping\.com/mapi/operating/loadsplashconfig/(?:\?[^#]*)?$ _ reject
+^https?://mapi\.dianping\.com/adshopping/?(?:\?[^#]*)?$ _ reject
+^https?://www\.dpfile\.com/sc/indexpromotion/?(?:\?[^#]*)?$ _ reject
+
+[MITM]
+hostname = %APPEND% mapi.dianping.com, www.dpfile.com

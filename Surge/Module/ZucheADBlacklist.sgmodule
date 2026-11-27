@@ -1,0 +1,13 @@
+#!name=Zuche AD Blacklist
+#!desc=V1.0.0 - CAR Inc. native rental app brand ads and marketing delivery.
+#!version=1.0.0
+#!category=Advertising
+
+[URL Rewrite]
+^https?://apiproxy\.zuche\.com/action/carrctapi/brand/area/advertising/?(?:\?[^#]*)?$ _ reject
+
+[Map Local]
+^https?://apiproxy\.zuche\.com/resource/cardes/toufang/marketing/?(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[MITM]
+hostname = %APPEND% apiproxy.zuche.com

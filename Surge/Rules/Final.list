@@ -1,0 +1,45 @@
+# DOMAIN
+
+DOMAIN, wl.spotify.com, Spotify
+DOMAIN, t.co, Twitter
+DOMAIN, www.themoviedb.org, Proxy
+DOMAIN, www.rottentomatoes.com, Proxy
+DOMAIN, www.dailymotion.com, Proxy
+DOMAIN, cc-api-data.adobe.io, Adobe
+DOMAIN, m.discuss.com.hk, Proxy
+DOMAIN, api.adapty.io, Proxy
+DOMAIN, app-analytics-services.com, Proxy
+DOMAIN, crashlytics.com, Proxy
+DOMAIN, firebaselogging-pa.googleapis.com, Proxy
+
+# DOMAIN-SUFFIX
+DOMAIN-SUFFIX, themoviedb.org, Proxy
+DOMAIN-SUFFIX, rottentomatoes.com, Proxy
+DOMAIN-SUFFIX, trakt.tv, Proxy
+DOMAIN-SUFFIX, letterboxd.com, Proxy
+DOMAIN-SUFFIX, dailymotion.com, Proxy
+DOMAIN-SUFFIX, z-lib.fm, Proxy
+DOMAIN-SUFFIX, assrt.net, Proxy
+DOMAIN-SUFFIX, weather.com, Proxy
+DOMAIN-SUFFIX, discuss.com.hk, Proxy
+DOMAIN-SUFFIX, livekit.cloud, Proxy
+DOMAIN-SUFFIX, api.revenuecat.com, Proxy
+DOMAIN-SUFFIX, torrentmac.net, Proxy
+DOMAIN-SUFFIX, torrentdownloads.pro, Proxy
+DOMAIN-SUFFIX, downloadtorrentfile.com, Proxy
+DOMAIN-SUFFIX, mac-torrent-download.net, Proxy
+DOMAIN-SUFFIX, phncdn.com, Proxy
+DOMAIN-SUFFIX, phprcdn.com, Proxy
+DOMAIN-SUFFIX, pornhub.com, Proxy
+DOMAIN-SUFFIX, pornhubpremium.com, Proxy
+DOMAIN-SUFFIX, modelhub.com, Proxy
+DOMAIN-SUFFIX, xvideos.com, Proxy
+DOMAIN-SUFFIX, redtube.com, Proxy
+DOMAIN-SUFFIX, youporn.com, Proxy
+DOMAIN-SUFFIX, xnxx.com, Proxy
+DOMAIN-SUFFIX, xhamster.com, Proxy
+DOMAIN-SUFFIX, spankbang.com, Proxy
+DOMAIN-SUFFIX, tube8.com, Proxy
+DOMAIN-SUFFIX, porntube.com, Proxy
+DOMAIN-SUFFIX, youjizz.com, Proxy
+DOMAIN-SUFFIX, hclips.com, Proxy

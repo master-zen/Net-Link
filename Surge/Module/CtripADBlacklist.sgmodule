@@ -1,0 +1,15 @@
+#!name=Ctrip AD Blacklist
+#!desc=V1.0.0 - Ctrip ad endpoints; optional business MITM and legacy splash filtering.
+#!version=1.0.0
+#!category=Advertising
+#!arguments=business_host:ma-adx.ctrip.com,trip_ads:(?!)
+#!arguments-desc=Default avoids business MITM. Set business_host to m.ctrip.com to test getAdsList. Set trip_ads to tripAds only if needed; may affect images. Restore defaults if booking or images fail.
+
+[URL Rewrite]
+^https?://ma-adx\.ctrip\.com/_ma\.gif(?:\?[^#]*)?$ _ reject
+^https?://mbd\.baidu\.com/newspage/api/getmobads\?(?:[^#&]*&)*page=landingshare(?:&[^#]*)?$ _ reject
+^https?://m\.ctrip\.com/restapi/soa2/[0-9]+/json/getAdsList/?(?:\?[^#]*)?$ _ reject
+^https?://m\.ctrip\.com/restapi/soa2/13916/(?:json/|scjson/)?{{{trip_ads}}}/?(?:\?[^#]*)?$ _ reject
+
+[MITM]
+hostname = %APPEND% ma-adx.ctrip.com, mbd.baidu.com, {{{business_host}}}

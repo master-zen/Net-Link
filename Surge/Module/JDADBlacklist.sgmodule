@@ -1,0 +1,28 @@
+#!name=JD AD Blacklist
+#!desc=V1.0.0 - JD splash and scoped promotional advertising filters.
+#!version=1.0.0
+#!category=Advertising
+
+[Rule]
+DOMAIN,ad.3.cn,REJECT,extended-matching,pre-matching
+DOMAIN,dsp-x.jd.com,REJECT,extended-matching,pre-matching
+DOMAIN,bdsp-x.jd.com,REJECT,extended-matching,pre-matching
+
+[URL Rewrite]
+^https?://img[0-9]+\.360buyimg\.com/jddjadvertise/[^?#]+(?:\?[^#]*)?$ _ reject
+
+[Map Local]
+^https?://api\.m\.jd\.com/client\.action\?(?:[^#&]*&)*functionId=queryMaterialAdverts(?:&[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://(?:bdsp-x|dsp-x)\.jd\.com/adx/[^?#]*(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+jd.start0 = type=http-response,pattern=^https?://api\.m\.jd\.com/client\.action\?(?:[^#&]*&)*functionId=start(?:&[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/jd-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+jd.start1 = type=http-response,pattern=^https://api\.m\.jd\.com/api\?(?:[^#&]*&)*functionId=start(?:&[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/jd-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+jd.welcomeHome = type=http-response,pattern=^https?://api\.m\.jd\.com/client\.action\?(?:[^#&]*&)*functionId=welcomeHome(?:&[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/jd-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+jd.personinfoBusiness = type=http-response,pattern=^https?://api\.m\.jd\.com/client\.action\?(?:[^#&]*&)*functionId=personinfoBusiness(?:&[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/jd-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+jd.deliverLayer = type=http-response,pattern=^https?://api\.m\.jd\.com/client\.action\?(?:[^#&]*&)*functionId=deliverLayer(?:&[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/jd-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+jd.orderTrackBusiness = type=http-response,pattern=^https?://api\.m\.jd\.com/client\.action\?(?:[^#&]*&)*functionId=orderTrackBusiness(?:&[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/jd-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+jd.getTabHomeInfo = type=http-response,pattern=^https?://api\.m\.jd\.com/client\.action\?(?:[^#&]*&)*functionId=getTabHomeInfo(?:&[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/jd-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+
+[MITM]
+hostname = %APPEND% api.m.jd.com, bdsp-x.jd.com, dsp-x.jd.com, img0.360buyimg.com, img1.360buyimg.com, img2.360buyimg.com, img3.360buyimg.com, img4.360buyimg.com, img5.360buyimg.com, img6.360buyimg.com, img7.360buyimg.com, img8.360buyimg.com, img9.360buyimg.com

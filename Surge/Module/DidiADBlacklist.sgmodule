@@ -1,0 +1,18 @@
+#!name=Didi AD Blacklist
+#!desc=V1.0.0 - Didi passenger app scoped advertising and homepage promotions.
+#!version=1.0.0
+#!category=Advertising
+#!icon=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Didi.png
+
+[Rule]
+DOMAIN,adtrack.xiaojukeji.com,REJECT,extended-matching,pre-matching
+
+[Map Local]
+^https?://hd\.xiaojukeji\.com/d/?(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+didi.home = type=http-response,pattern=^https?://conf\.diditaxi\.com\.cn/homepage/v1/other/fast/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/didi-ad.js?v=1.0.0,requires-body=true,max-size=2097152,timeout=10
+didi.activity = type=http-response,pattern=^https?://res\.xiaojukeji\.com/resapi/activity/mget/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/didi-ad.js?v=1.0.0,requires-body=true,max-size=2097152,timeout=10
+
+[MITM]
+hostname = %APPEND% conf.diditaxi.com.cn, hd.xiaojukeji.com, res.xiaojukeji.com

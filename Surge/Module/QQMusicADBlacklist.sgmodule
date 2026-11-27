@@ -1,0 +1,30 @@
+#!name=QQ Music AD Blacklist
+#!desc=V1.0.0 - QQ Music splash, advertising assets and music hall ad filtering.
+#!version=1.0.0
+#!category=Advertising
+
+[Rule]
+DOMAIN,ad.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,adcdn.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,adcdn6.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,adclick.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,adexpo.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,adstats.tencentmusic.com,REJECT,extended-matching,pre-matching
+DOMAIN,tmead.y.qq.com,REJECT,extended-matching,pre-matching
+DOMAIN,tmeadbak.y.qq.com,REJECT,extended-matching,pre-matching
+DOMAIN,tmeadcomm.y.qq.com,REJECT,extended-matching,pre-matching
+DOMAIN,tmeadquic.y.qq.com,REJECT,extended-matching,pre-matching
+
+[URL Rewrite]
+^https?://y\.gtimg\.cn/music/common/upload/t_splash_info/[^?#]*(?:\?[^#]*)?$ _ reject
+^https?://music\.y\.qq\.com/maproxy/getPbCompressAd/?(?:\?[^#]*)?$ _ reject
+
+[Map Local]
+^https?://y\.gtimg\.cn/music/common//?upload/kg_ad(?:/[^?#]*)?(?:\?[^#]*)?$ data-type=tiny-gif status-code=200
+^https?://y\.gtimg\.cn/music/common/upload/targeted_ads(?:/[^?#]*)?(?:\?[^#]*)?$ data-type=tiny-gif status-code=200
+
+[Script]
+qqmusic.hall = type=http-response,pattern=^https?://u\.y\.qq\.com/cgi-bin/musicu\.fcg(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/qqmusic-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+
+[MITM]
+hostname = %APPEND% music.y.qq.com, u.y.qq.com, y.gtimg.cn

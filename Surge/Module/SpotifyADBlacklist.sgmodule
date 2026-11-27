@@ -1,0 +1,31 @@
+#!name=Spotify AD Blacklist
+#!desc=V3.0.0 - Spotify ads and playback controls; complete configuration response handling.
+#!version=3.0.0
+#!category=Advertising
+
+[Rule]
+DOMAIN,ads-fa.spotify.com,REJECT
+DOMAIN,adeventtracker.spotify.com,REJECT
+DOMAIN,sponsored-recommendations.spotify.com,REJECT
+DOMAIN,aet.spotify.com,REJECT
+AND,((DOMAIN-SUFFIX,spotify.com),(PROTOCOL,UDP)),REJECT
+
+[Header Rewrite]
+http-request ^https:\/\/(?:spclient(?:\.wg)?|[A-Za-z0-9-]+-spclient(?:\.wg)?)\.spotify\.com(?::443)?\/(?:bootstrap\/v1\/bootstrap|user-customization-service\/v1\/customize|nebula\/v[0-9]+\/configuration\/attributes|remote-config-resolver\/v[0-9]+\/configuration)\/?(?:\?[^#]*)?$ header-del if-none-match
+
+[URL Rewrite]
+^https:\/\/(?:spclient(?:\.wg)?|[A-Za-z0-9-]+-spclient(?:\.wg)?)\.spotify\.com(?::443)?\/(?:ads\/|ad-logic\/|[^?#]*\/ad-on-app-open(?:[/?]|$)|premium-marketing\/upsellOffer(?:[/?]|$)) - reject
+
+[Map Local]
+^https:\/\/(?:spclient(?:\.wg)?|[A-Za-z0-9-]+-spclient(?:\.wg)?)\.spotify\.com(?::443)?\/pendragon(?:[/?]|$) data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https:\/\/(?:spclient(?:\.wg)?|[A-Za-z0-9-]+-spclient(?:\.wg)?)\.spotify\.com(?::443)?\/gabo-receiver-service(?:[/?]|$) data-type=text data="" status-code=200 header="Cache-Control:no-cache|Content-Length:0"
+
+[Script]
+spotify.ad.config = type=http-response,pattern=^https:\/\/(?:spclient(?:\.wg)?|[A-Za-z0-9-]+-spclient(?:\.wg)?)\.spotify\.com(?::443)?\/(?:bootstrap\/v1\/bootstrap|user-customization-service\/v1\/customize|nebula\/v[0-9]+\/configuration\/attributes|remote-config-resolver\/v[0-9]+\/configuration)\/?(?:\?[^#]*)?$,requires-body=true,binary-body-mode=true,max-size=-1,timeout=30,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/a9d979200ba633cadc79d193aef6f37d67cece96/Scripts/Spotify/spot-proto-ev3.js
+spotify.ad.home = type=http-response,pattern=^https:\/\/(?:spclient(?:\.wg)?|[A-Za-z0-9-]+-spclient(?:\.wg)?)\.spotify\.com(?::443)?\/casita\/v[0-9]+\/home\/,requires-body=true,binary-body-mode=true,max-size=-1,timeout=30,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/a9d979200ba633cadc79d193aef6f37d67cece96/Scripts/Spotify/spot-NoHomeAd.js
+spotify.ad.search = type=http-response,pattern=^https:\/\/(?:spclient(?:\.wg)?|[A-Za-z0-9-]+-spclient(?:\.wg)?)\.spotify\.com(?::443)?\/browsita\/v[0-9]+\/browse(?:[/?]|$),requires-body=true,binary-body-mode=true,max-size=-1,timeout=30,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/a9d979200ba633cadc79d193aef6f37d67cece96/Scripts/Spotify/spot-NoSearchAd.js
+spotify.ad.scroll = type=http-response,pattern=^https:\/\/(?:spclient(?:\.wg)?|[A-Za-z0-9-]+-spclient(?:\.wg)?)\.spotify\.com(?::443)?\/scrollsita\/v[0-9]+\/scroll\/spotify,requires-body=true,binary-body-mode=true,max-size=-1,timeout=30,script-path=https://raw.githubusercontent.com/devchristian1337/loon-plugins/a9d979200ba633cadc79d193aef6f37d67cece96/Scripts/Spotify/spot-NoScrollAd.js
+spotify.ad.artist = type=http-request,pattern=^https:\/\/(?:spclient(?:\.wg)?|[A-Za-z0-9-]+-spclient(?:\.wg)?)\.spotify\.com(?::443)?\/(?:artistview\/v1\/artist|album-entity-view\/v2\/album)\/,requires-body=false,timeout=5,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/spotify-request.js?v=2
+
+[MITM]
+hostname = %APPEND% spclient.spotify.com, spclient.wg.spotify.com, *-spclient.spotify.com, *-spclient.wg.spotify.com

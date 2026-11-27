@@ -1,0 +1,26 @@
+#!name=Xianyu AD Blacklist
+#!desc=V1.0.0 - Goofish splash, prefetch and explicit feed/search ads.
+#!version=1.0.0
+#!category=Advertising
+#!icon=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/Xianyu.png
+
+[Map Local]
+^https?://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlecommerce\.splash\.ads/[^?#]*(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlecommerce\.splash\.async\.ads/[^?#]*(?:\?[^#]*)?$ data-type=text data="" status-code=200
+^https://acs\.m\.taobao\.com/gw/mtop\.taobao\.idlecommerce\.splash\.ads(?:\?[^#]*)?$ data-type=text data="" status-code=200
+^https?://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlecommerce\.splash\.ads(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://acs\.m\.goofish\.com/gw/mtop\.taobao\.idlecommerce\.splash\.async\.ads(?:\?[^#]*)?$ data-type=text data="" status-code=200
+^https?://g-acs\.m\.goofish\.com/gw/mtop\.taobao\.idlecommerce\.splash\.ads(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https?://g-acs\.m\.goofish\.com/gw/mtop\.taobao\.idlecommerce\.splash\.async\.ads(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$ data-type=text data="" status-code=200
+^https://acs\.m\.taobao\.com/gw/mtop\.taobao\.idlecommerce\.splash\.ads/[0-9]+(?:\.[0-9]+)*/?(?:\?[^#]*)?$ data-type=text data="" status-code=200
+^https?://(?:g-)?acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.live\.home\.ads\.material\.get(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+xianyu.home = type=http-response,pattern=^https?://(?:g-)?acs\.m\.goofish\.com/gw/mtop\.taobao\.idlehome\.home\.nextfresh(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/xianyu-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+xianyu.local = type=http-response,pattern=^https?://(?:g-)?acs\.m\.goofish\.com/gw/mtop\.taobao\.idle\.local\.home(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/xianyu-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+xianyu.search = type=http-response,pattern=^https?://(?:g-)?acs\.m\.goofish\.com/gw/mtop\.taobao\.idlemtopsearch\.search(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/xianyu-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+xianyu.community = type=http-response,pattern=^https?://(?:g-)?acs\.m\.goofish\.com/gw/mtop\.taobao\.idlehome\.home\.community(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/xianyu-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+xianyu.newitem = type=http-response,pattern=^https?://(?:g-)?acs\.m\.goofish\.com/gw/mtop\.taobao\.idlehome\.home\.newitem\.page(?:/[0-9]+(?:\.[0-9]+)*)?/?(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/xianyu-ad.js?v=1.0.0,requires-body=true,max-size=8388608,timeout=15
+
+[MITM]
+hostname = %APPEND% acs.m.goofish.com, acs.m.taobao.com, g-acs.m.goofish.com

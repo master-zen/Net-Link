@@ -1,0 +1,2 @@
+Maasea/sgmodule, Apache-2.0, commit 65075cdb388fc5e3094afd7e7314c67b243f3525.
+Upstream scripts preserved byte-for-byte. Net-Link adds an integration wrapper and the existing local UI supplement. The external Worker path is disabled by default; enabling WorkerMode permits the original upstream redirect behavior.

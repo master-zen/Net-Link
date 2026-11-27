@@ -1,0 +1,20 @@
+YouTube Local for Surge
+Copyright 2026 nickcxm
+
+Protocol field numbers and feature behavior were researched from:
+Maasea/sgmodule — YouTube Enhance
+https://github.com/Maasea/sgmodule
+Upstream license: Apache License, Version 2.0 (included as LICENSE).
+
+This directory contains a newly written implementation of the wire codec,
+response transformations, and local playback fallback. It is not a copy of
+the upstream minified JavaScript bundle or protobuf-ts runtime.
+
+Changes include removing all third-party Worker forwarding, key collection
+and persistent classification caches; local fail-open decoding; configurable
+Shorts content filtering; preservation of unknown wire fields; and idempotent
+caption/settings updates. Upstream cloud playback processing is not included.
+
+Net-Link modification: ads-only routes and transformations; no playback fallback, entitlement changes, navigation changes, or external requests. Additional structured ad URL paths researched from app2smile/rules. No upstream bundled code from app2smile is redistributed.
+
+Net-Link update: user-requested Shorts recommendation and Playables layout filtering; layout and navigation identifiers cross-checked with MorpheApp/morphe-patches. No Morphe source code is included.

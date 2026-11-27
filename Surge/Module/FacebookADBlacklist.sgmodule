@@ -1,0 +1,14 @@
+#!name=Facebook AD Blacklist
+#!desc=V1.0.0 - Facebook web sponsored feed, search and Marketplace filtering; Audience Network domain blocking.
+#!version=1.0.0
+#!category=Advertising
+#!icon=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Icon/MetaFacebook.png
+
+[Rule]
+DOMAIN,an.facebook.com,REJECT
+
+[Script]
+facebook.ad.response = type=http-response,pattern=^https:\/\/(?:www|web|m)\.facebook\.com\/api\/graphql\/?(\?[^#]*)?$,requires-body=true,binary-body-mode=false,max-size=16777216,timeout=15,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/facebook-ad.js?v=1
+
+[MITM]
+hostname = %APPEND% www.facebook.com, web.facebook.com, m.facebook.com

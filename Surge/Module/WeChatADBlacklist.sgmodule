@@ -1,0 +1,53 @@
+#!name=WeChat AD Blacklist
+#!desc=V1.0.0 - Official account and mini-program ads; external link assistance.
+#!version=1.0.0
+#!category=Advertising
+
+[Rule]
+DOMAIN,ad.maoyan.com,REJECT
+DOMAIN,ads-shopping.shouqianba.com,REJECT
+DOMAIN,wxsmsdy.video.qq.com,REJECT
+DOMAIN,wxsnsdy.wxs.qq.com,REJECT
+DOMAIN,wxsnsdythumb.wxs.qq.com,REJECT
+
+[URL Rewrite]
+^https://aag\.enmonster\.com/apa/index/advert/skin(?:\?[^#]*)?$ _ reject
+^https://api\-marketing\.zhinengxiyifang\.cn/api/v2/cloudcode/wechat/bid(?:\?[^#]*)?$ _ reject
+^https://extra\.csair\.com/extraClient/data/mytrip/getTripAdvertisement(?:\?[^#]*)?$ _ reject
+^https://minipro\.95504\.net/app/json/ad/getIndexAdData(?:\?[^#]*)?$ _ reject
+^https://minipro\.95504\.net/app/json/ad/getPopAdData(?:\?[^#]*)?$ _ reject
+^https://ump\.ems\.com\.cn/mailAd(?:\?[^#]*)?$ _ reject
+^https://webapi\.qmai\.cn/web/cmk\-center/marketing/canvas/advert\-reach(?:\?[^#]*)?$ _ reject
+^https://wxapi\.csair\.com/mini/api/advertisement/[^?#]*(?:\?[^#]*)?$ _ reject
+
+[Map Local]
+^https://ads\.ishansong\.com/advert(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://apiproxy\.zuche\.com/resource/carrctapi/home/page/advertising(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://apis\.alenable\.com/ycx/v1/api/adPut(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://dsp\.fcbox\.com/adSearch/[^?#]*(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://gw\-passenger\-wap\.01zhuanche\.com/gw\-passenger\-wap/zhuanche\-passenger\-token/commonSkipToken/common/getAdList(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://hdgateway\.zto\.com/getAdInfo(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://m\.sh\.189\.cn/business\-appletapi/applet/query/getAdItemList(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://m\.sh\.189\.cn/business\-appletapi/packBinds/getAadvertisement(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://m\.sh\.189\.cn/business\-appletapi/packageQuery/getUserAdvertising(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://mcs\-mimp\-web\.sf\-express\.com/mcs\-mimp/integralPlanet/getCxAdvertiseList(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://minicap\.caocaokeji\.cn/advert\-bss/pullAdvert(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://mp\.weixin\.qq\.com/mp/cps_product_info(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://mp\.weixin\.qq\.com/mp/getappmsgad(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://mp\.weixin\.qq\.com/wapad/getaddata\?(?:[^#&]*&)*action=getad(?:&[^#]*)?$ data-type=text data="" status-code=200
+^https://mxsa\.mxbc\.net/api/v1/adinfo/adplace/query(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://ne\.gdsz\.sinopec\.com/gateway/api/omp/mt/appAdvertising(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://qapi\.huolala\.cn/ads(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://r2\.gzyct\.com/qrcode/advert(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://ucmp\.sf\-express\.com/proxy/operation\-platform/info\-flow\-adver/query(?:\?[^#]*)?$ data-type=text data="" status-code=200
+^https://webapi\.qmai\.cn/web/catering/advertising/[^?#]*(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://wechat\-api\-dj\.mstand\.cn/system/dms/dmsAdSetting/issue(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://wx\.17u\.cn/wxocbdapi/adService(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://wx\.maoyan\.com/maoyansh/myshow/ajax/ad/detail(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+^https://wxs\-weixin\.sd\.zhumanggroup\.com/api/v2/ad(?:\?[^#]*)?$ data-type=text data="{}" status-code=200 header="Content-Type:application/json"
+
+[Script]
+wechat.external.link = type=http-response,pattern=^https://(?:security\.wechat\.com|weixin110\.qq\.com)/cgi-bin/mmspamsupport-bin/newredirectconfirmcgi\?[^#]+$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/wechat-links.js,requires-body=true,max-size=1048576,timeout=5,engine=webview
+
+[MITM]
+hostname = %APPEND% aag.enmonster.com, ads.ishansong.com, api-marketing.zhinengxiyifang.cn, apiproxy.zuche.com, apis.alenable.com, dsp.fcbox.com, extra.csair.com, gw-passenger-wap.01zhuanche.com, hdgateway.zto.com, m.sh.189.cn, mcs-mimp-web.sf-express.com, minicap.caocaokeji.cn, minipro.95504.net, mp.weixin.qq.com, mxsa.mxbc.net, ne.gdsz.sinopec.com, qapi.huolala.cn, r2.gzyct.com, security.wechat.com, ucmp.sf-express.com, ump.ems.com.cn, webapi.qmai.cn, wechat-api-dj.mstand.cn, weixin110.qq.com, wx.17u.cn, wx.maoyan.com, wxapi.csair.com, wxs-weixin.sd.zhumanggroup.com

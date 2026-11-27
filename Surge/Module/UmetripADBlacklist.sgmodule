@@ -1,0 +1,15 @@
+#!name=Umetrip AD Blacklist
+#!desc=V1.0.0 - Umetrip startup assets and scoped native ad filtering.
+#!version=1.0.0
+#!category=Advertising
+
+[URL Rewrite]
+^https?://startup\.umetrip\.com/gateway/api/umetrip/native(?:\?[^#]*)?$ _ reject
+^https?://discardrp\.umetrip\.com/gateway/api/umetrip/native(?:\?[^#]*)?$ _ reject
+^https?://oss\.umetrip\.com/fs/advert/polite(?:/[^?#]*|)(?:\?[^#]*)?$ _ reject
+
+[Script]
+umetrip.ads = type=http-response,pattern=^https?://(?:activity\.umetrip\.com|appmsg\.umetrip\.com|bkclient\.umetrip\.com\.cn|home\.umetrip\.com|opactivity\.umetrip\.com|sns\.umetrip\.com|umehome\.umetrip\.com|umerp\.umetrip\.com|umerp\.umetrip\.com\.cn|umeflightstatus\.umetrip\.com|umestartup\.umetrip\.com|114\.115\.217\.129)/gateway/api/umetrip/native(?:\?[^#]*)?$,script-path=https://raw.githubusercontent.com/master-zen/Net-Link/main/Surge/Module/runtime/umetrip-ad.js?v=1.0.0,requires-body=true,binary-body-mode=true,max-size=2097152,timeout=15
+
+[MITM]
+hostname = %APPEND% 114.115.217.129, activity.umetrip.com, appmsg.umetrip.com, bkclient.umetrip.com.cn, discardrp.umetrip.com, home.umetrip.com, opactivity.umetrip.com, oss.umetrip.com, sns.umetrip.com, startup.umetrip.com, umeflightstatus.umetrip.com, umehome.umetrip.com, umerp.umetrip.com, umerp.umetrip.com.cn, umestartup.umetrip.com
